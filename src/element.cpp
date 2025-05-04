@@ -28,7 +28,8 @@ void element::drawAt(class scene *scene, float X, float Y, int type)
     assert (type <= DRAW_ORIGIN);
     
     scene->drawBox(X + 0.25, Y + 0.25, X + sizeX - 0.25, Y + sizeY - 0.25, COLOR_ELEMENT_NORMAL + type);
-    scene->drawBox(X + 0.45, Y + 0.45, X + sizeX - 0.45, Y + sizeY - 0.45, COLOR_ELEMENT_INSIDE);
+    if (type == DRAW_NORMAL || type == DRAW_ORIGIN)
+        scene->drawBox(X + 0.45, Y + 0.45, X + sizeX - 0.45, Y + sizeY - 0.45, COLOR_ELEMENT_INSIDE);
     
     /* TODO: real connectors */
     drawConnector(scene, X, Y, 0, 0, COLOR_ELEMENT_CONNECTOR + type);    
@@ -61,13 +62,15 @@ void element::draw(class scene *scene, int type)
     }
 }
 
-void element::start_drag(void)
+void element::start_drag(float _X, float _Y)
 {
     over_drag_threshold = false;
     Xghost = X;
     Yghost = Y;
     Xdnd = X;
     Ydnd = Y;
+    X_in_drag = _X - X;
+    Y_in_drag = _Y - Y;
 }
 
 void element::update_drag(float _X, float _Y)
@@ -75,13 +78,20 @@ void element::update_drag(float _X, float _Y)
     if (fabsf(_X - X) > 2 || fabsf(_Y - Y) > 2)
         over_drag_threshold = true;
         
-    Xdnd = _X;
-    Ydnd = _Y;
+    Xdnd = _X - X_in_drag;
+    Ydnd = _Y - Y_in_drag;
     
     if (over_drag_threshold) {
-        Xghost = roundf(_X);
-        Yghost = roundf(_Y);
+        Xghost = roundf(_X - X_in_drag);
+        Yghost = roundf(_Y - Y_in_drag);
     }
+}
+
+void element::stop_drag(void)
+{
+    X = Xghost;
+    Y = Yghost;
+    over_drag_threshold = false;
 }
 
 

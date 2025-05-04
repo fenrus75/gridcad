@@ -36,6 +36,7 @@ private:
     SDL_Window * window;
     SDL_Renderer * renderer;
     class element *dragging;
+    bool left_mouse_down;
     
 };
 
@@ -55,8 +56,9 @@ public:
     void drawAt(class scene *scene, float X, float Y, int type);
     void draw(class scene *scene, int type);
     
-    void start_drag(void);
+    void start_drag(float X, float Y);
     void update_drag(float X, float Y);
+    void stop_drag(void);
     
     bool intersect(float X, float Y);
 private:
@@ -67,6 +69,7 @@ private:
     float X, Y;
     float Xghost, Yghost;
     float Xdnd, Ydnd;
+    float X_in_drag, Y_in_drag;
     
     void drawConnector(class scene *scene, float X, float Y, int cX, int cY, int type);    
 };

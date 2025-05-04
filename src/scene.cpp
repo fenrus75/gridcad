@@ -8,6 +8,7 @@ scene::scene(void)
 {
     window = SDL_CreateWindow("FOO BAR", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1024, 768, 0);
     renderer = SDL_CreateRenderer(window, -1, 0);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     
     offsetX = 0;
     offsetY = 0;
@@ -17,6 +18,7 @@ scene::scene(void)
     sizeX = 200;
     sizeY = 200;
     dragging = NULL;
+    left_mouse_down = false;
 }
 
 scene::~scene(void)
@@ -79,6 +81,35 @@ void scene::eventloop(void)
                         break;
                 }
                 break;
+            case SDL_MOUSEBUTTONDOWN:
+                if (!left_mouse_down && event.button.button == SDL_BUTTON_LEFT)  {
+                    dragging = NULL;
+                    left_mouse_down = true;
+                    float x, y;
+                     
+                    x = scr_to_X(event.motion.x);
+                    y = scr_to_Y(event.motion.y);
+                     
+                    for (auto elem : elements) {
+                        if (elem->intersect(x, y))
+                            dragging = elem;
+                    }
+                    if (dragging)
+                        dragging->start_drag(x, y);
+                }
+                break;
+            case SDL_MOUSEBUTTONUP:
+                if (event.button.button == SDL_BUTTON_LEFT) {
+                    if (dragging)
+                        dragging->stop_drag();
+                    dragging = NULL;
+                    left_mouse_down = false;
+                }
+                break;
+            case SDL_MOUSEMOTION:
+                if (dragging) {
+                    dragging->update_drag(scr_to_X(event.motion.x), scr_to_Y(event.motion.y));
+                }
         }
         
         draw();
@@ -106,7 +137,15 @@ void scene::draw(void)
     
     /* draw the elements */
     for (auto const elem : elements) {
-        elem->draw(this, DRAW_NORMAL);
+        if (elem != dragging)
+            elem->draw(this, DRAW_NORMAL);
+        else
+            elem->draw(this, DRAW_ORIGIN);
+    }
+    
+    if (dragging) {
+        dragging->draw(this, DRAW_GHOST);
+        dragging->draw(this, DRAW_DND);
     }
 
     SDL_RenderPresent(renderer);     
