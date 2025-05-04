@@ -87,7 +87,7 @@ void scene::eventloop(void)
 void scene::draw(void)
 {
     /* first, draw the lighter gray background */
-    SDL_SetRenderDrawColor(renderer, 120, 120, 120, 255);
+    SDL_SetRenderDrawColor(renderer, R(COLOR_BACKGROUND_GRID), G(COLOR_BACKGROUND_GRID), B(COLOR_BACKGROUND_GRID), Alpha(COLOR_BACKGROUND_GRID));
     SDL_RenderClear(renderer);
     
     /* then fill in the darger gray grid to keep lines */
@@ -95,7 +95,7 @@ void scene::draw(void)
     while (Y < sizeY) {
         X = 0;
         while (X < sizeX) {
-            drawBox(X + 0.2, Y + 0.2, X + 9.8, Y + 9.8);
+            drawBox(X + 0.2, Y + 0.2, X + 9.8, Y + 9.8, COLOR_BACKGROUND_MAIN);
             X = X + 10;
         }
         Y = Y + 10;
@@ -114,7 +114,7 @@ int scene::Y_to_scr(float Y)
     return (Y - offsetY) * scaleY;
 }
 
-void scene::drawBox(float X1, float Y1, float X2, float Y2)
+void scene::drawBox(float X1, float Y1, float X2, float Y2, int color)
 {
     int x1,y1,x2,y2;
     
@@ -135,12 +135,14 @@ void scene::drawBox(float X1, float Y1, float X2, float Y2)
     if (y2 < 0)
         return;
         
+    /* TODO: clip boxes that are fully outside of the visible window */
+        
         
     rect.x = x1;
     rect.y = y1;
     rect.w = x2 - x1;
     rect.h = y2 - y1;
     
-    SDL_SetRenderDrawColor(renderer, 42, 42, 42, 255);
+    SDL_SetRenderDrawColor(renderer, R(color), G(color), B(color), Alpha(color));
     SDL_RenderFillRect(renderer, &rect);    
 }
