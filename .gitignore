@@ -1,0 +1,4 @@
+*~
+*.o
+gridcad
+src/*.o
