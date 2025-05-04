@@ -1,9 +1,15 @@
 #include <SDL2/SDL.h>
 
-#include <std>
+#include <vector>
 
 class scene
 {
+public:
+    scene(void);
+    
+    
+private:
+    SDL_Window * window;
 };
 
 
