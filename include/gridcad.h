@@ -30,6 +30,8 @@ public:
     
     void add_element(class element *element);
     
+    bool can_place_element(float x, float y, int w, int h, class element *myself = NULL);
+    
     
 private:
     std::vector<class element *> elements;
@@ -58,7 +60,7 @@ public:
     void draw(class scene *scene, int type);
     
     void start_drag(float X, float Y);
-    void update_drag(float X, float Y);
+    void update_drag(class scene *scene, float X, float Y);
     void stop_drag(void);
     
     bool intersect(float X, float Y);

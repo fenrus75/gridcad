@@ -112,7 +112,7 @@ void scene::eventloop(void)
                 break;
             case SDL_MOUSEMOTION:
                 if (dragging) {
-                    dragging->update_drag(scr_to_X(event.motion.x), scr_to_Y(event.motion.y));
+                    dragging->update_drag(this, scr_to_X(event.motion.x), scr_to_Y(event.motion.y));
                 }
         }
         
@@ -248,4 +248,18 @@ void scene::drawCircle(float X, float Y, float _R, int color)
 void scene::add_element(class element *element)
 {
     elements.push_back(element);
+}
+
+bool scene::can_place_element(float x, float y, int w, int h, class element *myself)
+{
+    for (auto const elem : elements) {
+        int _x, _y;
+        if (elem == myself)
+            continue;
+       for (_y = 0; _y <= h; _y++)
+           for (_x = 0; _x <=  w; _x++)
+               if (elem->intersect(x + _x, y + _y))
+                   return false;
+    }
+    return true;
 }

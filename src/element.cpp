@@ -32,11 +32,14 @@ void element::drawAt(class scene *scene, float X, float Y, int type)
         scene->drawBox(X + 0.45, Y + 0.45, X + sizeX - 0.45, Y + sizeY - 0.45, COLOR_ELEMENT_INSIDE);
     
     /* TODO: real connectors */
-    drawConnector(scene, X, Y, 0, 0, COLOR_ELEMENT_CONNECTOR + type);    
     drawConnector(scene, X, Y, 0, 1, COLOR_ELEMENT_CONNECTOR + type);    
     drawConnector(scene, X, Y, 0, 2, COLOR_ELEMENT_CONNECTOR + type);    
     drawConnector(scene, X, Y, 0, 3, COLOR_ELEMENT_CONNECTOR + type);    
     drawConnector(scene, X, Y, 1, 0, COLOR_ELEMENT_CONNECTOR + type);    
+    drawConnector(scene, X, Y, 2, 0, COLOR_ELEMENT_CONNECTOR + type);    
+    drawConnector(scene, X, Y, 3, 1, COLOR_ELEMENT_CONNECTOR + type);    
+    drawConnector(scene, X, Y, 3, 2, COLOR_ELEMENT_CONNECTOR + type);    
+    drawConnector(scene, X, Y, 3, 3, COLOR_ELEMENT_CONNECTOR + type);    
 }
 
 
@@ -73,7 +76,7 @@ void element::start_drag(float _X, float _Y)
     Y_in_drag = _Y - Y;
 }
 
-void element::update_drag(float _X, float _Y)
+void element::update_drag(class scene *scene, float _X, float _Y)
 {
     if (fabsf(_X - X) > 2 || fabsf(_Y - Y) > 2)
         over_drag_threshold = true;
@@ -82,8 +85,13 @@ void element::update_drag(float _X, float _Y)
     Ydnd = _Y - Y_in_drag;
     
     if (over_drag_threshold) {
-        Xghost = floorf(_X - X_in_drag + 0.25);
-        Yghost = floorf(_Y - Y_in_drag + 0.25);
+        float _Xghost, _Yghost;
+        _Xghost = floorf(_X - X_in_drag + 0.25);
+        _Yghost = floorf(_Y - Y_in_drag + 0.25);
+        if (scene->can_place_element(_Xghost, _Yghost, sizeX, sizeY, this)) {
+            Xghost = _Xghost;
+            Yghost = _Yghost;
+        }
     }
 }
 
