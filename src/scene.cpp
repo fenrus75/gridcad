@@ -256,8 +256,8 @@ bool scene::can_place_element(float x, float y, int w, int h, class element *mys
         int _x, _y;
         if (elem == myself)
             continue;
-       for (_y = 0; _y <= h; _y++)
-           for (_x = 0; _x <=  w; _x++)
+       for (_y = -1; _y <= h+1; _y++)
+           for (_x = -1; _x <=  w+1; _x++)
                if (elem->intersect(x + _x, y + _y))
                    return false;
     }

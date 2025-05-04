@@ -37,9 +37,9 @@ void element::drawAt(class scene *scene, float X, float Y, int type)
     drawConnector(scene, X, Y, 0, 3, COLOR_ELEMENT_CONNECTOR + type);    
     drawConnector(scene, X, Y, 1, 0, COLOR_ELEMENT_CONNECTOR + type);    
     drawConnector(scene, X, Y, 2, 0, COLOR_ELEMENT_CONNECTOR + type);    
-    drawConnector(scene, X, Y, 3, 1, COLOR_ELEMENT_CONNECTOR + type);    
-    drawConnector(scene, X, Y, 3, 2, COLOR_ELEMENT_CONNECTOR + type);    
-    drawConnector(scene, X, Y, 3, 3, COLOR_ELEMENT_CONNECTOR + type);    
+    drawConnector(scene, X, Y, sizeX, 1, COLOR_ELEMENT_CONNECTOR + type);    
+    drawConnector(scene, X, Y, sizeX, 2, COLOR_ELEMENT_CONNECTOR + type);    
+    drawConnector(scene, X, Y, sizeX, 3, COLOR_ELEMENT_CONNECTOR + type);    
 }
 
 

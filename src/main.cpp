@@ -16,7 +16,7 @@ int main(int argc, char **argv)
     _element->place(5,7);
     _scene->add_element(_element);
 
-    _element = new element(3,5);
+    _element = new element(4,4);
     _element->place(10,17);
     
     _scene->add_element(_element);
