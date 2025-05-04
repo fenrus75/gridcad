@@ -15,6 +15,7 @@ public:
     
     
     void drawBox(float X1, float Y1, float X2, float Y2, int color);
+    void drawCircle(float X, float Y, float R, int color);
     
     int X_to_scr(float X);
     int Y_to_scr(float Y);
@@ -38,6 +39,7 @@ private:
 #define DRAW_NORMAL 0
 #define DRAW_GHOST 1
 #define DRAW_DND 2
+#define DRAW_ORIGIN 3
 
 class element
 {
@@ -55,7 +57,7 @@ private:
     float Xghost, Yghost;
     float Xdnd, Ydnd;
     
-    
+    void drawConnector(class scene *scene, float X, float Y, int cX, int cY, int type);    
 };
 
 #define COLOR_BACKGROUND_MAIN 0
@@ -63,6 +65,9 @@ private:
 #define COLOR_ELEMENT_NORMAL 2
 #define COLOR_ELEMENT_GHOST 3
 #define COLOR_ELEMENT_DND 4
+#define COLOR_ELEMENT_ORIGIN 5
+#define COLOR_ELEMENT_INSIDE 0
+#define COLOR_ELEMENT_CONNECTOR COLOR_ELEMENT_NORMAL
 
 
 int R(int color);
