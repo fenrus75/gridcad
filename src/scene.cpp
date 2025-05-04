@@ -100,6 +100,13 @@ void scene::draw(void)
         }
         Y = Y + 10;
     }
+    
+    /* draw the wires before the elements */
+    
+    /* draw the elements */
+    for (auto const elem : elements) {
+        elem->draw(this, DRAW_NORMAL);
+    }
 
     SDL_RenderPresent(renderer);     
 }
@@ -145,4 +152,9 @@ void scene::drawBox(float X1, float Y1, float X2, float Y2, int color)
     
     SDL_SetRenderDrawColor(renderer, R(color), G(color), B(color), Alpha(color));
     SDL_RenderFillRect(renderer, &rect);    
+}
+
+void scene::add_element(class element *element)
+{
+    elements.push_back(element);
 }

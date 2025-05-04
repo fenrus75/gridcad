@@ -41,12 +41,12 @@ private:
 
 class element
 {
-    
+public:    
     element(int sizeX, int sizeY);
     
     void place(int X, int Y);
     
-    void drawAt(class scene *scene, float X, float Y);
+    void drawAt(class scene *scene, float X, float Y, int type);
     void draw(class scene *scene, int type);
 private:
     int sizeX;
@@ -62,6 +62,7 @@ private:
 #define COLOR_BACKGROUND_GRID 1
 #define COLOR_ELEMENT_NORMAL 2
 #define COLOR_ELEMENT_GHOST 3
+#define COLOR_ELEMENT_DND 4
 
 
 int R(int color);
