@@ -82,8 +82,8 @@ void element::update_drag(float _X, float _Y)
     Ydnd = _Y - Y_in_drag;
     
     if (over_drag_threshold) {
-        Xghost = floorf(_X - X_in_drag);
-        Yghost = floorf(_Y - Y_in_drag);
+        Xghost = floorf(_X - X_in_drag + 0.25);
+        Yghost = floorf(_Y - Y_in_drag + 0.25);
     }
 }
 
