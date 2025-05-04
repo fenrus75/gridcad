@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include <stdio.h>
 
 #include "gridcad.h"
 
@@ -61,6 +62,19 @@ void scene::eventloop(void)
                         offsetX ++;
                         if (offsetX > sizeX + 1)
                             offsetX = sizeX;
+                        break;
+                    case SDLK_PLUS:
+                    case SDLK_KP_PLUS:
+                    case SDLK_EQUALS:
+                        scaleX++;
+                        scaleY++;
+                        break;
+                    case SDLK_MINUS:
+                    case SDLK_KP_MINUS:
+                        if (scaleX > 1)
+                            scaleX--;
+                        if (scaleY > 1)
+                            scaleY--;
                         break;
                 }
                 break;
