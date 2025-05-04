@@ -40,6 +40,30 @@ void scene::eventloop(void)
             case SDL_QUIT:
                 leave = true;
                 break;
+            case SDL_KEYDOWN:
+                switch (event.key.keysym.sym) {
+                    case SDLK_UP:
+                        offsetY --;
+                        if  (offsetY < -1)
+                            offsetY = -1;
+                        break;
+                    case SDLK_DOWN:
+                        offsetY ++;
+                        if (offsetY > sizeY + 1)
+                            offsetY = sizeY;
+                        break;
+                    case SDLK_LEFT:
+                        offsetX --;
+                        if  (offsetX < -1)
+                            offsetX = -1;
+                        break;
+                    case SDLK_RIGHT:
+                        offsetX ++;
+                        if (offsetX > sizeX + 1)
+                            offsetX = sizeX;
+                        break;
+                }
+                break;
         }
         
         draw();
