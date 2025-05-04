@@ -16,6 +16,7 @@ scene::scene(void)
     
     sizeX = 200;
     sizeY = 200;
+    dragging = NULL;
 }
 
 scene::~scene(void)
@@ -116,9 +117,19 @@ int scene::X_to_scr(float X)
     return (X - offsetX) * scaleX;
 }
 
+float scene::scr_to_X(int X)
+{
+    return X / scaleX + offsetX;
+}
+
 int scene::Y_to_scr(float Y)
 {
     return (Y - offsetY) * scaleY;
+}
+
+float scene::scr_to_Y(int Y)
+{
+    return Y / scaleY + offsetY;
 }
 
 void scene::drawBox(float X1, float Y1, float X2, float Y2, int color)

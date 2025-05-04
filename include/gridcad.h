@@ -19,6 +19,8 @@ public:
     
     int X_to_scr(float X);
     int Y_to_scr(float Y);
+    float scr_to_X(int X);
+    float scr_to_Y(int Y);
     
     
     float offsetX, offsetY;
@@ -33,6 +35,8 @@ private:
     std::vector<class element *> elements;
     SDL_Window * window;
     SDL_Renderer * renderer;
+    class element *dragging;
+    
 };
 
 
@@ -50,9 +54,16 @@ public:
     
     void drawAt(class scene *scene, float X, float Y, int type);
     void draw(class scene *scene, int type);
+    
+    void start_drag(void);
+    void update_drag(float X, float Y);
+    
+    bool intersect(float X, float Y);
 private:
     int sizeX;
     int sizeY;
+    bool over_drag_threshold;  /* has a drag-and-drop been far enough to avoid spurious drags */
+    
     float X, Y;
     float Xghost, Yghost;
     float Xdnd, Ydnd;
