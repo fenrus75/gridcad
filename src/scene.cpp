@@ -1,4 +1,6 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+
 #include <stdio.h>
 
 #include "gridcad.h"
@@ -19,6 +21,8 @@ scene::scene(void)
     sizeY = 200;
     dragging = NULL;
     left_mouse_down = false;
+    connector_img = IMG_LoadTexture(renderer, "assets/connector.png");
+
 }
 
 scene::~scene(void)
@@ -233,8 +237,12 @@ void scene::drawCircle(float X, float Y, float _R, int color)
     rect.w = x2 - x1;
     rect.h = y2 - y1;
     
-    SDL_SetRenderDrawColor(renderer, R(color), G(color), B(color), Alpha(color));
-    SDL_RenderFillRect(renderer, &rect);    
+    SDL_SetTextureAlphaMod(connector_img, Alpha(color));
+    SDL_RenderCopy(renderer, connector_img, NULL, &rect);
+    
+//    SDL_SetRenderDrawColor(renderer, R(color), G(color), B(color), Alpha(color));
+//    SDL_RenderFillRect(renderer, &rect);    
+    
 }
 
 void scene::add_element(class element *element)

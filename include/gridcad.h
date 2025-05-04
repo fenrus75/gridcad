@@ -33,10 +33,11 @@ public:
     
 private:
     std::vector<class element *> elements;
-    SDL_Window * window;
-    SDL_Renderer * renderer;
+    SDL_Window *window;
+    SDL_Renderer *renderer;
     class element *dragging;
     bool left_mouse_down;
+    SDL_Texture *connector_img;
     
 };
 
@@ -65,6 +66,7 @@ private:
     int sizeX;
     int sizeY;
     bool over_drag_threshold;  /* has a drag-and-drop been far enough to avoid spurious drags */
+    
     
     float X, Y;
     float Xghost, Yghost;
