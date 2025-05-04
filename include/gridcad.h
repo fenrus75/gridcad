@@ -6,10 +6,16 @@ class scene
 {
 public:
     scene(void);
-    
     ~scene(void);
     
+    void draw(void);
     void eventloop(void);
+    
+    
+    float offsetX, offsetY;
+    float scaleX, scaleY;
+    
+    float sizeX, sizeY;
     
     
 private:

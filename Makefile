@@ -11,4 +11,4 @@ gridcad: $(OBJS) include/gridcad.h Makefile
 
 	
 clean:
-	rm gridcad
+	rm -f gridcad */*.o

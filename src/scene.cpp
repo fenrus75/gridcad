@@ -7,6 +7,14 @@ scene::scene(void)
 {
     window = SDL_CreateWindow("FOO BAR", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1024, 768, 0);
     renderer = SDL_CreateRenderer(window, -1, 0);
+    
+    offsetX = 0;
+    offsetY = 0;
+    scaleX = 25;
+    scaleY = 25;
+    
+    sizeX = 200;
+    sizeY = 200;
 }
 
 scene::~scene(void)
@@ -34,6 +42,11 @@ void scene::eventloop(void)
                 break;
         }
         
-        SDL_RenderPresent(renderer);     
+        draw();
     }
+}
+
+void scene::draw(void)
+{
+        SDL_RenderPresent(renderer);     
 }
