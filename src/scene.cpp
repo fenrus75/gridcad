@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL2_gfxPrimitives.h>
 
 #include <stdio.h>
 
@@ -162,8 +163,8 @@ void scene::draw(void)
         port2 = is_port(mouseX, mouseY);
         if (port2)
             color = COLOR_WIRE_SOLID;
-        SDL_SetRenderDrawColor(renderer, R(color), G(color), B(color), Alpha(color));
-        SDL_RenderDrawLine(renderer, X_to_scr(dragging_port->screenX), Y_to_scr(dragging_port->screenY), X_to_scr(mouseX), Y_to_scr(mouseY));
+        thickLineRGBA(renderer, X_to_scr(dragging_port->screenX), Y_to_scr(dragging_port->screenY), X_to_scr(mouseX), Y_to_scr(mouseY), 0.2 * scaleX,
+            R(color), G(color), B(color), Alpha(color));
         
         
     }
