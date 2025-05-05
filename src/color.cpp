@@ -9,6 +9,8 @@ static int colors[MAX_COLOR][4] =
  {240, 240, 240, 32},		// COLOR_ELEMENT_GHOST
  {160, 160, 160, 128},		// COLOR_ELEMENT_DND
  {180, 180, 180, 128},		// COLOR_ELEMENT_ORIGIN
+ {255, 128, 128, 255},		// COLOR_WRIRE_SOLID
+ {255, 128, 128, 128},		// COLOR_WRIRE_INVALID
 };
 
 int R(int color)

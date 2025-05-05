@@ -22,7 +22,7 @@ scene::scene(void)
     dragging = NULL;
     left_mouse_down = false;
     connector_img = IMG_LoadTexture(renderer, "assets/connector.png");
-
+    dragging_port = NULL;
 }
 
 scene::~scene(void)
@@ -88,6 +88,7 @@ void scene::eventloop(void)
             case SDL_MOUSEBUTTONDOWN:
                 if (!left_mouse_down && event.button.button == SDL_BUTTON_LEFT)  {
                     dragging = NULL;
+                    dragging_port = NULL;
                     left_mouse_down = true;
                     float x, y;
                      
@@ -100,17 +101,34 @@ void scene::eventloop(void)
                     }
                     if (dragging)
                         dragging->start_drag(x, y);
+                        
+                    if (!dragging) {
+                        dragging_port = is_port(x, y);
+                        if (dragging_port) {
+                            dragging_port->screenX = x;
+                            dragging_port->screenY = y;
+                        }
+                    }
                 }
                 break;
             case SDL_MOUSEBUTTONUP:
                 if (event.button.button == SDL_BUTTON_LEFT) {
+                    float x, y;
+                    x = scr_to_X(event.motion.x);
+                    y = scr_to_Y(event.motion.y);
                     if (dragging)
                         dragging->stop_drag();
+                    if (dragging_port && is_port(x, y))
+                        printf("Connection made\n");
                     dragging = NULL;
+                    dragging_port = NULL;
                     left_mouse_down = false;
                 }
                 break;
             case SDL_MOUSEMOTION:
+               mouseX = scr_to_X(event.motion.x);
+               mouseY = scr_to_Y(event.motion.y);
+
                 if (dragging) {
                     dragging->update_drag(this, scr_to_X(event.motion.x), scr_to_Y(event.motion.y));
                 }
@@ -138,6 +156,17 @@ void scene::draw(void)
     }
     
     /* draw the wires before the elements */
+    if (dragging_port) {
+        struct port *port2;
+        int color = COLOR_WIRE_INVALID;
+        port2 = is_port(mouseX, mouseY);
+        if (port2)
+            color = COLOR_WIRE_SOLID;
+        SDL_SetRenderDrawColor(renderer, R(color), G(color), B(color), Alpha(color));
+        SDL_RenderDrawLine(renderer, X_to_scr(dragging_port->screenX), Y_to_scr(dragging_port->screenY), X_to_scr(mouseX), Y_to_scr(mouseY));
+        
+        
+    }
     
     /* draw the elements */
     for (auto const elem : elements) {

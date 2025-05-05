@@ -3,6 +3,7 @@
 #include <vector>
 
 class element;
+struct port;
 
 class scene
 {
@@ -40,8 +41,10 @@ private:
     SDL_Window *window;
     SDL_Renderer *renderer;
     class element *dragging;
+    struct port *dragging_port;
     bool left_mouse_down;
     SDL_Texture *connector_img;
+    float mouseX, mouseY;
     
 };
 
@@ -53,6 +56,7 @@ private:
 
 struct port {
     int X, Y;
+    float screenX, screenY;
     const char *name;
     class element *parent;
 };
@@ -105,6 +109,8 @@ private:
 #define COLOR_ELEMENT_ORIGIN 5
 #define COLOR_ELEMENT_INSIDE 0
 #define COLOR_ELEMENT_CONNECTOR COLOR_ELEMENT_NORMAL
+#define COLOR_WIRE_SOLID 6
+#define COLOR_WIRE_INVALID 7
 
 
 int R(int color);
