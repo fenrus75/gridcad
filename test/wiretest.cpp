@@ -8,6 +8,8 @@ int main(int argc, char **argv)
     
     for (y = 20 ; y < 30; y++)
         grid->block_point(20, y);
+        
+    grid->path_walk(15,25,25,25);
     
     grid->debug_display();
     return 0;

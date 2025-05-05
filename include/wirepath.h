@@ -11,6 +11,8 @@ struct point {
     bool part_of_wire;
     double distance;
     
+    int dirX, dirY; /* direction we xame from to get best cost to get here */
+    
     double extra_score;
 };
 
@@ -21,12 +23,20 @@ public:
     void debug_display(void);    
     
     void block_point(int x, int y);
+    
+    void path_walk(int x1, int y1, int x2, int y2);
 private:
     std::vector<std::vector<struct point>> grid;
     
-    double cost_estimate(int x, int y);
+    double best_path;
     int width, height;
-    
+
     int originX, originY;
     int targetX, targetY;
+    
+    double cost_estimate(int x, int y);
+    
+    void walk_back(void);
+    
+    bool one_path_walk(double cost_so_far, int x, int y, int dx, int dy);
 };
