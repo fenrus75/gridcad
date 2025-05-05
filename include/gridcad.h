@@ -49,10 +49,18 @@ private:
 #define DRAW_DND 2
 #define DRAW_ORIGIN 3
 
+struct port {
+    int X, Y;
+    const char *name;
+    class element *from;
+    class element *to;
+};
+
 class element
 {
 public:    
-    element(int sizeX, int sizeY);
+    element(int sizeX, int sizeY, const char *_name);
+    ~element(void);
     
     void place(int X, int Y);
     
@@ -64,7 +72,11 @@ public:
     void stop_drag(void);
     
     bool intersect(float X, float Y);
+    
+    const char * get_name(void) { return name; };
 private:
+
+    const char *name;
     int sizeX;
     int sizeY;
     bool over_drag_threshold;  /* has a drag-and-drop been far enough to avoid spurious drags */
@@ -74,6 +86,8 @@ private:
     float Xghost, Yghost;
     float Xdnd, Ydnd;
     float X_in_drag, Y_in_drag;
+    
+    std::vector<struct port *> ports;
     
     void drawConnector(class scene *scene, float X, float Y, int cX, int cY, int type);    
 };

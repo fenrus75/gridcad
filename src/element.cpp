@@ -3,13 +3,19 @@
 
 #include "gridcad.h"
 
-element::element(int _sizeX, int _sizeY)
+element::element(int _sizeX, int _sizeY, const char *_name)
 {
     assert(_sizeX >= 2);
     assert(_sizeY >= 2);
     sizeX = _sizeX;
     sizeY = _sizeY;
     place(0,0);
+    name = strdup(_name);
+}
+
+element::~element()
+{
+    free((void*)name);
 }
 
 void element::place(int _X, int _Y)
