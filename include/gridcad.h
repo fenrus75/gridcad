@@ -52,8 +52,6 @@ private:
 struct port {
     int X, Y;
     const char *name;
-    class element *from;
-    class element *to;
 };
 
 class element
@@ -74,6 +72,8 @@ public:
     bool intersect(float X, float Y);
     
     const char * get_name(void) { return name; };
+    
+    void add_port(int X, int Y, const char *name);
 private:
 
     const char *name;

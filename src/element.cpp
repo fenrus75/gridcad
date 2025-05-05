@@ -11,11 +11,23 @@ element::element(int _sizeX, int _sizeY, const char *_name)
     sizeY = _sizeY;
     place(0,0);
     name = strdup(_name);
+    
+    add_port(0, 1, "In1");
+    add_port(0, 2, "In2");
+    add_port(0, 3, "Enable");
+    add_port(1, 0, "clk");
+    add_port(2, 0, "reset");
+    add_port(sizeX, 1, "Out1");
+    add_port(sizeX, 2, "Out2");
+    add_port(sizeX, 3, "Out3");
 }
 
 element::~element()
 {
     free((void*)name);
+    for (auto port : ports) {
+        free(port);
+    }
 }
 
 void element::place(int _X, int _Y)
@@ -38,14 +50,9 @@ void element::drawAt(class scene *scene, float X, float Y, int type)
         scene->drawBox(X + 0.45, Y + 0.45, X + sizeX - 0.45, Y + sizeY - 0.45, COLOR_ELEMENT_INSIDE);
     
     /* TODO: real connectors */
-    drawConnector(scene, X, Y, 0, 1, COLOR_ELEMENT_CONNECTOR + type);    
-    drawConnector(scene, X, Y, 0, 2, COLOR_ELEMENT_CONNECTOR + type);    
-    drawConnector(scene, X, Y, 0, 3, COLOR_ELEMENT_CONNECTOR + type);    
-    drawConnector(scene, X, Y, 1, 0, COLOR_ELEMENT_CONNECTOR + type);    
-    drawConnector(scene, X, Y, 2, 0, COLOR_ELEMENT_CONNECTOR + type);    
-    drawConnector(scene, X, Y, sizeX, 1, COLOR_ELEMENT_CONNECTOR + type);    
-    drawConnector(scene, X, Y, sizeX, 2, COLOR_ELEMENT_CONNECTOR + type);    
-    drawConnector(scene, X, Y, sizeX, 3, COLOR_ELEMENT_CONNECTOR + type);    
+    for (auto port: ports) {
+        drawConnector(scene, X, Y, port->X, port->Y, COLOR_ELEMENT_CONNECTOR + type);    
+    }
 }
 
 
@@ -115,4 +122,14 @@ bool element::intersect(float _X, float _Y)
     if (_X > X + 0.25 && _Y > Y + 0.25 && _X < X + sizeX - 0.25 && _Y < Y + sizeY - 0.25)
         return true;
     return false;
+}
+
+void element::add_port(int X, int Y, const char *_name)
+{
+    struct port *port;
+    port = (struct port*)calloc(sizeof(struct port), 1);
+    port->X = X;
+    port->Y = Y;
+    port->name = strdup(_name);
+    ports.push_back(port);
 }
