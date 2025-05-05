@@ -36,3 +36,16 @@ void wiregrid::block_point(int x, int y)
     assert(y < height);
     grid[y][x].blocked = true;
 };
+
+double wiregrid::cost_estimate(int x, int y)
+{
+    int max, min;
+    if (x > y) {
+        max = x;
+        min = y;
+    } else {
+        max = y;
+        min = x;
+    }
+    return SQRT2 * min + (max - min);
+}
