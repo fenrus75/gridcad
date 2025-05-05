@@ -22,7 +22,6 @@ scene::scene(void)
     sizeY = 200;
     dragging = NULL;
     left_mouse_down = false;
-    connector_img = IMG_LoadTexture(renderer, "assets/connector.png");
     dragging_port = NULL;
 }
 
@@ -240,38 +239,18 @@ void scene::drawBox(float X1, float Y1, float X2, float Y2, int color)
 
 void scene::drawCircle(float X, float Y, float _R, int color)
 {
-    int x1,y1,x2,y2;
+    int x1, y1;
     
-    SDL_Rect rect;
+    x1 = X_to_scr(X);
+    y1 = X_to_scr(Y);
     
-    x1 = X_to_scr(X - _R);
-    x2 = X_to_scr(X + _R);
-    y1 = Y_to_scr(Y - _R);
-    y2 = Y_to_scr(Y + _R);
-    
-    /* clip */
-    if (x1 < 0)
-        x1 = 0;
-    if (x2 < 0)
-        return;
-    if (y1 < 0)
-        y1 = 0;
-    if (y2 < 0)
-        return;
-        
     /* TODO: clip boxes that are fully outside of the visible window */
         
         
-    rect.x = x1;
-    rect.y = y1;
-    rect.w = x2 - x1;
-    rect.h = y2 - y1;
+    filledCircleRGBA(renderer, x1, y1, _R * scaleX,  R(color), G(color), B(color), Alpha(color));
+    color = COLOR_BACKGROUND_MAIN;
+    filledCircleRGBA(renderer, x1, y1, (_R /2 ) * scaleX,  R(color), G(color), B(color), Alpha(color));
     
-    SDL_SetTextureAlphaMod(connector_img, Alpha(color));
-    SDL_RenderCopy(renderer, connector_img, NULL, &rect);
-    
-//    SDL_SetRenderDrawColor(renderer, R(color), G(color), B(color), Alpha(color));
-//    SDL_RenderFillRect(renderer, &rect);    
     
 }
 

@@ -43,7 +43,6 @@ private:
     class element *dragging;
     struct port *dragging_port;
     bool left_mouse_down;
-    SDL_Texture *connector_img;
     float mouseX, mouseY;
     
 };
