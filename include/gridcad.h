@@ -31,6 +31,8 @@ public:
     void add_element(class element *element);
     
     bool can_place_element(float x, float y, int w, int h, class element *myself = NULL);
+
+    struct port * is_port(float X, float Y); /* X and Y are global positions */
     
     
 private:
@@ -52,6 +54,7 @@ private:
 struct port {
     int X, Y;
     const char *name;
+    class element *parent;
 };
 
 class element
@@ -74,6 +77,8 @@ public:
     const char * get_name(void) { return name; };
     
     void add_port(int X, int Y, const char *name);
+    
+    struct port * is_port(float X, float Y); /* X and Y are global positions */
 private:
 
     const char *name;

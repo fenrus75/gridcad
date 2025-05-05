@@ -263,3 +263,14 @@ bool scene::can_place_element(float x, float y, int w, int h, class element *mys
     }
     return true;
 }
+
+struct port *scene::is_port(float X, float Y)
+{
+    for (auto const elem : elements) {
+        struct port *p = elem->is_port(X, Y);
+        if (p)
+            return p;
+    }
+    return NULL;
+
+}

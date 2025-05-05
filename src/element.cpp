@@ -131,5 +131,21 @@ void element::add_port(int X, int Y, const char *_name)
     port->X = X;
     port->Y = Y;
     port->name = strdup(_name);
+    port->parent = this;
     ports.push_back(port);
+}
+
+struct port * element::is_port(float _X, float _Y)
+{
+    /* make relative to the element */
+    _X -= X;
+    _Y -= Y;
+    
+    for (auto port : ports) {
+        float d = sqrtf(  (_X - port->X) * (_X - port->X) + (_Y - port->Y) * (_Y - port->Y));
+        if (d > 0.27) 
+            continue;
+        return port;
+    }
+    return NULL;
 }
