@@ -1,4 +1,5 @@
 *~
 *.o
 gridcad
+wiretest
 src/*.o
