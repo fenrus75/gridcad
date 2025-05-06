@@ -305,14 +305,13 @@ std::vector<struct waypoint> * wiregrid::path_walk(int x1, int y1, int x2, int y
     targetX = x2;
     targetY = y2;
     
-    printf("From %ix%i to %ix%i\n", originX, originY, targetX, targetY);
-    
     recursecount = 0;
     
     
     /* make sure the origin is not blocked -- which is quite possible as by default all terminal nodes
      * are blocked */
     unblock_point(x1, y1);   
+    unblock_point(x2, y2);   
     one_path_walk(0.0, x1, y1, 0, 0, 0);
     printf("recursecount is %i \n", recursecount);
  //   debug_display();

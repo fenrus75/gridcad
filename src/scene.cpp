@@ -43,7 +43,7 @@ void scene::eventloop(void)
 		if (!ret)
 			SDL_Delay(1);
 		ret = SDL_PollEvent(&event);
-
+		
 		switch (event.type) {
 		case SDL_QUIT:
 			leave = true;
@@ -141,19 +141,33 @@ void scene::eventloop(void)
 			}
 			break;
 		case SDL_MOUSEMOTION:
+			int x,y;
 			mouseX = scr_to_X(event.motion.x);
 			mouseY = scr_to_Y(event.motion.y);
+			x = scr_to_X(event.motion.x);
+			y = scr_to_Y(event.motion.y);
 
 			if (dragging) {
 				dragging->update_drag(this,
 						      scr_to_X(event.motion.x),
 						      scr_to_Y(event.motion.y));
 			}
-			if (dragging_wire)
-				dragging_wire->move_target(mouseX, mouseY);
+			if (dragging_wire) {
+				bool banned = false;
+				for (auto elem:	elements) {
+					if (elem->intersect(x, y))
+						banned = true;
+				}
+				if (!banned)
+					dragging_wire->move_target(mouseX, mouseY);
+			}
 			break;
 
+		case SDL_POLLSENTINEL:
+			break;
 		}
+		
+	
 
 		draw();
 	}
