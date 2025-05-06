@@ -1,10 +1,12 @@
 #pragma once
 
+#include "wirepath.h"
 #include <SDL2/SDL.h>
 
 #include <vector>
 
 class element;
+class wire;
 struct port;
 
 class scene
@@ -19,12 +21,12 @@ public:
     
     void drawBox(float X1, float Y1, float X2, float Y2, int color);
     void drawCircle(float X, float Y, float R, int color);
+    void drawLine(float X1, float Y1, float X2, float Y2, int color);
     
     int X_to_scr(float X);
     int Y_to_scr(float Y);
     float scr_to_X(int X);
     float scr_to_Y(int Y);
-    
     
     float offsetX, offsetY;
     float scaleX, scaleY;
@@ -36,6 +38,8 @@ public:
     bool can_place_element(float x, float y, int w, int h, class element *myself = NULL);
 
     struct port * is_port(float X, float Y); /* X and Y are global positions */
+    
+    void fill_grid(class wiregrid* grid);
     
     
 private:
@@ -82,6 +86,7 @@ public:
     const char * get_name(void) { return name; };
     
     void add_port(int X, int Y, const char *name);
+    void fill_grid(class wiregrid* grid);
     
     struct port * is_port(float X, float Y); /* X and Y are global positions */
 private:
@@ -100,6 +105,20 @@ private:
     std::vector<struct port *> ports;
     
     void drawConnector(class scene *scene, float X, float Y, int cX, int cY, int type);    
+};
+
+class wire {
+public:
+    wire(int x1, int y1, int x2, int y2);
+    ~wire(void);
+    
+    void move_target(int x2, int y2);
+    void draw(class scene *);
+    void route(class scene *);
+    
+private:
+    int X1, Y1, X2, Y2;
+    std::vector<struct waypoint> *points;
 };
 
 #define COLOR_BACKGROUND_MAIN 0

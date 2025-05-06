@@ -149,3 +149,15 @@ struct port * element::is_port(float _X, float _Y)
     }
     return NULL;
 }
+
+void element::fill_grid(class wiregrid *grid)
+{
+    int x,y;
+    for (x = 1; x < sizeX; x++)
+        for (y = 1; y < sizeY; y++)
+            grid->block_point(X+x, Y+y);
+            
+    for (auto port: ports)
+        grid->block_point(X + port->X, Y + port->Y);
+    
+}

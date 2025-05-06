@@ -1,7 +1,7 @@
 all: gridcad wiretest
 
 
-OBJS := src/main.o src/scene.o src/color.o src/element.o lib/wirepath.o
+OBJS := src/main.o src/scene.o src/color.o src/element.o src/wire.o lib/wirepath.o 
 
 gridcad: $(OBJS) include/gridcad.h Makefile
 	g++ $(CFLAGS) -O3 -Wall -march=native $(OBJS) -flto -o gridcad -lSDL2main -lSDL2_image -lSDL2_gfx -lSDL2 

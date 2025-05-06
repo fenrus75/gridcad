@@ -237,6 +237,14 @@ void scene::drawBox(float X1, float Y1, float X2, float Y2, int color)
     SDL_RenderFillRect(renderer, &rect);    
 }
 
+void scene::drawLine(float X1, float Y1, float X2, float Y2, int color)
+{
+    /* TODO: clip boxes that are fully outside of the visible window */
+
+    thickLineRGBA(renderer, X_to_scr(X1), Y_to_scr(Y1), X_to_scr(X2), Y_to_scr(Y2), 0.2 * scaleX,
+            R(color), G(color), B(color), Alpha(color));
+}
+
 void scene::drawCircle(float X, float Y, float _R, int color)
 {
     int x1, y1;
@@ -282,4 +290,10 @@ struct port *scene::is_port(float X, float Y)
     }
     return NULL;
 
+}
+
+void scene::fill_grid(class wiregrid *grid)
+{
+    for (auto const elem : elements) 
+        elem->fill_grid(grid);
 }
