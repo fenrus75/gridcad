@@ -12,5 +12,6 @@ int main(int argc, char **argv)
     grid->path_walk(15,25,25,25);
     
     grid->debug_display();
+    delete grid;
     return 0;
 }

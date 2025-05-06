@@ -19,6 +19,7 @@ struct point {
 class wiregrid {
 public:
     wiregrid(int width, int height);
+    ~wiregrid();
 
     void debug_display(void);    
     

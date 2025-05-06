@@ -16,6 +16,15 @@ wiregrid::wiregrid(int _width, int _height)
     best_path = 4.0 * width * height;
 }
 
+wiregrid::~wiregrid()
+{
+    int y;
+    for (y = 0; y < height; y++)
+        grid[y].resize(0);
+    grid.resize(0);
+    
+}
+
 
 void wiregrid::debug_display(void)
 {
@@ -165,12 +174,16 @@ bool wiregrid::one_path_walk(double cost_so_far, int x, int y, int dx, int dy)
         maxcost = best_path;
 
     walked[4] = true;
-    while (leastcost < maxcost+0.31) {
+    while (leastcost < maxcost+0.3) {
         for (i = 0; i < 9; i++) {
+             double adder = 0.0;
              if (walked[i])
                  continue;
              if (costs[i] <= leastcost) {
-                 one_path_walk(cost_so_far + COST[i], x + DX[i], y + DY[i], DX[i], DY[i]);
+                 /* pay a small penalty for direction changes to give same length paths with fewer changes a bonus*/
+                 if (DX[i] != dx || DY[i] != dy)
+                     adder += 0.01;
+                 one_path_walk(cost_so_far + COST[i] + adder, x + DX[i], y + DY[i], DX[i], DY[i]);
                  walked[i] = true;
              }   
         }
