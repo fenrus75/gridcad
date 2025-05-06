@@ -29,6 +29,7 @@ public:
     
     void block_point(int x, int y);
     void unblock_point(int x, int y);
+    bool is_blocked(int x, int y);
     
     std::vector<struct waypoint> *  path_walk(int x1, int y1, int x2, int y2);
 private:
@@ -44,5 +45,5 @@ private:
     
     std::vector<struct waypoint> *  walk_back(void);
     
-    bool one_path_walk(double cost_so_far, int x, int y, int dx, int dy);
+    bool one_path_walk(double cost_so_far, int x, int y, int dx, int dy, int recurse);
 };

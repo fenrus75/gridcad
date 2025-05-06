@@ -119,7 +119,7 @@ void element::stop_drag(void)
 /* does a mouse press hit this specific element */
 bool element::intersect(float _X, float _Y)
 {
-    if (_X > X + 0.25 && _Y > Y + 0.25 && _X < X + sizeX - 0.25 && _Y < Y + sizeY - 0.25)
+    if (_X >= X + 1 && _Y >= Y + 1 && _X < X + sizeX && _Y < Y + sizeY)
         return true;
     return false;
 }
@@ -157,9 +157,6 @@ void element::fill_grid(class wiregrid *grid)
     for (x = 1; x < sizeX; x++)
         for (y = 1; y < sizeY; y++)
             grid->block_point(X+x, Y+y);
-
-return;
-    
 
     for (auto port: ports)
         grid->block_point(X + port->X, Y + port->Y);

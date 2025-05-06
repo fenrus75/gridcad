@@ -109,7 +109,7 @@ void scene::eventloop(void)
                             dragging_port->screenX = x;
                             dragging_port->screenY = y;
                             
-                            dragging_wire=new wire(roundf(x), roundf(y), roundf(x), roundf(y));
+                            dragging_wire=new wire(floorf(x), floorf(y), floorf(x), floorf(y));
                         }
                     }
                 }
