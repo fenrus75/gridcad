@@ -86,7 +86,6 @@ void scene::eventloop(void)
 			}
 			break;
 		case SDL_MOUSEBUTTONDOWN:
-			printf("BUTTON\n");
 			if (!left_mouse_down
 			    && event.button.button == SDL_BUTTON_LEFT) {
 				dragging = NULL;
@@ -118,7 +117,6 @@ void scene::eventloop(void)
 					}
 				}
 
-				printf("Mouse down\n");
 			}
 			break;
 		case SDL_MOUSEBUTTONUP:
