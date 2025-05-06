@@ -48,5 +48,5 @@ private:
     
     std::vector<struct waypoint> *  walk_back(void);
     
-    bool one_path_walk(double cost_so_far, int x, int y, int dx, int dy, int recurse);
+    bool one_path_walk(double cost_so_far, int x, int y, int dx, int dy, int recurse, bool first_half);
 };

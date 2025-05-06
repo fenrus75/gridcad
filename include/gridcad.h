@@ -25,7 +25,7 @@ class scene
 {
 public:
     scene(void);
-    ~scene(void);
+    virtual ~scene(void);
     
     void draw(void);
     void eventloop(void);
@@ -51,7 +51,7 @@ public:
 
     struct port * is_port(float X, float Y); /* X and Y are global positions */
     
-    virtual void fill_grid(class wiregrid* grid);
+    void fill_grid(class wiregrid* grid);
     
     
 protected:
@@ -99,7 +99,7 @@ public:
     const char * get_name(void) { return name; };
     
     void add_port(int X, int Y, const char *name);
-    void fill_grid(class wiregrid* grid);
+    virtual void fill_grid(class wiregrid* grid);
     
     struct port * is_port(float X, float Y); /* X and Y are global positions */
     
