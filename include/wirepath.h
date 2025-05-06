@@ -28,6 +28,7 @@ public:
     void debug_display(void);    
     
     void block_point(int x, int y);
+    void unblock_point(int x, int y);
     
     std::vector<struct waypoint> *  path_walk(int x1, int y1, int x2, int y2);
 private:

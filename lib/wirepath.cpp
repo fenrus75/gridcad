@@ -77,9 +77,19 @@ void wiregrid::debug_display(void)
 
 void wiregrid::block_point(int x, int y) 
 {
-    assert(x < width);
-    assert(y < height);
+    if (x < 0 || x >= width)
+        return;
+    if (y < 0 || y >= height)
+        return;
     grid[y][x].blocked = true;
+};
+void wiregrid::unblock_point(int x, int y) 
+{
+    if (x < 0 || x >= width)
+        return;
+    if (y < 0 || y >= height)
+        return;
+    grid[y][x].blocked =  false;
 };
 
 /*
@@ -258,6 +268,10 @@ std::vector<struct waypoint> * wiregrid::path_walk(int x1, int y1, int x2, int y
     
     recursecount = 0;
     
+    
+    /* make sure the origin is not blocked -- which is quite possible as by default all terminal nodes
+     * are blocked */
+    unblock_point(x1, y1);   
     one_path_walk(0.0, x1, y1, 0, 0);
 //    printf("recursecount is %i \n", recursecount);
  //   debug_display();
