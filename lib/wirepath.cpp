@@ -15,6 +15,7 @@ wiregrid::wiregrid(int _width, int _height)
         
     /* start with an upper bound on best path */
     best_path = 3.0 * width * height;
+    found_solution = false;
 }
 
 wiregrid::~wiregrid()
@@ -160,7 +161,7 @@ static const float COST[9] = {SQRT2, 1, SQRT2, 1, 0, 1, SQRT2, 1, SQRT2 };
 
 static int recursecount = 0;
 
-bool wiregrid::one_path_walk(double cost_so_far, int x, int y, int dx, int dy, int recurse, bool first_half)
+bool wiregrid::one_path_walk(double cost_so_far, int x, int y, int dx, int dy, int recurse)
 {
     double costs[9];
     bool walked[9];
@@ -179,6 +180,7 @@ bool wiregrid::one_path_walk(double cost_so_far, int x, int y, int dx, int dy, i
         return false;
         
     if (x == targetX && y == targetY) {
+        found_solution = true;
         /* we found the end point */
         if (cost_so_far < best_path) {
             best_path = cost_so_far;
@@ -250,12 +252,11 @@ bool wiregrid::one_path_walk(double cost_so_far, int x, int y, int dx, int dy, i
         i = grid[y][x].dir_to_goal;
         if (DX[i] != dx || DY[i] != dy)
              adder += 0.01;
-        one_path_walk(cost_so_far + COST[i] + adder, x + DX[i], y + DY[i], DX[i], DY[i], recurse+1, first_half);
+        one_path_walk(cost_so_far + COST[i] + adder, x + DX[i], y + DY[i], DX[i], DY[i], recurse+1);
         walked[i] = true;
     }
     bool ret = false;
-    int processed = 0;
- 
+    int counter = 0; 
     while (leastcost < maxcost+0.3) {
         for (i = 0; i < 9; i++) {
              double adder = 0.0;
@@ -263,13 +264,14 @@ bool wiregrid::one_path_walk(double cost_so_far, int x, int y, int dx, int dy, i
                  continue;
              if (costs[i] <= leastcost) {
                  bool this_ret;
-                 processed++;
-                if (first_half && processed > 4)
-                   break;
+                 
+                 counter++;
+                 if (counter > 4 && found_solution)
+                     break;
                  /* pay a small penalty for direction changes to give same length paths with fewer changes a bonus*/
                  if (DX[i] != dx || DY[i] != dy)
                      adder += 0.01;
-                 this_ret = one_path_walk(cost_so_far + COST[i] + adder, x + DX[i], y + DY[i], DX[i], DY[i], recurse+1, first_half);
+                 this_ret = one_path_walk(cost_so_far + COST[i] + adder, x + DX[i], y + DY[i], DX[i], DY[i], recurse+1);
                  ret |= this_ret;
                  if (ret)
                      grid[y][x].dir_to_goal = i;
@@ -360,8 +362,7 @@ std::vector<struct waypoint> * wiregrid::path_walk(int x1, int y1, int x2, int y
      * are blocked */
     unblock_point(x1, y1);   
     unblock_point(x2, y2);   
-    one_path_walk(0.0, x1, y1, 0, 0, 0, true);
-    one_path_walk(0.0, x1, y1, 0, 0, 0, false);
+    one_path_walk(0.0, x1, y1, 0, 0, 0);
     printf("recursecount is %i \n", recursecount);
  //   debug_display();
     return walk_back();

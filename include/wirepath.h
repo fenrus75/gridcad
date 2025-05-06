@@ -37,7 +37,8 @@ public:
     std::vector<struct waypoint> *  path_walk(int x1, int y1, int x2, int y2);
 private:
     std::vector<std::vector<struct point>> grid;
-    
+
+    bool found_solution;    
     double best_path;
     int width, height;
 
@@ -48,5 +49,5 @@ private:
     
     std::vector<struct waypoint> *  walk_back(void);
     
-    bool one_path_walk(double cost_so_far, int x, int y, int dx, int dy, int recurse, bool first_half);
+    bool one_path_walk(double cost_so_far, int x, int y, int dx, int dy, int recurse);
 };
