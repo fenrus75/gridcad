@@ -43,6 +43,8 @@ void wire::draw(class scene *scene, int color)
 
 void wire::move_target(int X, int Y)
 {
+    if (X2 == X && Y2 == Y)
+        return;
     X2 = X;
     Y2 = Y;
     if (points)
