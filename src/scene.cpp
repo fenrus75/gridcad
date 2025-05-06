@@ -122,16 +122,21 @@ void scene::eventloop(void)
 			}
 			break;
 		case SDL_MOUSEBUTTONUP:
-			printf("BUTTON UP\n");
 			if (event.button.button == SDL_BUTTON_LEFT) {
 				left_mouse_down = false;
 				float x, y;
 				x = scr_to_X(event.motion.x);
 				y = scr_to_Y(event.motion.y);
 				if (dragging)
-					dragging->stop_drag();
-				if (dragging_port && is_port(x, y))
+					dragging->stop_drag(this);
+				if (dragging_port && is_port(x, y)) {
+					struct port *port2 = is_port(x, y);
+					
+					dragging_port->parent->add_wire(dragging_wire, dragging_port);
+					port2->parent->add_wire(dragging_wire, port2);
+					dragging_wire = NULL;
 					printf("Connection made\n");
+				}
 				dragging = NULL;
 				dragging_port = NULL;
 				left_mouse_down = false;

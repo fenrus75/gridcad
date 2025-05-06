@@ -8,6 +8,7 @@ wire::wire(int x1, int y1, int x2, int y2, int _color)
     X2 = x2;
     Y2 = y2;
     color = _color;
+    refcount = 1;
     
     points = NULL;
 }
@@ -68,4 +69,26 @@ void wire::route(class scene *scene)
     }
     printf("----\n");
     delete(grid);
+}
+
+void wire::get_ref(void)
+{
+    refcount++;
+}
+
+void wire::add_parent(struct port *port)
+{
+    parents.push_back(port);
+}
+
+void wire::reseat(void)
+{
+    if (parents.size() > 0) {
+        X1 = parents[0]->parent->get_X() + parents[0]->X;
+        Y1 = parents[0]->parent->get_Y() + parents[0]->Y;
+    }
+    if (parents.size() > 1) {
+        X2 = parents[1]->parent->get_X() + parents[1]->X;
+        Y2 = parents[1]->parent->get_Y() + parents[1]->Y;
+    }
 }

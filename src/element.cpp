@@ -50,6 +50,9 @@ void element::drawAt(class scene *scene, float X, float Y, int type)
     for (auto port: ports) {
         drawConnector(scene, X, Y, port->X, port->Y, COLOR_ELEMENT_CONNECTOR + type);    
     }
+    for (auto wire : wires) {
+        wire->draw(scene);
+    }
 }
 
 
@@ -105,11 +108,15 @@ void element::update_drag(class scene *scene, float _X, float _Y)
     }
 }
 
-void element::stop_drag(void)
+void element::stop_drag(class scene *scene)
 {
     X = Xghost;
     Y = Yghost;
     over_drag_threshold = false;
+    for (auto wire : wires) {
+        wire->reseat();
+        wire->route(scene);
+    }
 }
 
 
@@ -170,4 +177,11 @@ void element::fill_grid(class wiregrid *grid)
         grid->add_soft_cost(X + port->X - 1, Y + port->Y + 1, 0.6);
         grid->add_soft_cost(X + port->X - 1, Y + port->Y - 1, 0.6);
     }
+}
+
+void element::add_wire(class wire *wire, struct port *port)
+{
+    wire->get_ref();
+    wires.push_back(wire);
+    wire->add_parent(port);
 }

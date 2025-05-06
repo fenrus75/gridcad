@@ -92,7 +92,7 @@ public:
     
     void start_drag(float X, float Y);
     void update_drag(class scene *scene, float X, float Y);
-    void stop_drag(void);
+    void stop_drag(class scene *scene);
     
     bool intersect(float X, float Y);
     
@@ -102,6 +102,10 @@ public:
     void fill_grid(class wiregrid* grid);
     
     struct port * is_port(float X, float Y); /* X and Y are global positions */
+    
+    void add_wire(class wire *wire, struct port *port);
+    float get_X(void) { return X; };
+    float get_Y(void) { return Y; };
 private:
 
     const char *name;
@@ -116,6 +120,7 @@ private:
     float X_in_drag, Y_in_drag;
     
     std::vector<struct port *> ports;
+    std::vector<class wire *> wires;
     
     void drawConnector(class scene *scene, float X, float Y, int cX, int cY, int type);    
 };
@@ -129,9 +134,15 @@ public:
     void draw(class scene *, int color = COLOR_WIRE_SOLID);
     void route(class scene *);
     
+    void get_ref(void);
+    void add_parent(struct port *port);
+    void reseat(void);
+    
 private:
+    std::vector<struct port *> parents;
     int X1, Y1, X2, Y2;
     int color;
+    int refcount;
     std::vector<struct waypoint> *points;
 };
 
