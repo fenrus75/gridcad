@@ -10,7 +10,11 @@ element::element(int _sizeX, int _sizeY, const char *_name)
     sizeX = _sizeX;
     sizeY = _sizeY;
     place(0,0);
-    name = strdup(_name);
+    if (_name)
+        name = strdup(_name);
+    else
+        name = strdup("NONAME"); /* TODO: generate a unimque name */
+        
     
     add_port(0, 1, "In1");
     add_port(0, 3, "In1");

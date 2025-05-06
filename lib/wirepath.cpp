@@ -220,6 +220,8 @@ bool wiregrid::one_path_walk(double cost_so_far, int x, int y, int dx, int dy, i
             maxcost = costs[i];
         if (costs[i] < leastcost)
             leastcost = costs[i];
+        if (costs[i] > best_path)
+            walked[i] = true;
     }
 
     if (maxcost > best_path)

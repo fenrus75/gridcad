@@ -127,6 +127,11 @@ void scene::eventloop(void)
 				y = scr_to_Y(event.motion.y);
 				if (dragging)
 					dragging->stop_drag(this);
+				if (dragging_port && !is_port(x, y)) {
+					class element *_element;
+					_element = new connector(x, y);
+				        add_element(_element);
+				}
 				if (dragging_port && is_port(x, y)) {
 					struct port *port2 = is_port(x, y);
 					
@@ -134,6 +139,11 @@ void scene::eventloop(void)
 					port2->parent->add_wire(dragging_wire, port2);
 					dragging_wire = NULL;
 					printf("Connection made\n");
+				} else 
+				if (dragging_port && !is_port(x, y)) {
+					class element *_element;
+					_element = new connector(x, y);
+				        add_element(_element);
 				}
 				dragging = NULL;
 				dragging_port = NULL;

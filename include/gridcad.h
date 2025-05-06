@@ -54,7 +54,7 @@ public:
     void fill_grid(class wiregrid* grid);
     
     
-private:
+protected:
     std::vector<class element *> elements;
     SDL_Window *window;
     SDL_Renderer *renderer;
@@ -88,7 +88,7 @@ public:
     void place(int X, int Y);
     
     void drawAt(class scene *scene, float X, float Y, int type);
-    void draw(class scene *scene, int type);
+    virtual void draw(class scene *scene, int type);
     
     void start_drag(float X, float Y);
     void update_drag(class scene *scene, float X, float Y);
@@ -106,7 +106,7 @@ public:
     void add_wire(class wire *wire, struct port *port);
     float get_X(void) { return X; };
     float get_Y(void) { return Y; };
-private:
+protected:
 
     const char *name;
     int sizeX;
@@ -138,7 +138,7 @@ public:
     void add_parent(struct port *port);
     void reseat(void);
     
-private:
+protected:
     std::vector<struct port *> parents;
     int X1, Y1, X2, Y2;
     int color;
@@ -147,6 +147,13 @@ private:
 };
 
 
+class connector : public element
+{
+public:
+    connector(float _X = 0, float _Y =0);
+    ~connector();
+    virtual void draw(class scene *scene, int type);
+};
 
 int R(int color);
 int G(int color);
