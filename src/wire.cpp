@@ -92,3 +92,4 @@ void wire::reseat(void)
         Y2 = parents[1]->parent->get_Y() + parents[1]->Y;
     }
 }
+

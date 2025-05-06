@@ -51,7 +51,7 @@ public:
 
     struct port * is_port(float X, float Y); /* X and Y are global positions */
     
-    void fill_grid(class wiregrid* grid);
+    virtual void fill_grid(class wiregrid* grid);
     
     
 protected:
@@ -83,7 +83,7 @@ class element
 {
 public:    
     element(int sizeX, int sizeY, const char *_name);
-    ~element(void);
+    virtual ~element(void);
     
     void place(int X, int Y);
     
@@ -151,8 +151,9 @@ class connector : public element
 {
 public:
     connector(float _X = 0, float _Y =0);
-    ~connector();
+    virtual ~connector();
     virtual void draw(class scene *scene, int type);
+    virtual void fill_grid(class wiregrid* grid);
 };
 
 int R(int color);

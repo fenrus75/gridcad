@@ -18,3 +18,8 @@ void connector::draw(class scene *scene, int type)
 {
     scene->drawCircle(X+0.5, Y+0.5, 0.5, COLOR_WIRE_SOLID);
 }
+
+void connector::fill_grid(class wiregrid *grid)
+{
+    grid->block_point(X, Y);
+}
