@@ -13,12 +13,9 @@ element::element(int _sizeX, int _sizeY, const char *_name)
     name = strdup(_name);
     
     add_port(0, 1, "In1");
-    add_port(0, 2, "In2");
-    add_port(0, 3, "Enable");
+    add_port(0, 3, "In1");
     add_port(1, 0, "clk");
-    add_port(2, 0, "reset");
     add_port(sizeX, 1, "Out1");
-    add_port(sizeX, 2, "Out2");
     add_port(sizeX, 3, "Out3");
 }
 
@@ -158,8 +155,19 @@ void element::fill_grid(class wiregrid *grid)
         for (y = 1; y < sizeY; y++)
             grid->block_point(X+x, Y+y);
 
-    for (auto port: ports)
+    for (x = 0; x < sizeX + 1; x++)
+        for (y = 0; y < sizeY +1; y++)
+            grid->add_soft_cost(X+x, Y+y, 0.6);
+
+    for (auto port: ports) {
         grid->block_point(X + port->X, Y + port->Y);
-            
-    
+        grid->add_soft_cost(X + port->X + 1, Y + port->Y + 0, 0.3);
+        grid->add_soft_cost(X + port->X - 1, Y + port->Y + 0, 0.3);
+        grid->add_soft_cost(X + port->X + 0, Y + port->Y + 1, 0.3);
+        grid->add_soft_cost(X + port->X + 0, Y + port->Y - 1, 0.3);
+        grid->add_soft_cost(X + port->X + 1, Y + port->Y + 1, 0.6);
+        grid->add_soft_cost(X + port->X - 1, Y + port->Y - 1, 0.6);
+        grid->add_soft_cost(X + port->X - 1, Y + port->Y + 1, 0.6);
+        grid->add_soft_cost(X + port->X - 1, Y + port->Y - 1, 0.6);
+    }
 }

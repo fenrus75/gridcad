@@ -101,6 +101,15 @@ bool wiregrid::is_blocked(int x, int y)
     return grid[y][x].blocked;
 }
 
+void wiregrid::add_soft_cost(int x, int y, double extra)
+{
+    if (x < 0 || x >= width)
+        return;
+    if (y < 0 || y >= height)
+        return;
+    grid[y][x].extra_score += extra;
+}
+
 /*
  * For the path finding algorithm we need a lower bound estimate
  * of the remaining distance. Traditionally one uses the pythagoras distance,
@@ -166,6 +175,8 @@ bool wiregrid::one_path_walk(double cost_so_far, int x, int y, int dx, int dy, i
         }
         return true;     
     }
+    
+    cost_so_far += grid[y][x].extra_score;
     
     if (cost_so_far > best_path)
         return false;
