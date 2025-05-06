@@ -9,6 +9,7 @@ struct point {
     bool valid;
     bool blocked;
     bool part_of_wire;
+    bool visited;
     double distance;
     
     int dirX, dirY; /* direction we xame from to get best cost to get here */

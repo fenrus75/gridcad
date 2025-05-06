@@ -14,7 +14,7 @@ wiregrid::wiregrid(int _width, int _height)
         grid[y].resize(width);
         
     /* start with an upper bound on best path */
-    best_path = 4.0 * width * height;
+    best_path = 3.0 * width * height;
 }
 
 wiregrid::~wiregrid()
@@ -111,8 +111,9 @@ double wiregrid::cost_estimate(int x, int y)
 {
     int max, min;
     
-    if (is_blocked(x, y))
+    if (is_blocked(x, y) || x <0 || y < 0)
         return 4.0 * width * height;
+        
     x -= targetX;
     y -= targetY;
     if (x < 0)
@@ -148,6 +149,8 @@ bool wiregrid::one_path_walk(double cost_so_far, int x, int y, int dx, int dy, i
     double maxcost = 0;
     int i;
     
+    recursecount++;
+    
     
     if (x < 0 || x >= width)
         return false;
@@ -167,7 +170,7 @@ bool wiregrid::one_path_walk(double cost_so_far, int x, int y, int dx, int dy, i
     if (cost_so_far > best_path)
         return false;
         
-    if (grid[y][x].blocked)
+    if (grid[y][x].blocked) 
         return false;
 
     /* we've been to this cell before with lower cost than the current path */
@@ -222,9 +225,9 @@ bool wiregrid::one_path_walk(double cost_so_far, int x, int y, int dx, int dy, i
                  walked[i] = true;
              }   
         }
-    
         leastcost += 0.3;
     }
+    grid[y][x].visited = true;   
 
     return false;    
 }
@@ -241,7 +244,7 @@ std::vector<struct waypoint> *  wiregrid::walk_back(void)
     
     x = targetX;
     y = targetY;
-    
+
     while (true) {
         int dx, dy;
         if (grid[y][x].dirX == 0 && grid[y][x].dirY == 0)
@@ -264,6 +267,10 @@ std::vector<struct waypoint> *  wiregrid::walk_back(void)
         prevDY = dy;
         x += dx;
         y += dy;
+        if (x < 0 || x >= width)
+            break;
+        if (y <0 || y >= height)
+            break;
     }
     wp.X = x;
     wp.Y = y;
@@ -277,10 +284,28 @@ std::vector<struct waypoint> *  wiregrid::walk_back(void)
 
 std::vector<struct waypoint> * wiregrid::path_walk(int x1, int y1, int x2, int y2)
 {
+    if (x1 < 0)
+        x1 = 0;
+    if (x1 >= width)
+        x1 = width -1;
+    if (y1 < 0)
+        y1 = 0;
+    if (y1 >= height)
+        y1 = height - 1;
+    if (x2 < 0)
+        x2 = 0;
+    if (x2 >= width)
+        x2 = width -1;
+    if (y2 < 0)
+        y2 = 0;
+    if (y2 >= height)
+        y2 = height - 1;
     originX = x1;
     originY = y1;
     targetX = x2;
     targetY = y2;
+    
+    printf("From %ix%i to %ix%i\n", originX, originY, targetX, targetY);
     
     recursecount = 0;
     
@@ -289,7 +314,7 @@ std::vector<struct waypoint> * wiregrid::path_walk(int x1, int y1, int x2, int y
      * are blocked */
     unblock_point(x1, y1);   
     one_path_walk(0.0, x1, y1, 0, 0, 0);
-//    printf("recursecount is %i \n", recursecount);
+    printf("recursecount is %i \n", recursecount);
  //   debug_display();
     return walk_back();
 }
