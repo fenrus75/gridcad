@@ -5,6 +5,18 @@
 
 #include <vector>
 
+
+#define COLOR_BACKGROUND_MAIN 0
+#define COLOR_BACKGROUND_GRID 1
+#define COLOR_ELEMENT_NORMAL 2
+#define COLOR_ELEMENT_GHOST 3
+#define COLOR_ELEMENT_DND 4
+#define COLOR_ELEMENT_ORIGIN 5
+#define COLOR_ELEMENT_INSIDE 0
+#define COLOR_ELEMENT_CONNECTOR COLOR_ELEMENT_NORMAL
+#define COLOR_WIRE_SOLID 6
+#define COLOR_WIRE_INVALID 7
+
 class element;
 class wire;
 struct port;
@@ -48,6 +60,7 @@ private:
     SDL_Renderer *renderer;
     class element *dragging;
     struct port *dragging_port;
+    class wire *dragging_wire;
     bool left_mouse_down;
     float mouseX, mouseY;
     
@@ -109,28 +122,19 @@ private:
 
 class wire {
 public:
-    wire(int x1, int y1, int x2, int y2);
+    wire(int x1, int y1, int x2, int y2, int _color = COLOR_WIRE_SOLID);
     ~wire(void);
     
     void move_target(int x2, int y2);
-    void draw(class scene *);
+    void draw(class scene *, int color = COLOR_WIRE_SOLID);
     void route(class scene *);
     
 private:
     int X1, Y1, X2, Y2;
+    int color;
     std::vector<struct waypoint> *points;
 };
 
-#define COLOR_BACKGROUND_MAIN 0
-#define COLOR_BACKGROUND_GRID 1
-#define COLOR_ELEMENT_NORMAL 2
-#define COLOR_ELEMENT_GHOST 3
-#define COLOR_ELEMENT_DND 4
-#define COLOR_ELEMENT_ORIGIN 5
-#define COLOR_ELEMENT_INSIDE 0
-#define COLOR_ELEMENT_CONNECTOR COLOR_ELEMENT_NORMAL
-#define COLOR_WIRE_SOLID 6
-#define COLOR_WIRE_INVALID 7
 
 
 int R(int color);

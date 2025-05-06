@@ -8,10 +8,10 @@ gridcad: $(OBJS) include/gridcad.h Makefile
 	
 	
 wiretest: $(OBJS) include/gridcad.h Makefile test/wiretest.o
-	g++ $(CFLAGS) -O3 -Wall -march=native lib/wirepath.o test/wiretest.o -flto -o wiretest -lSDL2main -lSDL2_image -lSDL2_gfx -lSDL2 
+	g++ $(CFLAGS) -O3 -Wall -march=native lib/wirepath.o test/wiretest.o -flto -g -o wiretest -lSDL2main -lSDL2_image -lSDL2_gfx -lSDL2 
 	
 .cpp.o:
-	g++ $(CXXFLAGS) -Iinclude/ -O3 -Wall -march=native -flto -c $< -o $@
+	g++ $(CXXFLAGS) -Iinclude/ -O3 -Wall -march=native -flto -g -c $< -o $@
 
 	
 clean:

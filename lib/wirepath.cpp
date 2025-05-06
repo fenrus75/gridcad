@@ -33,6 +33,14 @@ void wiregrid::debug_display(void)
     
     for (y = 0; y < height; y++) {
         for (x = 0; x < width; x++) {
+            if (x == originX && y == originY) {
+                printf("O");
+                continue;
+            }
+            if (x == targetX && y == targetY) {
+                printf("T");
+                continue;
+            }
             if (grid[y][x].blocked) {
                 printf("|");
                 continue;
@@ -234,6 +242,9 @@ std::vector<struct waypoint> *  wiregrid::walk_back(void)
     wp.X = x;
     wp.Y = y;
     vec->push_back(wp);
+    wp.X = originX;
+    wp.Y = originY;
+    vec->push_back(wp);
     std::reverse(vec->begin(), vec->end());
     return vec;
 }
@@ -245,6 +256,10 @@ std::vector<struct waypoint> * wiregrid::path_walk(int x1, int y1, int x2, int y
     targetX = x2;
     targetY = y2;
     
+    recursecount = 0;
+    
     one_path_walk(0.0, x1, y1, 0, 0);
+//    printf("recursecount is %i \n", recursecount);
+ //   debug_display();
     return walk_back();
 }

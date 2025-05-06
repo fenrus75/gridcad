@@ -23,6 +23,7 @@ scene::scene(void)
     dragging = NULL;
     left_mouse_down = false;
     dragging_port = NULL;
+    dragging_wire = NULL;
 }
 
 scene::~scene(void)
@@ -107,6 +108,8 @@ void scene::eventloop(void)
                         if (dragging_port) {
                             dragging_port->screenX = x;
                             dragging_port->screenY = y;
+                            
+                            dragging_wire=new wire(roundf(x), roundf(y), roundf(x), roundf(y));
                         }
                     }
                 }
@@ -123,6 +126,9 @@ void scene::eventloop(void)
                     dragging = NULL;
                     dragging_port = NULL;
                     left_mouse_down = false;
+                    if (dragging_wire)
+                        delete dragging_wire;
+                    dragging_wire = NULL;
                 }
                 break;
             case SDL_MOUSEMOTION:
@@ -132,7 +138,10 @@ void scene::eventloop(void)
                 if (dragging) {
                     dragging->update_drag(this, scr_to_X(event.motion.x), scr_to_Y(event.motion.y));
                 }
+                if (dragging_wire)
+                    dragging_wire->move_target(mouseX, mouseY);
         }
+
         
         draw();
     }
@@ -155,19 +164,6 @@ void scene::draw(void)
         Y = Y + 10;
     }
     
-    /* draw the wires before the elements */
-    if (dragging_port) {
-        struct port *port2;
-        int color = COLOR_WIRE_INVALID;
-        port2 = is_port(mouseX, mouseY);
-        if (port2)
-            color = COLOR_WIRE_SOLID;
-        thickLineRGBA(renderer, X_to_scr(dragging_port->screenX), Y_to_scr(dragging_port->screenY), X_to_scr(mouseX), Y_to_scr(mouseY), 0.2 * scaleX,
-            R(color), G(color), B(color), Alpha(color));
-        
-        
-    }
-    
     /* draw the elements */
     for (auto const elem : elements) {
         if (elem != dragging)
@@ -179,6 +175,17 @@ void scene::draw(void)
     if (dragging) {
         dragging->draw(this, DRAW_GHOST);
         dragging->draw(this, DRAW_DND);
+    }
+    
+    if (dragging_wire) {
+        struct port *port2;
+        int color = COLOR_WIRE_INVALID;
+        
+        port2 = is_port(mouseX, mouseY);
+        if (port2)
+            color = COLOR_WIRE_SOLID;
+
+        dragging_wire->draw(this, color);
     }
 
     SDL_RenderPresent(renderer);     
