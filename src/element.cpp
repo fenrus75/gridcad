@@ -38,16 +38,16 @@ void element::place(int _X, int _Y)
 
 void element::drawConnector(class scene *scene, float X, float Y, int cX, int cY, int type)
 {
-    scene->drawCircle(cX + X, cY+ Y, 0.24, type);
+    scene->drawCircle(cX + X + 0.5, cY+ Y + 0.5, 0.48, type);
 }
 
 void element::drawAt(class scene *scene, float X, float Y, int type)
 {
     assert (type <= DRAW_ORIGIN);
     
-    scene->drawBox(X + 0.25, Y + 0.25, X + sizeX - 0.25, Y + sizeY - 0.25, COLOR_ELEMENT_NORMAL + type);
+    scene->drawBox(X + 1, Y + 1, X + sizeX , Y + sizeY , COLOR_ELEMENT_NORMAL + type);
     if (type == DRAW_NORMAL || type == DRAW_ORIGIN)
-        scene->drawBox(X + 0.45, Y + 0.45, X + sizeX - 0.45, Y + sizeY - 0.45, COLOR_ELEMENT_INSIDE);
+        scene->drawBox(X + 1.2, Y + 1.2, X + sizeX - 0.2, Y + sizeY - 0.2, COLOR_ELEMENT_INSIDE);
     
     /* TODO: real connectors */
     for (auto port: ports) {
@@ -142,8 +142,8 @@ struct port * element::is_port(float _X, float _Y)
     _Y -= Y;
     
     for (auto port : ports) {
-        float d = sqrtf(  (_X - port->X) * (_X - port->X) + (_Y - port->Y) * (_Y - port->Y));
-        if (d > 0.27) 
+        float d = sqrtf(  (_X - port->X - 0.5) * (_X - port->X - 0.5) + (_Y - port->Y - 0.5) * (_Y - port->Y - 0.5));
+        if (d > 0.5) 
             continue;
         return port;
     }

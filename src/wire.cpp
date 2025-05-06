@@ -35,7 +35,7 @@ void wire::draw(class scene *scene, int color)
             first = false;
             continue;
         }
-        scene->drawLine(prevX, prevY, point.X, point.Y, color);
+        scene->drawLine(prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, color);
         prevX = point.X;
         prevY = point.Y;
     }
