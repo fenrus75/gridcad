@@ -303,9 +303,6 @@ std::vector<struct waypoint> *  wiregrid::walk_back(void)
     wp.X = x;
     wp.Y = y;
     vec->push_back(wp);
-    wp.X = originX;
-    wp.Y = originY;
-    vec->push_back(wp);
     std::reverse(vec->begin(), vec->end());
     return vec;
 }
