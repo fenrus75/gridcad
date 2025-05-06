@@ -1,4 +1,5 @@
 #include "wirepath.h"
+#include <algorithm>
 
 #include <stdio.h>
 #include <assert.h>
@@ -194,9 +195,15 @@ bool wiregrid::one_path_walk(double cost_so_far, int x, int y, int dx, int dy)
     return false;    
 }
 
-void wiregrid::walk_back(void)
+std::vector<struct waypoint> *  wiregrid::walk_back(void)
 {
     int x, y;
+    int prevDX = 0, prevDY = 0;
+    
+    std::vector<struct waypoint> *vec;
+    
+    vec = new std::vector<struct waypoint>;
+    struct waypoint wp;
     
     x = targetX;
     y = targetY;
@@ -209,14 +216,29 @@ void wiregrid::walk_back(void)
         if (x == originX && y == originY) {
             break;
         }
-        dx =  grid[y][x].dirX;
+        dx = grid[y][x].dirX;
         dy = grid[y][x].dirY;
+        
+        if (dx != prevDX || dy != prevDY) {
+            /* we're changing direction */
+            wp.X = x;
+            wp.Y = y;
+            vec->push_back(wp);
+        }
+        
+        prevDX = dx;
+        prevDY = dy;
         x += dx;
         y += dy;
     }
+    wp.X = x;
+    wp.Y = y;
+    vec->push_back(wp);
+    std::reverse(vec->begin(), vec->end());
+    return vec;
 }
 
-void wiregrid::path_walk(int x1, int y1, int x2, int y2)
+std::vector<struct waypoint> * wiregrid::path_walk(int x1, int y1, int x2, int y2)
 {
     originX = x1;
     originY = y1;
@@ -224,7 +246,5 @@ void wiregrid::path_walk(int x1, int y1, int x2, int y2)
     targetY = y2;
     
     one_path_walk(0.0, x1, y1, 0, 0);
-    walk_back();
-    printf("Final best cost %5.2f \n", best_path);
-    printf("Recursion count %i\n", recursecount);
+    return walk_back();
 }

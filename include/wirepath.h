@@ -16,6 +16,10 @@ struct point {
     double extra_score;
 };
 
+struct waypoint {
+    int X, Y;
+};
+
 class wiregrid {
 public:
     wiregrid(int width, int height);
@@ -25,7 +29,7 @@ public:
     
     void block_point(int x, int y);
     
-    void path_walk(int x1, int y1, int x2, int y2);
+    std::vector<struct waypoint> *  path_walk(int x1, int y1, int x2, int y2);
 private:
     std::vector<std::vector<struct point>> grid;
     
@@ -37,7 +41,7 @@ private:
     
     double cost_estimate(int x, int y);
     
-    void walk_back(void);
+    std::vector<struct waypoint> *  walk_back(void);
     
     bool one_path_walk(double cost_so_far, int x, int y, int dx, int dy);
 };
