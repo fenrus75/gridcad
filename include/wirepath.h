@@ -27,7 +27,7 @@ public:
     wiregrid(int width, int height);
     ~wiregrid();
 
-    void debug_display(void);    
+    void debug_display(int X = 0, int Y=0);    
     
     void block_point(int x, int y);
     void unblock_point(int x, int y);

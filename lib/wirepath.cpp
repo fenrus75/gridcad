@@ -27,7 +27,7 @@ wiregrid::~wiregrid()
 }
 
 
-void wiregrid::debug_display(void)
+void wiregrid::debug_display(int _X, int _Y)
 {
     int x,y;
     
@@ -39,6 +39,11 @@ void wiregrid::debug_display(void)
             }
             if (x == targetX && y == targetY) {
                 printf("T");
+                continue;
+            }
+            
+            if (x == _X && y == _Y) {
+                printf("&");
                 continue;
             }
             if (grid[y][x].blocked) {
@@ -159,7 +164,9 @@ bool wiregrid::one_path_walk(double cost_so_far, int x, int y, int dx, int dy, i
     int i;
     
     recursecount++;
-    
+ 
+ //   printf("Best %5.2f   current %5.2f\n", best_path, cost_so_far);
+//     debug_display(x, y);   
     
     if (x < 0 || x >= width)
         return false;
@@ -183,6 +190,9 @@ bool wiregrid::one_path_walk(double cost_so_far, int x, int y, int dx, int dy, i
         
     if (grid[y][x].blocked) 
         return false;
+        
+//    if (grid[y][x].dir_to_goal < 0 && grid[y][x].visited)
+//        return false;
 
     /* we've been to this cell before with lower cost than the current path */
     if (grid[y][x].valid and grid[y][x].distance <= cost_so_far)
