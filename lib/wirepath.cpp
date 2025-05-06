@@ -192,6 +192,9 @@ bool wiregrid::one_path_walk(double cost_so_far, int x, int y, int dx, int dy, i
         printf("Recursion limit hit\n");
         return false;
     }
+    
+    if (!grid[y][x].valid)
+        grid[y][x].dir_to_goal = -1;
         
     grid[y][x].valid = true;
     grid[y][x].distance = cost_so_far;        
@@ -223,8 +226,20 @@ bool wiregrid::one_path_walk(double cost_so_far, int x, int y, int dx, int dy, i
         maxcost = best_path;
 
     walked[4] = true;
+
+    /* if we know where the goal is -- lets go there first to quickly update path distance */    
+    if (grid[y][x].dir_to_goal >= 0) {
+        double adder = 0.0;
+        
+        i = grid[y][x].dir_to_goal;
+        if (DX[i] != dx || DY[i] != dy)
+             adder += 0.01;
+        one_path_walk(cost_so_far + COST[i] + adder, x + DX[i], y + DY[i], DX[i], DY[i], recurse+1);
+        walked[i] = true;
+    }
     while (leastcost < maxcost+0.3) {
         for (i = 0; i < 9; i++) {
+             bool ret;
              double adder = 0.0;
              if (walked[i])
                  continue;
@@ -232,7 +247,9 @@ bool wiregrid::one_path_walk(double cost_so_far, int x, int y, int dx, int dy, i
                  /* pay a small penalty for direction changes to give same length paths with fewer changes a bonus*/
                  if (DX[i] != dx || DY[i] != dy)
                      adder += 0.01;
-                 one_path_walk(cost_so_far + COST[i] + adder, x + DX[i], y + DY[i], DX[i], DY[i], recurse+1);
+                 ret = one_path_walk(cost_so_far + COST[i] + adder, x + DX[i], y + DY[i], DX[i], DY[i], recurse+1);
+                 if (ret)
+                     grid[y][x].dir_to_goal = i;
                  walked[i] = true;
              }   
         }

@@ -13,6 +13,7 @@ struct point {
     double distance;
     
     int dirX, dirY; /* direction we xame from to get best cost to get here */
+    int dir_to_goal;
     
     double extra_score;
 };
