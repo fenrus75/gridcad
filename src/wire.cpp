@@ -55,7 +55,7 @@ void draw_snake_line(class scene *scene, float x1, float y1, float x2, float y2,
         dy = dy/d/12.0;
         
         
-        while (dist(x1,y1,x2,y2) > 1) {
+        while (dist(x1,y1,x2,y2) > 1/10.0) {
             (*step)++;
             if ((*step) >= 60) {
                 (*step) = 0;
