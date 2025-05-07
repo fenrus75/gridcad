@@ -129,7 +129,7 @@ void wire::get_ref(void)
     refcount++;
 }
 
-void wire::add_parent(struct port *port)
+void wire::add_parent(class port *port)
 {
     parents.push_back(port);
 }
@@ -146,3 +146,16 @@ void wire::reseat(void)
     }
 }
 
+void wire::update_value(struct value *newvalue)
+{
+    if (memcmp(&value, newvalue, sizeof(struct value)) == 0) {
+        /* no change -- early exit to kill oscillations */
+        return;
+    }
+    value = *newvalue;
+    
+    /* now to notify the ports we're connected to */
+    for (auto port: parents) {
+        port->parent->update_value(port, &value);
+    }
+}

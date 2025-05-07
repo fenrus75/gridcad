@@ -134,8 +134,8 @@ bool element::intersect(float _X, float _Y)
 
 void element::add_port(int X, int Y, const char *_name)
 {
-    struct port *port;
-    port = (struct port*)calloc(sizeof(struct port), 1);
+    class port *port;
+    port = (class port*)calloc(sizeof(class port), 1);
     port->X = X;
     port->Y = Y;
     port->name = strdup(_name);
@@ -143,7 +143,7 @@ void element::add_port(int X, int Y, const char *_name)
     ports.push_back(port);
 }
 
-struct port * element::is_port(float _X, float _Y)
+class port * element::is_port(float _X, float _Y)
 {
     /* make relative to the element */
     _X -= X;
@@ -183,9 +183,17 @@ void element::fill_grid(class wiregrid *grid)
     }
 }
 
-void element::add_wire(class wire *wire, struct port *port)
+void element::add_wire(class wire *wire, class port *port)
 {
     wire->get_ref();
     wires.push_back(wire);
     wire->add_parent(port);
+}
+
+void element::update_value(class port *port, struct value *value)
+{
+    if (memcmp(value, &port->value, sizeof(struct value)) == 0)
+        return; /* short circuit noop updates */
+        
+    
 }

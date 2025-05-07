@@ -139,7 +139,7 @@ void scene::eventloop(void)
 				        add_element(_element);
 				}
 				if (dragging_port && is_port(x, y)) {
-					struct port *port2 = is_port(x, y);
+					class port *port2 = is_port(x, y);
 					
 					if (dragging_port != port2) {
 						dragging_port->parent->add_wire(dragging_wire, dragging_port);
@@ -224,7 +224,7 @@ void scene::draw(void)
 	}
 
 	if (dragging_wire) {
-		struct port *port2;
+		class port *port2;
 		int color = COLOR_WIRE_INVALID;
 
 		port2 = is_port(mouseX, mouseY);
@@ -342,10 +342,10 @@ bool scene::can_place_element(float x, float y, int w, int h,
 	return true;
 }
 
-struct port *scene::is_port(float X, float Y)
+class port *scene::is_port(float X, float Y)
 {
 	for (auto const elem:elements) {
-		struct port *p = elem->is_port(X, Y);
+		class port *p = elem->is_port(X, Y);
 		if (p)
 			return p;
 	}

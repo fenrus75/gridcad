@@ -22,7 +22,7 @@
 
 class element;
 class wire;
-struct port;
+class port;
 struct value;
 
 
@@ -70,7 +70,7 @@ public:
     
     bool can_place_element(float x, float y, int w, int h, class element *myself = NULL);
 
-    struct port * is_port(float X, float Y); /* X and Y are global positions */
+    class port * is_port(float X, float Y); /* X and Y are global positions */
     
     void fill_grid(class wiregrid* grid);
     
@@ -80,7 +80,7 @@ protected:
     SDL_Window *window;
     SDL_Renderer *renderer;
     class element *dragging;
-    struct port *dragging_port;
+    class port *dragging_port;
     class wire *dragging_wire;
     bool left_mouse_down;
     float mouseX, mouseY;
@@ -93,7 +93,8 @@ protected:
 #define DRAW_DND 2
 #define DRAW_ORIGIN 3
 
-struct port {
+class port {
+public:
     int X, Y;
     float screenX, screenY;
     const char *name;
@@ -123,11 +124,13 @@ public:
     void add_port(int X, int Y, const char *name);
     virtual void fill_grid(class wiregrid* grid);
     
-    struct port * is_port(float X, float Y); /* X and Y are global positions */
+    class port * is_port(float X, float Y); /* X and Y are global positions */
     
-    void add_wire(class wire *wire, struct port *port);
+    void add_wire(class wire *wire, class port *port);
     float get_X(void) { return X; };
     float get_Y(void) { return Y; };
+    
+    void update_value(class port *port, struct value *value);
 protected:
 
     const char *name;
@@ -141,7 +144,7 @@ protected:
     float Xdnd, Ydnd;
     float X_in_drag, Y_in_drag;
     
-    std::vector<struct port *> ports;
+    std::vector<class port *> ports;
     std::vector<class wire *> wires;
     
     void drawConnector(class scene *scene, float X, float Y, int cX, int cY, int type);    
@@ -157,12 +160,14 @@ public:
     void route(class scene *);
     
     void get_ref(void);
-    void add_parent(struct port *port);
+    void add_parent(class port *port);
     void reseat(void);
+    
+    void update_value(struct value *newvalue);
     
 protected:
     struct value value;
-    std::vector<struct port *> parents;
+    std::vector<class port *> parents;
     int X1, Y1, X2, Y2;
     int color;
     int refcount;
