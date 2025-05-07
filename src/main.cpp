@@ -2,7 +2,7 @@
 
 
 #include "gridcad.h"
-
+#include "models.h"
 
 int main(int argc, char **argv)
 {
@@ -22,6 +22,10 @@ int main(int argc, char **argv)
     
     _element = new twogate(12,7);
     _scene->add_element(_element);
+    
+    _scene->add_element(new model_zero(19,9));
+    _scene->add_element(new model_one(19,19));
+    
     
     _scene->eventloop();
     

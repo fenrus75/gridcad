@@ -1,0 +1,22 @@
+#pragma once
+
+class element;
+
+
+class model_zero : public element
+{
+public:
+    model_zero(float X, float Y);
+    virtual ~model_zero(void);
+    virtual void draw(class scene *scene, int type);
+    virtual void fill_grid(class wiregrid* grid);
+};
+
+
+class model_one : public model_zero
+{
+public:
+    model_one(float X, float Y);
+    virtual ~model_one(void);
+    virtual void draw(class scene *scene, int type);
+};
