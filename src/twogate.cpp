@@ -19,7 +19,7 @@ twogate::~twogate(void)
 }
 
 
-void twogate::draw(class scene *scene, int type)
+void twogate::drawAt(class scene *scene, float X, float Y, int type)
 {
     if (!visual)
        visual =  scene->load_image("assets/andgate.png");
@@ -32,5 +32,28 @@ void twogate::draw(class scene *scene, int type)
     for (auto wire : wires) {
         wire->draw(scene);
     }
-    
 }
+
+#if 0
+void twogate::draw(class scene *scene, int type)
+{
+    switch (type) {
+        case DRAW_NORMAL:
+            drawAt(scene, X, Y, DRAW_NORMAL);
+            break;
+        case DRAW_GHOST:
+            drawAt(scene, Xghost, Yghost, DRAW_GHOST);
+            break;
+        case DRAW_DND:
+            drawAt(scene, Xdnd, Ydnd, DRAW_DND);
+            break;
+        case DRAW_ORIGIN:
+            drawAt(scene, X, Y, DRAW_ORIGIN);
+            break;
+            
+        default:
+            assert(0);
+        
+    }
+}
+#endif

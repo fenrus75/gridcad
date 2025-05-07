@@ -118,7 +118,7 @@ public:
     
     void place(int X, int Y);
     
-    void drawAt(class scene *scene, float X, float Y, int type);
+    virtual void drawAt(class scene *scene, float X, float Y, int type);
     virtual void draw(class scene *scene, int type);
     
     void start_drag(float X, float Y);
@@ -198,7 +198,8 @@ class twogate : public element
 public:
     twogate(float _X = 0, float _Y = 0);
     virtual ~twogate();
-    virtual void draw(class scene *scene, int type);
+    virtual void drawAt(class scene *scene, float X, float Y, int type);
+//    virtual void draw(class scene *scene, int type);
 private:
     SDL_Texture *visual;;
 };
