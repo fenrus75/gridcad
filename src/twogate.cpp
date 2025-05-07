@@ -9,9 +9,9 @@ twogate::twogate(float _X, float _Y) : element(2, 2, NULL)
     visual = NULL;
     ports.resize(0);
     
-    add_port(0, 0, "In1");
-    add_port(0, 2, "In2");
-    add_port(2, 1, "Out");
+    add_port(0, 0, "In1", PORT_IN);
+    add_port(0, 2, "In2", PORT_IN);
+    add_port(2, 1, "Out", PORT_OUT);
 }
 
 twogate::~twogate(void)

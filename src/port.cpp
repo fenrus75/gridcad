@@ -1,7 +1,8 @@
 #include "gridcad.h"
 
-port::port(void)
+port::port(int _direction)
 {
+    direction = _direction;
 }
 
 port::~port()

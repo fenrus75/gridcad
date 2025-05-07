@@ -95,9 +95,13 @@ protected:
 #define DRAW_DND 2
 #define DRAW_ORIGIN 3
 
+#define PORT_IN 0
+#define PORT_OUT 1
+#define PORT_INOUT 2
+
 class port {
 public:
-    port(void);
+    port(int _direction = PORT_IN);
     ~port(void);
     int X, Y;
     float screenX, screenY;
@@ -107,6 +111,7 @@ public:
     void add_wire(class wire *wire);
     void update_value(struct value *newvalue);
 private:
+    int direction;
     std::vector<class wire*> wires;
 };
 
@@ -129,7 +134,7 @@ public:
     
     const char * get_name(void) { return name; };
     
-    void add_port(int X, int Y, const char *name);
+    void add_port(int X, int Y, const char *name, int direction = 0);
     virtual void fill_grid(class wiregrid* grid);
     
     class port * is_port(float X, float Y); /* X and Y are global positions */

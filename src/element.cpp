@@ -132,15 +132,15 @@ bool element::intersect(float _X, float _Y)
     return false;
 }
 
-void element::add_port(int X, int Y, const char *_name)
+void element::add_port(int X, int Y, const char *_name, int direction)
 {
-    class port *port;
-    port = (class port*)calloc(sizeof(class port), 1);
-    port->X = X;
-    port->Y = Y;
-    port->name = strdup(_name);
-    port->parent = this;
-    ports.push_back(port);
+    class port *_port;
+    _port = new port(direction);
+    _port->X = X;
+    _port->Y = Y;
+    _port->name = strdup(_name);
+    _port->parent = this;
+    ports.push_back(_port);
 }
 
 class port * element::is_port(float _X, float _Y)
