@@ -16,6 +16,7 @@
 #define COLOR_ELEMENT_CONNECTOR COLOR_ELEMENT_NORMAL
 #define COLOR_WIRE_SOLID 6
 #define COLOR_WIRE_INVALID 7
+#define COLOR_WIRE_MOTION 8
 
 class element;
 class wire;

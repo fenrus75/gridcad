@@ -6,6 +6,9 @@
 
 #include "gridcad.h"
 
+
+
+
 scene::scene(void)
 {
 	window =

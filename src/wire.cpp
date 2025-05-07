@@ -1,6 +1,8 @@
 
 #include "gridcad.h"
 
+#include <sys/time.h>
+
 wire::wire(int x1, int y1, int x2, int y2, int _color)
 {
     X1 = x1;
@@ -17,6 +19,56 @@ wire::~wire(void)
 {
     if (points)
         delete points;
+}
+
+/* returns a value of 0 - 60 based on the current time, suitable for animations */
+static int current_interval(void)
+{
+    struct timeval tv;
+    double d;
+    gettimeofday(&tv, NULL);
+    d = tv.tv_usec;
+    
+    d = d * 60 / 1000000.0;
+    return floorf(d);        
+}
+
+double dist(float x1, float y1, float x2, float y2)
+{
+        double dx, dy,d;
+        dx = x2-x1;
+        dy = y2-y1;
+        d = sqrt(dx*dx + dy*dy);
+        return d;
+}
+
+
+void draw_snake_line(class scene *scene, float x1, float y1, float x2, float y2, int color)
+{
+        double dx, dy,d;
+        scene->drawLine(x1, y1, x2, y2, color);
+        int step = 0;
+        
+        dx = x2-x1;
+        dy = y2-y1;
+        d = dist(x1,y1,x2,y2);;
+        dx = dx/d/12.0;
+        dy = dy/d/12.0;
+        
+        step = current_interval();
+        
+        while (dist(x1,y1,x2,y2) > 1) {
+            step++;
+            if (step >= 60) {
+                step = 0;
+                scene->drawCircle(x1, y1, 0.18, COLOR_WIRE_MOTION);
+            }
+            x1 += dx;
+            y1 += dy;
+        }
+        
+        
+    
 }
 
 void wire::draw(class scene *scene, int color)
@@ -36,7 +88,7 @@ void wire::draw(class scene *scene, int color)
             first = false;
             continue;
         }
-        scene->drawLine(prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, color);
+        draw_snake_line(scene, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, color);
         prevX = point.X;
         prevY = point.Y;
     }

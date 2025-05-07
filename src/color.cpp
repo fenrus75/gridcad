@@ -11,6 +11,7 @@ static int colors[MAX_COLOR][4] =
  {180, 180, 180, 128},		// COLOR_ELEMENT_ORIGIN
  {255, 128, 128, 255},		// COLOR_WRIRE_SOLID
  {255, 128, 128, 128},		// COLOR_WRIRE_INVALID
+ {225, 138, 138, 128},		// COLOR_WRIRE_MOTION
 };
 
 int R(int color)
