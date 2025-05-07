@@ -13,6 +13,7 @@ wire::wire(int x1, int y1, int x2, int y2, int _color)
     refcount = 1;
     
     points = NULL;
+    value = {};
 }
 
 wire::~wire(void)
@@ -43,7 +44,7 @@ double dist(float x1, float y1, float x2, float y2)
 }
 
 
-void draw_snake_line(class scene *scene, float x1, float y1, float x2, float y2, int color, int *step)
+void draw_snake_line(class scene *scene, float x1, float y1, float x2, float y2, int color, int *step, struct value *value)
 {
         double dx, dy,d;
         scene->drawLine(x1, y1, x2, y2, color);
@@ -59,7 +60,7 @@ void draw_snake_line(class scene *scene, float x1, float y1, float x2, float y2,
             (*step)++;
             if ((*step) >= 60) {
                 (*step) = 0;
-                scene->drawCircle(x1, y1, 0.18, COLOR_WIRE_MOTION);
+                scene->drawCircle(x1, y1, 0.18, COLOR_WIRE_MOTION, value_color(value));
             }
             x1 += dx;
             y1 += dy;
@@ -88,7 +89,7 @@ void wire::draw(class scene *scene, int color)
             first = false;
             continue;
         }
-        draw_snake_line(scene, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, color, &step);
+        draw_snake_line(scene, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, color, &step, &value);
         prevX = point.X;
         prevY = point.Y;
     }

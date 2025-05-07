@@ -11,7 +11,9 @@ static int colors[MAX_COLOR][4] =
  {180, 180, 180, 128},		// COLOR_ELEMENT_ORIGIN
  {255, 128, 128, 255},		// COLOR_WRIRE_SOLID
  {255, 128, 128, 128},		// COLOR_WRIRE_INVALID
- {225, 138, 138, 128},		// COLOR_WRIRE_MOTION
+ {225, 138, 138, 255},		// COLOR_WRIRE_MOTION
+ {255,  64,  64, 255},		// COLOR_VALUE_RED
+ {64,  255,  64, 255},		// COLOR_VALUE_GREEN
 };
 
 int R(int color)
@@ -42,3 +44,15 @@ int Alpha(int color)
     return colors[color][3];
 }
 
+int value_color(struct value *value)
+{
+      switch (value->type) {
+         case VALUE_TYPE_BOOL:
+              if (value->boolval)
+                   return COLOR_VALUE_GREEN;
+              else
+                   return COLOR_VALUE_RED;
+         default:
+              return COLOR_BACKGROUND_MAIN;
+      }
+}

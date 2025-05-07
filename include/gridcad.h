@@ -17,10 +17,30 @@
 #define COLOR_WIRE_SOLID 6
 #define COLOR_WIRE_INVALID 7
 #define COLOR_WIRE_MOTION 8
+#define COLOR_VALUE_RED 9
+#define COLOR_VALUE_GREEN 10
 
 class element;
 class wire;
 struct port;
+struct value;
+
+
+#define VALUE_TYPE_BOOL 0
+#define VALUE_TYPE_INT 1
+#define VALUE_TYPE_FLOAT 2
+#define VALUE_TYPE_ARRAY 3
+struct value {
+    int type;
+    union {
+        bool boolval;
+        int intval;
+        float floatval;
+        int arrayval[64];
+    };
+};
+
+
 
 class scene
 {
@@ -78,6 +98,7 @@ struct port {
     float screenX, screenY;
     const char *name;
     class element *parent;
+    struct value value;
 };
 
 class element
@@ -140,6 +161,7 @@ public:
     void reseat(void);
     
 protected:
+    struct value value;
     std::vector<struct port *> parents;
     int X1, Y1, X2, Y2;
     int color;
@@ -157,7 +179,9 @@ public:
     virtual void fill_grid(class wiregrid* grid);
 };
 
-int R(int color);
-int G(int color);
-int B(int color);
-int Alpha(int color);
+extern int R(int color);
+extern int G(int color);
+extern int B(int color);
+extern int Alpha(int color);
+extern int value_color(struct value *value);
+
