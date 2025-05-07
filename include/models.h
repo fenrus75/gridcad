@@ -10,6 +10,7 @@ public:
     virtual ~model_zero(void);
     virtual void draw(class scene *scene, int type);
     virtual void fill_grid(class wiregrid* grid);
+    virtual bool intersect(float _X, float _Y);
 };
 
 

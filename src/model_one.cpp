@@ -3,6 +3,11 @@
 
 model_one::model_one(float _X, float _Y)  : model_zero(_X, _Y)
 {
+    struct value value;
+    value.boolval = true;
+    for (auto port : ports) {
+        port->update_value(&value);
+    }
 }
 
 model_one::~model_one(void)

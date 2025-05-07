@@ -5,8 +5,6 @@
 
 element::element(int _sizeX, int _sizeY, const char *_name)
 {
-    assert(_sizeX >= 2);
-    assert(_sizeY >= 2);
     sizeX = _sizeX;
     sizeY = _sizeY;
     place(0,0);

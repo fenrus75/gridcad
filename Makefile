@@ -15,7 +15,7 @@ wiretest: $(OBJS) include/gridcad.h Makefile test/wiretest.o
 
 	
 clean:
-	rm -f gridcad */*.o wiretest
+	rm -f gridcad */*.o wiretest *~ */*~
 	
 devdeps:
 	sudo apt install libsdl2-dev libsdl2-image-dev libsdl2-gfx-dev

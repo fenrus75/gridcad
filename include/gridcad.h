@@ -130,7 +130,7 @@ public:
     void update_drag(class scene *scene, float X, float Y);
     void stop_drag(class scene *scene);
     
-    bool intersect(float X, float Y);
+    virtual bool intersect(float X, float Y);
     
     const char * get_name(void) { return name; };
     
