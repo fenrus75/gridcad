@@ -256,7 +256,6 @@ bool wiregrid::one_path_walk(double cost_so_far, int x, int y, int dx, int dy, i
         walked[i] = true;
     }
     bool ret = false;
-    int counter = 0; 
     while (leastcost < maxcost+0.3) {
         for (i = 0; i < 9; i++) {
              double adder = 0.0;
@@ -265,9 +264,6 @@ bool wiregrid::one_path_walk(double cost_so_far, int x, int y, int dx, int dy, i
              if (costs[i] <= leastcost) {
                  bool this_ret;
                  
-                 counter++;
-                 if (counter > 4 && found_solution)
-                     break;
                  /* pay a small penalty for direction changes to give same length paths with fewer changes a bonus*/
                  if (DX[i] != dx || DY[i] != dy)
                      adder += 0.01;
