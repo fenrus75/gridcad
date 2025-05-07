@@ -33,7 +33,7 @@ public:
     
     
     void drawBox(float X1, float Y1, float X2, float Y2, int color);
-    void drawCircle(float X, float Y, float R, int color);
+    void drawCircle(float X, float Y, float R, int color, int color2=COLOR_BACKGROUND_MAIN);
     void drawLine(float X1, float Y1, float X2, float Y2, int color);
     
     int X_to_scr(float X);

@@ -305,7 +305,7 @@ void scene::drawLine(float X1, float Y1, float X2, float Y2, int color)
 	}
 }
 
-void scene::drawCircle(float X, float Y, float _R, int color)
+void scene::drawCircle(float X, float Y, float _R, int color, int color2)
 {
 	int x1, y1;
 
@@ -316,7 +316,7 @@ void scene::drawCircle(float X, float Y, float _R, int color)
 
 	filledCircleRGBA(renderer, x1, y1, _R * scaleX, R(color), G(color),
 			 B(color), Alpha(color));
-	color = COLOR_BACKGROUND_MAIN;
+	color = color2;
 	filledCircleRGBA(renderer, x1, y1, (_R / 2) * scaleX, R(color),
 			 G(color), B(color), Alpha(color));
 
