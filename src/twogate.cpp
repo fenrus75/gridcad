@@ -2,7 +2,7 @@
 
 #include <SDL2/SDL_image.h>
 
-twogate::twogate(float _X, float _Y) : element(3, 3, NULL)
+twogate::twogate(float _X, float _Y) : element(2, 2, NULL)
 {
     X = _X;
     Y = _Y;
@@ -23,8 +23,10 @@ void twogate::drawAt(class scene *scene, float X, float Y, int type)
 {
     if (!visual)
        visual =  scene->load_image("assets/andgate.png");
+       
+    
         
-    scene->draw_image(visual, X, Y, 3, 3);
+    scene->draw_image(visual, X, Y, 3, 3, Alpha(type));
 
 //    for (auto port: ports) {
 //        drawConnector(scene, X, Y, port->X, port->Y, COLOR_ELEMENT_CONNECTOR + type);    

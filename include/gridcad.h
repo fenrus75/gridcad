@@ -74,7 +74,7 @@ public:
     
     void fill_grid(class wiregrid* grid);
     SDL_Texture *load_image(const char *filename);
-    void draw_image(SDL_Texture *image, float X, float Y, float W, float H);
+    void draw_image(SDL_Texture *image, float X, float Y, float W, float H, int alpha=255);
     
     
 protected:
