@@ -73,6 +73,8 @@ public:
     class port * is_port(float X, float Y); /* X and Y are global positions */
     
     void fill_grid(class wiregrid* grid);
+    SDL_Texture *load_image(const char *filename);
+    void draw_image(SDL_Texture *image, float X, float Y, float W, float H);
     
     
 protected:
@@ -188,6 +190,17 @@ public:
     virtual ~connector();
     virtual void draw(class scene *scene, int type);
     virtual void fill_grid(class wiregrid* grid);
+};
+
+/* Metaclass for basic and/or/nand/etc gates with 2 inputs */
+class twogate : public element
+{
+public:
+    twogate(float _X = 0, float _Y = 0);
+    virtual ~twogate();
+    virtual void draw(class scene *scene, int type);
+private:
+    SDL_Texture *visual;;
 };
 
 extern int R(int color);

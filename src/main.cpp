@@ -18,7 +18,9 @@ int main(int argc, char **argv)
 
     _element = new element(4,4, "nand2");
     _element->place(10,17);
+    _scene->add_element(_element);
     
+    _element = new twogate(12,7);
     _scene->add_element(_element);
     
     _scene->eventloop();

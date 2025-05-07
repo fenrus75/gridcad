@@ -360,3 +360,19 @@ void scene::fill_grid(class wiregrid * grid)
 	for (auto const elem:elements)
 		elem->fill_grid(grid);
 }
+
+SDL_Texture * scene::load_image(const char *filename)
+{
+	return IMG_LoadTexture(renderer, filename);
+}
+
+void scene::draw_image(SDL_Texture *image, float X, float Y, float W, float H) 
+{
+	SDL_Rect rect;
+	rect.x = X_to_scr(X);
+	rect.y = Y_to_scr(Y);
+	rect.w = W * scaleX;
+	rect.h = H * scaleY;
+	
+	SDL_RenderCopy(renderer, image, NULL, &rect);
+}

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   sodipodi:docname="andgate.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.72880595"
+     inkscape:cx="421.92301"
+     inkscape:cy="440.44646"
+     inkscape:window-width="1536"
+     inkscape:window-height="779"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       id="path1232"
+       style="fill:#000000;stroke:none;stroke-width:30;stroke-opacity:1;fill-opacity:1"
+       d="M 40.629561 18.495512 L 40.629561 218.49571 L 100.32928 218.49571 L 100.63003 218.49571 L 100.63003 218.47659 A 80 100 0 0 0 178.87332 118.56124 A 80 100 0 0 0 100.63003 18.602482 L 100.63003 18.495512 L 40.629561 18.495512 z M 69.0547 45.80599 L 103.67843 45.80599 L 103.67843 45.880404 A 46.164828 69.690717 0 0 1 148.82968 115.5423 A 46.164828 69.690717 0 0 1 103.67843 185.17423 L 103.67843 185.18766 L 103.50531 185.18766 L 69.0547 185.18766 L 69.0547 45.80599 z " />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:30;stroke-opacity:1"
+       id="rect1580"
+       width="25"
+       height="25"
+       x="16.292692"
+       y="35.383316" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:30;stroke-opacity:1"
+       id="rect1580-9"
+       width="25"
+       height="25"
+       x="16.619516"
+       y="175.78276" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:30;stroke-opacity:1"
+       id="rect1580-3"
+       width="25"
+       height="25"
+       x="175.98129"
+       y="103.64622"
+       inkscape:export-filename="andgate.png"
+       inkscape:export-xdpi="120"
+       inkscape:export-ydpi="120" />
+  </g>
+</svg>
