@@ -143,7 +143,9 @@ void scene::eventloop(void)
 					
 					if (dragging_port != port2) {
 						dragging_port->parent->add_wire(dragging_wire, dragging_port);
+						dragging_port->add_wire(dragging_wire);
 						port2->parent->add_wire(dragging_wire, port2);
+						port2->add_wire(dragging_wire);
 						dragging_wire = NULL;
 						printf("Connection made\n");
 					}

@@ -156,6 +156,6 @@ void wire::update_value(struct value *newvalue)
     
     /* now to notify the ports we're connected to */
     for (auto port: parents) {
-        port->parent->update_value(port, &value);
+        port->update_value(&value);
     }
 }

@@ -95,11 +95,17 @@ protected:
 
 class port {
 public:
+    port(void);
+    ~port(void);
     int X, Y;
     float screenX, screenY;
     const char *name;
     class element *parent;
     struct value value;
+    void add_wire(class wire *wire);
+    void update_value(struct value *newvalue);
+private:
+    std::vector<class wire*> wires;
 };
 
 class element
