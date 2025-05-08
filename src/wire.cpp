@@ -132,9 +132,7 @@ void wire::get_ref(void)
 void wire::add_parent(class port *port)
 {
     parents.push_back(port);
-    printf("Adding to port %s which has value %i\n", port->name, port->value.boolval);
     if (port->direction == PORT_OUT) {
-        printf("Updating wire from port %s value to %i \n", port->name, port->value.boolval);
         update_value(&port->value);
     }
 }
@@ -153,7 +151,6 @@ void wire::reseat(void)
 
 void wire::update_value(struct value *newvalue)
 {
-    printf("Updating wire value to %i \n", newvalue->boolval);
     if (memcmp(&value, newvalue, sizeof(struct value)) == 0) {
         /* no change -- early exit to kill oscillations */
         return;

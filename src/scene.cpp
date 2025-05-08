@@ -14,8 +14,17 @@ scene::scene(void)
 	window =
 	    SDL_CreateWindow("FOO BAR", SDL_WINDOWPOS_UNDEFINED,
 			     SDL_WINDOWPOS_UNDEFINED, 1024, 768, 0);
-	renderer = SDL_CreateRenderer(window, -1, 0);
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+	
+	main_area_rect.x = 0;
+	main_area_rect.y = 0;
+	main_area_rect.w = 800;
+	main_area_rect.h = 768;
+	ui_area_rect.x = 800;
+	ui_area_rect.y = 0;
+	ui_area_rect.w = 1024 - 800;
+	ui_area_rect.h = 768;
 
 	offsetX = 0;
 	offsetY = 0;
@@ -195,6 +204,7 @@ void scene::eventloop(void)
 
 void scene::draw(void)
 {
+	SDL_RenderSetClipRect(renderer, &main_area_rect);
 	/* first, draw the lighter gray background */
 	SDL_SetRenderDrawColor(renderer, R(COLOR_BACKGROUND_GRID),
 			       G(COLOR_BACKGROUND_GRID),

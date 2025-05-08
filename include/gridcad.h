@@ -81,6 +81,7 @@ protected:
     std::vector<class element *> elements;
     SDL_Window *window;
     SDL_Renderer *renderer;
+    SDL_Rect main_area_rect, ui_area_rect;
     class element *dragging;
     class port *dragging_port;
     class wire *dragging_wire;
