@@ -100,8 +100,10 @@ void scene::eventloop(void)
 				y = scr_to_Y(event.motion.y);
 
 				for (auto elem:	elements) {
-					if (elem->intersect(x, y))
+					if (elem->intersect(x, y)) {
+						printf("Start drag: %5.2f %5.2f \n", x, y);
 						dragging = elem;
+					}
 				}
 				if (dragging)
 					dragging->start_drag(x, y);

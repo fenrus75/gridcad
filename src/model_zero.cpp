@@ -19,7 +19,6 @@ model_zero::~model_zero(void)
 
 void model_zero::draw(class scene *scene, int type)
 {
-    element::draw(scene, type);
     scene->drawBox(X,Y,X+1,Y+1, COLOR_ELEMENT_NORMAL);
     scene->drawCircle(X+1.5, Y+0.5, 0.5, COLOR_WIRE_SOLID);
     for (auto wire : wires) {
@@ -30,12 +29,11 @@ void model_zero::draw(class scene *scene, int type)
 void model_zero::fill_grid(class wiregrid *grid)
 {
     grid->block_point(X, Y);
-    grid->block_point(X+1, Y);
 }
 
 bool model_zero::intersect(float _X, float _Y)
 {
-    if (_X >= X  && _Y >= Y  && _X < X + sizeX && _Y <= Y + sizeY)
+    if (_X >= X  && _Y >= Y  && _X < X + 1 && _Y <= Y + sizeY)
         return true;
     return false;
 }
