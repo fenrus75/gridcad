@@ -11,7 +11,6 @@ port::~port()
 
 void port::add_wire(class wire* wire)
 {
-    printf("Adding wire\n");
     wires.push_back(wire);
     if (direction == PORT_OUT) {
         wire->update_value(&value);

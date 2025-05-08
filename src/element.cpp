@@ -124,7 +124,6 @@ void element::stop_drag(class scene *scene)
     }
     over_drag_threshold = false;
     for (auto wire : wires) {
-        printf("DO WIRE\n");
         wire->reseat();
         wire->route(scene);
     }

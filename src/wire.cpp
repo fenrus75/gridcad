@@ -126,7 +126,6 @@ void wire::route(class scene *scene)
     delete(grid);
 
     for (auto port : ports) {
-        printf("Checking %5.2f x %5.2f  vs %i, %i\n", port->screenX, port->screenY, X1, Y1);
         if (floorf(port->screenX) == X1 && floorf(port->screenY) == Y1 && port->direction == PORT_OUT) {
             std::reverse(points->begin(), points->end());
         }
@@ -140,7 +139,6 @@ void wire::get_ref(void)
 
 void wire::add_port(class port *port)
 {
-    printf("%p adding port\n", this);
     ports.push_back(port);
     if (port->direction == PORT_OUT) {
         update_value(&port->value);
@@ -149,7 +147,6 @@ void wire::add_port(class port *port)
 
 void wire::reseat(void)
 {
-    printf("Before reseat %i %i %i %i -- %i\n", X1, Y1, X2, Y2, (int)ports.size());
     if (ports.size() > 0) {
         X1 = ports[0]->screenX;
         Y1 = ports[0]->screenY;
@@ -158,7 +155,6 @@ void wire::reseat(void)
         X2 = ports[1]->screenX;
         Y2 = ports[1]->screenY;
     }
-    printf("After reseat %i %i %i %i \n", X1, Y1, X2, Y2);
 }
 
 void wire::update_value(struct value *newvalue)
