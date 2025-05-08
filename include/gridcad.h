@@ -23,6 +23,7 @@
 class element;
 class wire;
 class port;
+class iconbar;
 struct value;
 
 
@@ -85,6 +86,7 @@ protected:
     class element *dragging;
     class port *dragging_port;
     class wire *dragging_wire;
+    class iconbar *icon_bar;
     bool left_mouse_down;
     float mouseX, mouseY;
     

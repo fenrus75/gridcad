@@ -6,7 +6,7 @@
 
 #include "gridcad.h"
 
-
+#include "iconbar.h"
 
 
 scene::scene(void)
@@ -37,6 +37,7 @@ scene::scene(void)
 	left_mouse_down = false;
 	dragging_port = NULL;
 	dragging_wire = NULL;
+	icon_bar = new iconbar(renderer, ui_area_rect);
 }
 
 scene::~scene(void)
@@ -203,6 +204,7 @@ void scene::eventloop(void)
 				ui_area_rect.y = 0;
 				ui_area_rect.w = event.window.data1 - main_area_rect.w;
 				ui_area_rect.h = event.window.data2;
+				icon_bar->resize(ui_area_rect);
 			}
 			break;
 		}		
@@ -212,13 +214,15 @@ void scene::eventloop(void)
 
 void scene::draw(void)
 {
-	SDL_RenderSetClipRect(renderer, &main_area_rect);
 	/* first, draw the lighter gray background */
 	SDL_SetRenderDrawColor(renderer, R(COLOR_BACKGROUND_GRID),
 			       G(COLOR_BACKGROUND_GRID),
 			       B(COLOR_BACKGROUND_GRID),
 			       Alpha(COLOR_BACKGROUND_GRID));
 	SDL_RenderClear(renderer);
+	
+	icon_bar->draw();
+	SDL_RenderSetClipRect(renderer, &main_area_rect);
 
 	/* then fill in the darger gray grid to keep lines */
 	float X = 0, Y = 0;
