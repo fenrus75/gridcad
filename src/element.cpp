@@ -50,7 +50,10 @@ void element::drawAt(class scene *scene, float X, float Y, int type)
     
     /* TODO: real connectors */
     for (auto port: ports) {
-        drawConnector(scene, X, Y, port->X, port->Y, COLOR_ELEMENT_CONNECTOR + type);    
+        if (port->direction == PORT_IN)
+            drawConnector(scene, X, Y, port->X, port->Y, COLOR_ELEMENT_CONNECTOR + type);    
+        else
+            drawConnector(scene, X, Y, port->X, port->Y, value_color(&port->value));    
     }
     for (auto wire : wires) {
         wire->draw(scene);
@@ -130,7 +133,7 @@ bool element::intersect(float _X, float _Y)
     return false;
 }
 
-void element::add_port(int X, int Y, const char *_name, int direction)
+void element::add_port(int X, int Y, const char *_name, int direction, bool initval)
 {
     class port *_port;
     _port = new port(direction);
@@ -138,6 +141,7 @@ void element::add_port(int X, int Y, const char *_name, int direction)
     _port->Y = Y;
     _port->name = strdup(_name);
     _port->parent = this;
+    _port->value.boolval = initval;
     ports.push_back(_port);
 }
 

@@ -110,8 +110,8 @@ public:
     struct value value;
     void add_wire(class wire *wire);
     void update_value(struct value *newvalue);
-private:
     int direction;
+private:
     std::vector<class wire*> wires;
 };
 
@@ -134,7 +134,7 @@ public:
     
     const char * get_name(void) { return name; };
     
-    void add_port(int X, int Y, const char *name, int direction = 0);
+    void add_port(int X, int Y, const char *name, int direction = 0, bool initval = false);
     virtual void fill_grid(class wiregrid* grid);
     
     class port * is_port(float X, float Y); /* X and Y are global positions */
