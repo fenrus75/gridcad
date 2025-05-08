@@ -13,7 +13,7 @@ scene::scene(void)
 {
 	window =
 	    SDL_CreateWindow("FOO BAR", SDL_WINDOWPOS_UNDEFINED,
-			     SDL_WINDOWPOS_UNDEFINED, 1024, 768, 0);
+			     SDL_WINDOWPOS_UNDEFINED, 1024, 768, SDL_WINDOW_RESIZABLE);
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 	
@@ -195,10 +195,17 @@ void scene::eventloop(void)
 
 		case SDL_POLLSENTINEL:
 			break;
-		}
-		
-	
-
+		case SDL_WINDOWEVENT:
+			if (event.window.event == SDL_WINDOWEVENT_RESIZED) {			
+				main_area_rect.w = event.window.data1 - 200;;
+				main_area_rect.h = event.window.data2;
+				ui_area_rect.x = main_area_rect.w;
+				ui_area_rect.y = 0;
+				ui_area_rect.w = event.window.data1 - main_area_rect.w;
+				ui_area_rect.h = event.window.data2;
+			}
+			break;
+		}		
 		draw();
 	}
 }

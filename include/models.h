@@ -8,7 +8,7 @@ class model_zero : public element
 public:
     model_zero(float X, float Y);
     virtual ~model_zero(void);
-    virtual void draw(class scene *scene, int type);
+    virtual void drawAt(class scene *scene, float X, float Y, int type);
     virtual void fill_grid(class wiregrid* grid);
     virtual bool intersect(float _X, float _Y);
 };
@@ -19,5 +19,5 @@ class model_one : public model_zero
 public:
     model_one(float X, float Y);
     virtual ~model_one(void);
-    virtual void draw(class scene *scene, int type);
+    virtual void drawAt(class scene *scene, float X, float Y, int type);
 };
