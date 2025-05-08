@@ -140,7 +140,7 @@ public:
     
     class port * is_port(float X, float Y); /* X and Y are global positions */
     
-    void add_wire(class wire *wire, class port *port);
+    void add_wire(class wire *wire);
     float get_X(void) { return X; };
     float get_Y(void) { return Y; };
     
@@ -174,14 +174,14 @@ public:
     void route(class scene *);
     
     void get_ref(void);
-    void add_parent(class port *port);
+    void add_port(class port *port);
     void reseat(void);
     
     void update_value(struct value *newvalue);
     
 protected:
     struct value value;
-    std::vector<class port *> parents;
+    std::vector<class port *> ports;
     int X1, Y1, X2, Y2;
     int color;
     int refcount;

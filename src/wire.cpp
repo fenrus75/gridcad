@@ -1,6 +1,8 @@
 
 #include "gridcad.h"
 
+#include <algorithm>
+
 #include <sys/time.h>
 
 wire::wire(int x1, int y1, int x2, int y2, int _color)
@@ -122,6 +124,13 @@ void wire::route(class scene *scene)
     }
     printf("----\n");
     delete(grid);
+    return ;
+    for (auto port : ports) {
+        printf("Checking %5.2f x %5.2f  vs %i, %i\n", port->screenX, port->screenY, X1, Y1);
+        if (port->screenX == X2 && port->screenY == Y2 && port->direction == PORT_OUT) {
+            std::reverse(points->begin(), points->end());
+        }
+    }
 }
 
 void wire::get_ref(void)
@@ -129,9 +138,10 @@ void wire::get_ref(void)
     refcount++;
 }
 
-void wire::add_parent(class port *port)
+void wire::add_port(class port *port)
 {
-    parents.push_back(port);
+    printf("%p adding port\n", this);
+    ports.push_back(port);
     if (port->direction == PORT_OUT) {
         update_value(&port->value);
     }
@@ -139,14 +149,16 @@ void wire::add_parent(class port *port)
 
 void wire::reseat(void)
 {
-    if (parents.size() > 0) {
-        X1 = parents[0]->parent->get_X() + parents[0]->X;
-        Y1 = parents[0]->parent->get_Y() + parents[0]->Y;
+    printf("Before reseat %i %i %i %i -- %i\n", X1, Y1, X2, Y2, (int)ports.size());
+    if (ports.size() > 0) {
+        X1 = ports[0]->screenX;
+        Y1 = ports[0]->screenY;
     }
-    if (parents.size() > 1) {
-        X2 = parents[1]->parent->get_X() + parents[1]->X;
-        Y2 = parents[1]->parent->get_Y() + parents[1]->Y;
+    if (ports.size() > 1) {
+        X2 = ports[1]->screenX;
+        Y2 = ports[1]->screenY;
     }
+    printf("After reseat %i %i %i %i \n", X1, Y1, X2, Y2);
 }
 
 void wire::update_value(struct value *newvalue)
@@ -158,7 +170,7 @@ void wire::update_value(struct value *newvalue)
     value = *newvalue;
     
     /* now to notify the ports we're connected to */
-    for (auto port: parents) {
+    for (auto port: ports) {
         if (port->direction == PORT_IN)
             port->update_value(&value);
     }

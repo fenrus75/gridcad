@@ -117,8 +117,14 @@ void element::stop_drag(class scene *scene)
 {
     X = Xghost;
     Y = Yghost;
+    
+    for (auto port: ports) {
+        port->screenX = X + port->X;
+        port->screenY = Y + port->Y;
+    }
     over_drag_threshold = false;
     for (auto wire : wires) {
+        printf("DO WIRE\n");
         wire->reseat();
         wire->route(scene);
     }
@@ -185,11 +191,10 @@ void element::fill_grid(class wiregrid *grid)
     }
 }
 
-void element::add_wire(class wire *wire, class port *port)
+void element::add_wire(class wire *wire)
 {
     wire->get_ref();
     wires.push_back(wire);
-    wire->add_parent(port);
 }
 
 void element::update_value(class port *port, struct value *value)
