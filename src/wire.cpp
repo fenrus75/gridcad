@@ -124,10 +124,10 @@ void wire::route(class scene *scene)
     }
     printf("----\n");
     delete(grid);
-    return ;
+
     for (auto port : ports) {
         printf("Checking %5.2f x %5.2f  vs %i, %i\n", port->screenX, port->screenY, X1, Y1);
-        if (port->screenX == X2 && port->screenY == Y2 && port->direction == PORT_OUT) {
+        if (floorf(port->screenX) == X1 && floorf(port->screenY) == Y1 && port->direction == PORT_OUT) {
             std::reverse(points->begin(), points->end());
         }
     }
