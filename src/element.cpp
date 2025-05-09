@@ -99,6 +99,7 @@ void element::update_drag(class scene *scene, float _X, float _Y)
     if (fabsf(_X - X) > 2 || fabsf(_Y - Y) > 2)
         over_drag_threshold = true;
         
+        
     Xdnd = _X - X_in_drag;
     Ydnd = _Y - Y_in_drag;
     
@@ -109,7 +110,7 @@ void element::update_drag(class scene *scene, float _X, float _Y)
         if (scene->can_place_element(_Xghost, _Yghost, sizeX, sizeY, this)) {
             Xghost = _Xghost;
             Yghost = _Yghost;
-        }
+        } 
     }
 }
 

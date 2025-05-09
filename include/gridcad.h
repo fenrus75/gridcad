@@ -156,10 +156,10 @@ protected:
     bool over_drag_threshold;  /* has a drag-and-drop been far enough to avoid spurious drags */
     
     
-    float X, Y;
-    float Xghost, Yghost;
-    float Xdnd, Ydnd;
-    float X_in_drag, Y_in_drag;
+    float X = 0, Y = 0;
+    float Xghost = 0, Yghost = 0;
+    float Xdnd = 0, Ydnd = 0;
+    float X_in_drag = 0, Y_in_drag = 0;
     
     std::vector<class port *> ports;
     std::vector<class wire *> wires;

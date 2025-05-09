@@ -143,11 +143,24 @@ void scene::eventloop(void)
 						active_icon = NULL;
 					
 				if (active_icon) {
-					floating = active_icon->create_element();
+					if (!floating)
+						floating = active_icon->create_element();
 				} else {
 					delete floating;
 					floating = NULL;
 				}
+				
+				
+				if (event.motion.x < main_area_rect.w && floating) {
+					printf("Adding element\n");
+					add_element(floating);
+					floating->stop_drag(this);
+					if (active_icon)
+						floating = active_icon->create_element();
+					else
+						floating = NULL;
+				}
+
 
 			}
 			if ( event.button.button == SDL_BUTTON_RIGHT) {

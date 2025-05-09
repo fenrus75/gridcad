@@ -124,7 +124,7 @@ class element * icon::create_element(void)
 {
      switch (type) {
           case ICON_NAND:
-              return new twogate();
+              return new twogate(-10, -10);
           default:
              return NULL;
      }
