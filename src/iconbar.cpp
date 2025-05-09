@@ -1,5 +1,6 @@
 #include "gridcad.h"
 #include "iconbar.h"
+#include "models.h"
 
 #include <SDL2/SDL_image.h>
 
@@ -124,7 +125,7 @@ class element * icon::create_element(void)
 {
      switch (type) {
           case ICON_NAND:
-              return new twogate(-10, -10);
+              return new model_nand(-10, -10);
           default:
              return NULL;
      }

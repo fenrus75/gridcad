@@ -7,7 +7,6 @@
 int main(int argc, char **argv)
 {
     class scene *_scene;
-    class element * _element;
     SDL_Init(SDL_INIT_VIDEO);
     
     _scene = new scene();

@@ -150,10 +150,10 @@ public:
     void update_value(class port *port, struct value *value);
 protected:
 
-    const char *name;
-    int sizeX;
-    int sizeY;
-    bool over_drag_threshold;  /* has a drag-and-drop been far enough to avoid spurious drags */
+    const char *name = NULL;
+    int sizeX = 1;
+    int sizeY = 1;
+    bool over_drag_threshold = false;  /* has a drag-and-drop been far enough to avoid spurious drags */
     
     
     float X = 0, Y = 0;
@@ -185,10 +185,10 @@ public:
 protected:
     struct value value;
     std::vector<class port *> ports;
-    int X1, Y1, X2, Y2;
-    int color;
-    int refcount;
-    std::vector<struct waypoint> *points;
+    int X1 = 0, Y1 = 0, X2 = 0, Y2 = 0;
+    int color = 0;
+    int refcount = 0;
+    std::vector<struct waypoint> *points = NULL;
 };
 
 
@@ -209,8 +209,8 @@ public:
     virtual ~twogate();
     virtual void drawAt(class scene *scene, float X, float Y, int type);
 //    virtual void draw(class scene *scene, int type);
-private:
-    SDL_Texture *visual;;
+protected:
+    SDL_Texture *visual = NULL;
 };
 
 extern int R(int color);

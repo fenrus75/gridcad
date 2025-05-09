@@ -1,7 +1,9 @@
 #pragma once
 
-class element;
+#include "gridcad.h"
 
+class element;
+class twogate;
 
 class model_zero : public element
 {
@@ -20,4 +22,15 @@ public:
     model_one(float X, float Y);
     virtual ~model_one(void);
     virtual void drawAt(class scene *scene, float X, float Y, int type);
+};
+
+
+class model_nand : public element
+{
+public:
+    model_nand(float X, float Y);
+    virtual ~model_nand(void);
+    virtual void drawAt(class scene *scene, float X, float Y, int type);
+protected:
+    SDL_Texture *visual = NULL;
 };
