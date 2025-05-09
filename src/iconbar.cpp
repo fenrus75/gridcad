@@ -15,6 +15,8 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
     rect = _rect;
     
     icons[0][0] = new icon(renderer, ICON_NAND);
+    icons[0][1] = new icon(renderer, ICON_ZERO);
+    icons[1][1] = new icon(renderer, ICON_ONE);
 }
 
 iconbar::~iconbar(void)
@@ -88,8 +90,8 @@ class icon * iconbar::current_icon(int ScreenX, int ScreenY)
 }
 
 static const char *image_names[] = 
-{"",
- "",
+{"assets/zero.png",
+ "assets/one.png",
  "assets/nandgate.png",
 };
 
@@ -126,6 +128,10 @@ class element * icon::create_element(void)
      switch (type) {
           case ICON_NAND:
               return new model_nand(-10, -10);
+          case ICON_ONE:
+              return new model_one(-10, -10);
+          case ICON_ZERO:
+              return new model_zero(-10, -10);
           default:
              return NULL;
      }
