@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg240"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   sodipodi:docname="nandgate.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview242"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="1.0191358"
+     inkscape:cx="330.18171"
+     inkscape:cy="518.08601"
+     inkscape:window-width="1536"
+     inkscape:window-height="779"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs237" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g540">
+      <path
+         id="path413"
+         style="fill:#000000;stroke-width:30"
+         d="m 54.415283,115.9619 v 79.99977 h 49.999537 v -0.0191 a 40,40 0 0 0 0.51056,0.0191 40,40 0 0 0 39.99962,-39.99963 40,40 0 0 0 -39.99962,-40.00014 40,40 0 0 0 -0.51056,0.0191 v -0.0191 z" />
+      <g
+         id="g534"
+         transform="translate(-1.0851112,2.0970682)">
+        <circle
+           style="fill:#000000;stroke-width:30"
+           id="path526"
+           cx="155.73323"
+           cy="153.86472"
+           r="10" />
+        <circle
+           style="fill:#ffffff;stroke-width:30"
+           id="path530"
+           cx="155.73323"
+           cy="153.86472"
+           r="5" />
+      </g>
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:25.4px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';fill:#ffffff;stroke-width:30"
+       x="58.480389"
+       y="164.24426"
+       id="text596"><tspan
+         sodipodi:role="line"
+         id="tspan594"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:25.4px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:30"
+         x="58.480389"
+         y="164.24426">NAND</tspan></text>
+    <rect
+       style="fill:#000000;stroke-width:30"
+       id="rect700"
+       width="20.076584"
+       height="10"
+       x="34.96999"
+       y="126.18221" />
+    <rect
+       style="fill:#000000;stroke-width:30"
+       id="rect700-3"
+       width="20.076584"
+       height="10"
+       x="34.530369"
+       y="176.40523" />
+    <rect
+       style="fill:#000000;stroke-width:30"
+       id="rect700-6"
+       width="20.076584"
+       height="10"
+       x="160.54828"
+       y="151.327"
+       inkscape:export-filename="nandgate.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+  </g>
+</svg>

@@ -19,11 +19,11 @@ scene::scene(void)
 	
 	main_area_rect.x = 0;
 	main_area_rect.y = 0;
-	main_area_rect.w = 800;
+	main_area_rect.w = 820;
 	main_area_rect.h = 768;
 	ui_area_rect.x = 800;
 	ui_area_rect.y = 0;
-	ui_area_rect.w = 1024 - 800;
+	ui_area_rect.w = 1024 - 820;
 	ui_area_rect.h = 768;
 
 	offsetX = 0;
@@ -198,7 +198,7 @@ void scene::eventloop(void)
 			break;
 		case SDL_WINDOWEVENT:
 			if (event.window.event == SDL_WINDOWEVENT_RESIZED) {			
-				main_area_rect.w = event.window.data1 - 200;;
+				main_area_rect.w = event.window.data1 - 220;;
 				main_area_rect.h = event.window.data2;
 				ui_area_rect.x = main_area_rect.w;
 				ui_area_rect.y = 0;

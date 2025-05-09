@@ -2,15 +2,19 @@
 
 #include "gridcad.h"
 
+#define ICON_ZERO 0
+#define ICON_ONE  1
+#define ICON_NAND 2
 
 class icon {
 public:
-    icon(void);
+    icon(SDL_Renderer *renderer, int type);
     ~icon(void);
     
     class element *create_element(void);
-    void draw (SDL_Renderer *renderer, int X1, int Y1);
+    void draw (SDL_Renderer *renderer, float X1, float Y1, float width, float height);
 private:
+    SDL_Texture *texture;
 };
 
 class iconbar {
