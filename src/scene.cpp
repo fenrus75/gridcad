@@ -96,6 +96,13 @@ void scene::eventloop(void)
 				if (scaleY > 1)
 					scaleY--;
 				break;
+			case SDLK_ESCAPE:
+				if (floating)
+					delete floating;
+				floating = NULL;
+				if (active_icon)
+					active_icon->set_inactive();
+				active_icon = NULL;
 			}
 			break;
 		case SDL_MOUSEBUTTONDOWN:
