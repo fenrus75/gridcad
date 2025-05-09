@@ -134,12 +134,20 @@ void scene::eventloop(void)
 				}
 				
 				this_icon = icon_bar->current_icon(event.motion.x, event.motion.y);
-				if (active_icon)
+				if (active_icon && this_icon)
 					active_icon->set_inactive();
-				if (active_icon != this_icon)
+				if (active_icon != this_icon && this_icon)
 					active_icon = this_icon;
 				else
-					active_icon = NULL;
+					if (this_icon)
+						active_icon = NULL;
+					
+				if (active_icon) {
+					floating = active_icon->create_element();
+				} else {
+					delete floating;
+					floating = NULL;
+				}
 
 			}
 			if ( event.button.button == SDL_BUTTON_RIGHT) {
@@ -189,6 +197,11 @@ void scene::eventloop(void)
 
 			if (dragging) {
 				dragging->update_drag(this,
+						      scr_to_X(event.motion.x),
+						      scr_to_Y(event.motion.y));
+			}
+			if (floating) {
+				floating->update_drag(this, 
 						      scr_to_X(event.motion.x),
 						      scr_to_Y(event.motion.y));
 			}
@@ -256,6 +269,10 @@ void scene::draw(void)
 	if (dragging) {
 		dragging->draw(this, DRAW_GHOST);
 		dragging->draw(this, DRAW_DND);
+	}
+	if (floating) {
+		floating->draw(this, DRAW_GHOST);
+		floating->draw(this, DRAW_DND);
 	}
 
 	if (dragging_wire) {

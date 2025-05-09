@@ -80,15 +80,15 @@ public:
     
 protected:
     std::vector<class element *> elements;
-    SDL_Window *window;
-    SDL_Renderer *renderer;
+    SDL_Window *window = NULL;
+    SDL_Renderer *renderer = NULL;
     SDL_Rect main_area_rect, ui_area_rect;
-    class element *dragging;
-    class port *dragging_port;
-    class wire *dragging_wire;
-    class iconbar *icon_bar;
+    class element *dragging = NULL, *floating = NULL;
+    class port *dragging_port = NULL;
+    class wire *dragging_wire = NULL;
+    class iconbar *icon_bar = NULL;
     class icon *active_icon = NULL;
-    bool left_mouse_down;
+    bool left_mouse_down = false;
     float mouseX, mouseY;
     
 };
