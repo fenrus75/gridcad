@@ -67,9 +67,9 @@ class icon * iconbar::current_icon(int ScreenX, int ScreenY)
     
     if (ScreenX < 0 || ScreenY <0) /* left of the icons */
       return NULL;
-    
-    dX = ScreenX / 2.5;
-    dY = ScreenY / 2.5;
+      
+    dX = ScreenX / (2.5 * SCALEX);
+    dY = ScreenY / (2.5 * SCALEY);
     
     gridX = floor(dX);
     gridY = floor(dY);

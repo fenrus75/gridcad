@@ -87,6 +87,7 @@ protected:
     class port *dragging_port;
     class wire *dragging_wire;
     class iconbar *icon_bar;
+    class icon *active_icon = NULL;
     bool left_mouse_down;
     float mouseX, mouseY;
     

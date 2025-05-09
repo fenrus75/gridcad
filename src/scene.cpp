@@ -104,6 +104,7 @@ void scene::eventloop(void)
 				dragging = NULL;
 				dragging_port = NULL;
 				left_mouse_down = true;
+				class icon *this_icon;
 				float x, y;
 
 				x = scr_to_X(event.motion.x);
@@ -131,6 +132,14 @@ void scene::eventloop(void)
 							     floorf(y));
 					}
 				}
+				
+				this_icon = icon_bar->current_icon(event.motion.x, event.motion.y);
+				if (active_icon)
+					active_icon->set_inactive();
+				if (active_icon != this_icon)
+					active_icon = this_icon;
+				else
+					active_icon = NULL;
 
 			}
 			if ( event.button.button == SDL_BUTTON_RIGHT) {
