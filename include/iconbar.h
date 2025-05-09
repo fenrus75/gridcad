@@ -11,9 +11,13 @@ public:
     icon(SDL_Renderer *renderer, int type);
     ~icon(void);
     
-    class element *create_element(void);
+    virtual class element *create_element(void);
     void draw (SDL_Renderer *renderer, float X1, float Y1, float width, float height);
+    void set_active(void) { active = true; };
+    void set_inactive(void) { active = false; };
 private:
+    bool active;
+    int type;
     SDL_Texture *texture;
 };
 
@@ -25,8 +29,11 @@ public:
     void resize(SDL_Rect _rect);
     
     void draw(void);
+    
+    class icon *current_icon(int ScreenX, int ScreenY);
 private:
     SDL_Rect rect;
     std::vector<std::vector<class icon *>> icons;
     SDL_Renderer *renderer;
 };
+
