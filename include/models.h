@@ -25,14 +25,27 @@ public:
 };
 
 
-class model_nand : public element
+class model_logic2 : public element
 {
 public:
-    model_nand(float X, float Y);
-    virtual ~model_nand(void);
+    model_logic2(float X, float Y, const char *filename);
+    virtual ~model_logic2(void);
     virtual void drawAt(class scene *scene, float X, float Y, int type);
     
     virtual void calculate(void);
 protected:
     SDL_Texture *visual = NULL;
+    const char *filename;
 };
+
+class model_nand : public model_logic2
+{
+public:
+    model_nand(float X, float Y);
+    virtual ~model_nand(void);
+    
+    virtual void calculate(void);
+protected:
+    SDL_Texture *visual = NULL;
+};
+

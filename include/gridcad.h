@@ -177,7 +177,7 @@ protected:
 class wire {
 public:
     wire(int x1, int y1, int x2, int y2, int _color = COLOR_WIRE_SOLID);
-    ~wire(void);
+    virtual ~wire(void);
     
     void move_target(int x2, int y2);
     void draw(class scene *, int color = COLOR_WIRE_SOLID);
