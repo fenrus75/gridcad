@@ -45,7 +45,14 @@ public:
     virtual ~model_nand(void);
     
     virtual void calculate(void);
-protected:
-    SDL_Texture *visual = NULL;
+};
+
+class model_and : public model_logic2
+{
+public:
+    model_and(float X, float Y);
+    virtual ~model_and(void);
+    
+    virtual void calculate(void);
 };
 

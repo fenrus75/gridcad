@@ -209,18 +209,6 @@ public:
     virtual void fill_grid(class wiregrid* grid);
 };
 
-/* Metaclass for basic and/or/nand/etc gates with 2 inputs */
-class twogate : public element
-{
-public:
-    twogate(float _X = 0, float _Y = 0);
-    virtual ~twogate();
-    virtual void drawAt(class scene *scene, float X, float Y, int type);
-//    virtual void draw(class scene *scene, int type);
-protected:
-    SDL_Texture *visual = NULL;
-};
-
 extern int R(int color);
 extern int G(int color);
 extern int B(int color);

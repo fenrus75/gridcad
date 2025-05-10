@@ -5,7 +5,7 @@
 #define ICON_ZERO 0
 #define ICON_ONE  1
 #define ICON_NAND 2
-#define ICON_DUMMY 3
+#define ICON_AND 3
 class icon {
 public:
     icon(SDL_Renderer *renderer, int type);
