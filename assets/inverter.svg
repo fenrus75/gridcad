@@ -22,13 +22,13 @@
      bordercolor="#000000"
      borderopacity="0.25"
      inkscape:showpageshadow="2"
-     inkscape:pageopacity="0.0"
-     inkscape:pagecheckerboard="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="true"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="0.5095679"
-     inkscape:cx="666.25076"
+     inkscape:cx="668.21321"
      inkscape:cy="571.07208"
      inkscape:window-width="1536"
      inkscape:window-height="779"
@@ -43,14 +43,14 @@
      inkscape:groupmode="layer"
      id="layer1">
     <rect
-       style="fill:#000000;stroke-width:30"
+       style="fill:#ffffff;stroke-width:30"
        id="rect234"
        width="220.86749"
        height="21.228819"
        x="-0.018644424"
        y="139.38559" />
     <rect
-       style="fill:#000000;stroke-width:12.2121"
+       style="fill:#ffffff;stroke-width:12.2121"
        id="rect234-6"
        width="36.598827"
        height="21.228819"
@@ -58,7 +58,7 @@
        y="139.38559" />
     <path
        sodipodi:type="star"
-       style="fill:#000000;stroke-width:30"
+       style="fill:#ffffff;stroke-width:30"
        id="path381"
        inkscape:flatsided="false"
        sodipodi:sides="3"
@@ -92,21 +92,17 @@
        inkscape:transform-center-x="-22.727426"
        inkscape:transform-center-y="-0.1056053"
        transform="matrix(0.65984355,0,0,0.65984355,34.337307,23.414452)" />
-    <g
-       id="g439"
-       transform="matrix(1.7862154,0,0,1.7862154,-205.29739,67.330743)">
-      <circle
-         style="fill:#000000;stroke-width:30"
-         id="path396"
-         cx="237.54205"
-         cy="46.106926"
-         r="30" />
-      <circle
-         style="fill:#ffffff;stroke-width:30"
-         id="path396-3"
-         cx="237.54205"
-         cy="46.106926"
-         r="20" />
-    </g>
+    <circle
+       style="fill:#ffffff;stroke-width:53.5865"
+       id="path396"
+       cx="219.00389"
+       cy="149.68764"
+       r="53.58646" />
+    <circle
+       style="fill:#000000;stroke-width:53.5865"
+       id="path396-3"
+       cx="219.00389"
+       cy="149.68764"
+       r="35.724308" />
   </g>
 </svg>
