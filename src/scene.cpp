@@ -183,8 +183,11 @@ void scene::eventloop(void)
 				float x, y;
 				x = scr_to_X(event.motion.x);
 				y = scr_to_Y(event.motion.y);
-				if (dragging)
+				if (dragging) {
+					if (!dragging->has_moved())
+						dragging->mouse_select();
 					dragging->stop_drag(this);
+				}
 				if (dragging_port && !is_port(x, y)) {
 					class element *_element;
 					_element = new connector(x, y);

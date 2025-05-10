@@ -156,6 +156,8 @@ public:
     void update_value(class port *port, struct value *value);
     virtual void notify(void);
     virtual void calculate();
+    virtual void mouse_select(void);
+    bool has_moved(void) { return (Xdnd == X) && (Ydnd == Y);};
 protected:
 
     const char *name = NULL;

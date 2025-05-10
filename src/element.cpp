@@ -197,3 +197,8 @@ void element::calculate(void)
 {
     /* empty in the base class */
 }
+
+void element::mouse_select(void)
+{
+    /* empty in the base class */
+}
