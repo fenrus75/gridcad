@@ -17,6 +17,13 @@ void port::add_wire(class wire * wire)
 		wire->update_value(&value);
 	}
 	wire->add_port(this);
+	
+	if (direction == PORT_IN) {
+		update_value(&(wire->value));
+	}
+	if (parent)
+		parent->notify();
+	wire->notify();
 }
 
 void port::update_value(struct value *newvalue)
@@ -26,6 +33,7 @@ void port::update_value(struct value *newvalue)
 	for (auto wire:wires) {
 		wire->update_value(newvalue);
 	}
+	value = *newvalue;
 	notify();
 }
 
@@ -70,4 +78,9 @@ void port::stop_drag(class scene *scene)
 
 void port::notify(void)
 {
+    if (direction == PORT_IN)
+    	return;
+    for (auto wire : wires) {
+    	wire->update_value(&value);
+    }
 }

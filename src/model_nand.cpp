@@ -29,3 +29,14 @@ void model_nand::drawAt(class scene *scene, float X, float Y, int type)
     }
 }
 
+
+void model_nand::calculate(void)
+{
+    struct value result = {};
+    
+    result.type = VALUE_TYPE_BOOL;
+    result.boolval = !(ports[0]->value.boolval && ports[1]->value.boolval);
+    
+    ports[2]->update_value(&result);
+    
+}

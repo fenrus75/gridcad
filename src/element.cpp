@@ -188,6 +188,7 @@ void element::update_value(class port *port, struct value *value)
 
 void element::notify(void)
 {
+    printf("Notify\n");
     calculate();
 }
 

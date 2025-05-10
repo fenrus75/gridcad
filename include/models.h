@@ -31,6 +31,8 @@ public:
     model_nand(float X, float Y);
     virtual ~model_nand(void);
     virtual void drawAt(class scene *scene, float X, float Y, int type);
+    
+    virtual void calculate(void);
 protected:
     SDL_Texture *visual = NULL;
 };

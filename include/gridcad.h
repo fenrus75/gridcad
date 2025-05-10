@@ -189,9 +189,9 @@ public:
     
     void update_value(struct value *newvalue);
     virtual void notify(void);
+    struct value value;
     
 protected:
-    struct value value;
     std::vector<class port *> ports;
     int X1 = 0, Y1 = 0, X2 = 0, Y2 = 0;
     int color = 0;
