@@ -115,7 +115,11 @@ public:
     void add_wire(class wire *wire);
     void update_value(struct value *newvalue);
     int direction;
+    
+    virtual void draw(class scene *scene, int color);
+    void drawAt(class scene *scene, float X, float Y, int color);
 private:
+    void drawConnector(class scene *scene, float X, float Y, int cX, int cY, int type);    
     std::vector<class wire*> wires;
 };
 
@@ -164,7 +168,6 @@ protected:
     std::vector<class port *> ports;
     std::vector<class wire *> wires;
     
-    void drawConnector(class scene *scene, float X, float Y, int cX, int cY, int type);    
 };
 
 class wire {

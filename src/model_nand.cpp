@@ -25,7 +25,7 @@ void model_nand::drawAt(class scene *scene, float X, float Y, int type)
     }
     scene->draw_image(visual, X+1, Y, sizeX-1, sizeY, Alpha(type));
     for (auto port: ports) {
-        drawConnector(scene, X, Y, port->X, port->Y, COLOR_ELEMENT_CONNECTOR + type);    
+        port->drawAt(scene, X, Y, type);
     }
     for (auto wire : wires) {
         wire->draw(scene);

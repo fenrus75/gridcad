@@ -28,10 +28,6 @@ void element::place(int _X, int _Y)
     Y = _Y; Yghost = _Y; Ydnd = _Y;
 }
 
-void element::drawConnector(class scene *scene, float X, float Y, int cX, int cY, int type)
-{
-    scene->drawCircle(cX + X + 0.5, cY+ Y + 0.5, 0.48, type);
-}
 
 void element::drawAt(class scene *scene, float X, float Y, int type)
 {
@@ -42,11 +38,9 @@ void element::drawAt(class scene *scene, float X, float Y, int type)
         scene->drawBox(X + 1.2, Y + 1.2, X + sizeX - 0.2, Y + sizeY - 0.2, COLOR_ELEMENT_INSIDE);
     
     /* TODO: real connectors */
+    /* TODO: ports need to learn how to draw themselves, and then their own wires */
     for (auto port: ports) {
-        if (port->direction == PORT_IN)
-            drawConnector(scene, X, Y, port->X, port->Y, COLOR_ELEMENT_CONNECTOR + type);    
-        else
-            drawConnector(scene, X, Y, port->X, port->Y, value_color(&port->value));    
+        port->drawAt(scene, X, Y, type);
     }
     for (auto wire : wires) {
         wire->draw(scene);
