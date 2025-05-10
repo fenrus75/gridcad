@@ -114,6 +114,7 @@ void element::stop_drag(class scene *scene)
     for (auto port : ports)
         port->stop_drag(scene);
 
+    calculate();
 }
 
 
