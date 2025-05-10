@@ -109,12 +109,12 @@ public:
     ~port(void);
     int X, Y;
     float screenX, screenY;
-    const char *name;
-    class element *parent;
-    struct value value;
+    const char *name = NULL;
+    class element *parent = NULL;
+    struct value value = {};
     void add_wire(class wire *wire);
     void update_value(struct value *newvalue);
-    int direction;
+    int direction = PORT_IN;;
     
     virtual void draw(class scene *scene, int color);
     void drawAt(class scene *scene, float X, float Y, int color);

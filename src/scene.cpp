@@ -143,8 +143,11 @@ void scene::eventloop(void)
 				this_icon = icon_bar->current_icon(event.motion.x, event.motion.y);
 				if (active_icon && this_icon)
 					active_icon->set_inactive();
-				if (active_icon != this_icon && this_icon)
+				if (active_icon != this_icon && this_icon) {
 					active_icon = this_icon;
+					delete floating;
+					floating = NULL;
+				}				
 				else
 					if (this_icon)
 						active_icon = NULL;
@@ -407,7 +410,7 @@ bool scene::can_place_element(float x, float y, int w, int h,
 		if (elem == myself)
 			continue;
 		for (_y = -1; _y <= h + 1; _y++)
-			for (_x = -1; _x <= w + 1; _x++)
+			for (_x = -1; _x <= w + 1 ; _x++)
 				if (elem->intersect(x + _x, y + _y))
 					return false;
 	}

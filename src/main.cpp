@@ -11,10 +11,6 @@ int main(int argc, char **argv)
     
     _scene = new scene();
     
-    _scene->add_element(new model_zero(19,9));
-    _scene->add_element(new model_one(19,19));
-    
-    
     _scene->eventloop();
     
     

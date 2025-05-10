@@ -7,6 +7,8 @@ model_one::model_one(float _X, float _Y)  : model_zero(_X, _Y)
     
     memset(&value, 0, sizeof(struct value));
     value.boolval = true;
+    sizeX = 2;
+    sizeY = 1;
 
     ports.resize(0);
 
