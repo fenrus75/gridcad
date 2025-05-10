@@ -20,6 +20,8 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
     icons[1][1] = new icon(renderer, ICON_TOGGLE);
     icons[0][2] = new icon(renderer, ICON_NAND);
     icons[1][2] = new icon(renderer, ICON_AND);
+    icons[0][3] = new icon(renderer, ICON_NOR);
+    icons[1][3] = new icon(renderer, ICON_OR);
 }
 
 iconbar::~iconbar(void)
@@ -98,7 +100,9 @@ static const char *image_names[] =
  "assets/nandgate.png",
  "assets/andgate.png",
  "assets/inverter.png",
- "assets/toggle.png"
+ "assets/toggle.png",
+ "assets/norgate.png",
+ "assets/orgate.png",
 };
 
 icon::icon(SDL_Renderer *renderer, int _type)
@@ -124,6 +128,7 @@ void icon::draw(SDL_Renderer *renderer, float X, float Y, float width, float hei
        rect.h = height;
        SDL_SetRenderDrawColor(renderer, R(color), G(color), B(color),
 			       Alpha(color));
+       SDL_SetTextureAlphaMod(texture, 255);
        if (active)                              
         	SDL_RenderFillRect(renderer, &rect);
        SDL_RenderCopy(renderer, texture, NULL, &rect);
@@ -144,6 +149,10 @@ class element * icon::create_element(void)
               return new model_not(-10, -10);
           case ICON_TOGGLE:
               return new model_toggle(-10, -10);
+          case ICON_NOR:
+              return new model_nor(-10, -10);
+          case ICON_OR:
+              return new model_or(-10, -10);
           default:
              return NULL;
      }

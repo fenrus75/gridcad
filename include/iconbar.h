@@ -8,6 +8,8 @@
 #define ICON_AND 3
 #define ICON_NOT 4
 #define ICON_TOGGLE 5
+#define ICON_NOR 6
+#define ICON_OR 7
 
 class icon {
 public:

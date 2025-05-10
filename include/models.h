@@ -80,3 +80,20 @@ public:
     virtual void calculate(void);
 };
 
+class model_nor : public model_logic2
+{
+public:
+    model_nor(float X, float Y);
+    virtual ~model_nor(void);
+    
+    virtual void calculate(void);
+};
+
+class model_or : public model_logic2
+{
+public:
+    model_or(float X, float Y);
+    virtual ~model_or(void);
+    
+    virtual void calculate(void);
+};

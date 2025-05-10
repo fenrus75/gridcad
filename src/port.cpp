@@ -67,7 +67,7 @@ void port::draw(class scene *scene, int color)
 
 void port::drawConnector(class scene * scene, float X, float Y, int cX, int cY, int type)
 {
-	scene->drawCircle(cX + X + 0.5, cY + Y + 0.5, 0.48, type);
+	scene->drawCircle(cX + X + 0.5, cY + Y + 0.5, 0.51, type);
 }
 
 void port::stop_drag(class scene *scene)
