@@ -167,7 +167,7 @@ void wire::update_value(struct value *newvalue)
     
     /* now to notify the ports we're connected to */
     for (auto port: ports) {
-        if (port->direction == PORT_IN)
+        if (port->direction != PORT_OUT)
             port->update_value(&value);
     }
     notify();

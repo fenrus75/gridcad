@@ -34,7 +34,10 @@ void port::update_value(struct value *newvalue)
 		wire->update_value(newvalue);
 	}
 	value = *newvalue;
+	
 	notify();
+	if (parent)
+		parent->notify();
 }
 
 
