@@ -120,6 +120,7 @@ public:
     virtual void draw_wires(class scene *scene);
     void drawAt(class scene *scene, float X, float Y, int color);
     void stop_drag(class scene *scene);
+    virtual void notify(void);
 private:
     void drawConnector(class scene *scene, float X, float Y, int cX, int cY, int type);    
     std::vector<class wire*> wires;
@@ -153,6 +154,8 @@ public:
     float get_Y(void) { return Y; };
     
     void update_value(class port *port, struct value *value);
+    virtual void notify(void);
+    virtual void calculate();
 protected:
 
     const char *name = NULL;
@@ -185,6 +188,7 @@ public:
     void reseat(void);
     
     void update_value(struct value *newvalue);
+    virtual void notify(void);
     
 protected:
     struct value value;

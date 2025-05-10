@@ -182,5 +182,16 @@ void element::update_value(class port *port, struct value *value)
     if (memcmp(value, &port->value, sizeof(struct value)) == 0)
         return; /* short circuit noop updates */
         
+    notify();
     
+}
+
+void element::notify(void)
+{
+    calculate();
+}
+
+void element::calculate(void)
+{
+    /* empty in the base class */
 }

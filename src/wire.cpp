@@ -170,4 +170,9 @@ void wire::update_value(struct value *newvalue)
         if (port->direction == PORT_IN)
             port->update_value(&value);
     }
+    notify();
+}
+
+void wire::notify(void)
+{
 }

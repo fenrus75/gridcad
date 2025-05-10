@@ -26,6 +26,7 @@ void port::update_value(struct value *newvalue)
 	for (auto wire:wires) {
 		wire->update_value(newvalue);
 	}
+	notify();
 }
 
 
@@ -65,4 +66,8 @@ void port::stop_drag(class scene *scene)
         wire->route(scene);
     }
 
+}
+
+void port::notify(void)
+{
 }
