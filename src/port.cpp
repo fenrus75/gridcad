@@ -37,7 +37,14 @@ void port::drawAt(class scene * scene, float _X, float _Y, int type)
 	} else { 
 		drawConnector(scene, _X, _Y, X, Y, value_color(&value));
 	}
+	draw_wires(scene);
+}
 
+void port::draw_wires(class scene * scene)
+{
+	for (auto wire : wires) {
+        	wire->draw(scene);
+	}
 }
 
 void port::draw(class scene *scene, int color)
@@ -49,4 +56,13 @@ void port::draw(class scene *scene, int color)
 void port::drawConnector(class scene * scene, float X, float Y, int cX, int cY, int type)
 {
 	scene->drawCircle(cX + X + 0.5, cY + Y + 0.5, 0.48, type);
+}
+
+void port::stop_drag(class scene *scene)
+{
+    for (auto wire : wires) {
+        wire->reseat();
+        wire->route(scene);
+    }
+
 }

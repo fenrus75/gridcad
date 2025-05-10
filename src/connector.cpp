@@ -17,9 +17,8 @@ connector::~connector(void)
 void connector::draw(class scene *scene, int type)
 {
     scene->drawCircle(X+0.5, Y+0.5, 0.5, COLOR_WIRE_SOLID);
-    for (auto wire : wires) {
-        wire->draw(scene);
-    }
+    for (auto port: ports) 
+        port->draw_wires(scene);
 }
 
 void connector::fill_grid(class wiregrid *grid)

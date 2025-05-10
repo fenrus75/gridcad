@@ -31,8 +31,8 @@ void twogate::drawAt(class scene *scene, float X, float Y, int type)
 //    for (auto port: ports) {
 //        drawConnector(scene, X, Y, port->X, port->Y, COLOR_ELEMENT_CONNECTOR + type);    
 //    }
-    for (auto wire : wires) {
-        wire->draw(scene);
+    for (auto port : ports) {
+        port->draw_wires(scene);
     }
 }
 

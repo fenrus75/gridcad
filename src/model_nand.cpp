@@ -27,8 +27,5 @@ void model_nand::drawAt(class scene *scene, float X, float Y, int type)
     for (auto port: ports) {
         port->drawAt(scene, X, Y, type);
     }
-    for (auto wire : wires) {
-        wire->draw(scene);
-    }
 }
 

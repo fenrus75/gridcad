@@ -28,8 +28,9 @@ void model_one::drawAt(class scene *scene, float X, float Y, int type)
 {
     scene->drawBox(X,Y,X+1,Y+1, COLOR_ELEMENT_NORMAL);
     scene->drawCircle(X+1.5, Y+0.5, 0.5, COLOR_VALUE_GREEN);
-    for (auto wire : wires) {
-        wire->draw(scene);
+    
+    for (auto port : ports) {
+        port->draw_wires(scene);
     }
 }
 

@@ -38,13 +38,12 @@ void element::drawAt(class scene *scene, float X, float Y, int type)
         scene->drawBox(X + 1.2, Y + 1.2, X + sizeX - 0.2, Y + sizeY - 0.2, COLOR_ELEMENT_INSIDE);
     
     /* TODO: real connectors */
-    /* TODO: ports need to learn how to draw themselves, and then their own wires */
     for (auto port: ports) {
         port->drawAt(scene, X, Y, type);
     }
-    for (auto wire : wires) {
-        wire->draw(scene);
-    }
+//    for (auto wire : wires) {
+//       wire->draw(scene);
+//    }
 }
 
 
@@ -111,10 +110,10 @@ void element::stop_drag(class scene *scene)
         port->screenY = Y + port->Y;
     }
     over_drag_threshold = false;
-    for (auto wire : wires) {
-        wire->reseat();
-        wire->route(scene);
-    }
+    
+    for (auto port : ports)
+        port->stop_drag(scene);
+
 }
 
 
@@ -176,12 +175,6 @@ void element::fill_grid(class wiregrid *grid)
         grid->add_soft_cost(X + port->X - 1, Y + port->Y + 1, 0.6);
         grid->add_soft_cost(X + port->X - 1, Y + port->Y - 1, 0.6);
     }
-}
-
-void element::add_wire(class wire *wire)
-{
-    wire->get_ref();
-    wires.push_back(wire);
 }
 
 void element::update_value(class port *port, struct value *value)

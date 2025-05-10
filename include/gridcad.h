@@ -117,7 +117,9 @@ public:
     int direction = PORT_IN;;
     
     virtual void draw(class scene *scene, int color);
+    virtual void draw_wires(class scene *scene);
     void drawAt(class scene *scene, float X, float Y, int color);
+    void stop_drag(class scene *scene);
 private:
     void drawConnector(class scene *scene, float X, float Y, int cX, int cY, int type);    
     std::vector<class wire*> wires;
@@ -147,7 +149,6 @@ public:
     
     class port * is_port(float X, float Y); /* X and Y are global positions */
     
-    void add_wire(class wire *wire);
     float get_X(void) { return X; };
     float get_Y(void) { return Y; };
     
@@ -166,7 +167,7 @@ protected:
     float X_in_drag = 0, Y_in_drag = 0;
     
     std::vector<class port *> ports;
-    std::vector<class wire *> wires;
+//    std::vector<class wire *> wires;
     
 };
 
