@@ -28,7 +28,7 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="0.5095679"
-     inkscape:cx="668.21321"
+     inkscape:cx="593.64022"
      inkscape:cy="571.07208"
      inkscape:window-width="1536"
      inkscape:window-height="779"
@@ -103,6 +103,9 @@
        id="path396-3"
        cx="219.00389"
        cy="149.68764"
-       r="35.724308" />
+       r="35.724308"
+       inkscape:export-filename="inverter.png"
+       inkscape:export-xdpi="101.6"
+       inkscape:export-ydpi="101.6" />
   </g>
 </svg>

@@ -17,6 +17,7 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
     icons[0][0] = new icon(renderer, ICON_ZERO);
     icons[1][0] = new icon(renderer, ICON_ONE);
     icons[0][1] = new icon(renderer, ICON_NOT);
+    icons[1][1] = new icon(renderer, ICON_TOGGLE);
     icons[0][2] = new icon(renderer, ICON_NAND);
     icons[1][2] = new icon(renderer, ICON_AND);
 }
@@ -97,6 +98,7 @@ static const char *image_names[] =
  "assets/nandgate.png",
  "assets/andgate.png",
  "assets/inverter.png",
+ "assets/toggle.png"
 };
 
 icon::icon(SDL_Renderer *renderer, int _type)
@@ -140,6 +142,8 @@ class element * icon::create_element(void)
               return new model_and(-10, -10);
           case ICON_NOT:
               return new model_not(-10, -10);
+          case ICON_TOGGLE:
+              return new model_toggle(-10, -10);
           default:
              return NULL;
      }

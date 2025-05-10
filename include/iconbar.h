@@ -7,6 +7,8 @@
 #define ICON_NAND 2
 #define ICON_AND 3
 #define ICON_NOT 4
+#define ICON_TOGGLE 5
+
 class icon {
 public:
     icon(SDL_Renderer *renderer, int type);

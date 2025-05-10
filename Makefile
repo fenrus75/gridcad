@@ -1,6 +1,6 @@
 all: gridcad wiretest
 
-MODELS :=  src/model_logic2.o src/model_nand.o src/model_and.o src/model_not.o
+MODELS :=  src/model_logic2.o src/model_nand.o src/model_and.o src/model_not.o src/model_toggle.o
 OBJS := src/main.o src/scene.o src/color.o src/element.o src/wire.o src/connector.o src/port.o src/model_zero.o src/model_one.o src/iconbar.o lib/wirepath.o $(MODELS) 
 
 gridcad: $(OBJS) include/gridcad.h Makefile

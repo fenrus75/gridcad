@@ -24,6 +24,17 @@ public:
     virtual void drawAt(class scene *scene, float X, float Y, int type);
 };
 
+class model_toggle : public element
+{
+public:
+    model_toggle(float X, float Y);
+    virtual ~model_toggle(void);
+    virtual void drawAt(class scene *scene, float X, float Y, int type);
+    virtual void mouse_select(void);
+private:
+    struct value value = {};
+};
+
 
 class model_logic2 : public element
 {

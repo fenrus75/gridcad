@@ -157,7 +157,7 @@ public:
     virtual void notify(void);
     virtual void calculate();
     virtual void mouse_select(void);
-    bool has_moved(void) { return (Xdnd == X) && (Ydnd == Y);};
+    bool has_moved(void) { return over_drag_threshold;};
 protected:
 
     const char *name = NULL;

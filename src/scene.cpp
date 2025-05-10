@@ -184,8 +184,11 @@ void scene::eventloop(void)
 				x = scr_to_X(event.motion.x);
 				y = scr_to_Y(event.motion.y);
 				if (dragging) {
-					if (!dragging->has_moved())
+					printf("Up\n");
+					if (!dragging->has_moved())  {
+						printf("Click\n");
 						dragging->mouse_select();
+					}
 					dragging->stop_drag(this);
 				}
 				if (dragging_port && !is_port(x, y)) {
