@@ -29,6 +29,13 @@ void model_zero::drawAt(class scene *scene, float X, float Y, int type)
 void model_zero::fill_grid(class wiregrid *grid)
 {
     grid->block_point(X, Y);
+    grid->add_soft_cost(X+1, Y - 1, 0.2);
+    grid->add_soft_cost(X+1, Y + 1, 0.2);
+    grid->add_soft_cost(X, Y - 1, 0.6);
+    grid->add_soft_cost(X, Y + 1, 0.6);
+    grid->add_soft_cost(X-1, Y - 1, 0.3);
+    grid->add_soft_cost(X-1, Y,    0.3);
+    grid->add_soft_cost(X-1, Y + 1, 0.3);
 }
 
 bool model_zero::intersect(float _X, float _Y)
