@@ -38,6 +38,19 @@ protected:
     const char *filename;
 };
 
+class model_not : public element
+{
+public:
+    model_not(float X, float Y);
+    virtual ~model_not(void);
+    virtual void drawAt(class scene *scene, float X, float Y, int type);
+    
+    virtual void calculate(void);
+protected:
+    SDL_Texture *visual = NULL;
+    const char *filename;
+};
+
 class model_nand : public model_logic2
 {
 public:
