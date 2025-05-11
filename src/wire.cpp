@@ -126,7 +126,7 @@ void wire::route(class scene *scene)
     delete(grid);
 
     for (auto port : ports) {
-        if (floorf(port->screenX) == X1 && floorf(port->screenY) == Y1 && port->direction == PORT_OUT) {
+        if (floorf(port->screenX) == X1 && floorf(port->screenY) == Y1 && port->direction != PORT_IN) {
             std::reverse(points->begin(), points->end());
         }
     }
