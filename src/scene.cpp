@@ -221,6 +221,12 @@ void scene::eventloop(void)
 			mouseY = scr_to_Y(event.motion.y);
 			x = scr_to_X(event.motion.x);
 			y = scr_to_Y(event.motion.y);
+			
+			if (hover_wire)
+				hover_wire->deselect();
+			hover_wire = is_wire(x, y);
+			if (hover_wire)
+				hover_wire->select();
 
 			if (dragging) {
 				dragging->update_drag(this,
@@ -436,8 +442,9 @@ class wire *scene::is_wire(float X, float Y)
 {
 	for (auto const elem:elements) {
 		class wire *p = elem->is_wire(X, Y);
-		if (p)
+		if (p) {
 			return p;
+		}
 	}
 	return NULL;
 }

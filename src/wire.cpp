@@ -46,7 +46,7 @@ double dist(float x1, float y1, float x2, float y2)
 }
 
 
-void draw_snake_line(class scene *scene, float x1, float y1, float x2, float y2, int color, int *step, struct value *value)
+void draw_snake_line(class scene *scene, float x1, float y1, float x2, float y2, int color, int *step, struct value *value, int stepsize = 60)
 {
         double dx, dy,d;
         scene->drawLine(x1, y1, x2, y2, color);
@@ -60,7 +60,7 @@ void draw_snake_line(class scene *scene, float x1, float y1, float x2, float y2,
         
         while (dist(x1,y1,x2,y2) > 1/10.0) {
             (*step)++;
-            if ((*step) >= 60) {
+            if ((*step) >= stepsize) {
                 (*step) = 0;
                 scene->drawCircle(x1, y1, 0.18, COLOR_WIRE_MOTION, value_color(value));
             }
@@ -76,6 +76,7 @@ void wire::draw(class scene *scene, int color)
 {
     int prevX, prevY;
     bool first = true;
+    int stepsize;
     int step;
     if (!points)
         route(scene);
@@ -83,7 +84,11 @@ void wire::draw(class scene *scene, int color)
     if (!points)
         return;
         
-    step = current_interval();
+    stepsize = 60;
+    if (selected)
+        stepsize = 20;
+        
+    step = current_interval() % stepsize;
     for (auto point: *points) {
         if (first) {
             prevX = point.X;
@@ -91,7 +96,7 @@ void wire::draw(class scene *scene, int color)
             first = false;
             continue;
         }
-        draw_snake_line(scene, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, color, &step, &value);
+        draw_snake_line(scene, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, color, &step, &value, stepsize);
         prevX = point.X;
         prevY = point.Y;
     }

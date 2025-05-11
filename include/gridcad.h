@@ -86,7 +86,7 @@ protected:
     SDL_Rect main_area_rect, ui_area_rect;
     class element *dragging = NULL, *floating = NULL;
     class port *dragging_port = NULL;
-    class wire *dragging_wire = NULL;
+    class wire *dragging_wire = NULL, *hover_wire = NULL;
     class iconbar *icon_bar = NULL;
     class icon *active_icon = NULL;
     bool left_mouse_down = false;
@@ -196,7 +196,12 @@ public:
     virtual void notify(void);
     struct value value;
     bool intersect(float targetX, float targetY);
+    
+    void select(void) { selected = true;};
+    void deselect(void) { selected = false;};
+    
 protected:
+    bool selected = false;
     std::vector<class port *> ports;
     int X1 = 0, Y1 = 0, X2 = 0, Y2 = 0;
     int color = 0;
