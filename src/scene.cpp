@@ -432,6 +432,16 @@ class port *scene::is_port(float X, float Y)
 
 }
 
+class wire *scene::is_wire(float X, float Y)
+{
+	for (auto const elem:elements) {
+		class wire *p = elem->is_wire(X, Y);
+		if (p)
+			return p;
+	}
+	return NULL;
+}
+
 void scene::fill_grid(class wiregrid * grid)
 {
 	for (auto const elem:elements)

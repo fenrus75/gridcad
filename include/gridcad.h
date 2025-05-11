@@ -72,6 +72,7 @@ public:
     bool can_place_element(float x, float y, int w, int h, class element *myself = NULL);
 
     class port * is_port(float X, float Y); /* X and Y are global positions */
+    class wire *is_wire(float X, float Y);
     
     void fill_grid(class wiregrid* grid);
     SDL_Texture *load_image(const char *filename);
@@ -121,6 +122,7 @@ public:
     void drawAt(class scene *scene, float X, float Y, int color);
     void stop_drag(class scene *scene);
     virtual void notify(void);
+    class wire *is_wire(float X, float Y);
 private:
     void drawConnector(class scene *scene, float X, float Y, int cX, int cY, int type);    
     std::vector<class wire*> wires;
@@ -158,6 +160,7 @@ public:
     virtual void calculate();
     virtual void mouse_select(void);
     bool has_moved(void) { return over_drag_threshold;};
+    class wire *is_wire(float X, float Y);
 protected:
 
     const char *name = NULL;
@@ -192,7 +195,7 @@ public:
     void update_value(struct value *newvalue);
     virtual void notify(void);
     struct value value;
-    
+    bool intersect(float targetX, float targetY);
 protected:
     std::vector<class port *> ports;
     int X1 = 0, Y1 = 0, X2 = 0, Y2 = 0;

@@ -87,3 +87,12 @@ void port::notify(void)
     	wire->update_value(&value);
     }
 }
+
+class wire *port::is_wire(float X, float Y)
+{
+	for (auto wire : wires) {
+		if (wire->intersect(X, Y))
+			return wire;	
+	}
+	return NULL;
+}

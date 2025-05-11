@@ -176,3 +176,48 @@ void wire::update_value(struct value *newvalue)
 void wire::notify(void)
 {
 }
+
+
+bool wire::intersect(float targetX, float targetY)
+{
+    float bestdist = 10000;
+    bool first = true;
+    float prevX, prevY;
+    
+    /* TODO we should do fancy "point to a line" math.... */
+    for (auto point: *points) {
+        if (first) {
+            first = false;
+            prevX = point.X;
+            prevY = point.Y;
+            continue;
+        }
+        double dx, dy,d;
+        float x1,y1,x2,y2;
+        x1 = prevX;
+        y1 = prevY;
+        x2 = point.X;
+        y2 = point.Y;
+        
+        dx = x2-x1;
+        dy = y2-y1;
+        d = dist(x1,y1,x2,y2);
+        dx = dx/d/20.0;
+        dy = dy/d/20.0;
+        
+        
+        while (dist(x1,y1,x2,y2) > 1/10.0) {
+            if (dist(targetX, targetY, x1, y1) < bestdist) {
+                bestdist = dist(targetX, targetY, x1, y1);
+            }
+            x1 += dx;
+            y1 += dy;            
+        }
+        prevX = point.X;
+        prevY = point.Y;
+    }
+
+    if (bestdist < 0.5)
+        return true;
+    return false;
+}

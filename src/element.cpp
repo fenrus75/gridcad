@@ -201,3 +201,14 @@ void element::mouse_select(void)
 {
     /* empty in the base class */
 }
+
+class wire *element::is_wire(float X, float Y)
+{
+    class wire *wire = NULL;
+    for (auto port : ports) {
+        wire = port->is_wire(X, Y);
+        if (wire)
+            return (wire);
+    }
+    return NULL;
+}
