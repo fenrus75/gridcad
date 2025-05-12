@@ -207,8 +207,8 @@ bool wire::intersect(float targetX, float targetY)
         dx = x2-x1;
         dy = y2-y1;
         d = dist(x1,y1,x2,y2);
-        dx = dx/d/20.0;
-        dy = dy/d/20.0;
+        dx = dx/d/12.0;
+        dy = dy/d/12.0;
         
         
         while (dist(x1,y1,x2,y2) > 1/10.0) {

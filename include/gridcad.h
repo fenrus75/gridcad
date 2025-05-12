@@ -91,6 +91,7 @@ protected:
     class icon *active_icon = NULL;
     bool left_mouse_down = false;
     float mouseX, mouseY;
+    float click_start_X, click_start_Y;
     
 };
 

@@ -113,6 +113,9 @@ void scene::eventloop(void)
 				left_mouse_down = true;
 				class icon *this_icon;
 				float x, y;
+				
+				click_start_X = event.motion.x;
+				click_start_Y = event.motion.y;
 
 				x = scr_to_X(event.motion.x);
 				y = scr_to_Y(event.motion.y);
@@ -247,6 +250,42 @@ void scene::eventloop(void)
 				if (!banned)
 					dragging_wire->move_target(mouseX, mouseY);
 			}
+			break;
+			
+		case SDL_MOUSEWHEEL:
+			if (event.wheel.y > 0) {
+				float cX, cY;
+				int count = 0;
+				
+				cX = X_to_scr(mouseX);
+				cY = Y_to_scr(mouseY);
+				scaleX++;
+				scaleY++;
+				
+				/* need to keep the point under the cursor the same */
+				while (scr_to_X(cX) < mouseX && count++ < 1000)
+					offsetX += 0.02;
+				while (scr_to_Y(cY) < mouseY && count++ < 1000)
+					offsetY += 0.02;
+				
+			}
+			if (event.wheel.y < 0) {
+				float cX, cY;
+				int count = 0;
+				
+				cX = X_to_scr(mouseX);
+				cY = Y_to_scr(mouseY);
+				if (scaleX > 1)
+					scaleX--;
+				if (scaleY > 1)
+					scaleY--;
+				/* need to keep the point under the cursor the same */
+				while (scr_to_X(cX) > mouseX && count++ < 1000)  
+					offsetX -= 0.2;
+				while (scr_to_Y(cY) > mouseY & count++ < 1000)
+					offsetY -= 0.2;
+			}
+			
 			break;
 
 		case SDL_POLLSENTINEL:
