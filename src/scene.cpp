@@ -282,7 +282,7 @@ void scene::eventloop(void)
 				/* need to keep the point under the cursor the same */
 				while (scr_to_X(cX) > mouseX && count++ < 1000)  
 					offsetX -= 0.2;
-				while (scr_to_Y(cY) > mouseY & count++ < 1000)
+				while (scr_to_Y(cY) > mouseY && count++ < 1000)
 					offsetY -= 0.2;
 			}
 			
