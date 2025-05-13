@@ -118,8 +118,8 @@ public:
     void update_value(struct value *newvalue);
     int direction = PORT_IN;;
     
-    virtual void draw(class scene *scene, int color);
-    virtual void draw_wires(class scene *scene);
+    void draw(class scene *scene, int color);
+    void draw_wires(class scene *scene);
     void drawAt(class scene *scene, float X, float Y, int color);
     void stop_drag(class scene *scene);
     virtual void notify(void);
@@ -216,8 +216,8 @@ class connector : public element
 public:
     connector(float _X = 0, float _Y =0);
     virtual ~connector();
-    virtual void draw(class scene *scene, int type);
-    virtual void fill_grid(class wiregrid* grid);
+    void draw(class scene *scene, int type) override;
+    void fill_grid(class wiregrid* grid) override;
 };
 
 extern int R(int color);
