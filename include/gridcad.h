@@ -78,11 +78,11 @@ public:
     SDL_Texture *load_image(const char *filename);
     void draw_image(SDL_Texture *image, float X, float Y, float W, float H, int alpha=255);
     
+    SDL_Renderer *renderer = NULL;
     
 protected:
     std::vector<class element *> elements;
     SDL_Window *window = NULL;
-    SDL_Renderer *renderer = NULL;
     SDL_Rect main_area_rect, ui_area_rect;
     class element *dragging = NULL, *floating = NULL;
     class port *dragging_port = NULL;
@@ -107,7 +107,7 @@ protected:
 
 class port {
 public:
-    port(int _direction = PORT_IN);
+    port(const char *_name, int _direction = PORT_IN);
     ~port(void);
     int X, Y;
     float screenX, screenY;
@@ -127,6 +127,7 @@ public:
 private:
     void drawConnector(class scene *scene, float X, float Y, int cX, int cY, int type);    
     std::vector<class wire*> wires;
+    SDL_Texture *label = NULL;
 };
 
 class element

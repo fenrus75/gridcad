@@ -1,8 +1,15 @@
 #include "gridcad.h"
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_render.h>
 
-port::port(int _direction)
+port::port(const char *_name, int _direction)
 {
+
 	direction = _direction;
+	name = strdup(_name);
+	
 }
 
 port::~port()
@@ -44,6 +51,18 @@ void port::update_value(struct value *newvalue)
 
 void port::drawAt(class scene * scene, float _X, float _Y, int type)
 {
+	SDL_Color white = {255, 255, 255, 255};
+
+
+	if (!label) {
+		SDL_Surface *surface;
+		TTF_Font *font;
+		font = TTF_OpenFont("fonts/Roboto-Medium-webfont.ttf", 14);
+		surface = TTF_RenderUTF8_Blended(font, name, white);
+		label = SDL_CreateTextureFromSurface(scene->renderer, surface);
+		SDL_FreeSurface(surface);
+	}
+
 	if (direction == PORT_IN) {
 		drawConnector(scene, _X, _Y, X, Y, COLOR_ELEMENT_CONNECTOR + type);
 	} else { 
@@ -68,6 +87,16 @@ void port::draw(class scene *scene, int color)
 void port::drawConnector(class scene * scene, float X, float Y, int cX, int cY, int type)
 {
 	scene->drawCircle(cX + X + 0.5, cY + Y + 0.5, 0.51, type);
+	if (label) {
+		double w,h;
+		SDL_Point size;
+		SDL_QueryTexture(label, NULL, NULL, &size.x, &size.y);
+		
+		h = 0.3;
+		w = size.x / size.y * h;
+		
+		scene->draw_image(label, cX + X + (1 - w)/2, cY + Y + 1, w, h); 
+	}
 }
 
 void port::stop_drag(class scene *scene)

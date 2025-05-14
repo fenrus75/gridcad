@@ -19,7 +19,8 @@ int main(int argc, char **argv)
     
     delete _scene;
     
-    
+
+    TTF_Quit();    
     SDL_Quit();
     return 0;
 }

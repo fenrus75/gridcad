@@ -129,10 +129,9 @@ bool element::intersect(float _X, float _Y)
 void element::add_port(int X, int Y, const char *_name, int direction, bool initval)
 {
     class port *_port;
-    _port = new port(direction);
+    _port = new port(_name, direction);
     _port->X = X;
     _port->Y = Y;
-    _port->name = strdup(_name);
     _port->parent = this;
     _port->value.boolval = initval;
     ports.push_back(_port);
