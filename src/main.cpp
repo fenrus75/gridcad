@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
 
 #include "gridcad.h"
@@ -8,6 +9,7 @@ int main(int argc, char **argv)
 {
     class scene *_scene;
     SDL_Init(SDL_INIT_VIDEO);
+    TTF_Init();
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2");
     
     _scene = new scene();
