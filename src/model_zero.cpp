@@ -17,12 +17,12 @@ model_zero::~model_zero(void)
 {
 }
 
-void model_zero::drawAt(class scene *scene, float X, float Y, int type)
+void model_zero::drawAt(class canvas *canvas, float X, float Y, int type)
 {
-    scene->drawBox(X,Y,X+1,Y+1, COLOR_ELEMENT_NORMAL);
-    scene->drawCircle(X+1.5, Y+0.5, 0.5, COLOR_WIRE_SOLID);
+    canvas->drawBox(X,Y,X+1,Y+1, COLOR_ELEMENT_NORMAL);
+    canvas->drawCircle(X+1.5, Y+0.5, 0.5, COLOR_WIRE_SOLID);
     for (auto port : ports) {
-        port->draw_wires(scene);
+        port->draw_wires(canvas);
     }
 }
 

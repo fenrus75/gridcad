@@ -10,7 +10,7 @@ class model_zero : public element
 public:
     model_zero(float X, float Y);
     virtual ~model_zero(void);
-    void drawAt(class scene *scene, float X, float Y, int type) override;
+    void drawAt(class canvas *canvas, float X, float Y, int type) override;
     void fill_grid(class wiregrid* grid) override;
     bool intersect(float _X, float _Y) override;
 };
@@ -21,7 +21,7 @@ class model_one : public model_zero
 public:
     model_one(float X, float Y);
     virtual ~model_one(void);
-    void drawAt(class scene *scene, float X, float Y, int type) override;
+    void drawAt(class canvas *canvas, float X, float Y, int type) override;
 };
 
 class model_toggle : public element
@@ -29,7 +29,7 @@ class model_toggle : public element
 public:
     model_toggle(float X, float Y);
     virtual ~model_toggle(void);
-    void drawAt(class scene *scene, float X, float Y, int type) override;
+    void drawAt(class canvas *canvas, float X, float Y, int type) override;
     void mouse_select(void) override;
 private:
     struct value value = {};
@@ -41,7 +41,7 @@ class model_logic2 : public element
 public:
     model_logic2(float X, float Y, const char *filename);
     virtual ~model_logic2(void);
-    void drawAt(class scene *scene, float X, float Y, int type) override;
+    void drawAt(class canvas *canvas, float X, float Y, int type) override;
     
     void calculate(void) override;
 protected:
@@ -54,7 +54,7 @@ class model_not : public element
 public:
     model_not(float X, float Y);
     virtual ~model_not(void);
-    void drawAt(class scene *scene, float X, float Y, int type) override;
+    void drawAt(class canvas *canvas, float X, float Y, int type) override;
     
     void calculate(void) override;
 protected:

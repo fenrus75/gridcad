@@ -4,7 +4,7 @@ all: gridcad wiretest subdirs
 SUBDIRS := fonts
 
 MODELS :=  src/model_logic2.o src/model_nand.o src/model_and.o src/model_not.o src/model_toggle.o src/model_nor.o src/model_or.o
-OBJS := src/main.o src/scene.o src/color.o src/element.o src/wire.o src/connector.o src/port.o src/model_zero.o src/model_one.o src/iconbar.o lib/wirepath.o $(MODELS) 
+OBJS := src/main.o src/canvas.o src/scene.o src/color.o src/element.o src/wire.o src/connector.o src/port.o src/model_zero.o src/model_one.o src/iconbar.o lib/wirepath.o $(MODELS) 
 
 gridcad: $(OBJS) include/gridcad.h Makefile
 	g++ $(CFLAGS) -O3 -Wall -march=native $(OBJS) -flto -o gridcad -lSDL2main -lSDL2_image -lSDL2_gfx -lSDL2_ttf -lSDL2 

@@ -42,12 +42,12 @@ struct value {
 };
 
 
-
-class scene
+/* gui canvas to draw on */
+class canvas
 {
 public:
-    scene(void);
-    virtual ~scene(void);
+    canvas (class scene *_scene);
+    virtual ~canvas(void);
     
     void draw(void);
     void eventloop(void);
@@ -65,24 +65,17 @@ public:
     float offsetX, offsetY;
     float scaleX, scaleY;
     
-    float sizeX, sizeY;
     
-    void add_element(class element *element);
-    
-    bool can_place_element(float x, float y, int w, int h, class element *myself = NULL);
-
-    class port * is_port(float X, float Y); /* X and Y are global positions */
-    class wire *is_wire(float X, float Y);
-    
-    void fill_grid(class wiregrid* grid);
     SDL_Texture *load_image(const char *filename);
     void draw_image(SDL_Texture *image, float X, float Y, float W, float H, int alpha=255);
     SDL_Texture *text_to_texture(const char *text);
     
+    class scene *get_scene(void) { return current_scene; };
+    
     
 protected:
+    class scene *current_scene;
     SDL_Renderer *renderer = NULL;
-    std::vector<class element *> elements;
     SDL_Window *window = NULL;
     SDL_Rect main_area_rect, ui_area_rect;
     class element *dragging = NULL, *floating = NULL;
@@ -93,6 +86,30 @@ protected:
     bool left_mouse_down = false;
     float mouseX, mouseY;
     float click_start_X, click_start_Y;
+    
+};
+
+/* logical representation of a (sub)circuit */
+class scene
+{
+public:
+    scene(void);
+    virtual ~scene(void);
+
+    float sizeX, sizeY;
+    
+    void add_element(class element *element);
+    
+    bool can_place_element(float x, float y, int w, int h, class element *myself = NULL);
+
+    class port * is_port(float X, float Y); /* X and Y are global positions */
+    class wire *is_wire(float X, float Y);
+    
+    void fill_grid(class wiregrid* grid);
+    
+    std::vector<class element *> elements;
+    
+protected:
     
 };
 
@@ -119,14 +136,14 @@ public:
     void update_value(struct value *newvalue);
     int direction = PORT_IN;;
     
-    void draw(class scene *scene, int color);
-    void draw_wires(class scene *scene);
-    void drawAt(class scene *scene, float X, float Y, int color);
-    void stop_drag(class scene *scene);
+    void draw(class canvas *canvas, int color);
+    void draw_wires(class canvas *canva);
+    void drawAt(class canvas *canvas, float X, float Y, int color);
+    void stop_drag(class canvas *canva);
     virtual void notify(void);
     class wire *is_wire(float X, float Y);
 private:
-    void drawConnector(class scene *scene, float X, float Y, int cX, int cY, int type);    
+    void drawConnector(class canvas *canvas, float X, float Y, int cX, int cY, int type);    
     std::vector<class wire*> wires;
     SDL_Texture *label = NULL;
 };
@@ -139,12 +156,12 @@ public:
     
     void place(int X, int Y);
     
-    virtual void drawAt(class scene *scene, float X, float Y, int type);
-    virtual void draw(class scene *scene, int type);
+    virtual void drawAt(class canvas *canvas, float X, float Y, int type);
+    virtual void draw(class canvas *canvas, int type);
     
     void start_drag(float X, float Y);
-    void update_drag(class scene *scene, float X, float Y);
-    void stop_drag(class scene *scene);
+    void update_drag(class canvas *canvas, class scene *scene,  float X, float Y);
+    void stop_drag(class canvas *canva);
     
     virtual bool intersect(float X, float Y);
     
@@ -188,7 +205,7 @@ public:
     virtual ~wire(void);
     
     void move_target(int x2, int y2);
-    void draw(class scene *, int color = COLOR_WIRE_SOLID);
+    void draw(class canvas *, int color = COLOR_WIRE_SOLID);
     void route(class scene *);
     
     void get_ref(void);
@@ -218,7 +235,7 @@ class connector : public element
 public:
     connector(float _X = 0, float _Y =0);
     virtual ~connector();
-    void draw(class scene *scene, int type) override;
+    void draw(class canvas *canvas, int type) override;
     void fill_grid(class wiregrid* grid) override;
 };
 

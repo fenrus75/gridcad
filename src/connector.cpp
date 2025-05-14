@@ -14,11 +14,11 @@ connector::~connector(void)
 {
 }
 
-void connector::draw(class scene *scene, int type)
+void connector::draw(class canvas *canvas, int type)
 {
-    scene->drawCircle(X+0.5, Y+0.5, 0.5, COLOR_WIRE_SOLID);
+    canvas->drawCircle(X+0.5, Y+0.5, 0.5, COLOR_WIRE_SOLID);
     for (auto port: ports) 
-        port->draw_wires(scene);
+        port->draw_wires(canvas);
 }
 
 void connector::fill_grid(class wiregrid *grid)

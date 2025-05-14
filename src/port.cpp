@@ -47,36 +47,36 @@ void port::update_value(struct value *newvalue)
 
 
 
-void port::drawAt(class scene * scene, float _X, float _Y, int type)
+void port::drawAt(class canvas * canvas, float _X, float _Y, int type)
 {
 	if (!label) {
-		label = scene->text_to_texture(name);
+		label = canvas->text_to_texture(name);
 	}
 
 	if (direction == PORT_IN) {
-		drawConnector(scene, _X, _Y, X, Y, COLOR_ELEMENT_CONNECTOR + type);
+		drawConnector(canvas, _X, _Y, X, Y, COLOR_ELEMENT_CONNECTOR + type);
 	} else { 
-		drawConnector(scene, _X, _Y, X, Y, value_color(&value));
+		drawConnector(canvas, _X, _Y, X, Y, value_color(&value));
 	}
-	draw_wires(scene);
+	draw_wires(canvas);
 }
 
-void port::draw_wires(class scene * scene)
+void port::draw_wires(class canvas * canvas)
 {
 	for (auto wire : wires) {
-        	wire->draw(scene);
+        	wire->draw(canvas);
 	}
 }
 
-void port::draw(class scene *scene, int color)
+void port::draw(class canvas *canvas, int color)
 {
-	drawAt(scene, screenX, screenY, color);
+	drawAt(canvas, screenX, screenY, color);
 }
 
 
-void port::drawConnector(class scene * scene, float X, float Y, int cX, int cY, int type)
+void port::drawConnector(class canvas * canvas, float X, float Y, int cX, int cY, int type)
 {
-	scene->drawCircle(cX + X + 0.5, cY + Y + 0.5, 0.51, type);
+	canvas->drawCircle(cX + X + 0.5, cY + Y + 0.5, 0.51, type);
 	if (label) {
 		double w,h;
 		SDL_Point size;
@@ -85,15 +85,15 @@ void port::drawConnector(class scene * scene, float X, float Y, int cX, int cY, 
 		h = 0.3;
 		w = size.x / size.y * h;
 		
-		scene->draw_image(label, cX + X + (1 - w)/2, cY + Y + 1, w, h); 
+		canvas->draw_image(label, cX + X + (1 - w)/2, cY + Y + 1, w, h); 
 	}
 }
 
-void port::stop_drag(class scene *scene)
+void port::stop_drag(class canvas *canvas)
 {
     for (auto wire : wires) {
         wire->reseat();
-        wire->route(scene);
+        wire->route(canvas->get_scene());
     }
 
 }

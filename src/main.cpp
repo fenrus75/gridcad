@@ -7,16 +7,21 @@
 
 int main(int argc, char **argv)
 {
+    class canvas *_canvas;
     class scene *_scene;
     SDL_Init(SDL_INIT_VIDEO);
     TTF_Init();
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2");
-    
+
     _scene = new scene();
     
-    _scene->eventloop();
+    _canvas = new canvas(_scene);
     
     
+    _canvas->eventloop();
+    
+
+    delete _canvas;    
     delete _scene;
     
 

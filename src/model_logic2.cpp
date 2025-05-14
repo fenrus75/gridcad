@@ -18,14 +18,14 @@ model_logic2::~model_logic2(void)
 {
 }
 
-void model_logic2::drawAt(class scene *scene, float X, float Y, int type)
+void model_logic2::drawAt(class canvas *canvas, float X, float Y, int type)
 {
     if (!visual) {
-        visual = scene->load_image(filename);    
+        visual = canvas->load_image(filename);    
     }
-    scene->draw_image(visual, X+1, Y, sizeX-1, sizeY, Alpha(type));
+    canvas->draw_image(visual, X+1, Y, sizeX-1, sizeY, Alpha(type));
     for (auto port: ports) {
-        port->drawAt(scene, X, Y, type);
+        port->drawAt(canvas, X, Y, type);
     }
 }
 

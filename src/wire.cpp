@@ -46,10 +46,10 @@ double dist(float x1, float y1, float x2, float y2)
 }
 
 
-void draw_snake_line(class scene *scene, float x1, float y1, float x2, float y2, int color, int *step, struct value *value, int stepsize = 60)
+void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y2, int color, int *step, struct value *value, int stepsize = 60)
 {
         double dx, dy,d;
-        scene->drawLine(x1, y1, x2, y2, color);
+        canvas->drawLine(x1, y1, x2, y2, color);
         
         dx = x2-x1;
         dy = y2-y1;
@@ -62,7 +62,7 @@ void draw_snake_line(class scene *scene, float x1, float y1, float x2, float y2,
             (*step)++;
             if ((*step) >= stepsize) {
                 (*step) = 0;
-                scene->drawCircle(x1, y1, 0.18, COLOR_WIRE_MOTION, value_color(value));
+                canvas->drawCircle(x1, y1, 0.18, COLOR_WIRE_MOTION, value_color(value));
             }
             x1 += dx;
             y1 += dy;
@@ -72,14 +72,14 @@ void draw_snake_line(class scene *scene, float x1, float y1, float x2, float y2,
     
 }
 
-void wire::draw(class scene *scene, int color)
+void wire::draw(class canvas *canvas, int color)
 {
     int prevX, prevY;
     bool first = true;
     int stepsize;
     int step;
     if (!points)
-        route(scene);
+        route(canvas->get_scene());
         
     if (!points)
         return;
@@ -96,7 +96,7 @@ void wire::draw(class scene *scene, int color)
             first = false;
             continue;
         }
-        draw_snake_line(scene, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, color, &step, &value, stepsize);
+        draw_snake_line(canvas, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, color, &step, &value, stepsize);
         prevX = point.X;
         prevY = point.Y;
     }

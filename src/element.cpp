@@ -29,17 +29,17 @@ void element::place(int _X, int _Y)
 }
 
 
-void element::drawAt(class scene *scene, float X, float Y, int type)
+void element::drawAt(class canvas *canvas, float X, float Y, int type)
 {
     assert (type <= DRAW_ORIGIN);
     
-    scene->drawBox(X + 1, Y + 1, X + sizeX , Y + sizeY , COLOR_ELEMENT_NORMAL + type);
+    canvas->drawBox(X + 1, Y + 1, X + sizeX , Y + sizeY , COLOR_ELEMENT_NORMAL + type);
     if (type == DRAW_NORMAL || type == DRAW_ORIGIN)
-        scene->drawBox(X + 1.2, Y + 1.2, X + sizeX - 0.2, Y + sizeY - 0.2, COLOR_ELEMENT_INSIDE);
+        canvas->drawBox(X + 1.2, Y + 1.2, X + sizeX - 0.2, Y + sizeY - 0.2, COLOR_ELEMENT_INSIDE);
     
     /* TODO: real connectors */
     for (auto port: ports) {
-        port->drawAt(scene, X, Y, type);
+        port->drawAt(canvas, X, Y, type);
     }
 //    for (auto wire : wires) {
 //       wire->draw(scene);
@@ -47,20 +47,20 @@ void element::drawAt(class scene *scene, float X, float Y, int type)
 }
 
 
-void element::draw(class scene *scene, int type)
+void element::draw(class canvas *canvas, int type)
 {
     switch (type) {
         case DRAW_NORMAL:
-            drawAt(scene, X, Y, DRAW_NORMAL);
+            drawAt(canvas, X, Y, DRAW_NORMAL);
             break;
         case DRAW_GHOST:
-            drawAt(scene, Xghost, Yghost, DRAW_GHOST);
+            drawAt(canvas, Xghost, Yghost, DRAW_GHOST);
             break;
         case DRAW_DND:
-            drawAt(scene, Xdnd, Ydnd, DRAW_DND);
+            drawAt(canvas, Xdnd, Ydnd, DRAW_DND);
             break;
         case DRAW_ORIGIN:
-            drawAt(scene, X, Y, DRAW_ORIGIN);
+            drawAt(canvas, X, Y, DRAW_ORIGIN);
             break;
             
         default:
@@ -80,7 +80,7 @@ void element::start_drag(float _X, float _Y)
     Y_in_drag = _Y - Y;
 }
 
-void element::update_drag(class scene *scene, float _X, float _Y)
+void element::update_drag(class canvas *canvas, class scene *scene, float _X, float _Y)
 {
     if (fabsf(_X - X) > 2 || fabsf(_Y - Y) > 2)
         over_drag_threshold = true;
@@ -100,7 +100,7 @@ void element::update_drag(class scene *scene, float _X, float _Y)
     }
 }
 
-void element::stop_drag(class scene *scene)
+void element::stop_drag(class canvas *canvas)
 {
     X = Xghost;
     Y = Yghost;
@@ -112,7 +112,7 @@ void element::stop_drag(class scene *scene)
     over_drag_threshold = false;
     
     for (auto port : ports)
-        port->stop_drag(scene);
+        port->stop_drag(canvas);
 
     calculate();
 }

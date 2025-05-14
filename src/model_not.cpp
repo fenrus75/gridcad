@@ -16,14 +16,14 @@ model_not::~model_not(void)
 {
 }
 
-void model_not::drawAt(class scene *scene, float X, float Y, int type)
+void model_not::drawAt(class canvas *canvas, float X, float Y, int type)
 {
     if (!visual) {
-        visual = scene->load_image("assets/inverter.png");    
+        visual = canvas->load_image("assets/inverter.png");    
     }
-    scene->draw_image(visual, X+1, Y, sizeX-1, sizeY, Alpha(type));
+    canvas->draw_image(visual, X+1, Y, sizeX-1, sizeY, Alpha(type));
     for (auto port: ports) {
-        port->drawAt(scene, X, Y, type);
+        port->drawAt(canvas, X, Y, type);
     }
 }
 

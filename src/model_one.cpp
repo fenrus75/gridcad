@@ -24,13 +24,13 @@ model_one::~model_one(void)
 {
 }
 
-void model_one::drawAt(class scene *scene, float X, float Y, int type)
+void model_one::drawAt(class canvas *canvas, float X, float Y, int type)
 {
-    scene->drawBox(X,Y,X+1,Y+1, COLOR_ELEMENT_NORMAL);
-    scene->drawCircle(X+1.5, Y+0.5, 0.5, COLOR_VALUE_GREEN);
+    canvas->drawBox(X,Y,X+1,Y+1, COLOR_ELEMENT_NORMAL);
+    canvas->drawCircle(X+1.5, Y+0.5, 0.5, COLOR_VALUE_GREEN);
     
     for (auto port : ports) {
-        port->draw_wires(scene);
+        port->draw_wires(canvas);
     }
 }
 

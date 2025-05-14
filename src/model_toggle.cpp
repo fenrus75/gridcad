@@ -15,13 +15,13 @@ model_toggle::~model_toggle(void)
 {
 }
 
-void model_toggle::drawAt(class scene *scene, float X, float Y, int type)
+void model_toggle::drawAt(class canvas *canvas, float X, float Y, int type)
 {
-//    element::drawAt(scene, X, Y, type);
-    scene->drawCircle(X+2, Y+1, 1.5, COLOR_WIRE_SOLID, value_color(&value));
+//    element::drawAt(canvas, X, Y, type);
+    canvas->drawCircle(X+2, Y+1, 1.5, COLOR_WIRE_SOLID, value_color(&value));
     for (auto port : ports) {
-        port->drawAt(scene, X,Y, COLOR_WIRE_SOLID);
-        port->draw_wires(scene);
+        port->drawAt(canvas, X,Y, COLOR_WIRE_SOLID);
+        port->draw_wires(canvas);
     }
 }
 
