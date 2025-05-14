@@ -1,5 +1,7 @@
-all: gridcad wiretest
+all: gridcad wiretest subdirs
 
+
+SUBDIRS := fonts
 
 MODELS :=  src/model_logic2.o src/model_nand.o src/model_and.o src/model_not.o src/model_toggle.o src/model_nor.o src/model_or.o
 OBJS := src/main.o src/scene.o src/color.o src/element.o src/wire.o src/connector.o src/port.o src/model_zero.o src/model_one.o src/iconbar.o lib/wirepath.o $(MODELS) 
@@ -20,3 +22,11 @@ clean:
 	
 devdeps:
 	sudo apt install libsdl2-dev libsdl2-image-dev libsdl2-gfx-dev
+	
+
+subdirs:
+	for dir in $(SUBDIRS); do \
+		$(MAKE) -C $$dir; \
+	done
+
+.PHONY: all subdirs
