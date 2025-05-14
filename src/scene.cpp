@@ -1,6 +1,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
+#include <SDL2/SDL_ttf.h>
 
 #include <stdio.h>
 
@@ -510,4 +511,20 @@ void scene::draw_image(SDL_Texture *image, float X, float Y, float W, float H, i
 	SDL_SetTextureAlphaMod(image, alpha);
 	
 	SDL_RenderCopy(renderer, image, NULL, &rect);
+}
+
+
+SDL_Texture *scene::text_to_texture(const char *text)
+{
+	const SDL_Color white = {255, 255, 255, 255};
+	SDL_Texture *tx;
+	SDL_Surface *surface;
+	TTF_Font *font;
+		
+	font = TTF_OpenFont("fonts/Roboto-Medium-webfont.ttf", 14);
+	surface = TTF_RenderUTF8_Blended(font, text, white);
+	tx = SDL_CreateTextureFromSurface(renderer, surface);
+	SDL_FreeSurface(surface);
+	TTF_CloseFont(font);
+	return tx;
 }

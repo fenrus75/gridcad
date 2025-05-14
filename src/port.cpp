@@ -1,8 +1,6 @@
 #include "gridcad.h"
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
-#include <SDL2/SDL_render.h>
 
 port::port(const char *_name, int _direction)
 {
@@ -51,16 +49,8 @@ void port::update_value(struct value *newvalue)
 
 void port::drawAt(class scene * scene, float _X, float _Y, int type)
 {
-	SDL_Color white = {255, 255, 255, 255};
-
-
 	if (!label) {
-		SDL_Surface *surface;
-		TTF_Font *font;
-		font = TTF_OpenFont("fonts/Roboto-Medium-webfont.ttf", 14);
-		surface = TTF_RenderUTF8_Blended(font, name, white);
-		label = SDL_CreateTextureFromSurface(scene->renderer, surface);
-		SDL_FreeSurface(surface);
+		label = scene->text_to_texture(name);
 	}
 
 	if (direction == PORT_IN) {
