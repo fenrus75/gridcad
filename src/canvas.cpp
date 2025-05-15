@@ -139,6 +139,8 @@ void canvas::eventloop(void)
 				
 				
 				wr = current_scene->is_wire(x, y);
+				if (wr)
+					printf("WR  %i\n", dragging != NULL);
 				if (!dragging && wr) {
 					class wire *wr2;
 					class element *_element;
@@ -224,9 +226,28 @@ void canvas::eventloop(void)
 					dragging->stop_drag(this);
 				}
 				if (dragging_port && !current_scene->is_port(x, y)) {
+					class wire *wr;
 					class element *_element;
-					_element = new connector(x, y);
-				        current_scene->add_element(_element);
+					
+					wr = current_scene->is_wire(x, y);
+					if (wr) {
+						class wire *wr2;
+						class port *port;
+						_element = new connector(x, y);
+					        current_scene->add_element(_element);
+					
+						wr2 = wr->split();
+						port = current_scene->is_port(x,y);
+						wr->add_port(port);
+						wr2->add_port(port);
+						wr->reseat();
+						wr2->reseat();
+						printf("new split code\n");
+					} else {
+						printf("not new split code\n");
+						_element = new connector(x, y);
+					        current_scene->add_element(_element);
+					}
 				}
 				if (dragging_port && current_scene->is_port(x, y)) {
 					class port *port2 = current_scene->is_port(x, y);
