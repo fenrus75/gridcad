@@ -42,6 +42,12 @@ struct value {
 };
 
 
+class base
+{
+public:
+    virtual const char * class_id(void) = 0;
+};
+
 /* gui canvas to draw on */
 class canvas
 {
@@ -90,11 +96,13 @@ protected:
 };
 
 /* logical representation of a (sub)circuit */
-class scene
+class scene : public base
 {
 public:
     scene(void);
     virtual ~scene(void);
+    
+    virtual const char *class_id(void) { return "scene:";};
 
     float sizeX, sizeY;
     
@@ -123,10 +131,12 @@ protected:
 #define PORT_OUT 1
 #define PORT_INOUT 2
 
-class port {
+class port : public base
+{
 public:
-    port(const char *_name, int _direction = PORT_IN);
+    port(const char *_name, int _direction = PORT_IN);    
     ~port(void);
+    virtual const char *class_id(void) { return "port:";};
     int X, Y;
     float screenX, screenY;
     const char *name = NULL;
@@ -150,11 +160,13 @@ private:
     SDL_Texture *label = NULL;
 };
 
-class element
+class element : public base
 {
 public:    
     element(int sizeX, int sizeY, const char *_name);
     virtual ~element(void);
+
+    virtual const char *class_id(void) { return "element:";};
     
     void place(int X, int Y);
     
@@ -200,10 +212,12 @@ protected:
     
 };
 
-class wire {
+class wire : public base{
 public:
     wire(int x1, int y1, int x2, int y2, int _color = COLOR_WIRE_SOLID);
     virtual ~wire(void);
+
+    virtual const char *class_id(void) { return "wire:";};
     
     void move_target(int x2, int y2);
     void draw(class canvas *, int color = COLOR_WIRE_SOLID);
@@ -237,6 +251,8 @@ class connector : public element
 public:
     connector(float _X = 0, float _Y =0);
     virtual ~connector();
+
+    virtual const char *class_id(void) { return "connector:";};
     void draw(class canvas *canvas, int type) override;
     void fill_grid(class wiregrid* grid) override;
 };
