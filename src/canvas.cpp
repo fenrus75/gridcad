@@ -116,6 +116,8 @@ void canvas::eventloop(void)
 		case SDL_MOUSEBUTTONDOWN:
 			if (!left_mouse_down
 			    && event.button.button == SDL_BUTTON_LEFT) {
+			    	class wire *wr;
+			    	
 				dragging = NULL;
 				dragging_port = NULL;
 				left_mouse_down = true;
@@ -133,6 +135,25 @@ void canvas::eventloop(void)
 						printf("Start drag: %5.2f %5.2f \n", x, y);
 						dragging = elem;
 					}
+				}
+				
+				
+				wr = current_scene->is_wire(x, y);
+				if (!dragging && wr) {
+					class wire *wr2;
+					class element *_element;
+					class port *port;
+					_element = new connector(x, y);
+				        current_scene->add_element(_element);
+					
+					wr2 = wr->split();
+					port = current_scene->is_port(x,y);
+					wr->add_port(port);
+					wr2->add_port(port);
+					wr->reseat();
+					wr2->reseat();
+					
+					
 				}
 				if (dragging)
 					dragging->start_drag(x, y);
@@ -213,6 +234,7 @@ void canvas::eventloop(void)
 					if (dragging_port != port2) {
 						dragging_port->add_wire(dragging_wire);
 						port2->add_wire(dragging_wire);
+						dragging_wire->reseat();
 						dragging_wire->route(current_scene);
 						dragging_wire = NULL;
 						printf("Connection made\n");

@@ -126,3 +126,17 @@ void port::remove_wire(class wire *_wire)
 		}
 	}
 }
+bool port::replace_wire(class wire *from, class wire *to)
+{
+	bool result = false;
+	for (unsigned int i = 0; i< wires.size(); ++i) {
+		class wire *wire = wires[i];
+		if (wire == from) {
+			wires[i] = to;
+			to->add_port(this);
+			result = true;
+		}
+	}
+	
+	return result;
+}

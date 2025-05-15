@@ -105,10 +105,7 @@ void element::stop_drag(class canvas *canvas)
     X = Xghost;
     Y = Yghost;
     
-    for (auto port: ports) {
-        port->screenX = X + port->X;
-        port->screenY = Y + port->Y;
-    }
+    reseat();
     over_drag_threshold = false;
     
     for (auto port : ports)
@@ -198,7 +195,7 @@ void element::calculate(void)
 
 void element::mouse_select(void)
 {
-    /* empty in the base class */
+    reseat();
 }
 
 class wire *element::is_wire(float X, float Y)
@@ -210,4 +207,13 @@ class wire *element::is_wire(float X, float Y)
             return (wire);
     }
     return NULL;
+}
+
+void element::reseat(void)
+{
+    for (auto port: ports) {
+        port->screenX = X + port->X;
+        port->screenY = Y + port->Y;
+    }
+
 }

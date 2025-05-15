@@ -154,6 +154,7 @@ public:
     class wire *is_wire(float X, float Y);
     
     void remove_wire(class wire *wire);
+    bool replace_wire(class wire *from, class wire *to);
 private:
     void drawConnector(class canvas *canvas, float X, float Y, int cX, int cY, int type);    
     std::vector<class wire*> wires;
@@ -195,6 +196,8 @@ public:
     virtual void mouse_select(void);
     bool has_moved(void) { return over_drag_threshold;};
     class wire *is_wire(float X, float Y);
+    
+    void reseat(void);
 protected:
 
     const char *name = NULL;
@@ -235,6 +238,8 @@ public:
     void select(void) { selected = true;};
     void deselect(void) { selected = false;};
     void remove(void);
+    
+    class wire *split(void);
     
 protected:
     bool selected = false;
