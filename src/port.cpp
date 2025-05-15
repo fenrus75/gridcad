@@ -115,3 +115,14 @@ class wire *port::is_wire(float X, float Y)
 	}
 	return NULL;
 }
+
+void port::remove_wire(class wire *_wire)
+{
+	for (unsigned int i = 0; i< wires.size(); ++i) {
+		class wire *wire = wires[i];
+		if (wire == _wire) {
+			wires.erase(wires.begin() + i);
+			return;
+		}
+	}
+}

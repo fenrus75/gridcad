@@ -142,6 +142,8 @@ public:
     void stop_drag(class canvas *canva);
     virtual void notify(void);
     class wire *is_wire(float X, float Y);
+    
+    void remove_wire(class wire *wire);
 private:
     void drawConnector(class canvas *canvas, float X, float Y, int cX, int cY, int type);    
     std::vector<class wire*> wires;
@@ -195,7 +197,6 @@ protected:
     float X_in_drag = 0, Y_in_drag = 0;
     
     std::vector<class port *> ports;
-//    std::vector<class wire *> wires;
     
 };
 
@@ -219,6 +220,7 @@ public:
     
     void select(void) { selected = true;};
     void deselect(void) { selected = false;};
+    void remove(void);
     
 protected:
     bool selected = false;

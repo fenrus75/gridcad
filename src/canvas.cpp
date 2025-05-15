@@ -103,6 +103,14 @@ void canvas::eventloop(void)
 				if (active_icon)
 					active_icon->set_inactive();
 				active_icon = NULL;
+				break;
+			case SDLK_BACKSPACE:
+				if (hover_wire) {
+					hover_wire->remove();
+					delete hover_wire;
+					hover_wire = NULL;
+				}
+				break;
 			}
 			break;
 		case SDL_MOUSEBUTTONDOWN:

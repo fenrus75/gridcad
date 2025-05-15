@@ -226,3 +226,10 @@ bool wire::intersect(float targetX, float targetY)
         return true;
     return false;
 }
+
+void wire::remove(void)
+{
+    for (auto port : ports) {
+        port->remove_wire(this);
+    }
+}
