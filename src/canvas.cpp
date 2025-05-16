@@ -392,6 +392,22 @@ void canvas::draw(void)
 		}
 		Y = Y + 10;
 	}
+	
+	
+	if (draw_grid) {
+		int x, y;
+		class wiregrid * grid = new wiregrid(current_scene->sizeX, current_scene->sizeY);
+		current_scene->fill_grid(grid);
+		
+		for (y = 0; y < current_scene->sizeY ; y++)
+			for (x = 0; x < current_scene->sizeX ; x++) {
+				if (grid->is_blocked(x,y)) {
+					drawBox(x + 0.1, y + 0.1, x + 0.9, y + 0.9, COLOR_ELEMENT_GHOST);
+				} 
+			}
+		
+		delete grid;
+	}
 
 	/* draw the elements */
 	for (auto const elem: current_scene->elements) {

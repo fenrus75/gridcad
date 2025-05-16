@@ -154,7 +154,7 @@ void element::fill_grid(class wiregrid *grid)
     int x,y;
 
     for (x = 1; x < sizeX; x++)
-        for (y = 1; y < sizeY; y++)
+        for (y = 0; y < sizeY; y++)
             grid->block_point(X+x, Y+y);
 
     for (x = 0; x < sizeX + 1; x++)
