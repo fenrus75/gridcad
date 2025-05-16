@@ -152,6 +152,8 @@ void canvas::eventloop(void)
 					port = current_scene->is_port(x,y);
 					wr->add_port(port);
 					wr2->add_port(port);
+					port->add_wire(wr);
+					port->add_wire(wr2);
 					wr->reseat();
 					wr2->reseat();
 					
@@ -238,8 +240,14 @@ void canvas::eventloop(void)
 					
 						wr2 = wr->split();
 						port = current_scene->is_port(x,y);
+						if (!port)
+							printf("No port found\n");
+						else
+							printf("Port %s found\n", port->name);
 						wr->add_port(port);
 						wr2->add_port(port);
+						port->add_wire(wr);
+						port->add_wire(wr2);
 						wr->reseat();
 						wr2->reseat();
 						printf("new split code\n");

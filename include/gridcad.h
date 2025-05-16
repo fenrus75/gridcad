@@ -241,6 +241,8 @@ public:
     
     class wire *split(void);
     
+    const char *name = NULL;
+    
 protected:
     bool selected = false;
     std::vector<class port *> ports;

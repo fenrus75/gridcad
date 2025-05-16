@@ -18,6 +18,7 @@ port::~port()
 void port::add_wire(class wire * wire)
 {
 	wires.push_back(wire);
+	
 	if (direction == PORT_OUT) {
 		wire->update_value(&value);
 	}
@@ -33,12 +34,14 @@ void port::add_wire(class wire * wire)
 
 void port::update_value(struct value *newvalue)
 {
+	int i = 0;
 	if (memcmp(&value, newvalue, sizeof(struct value)) == 0)
 		return;
+		
+	value = *newvalue;
 	for (auto wire:wires) {
 		wire->update_value(newvalue);
 	}
-	value = *newvalue;
 	
 	notify();
 	if (parent)

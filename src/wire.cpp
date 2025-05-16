@@ -5,8 +5,11 @@
 
 #include <sys/time.h>
 
+static int wirecount = 0;
+
 wire::wire(int x1, int y1, int x2, int y2, int _color)
 {
+    char buffer[128];
     X1 = x1;
     Y1 = y1;
     X2 = x2;
@@ -16,6 +19,9 @@ wire::wire(int x1, int y1, int x2, int y2, int _color)
     
     points = NULL;
     value = {};
+    sprintf(buffer,"Wire%i", wirecount++);
+    name = strdup(buffer);
+    
 }
 
 wire::~wire(void)
@@ -145,7 +151,7 @@ void wire::get_ref(void)
 void wire::add_port(class port *port)
 {
     ports.push_back(port);
-    if (port->direction == PORT_OUT) {
+    if (port->direction != PORT_IN) {
         update_value(&port->value);
     }
 }
@@ -222,7 +228,7 @@ bool wire::intersect(float targetX, float targetY)
         prevY = point.Y;
     }
 
-    if (bestdist < 0.5)
+    if (bestdist <= 0.5)
         return true;
     return false;
 }
@@ -244,8 +250,9 @@ class wire *wire::split(void)
     
     if (ports.size() > 0) {
          success = ports[0]->replace_wire(this, wr);
-         if (success)
+         if (success) {
              ports.erase(ports.begin() + 0);
+        }
     }
          
     wr->reseat();
