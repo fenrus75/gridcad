@@ -150,6 +150,10 @@ void wire::get_ref(void)
 
 void wire::add_port(class port *port)
 {
+    for (auto _port : ports) {
+        if (port == _port)
+            return;
+    }
     ports.push_back(port);
     if (port->direction != PORT_IN) {
         update_value(&port->value);
