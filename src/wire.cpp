@@ -250,19 +250,14 @@ the current and new wire have one loose side */
 class wire *wire::split(void)
 {
     class wire *wr = new wire(0, 0, 0, 0, color);
-    bool success = false;
     
     if (ports.size() > 0) {
-         success = ports[0]->replace_wire(this, wr);
-         if (success) {
-             ports.erase(ports.begin() + 0);
-        }
+        ports[0]->replace_wire(this, wr);
+        ports.erase(ports.begin() + 0);
     }
          
     wr->reseat();
     reseat();
     
-    if (!success)
-        printf("Failed to split\n");
     return wr;
 }

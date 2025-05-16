@@ -156,6 +156,8 @@ void canvas::eventloop(void)
 					port->add_wire(wr2);
 					wr->reseat();
 					wr2->reseat();
+					wr->route(current_scene);
+					wr2->route(current_scene);
 					
 					
 				}
