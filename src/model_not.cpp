@@ -28,12 +28,15 @@ void model_not::drawAt(class canvas *canvas, float X, float Y, int type)
 }
 
 
-void model_not::calculate(void)
+void model_not::calculate(int ttl)
 {
     struct value result = {};
+    
+    if (ttl <= 0)
+        return;
     
     result.type = VALUE_TYPE_BOOL;
     result.boolval = !(ports[0]->value.boolval);
     
-    ports[1]->update_value(&result);
+    ports[1]->update_value(&result, ttl -1);
 }

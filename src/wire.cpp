@@ -156,7 +156,7 @@ void wire::add_port(class port *port)
     }
     ports.push_back(port);
     if (port->direction != PORT_IN) {
-        update_value(&port->value);
+        update_value(&port->value, DEFAULT_TTL);
     }
 }
 
@@ -172,8 +172,10 @@ void wire::reseat(void)
     }
 }
 
-void wire::update_value(struct value *newvalue)
+void wire::update_value(struct value *newvalue, int ttl)
 {
+    if (ttl <= 0)
+        return;
     if (memcmp(&value, newvalue, sizeof(struct value)) == 0) {
         /* no change -- early exit to kill oscillations */
         return;
@@ -183,12 +185,12 @@ void wire::update_value(struct value *newvalue)
     /* now to notify the ports we're connected to */
     for (auto port: ports) {
         if (port->direction != PORT_OUT)
-            port->update_value(&value);
+            port->update_value(&value, ttl -1);
     }
-    notify();
+    notify(ttl - 1);
 }
 
-void wire::notify(void)
+void wire::notify(int ttl)
 {
 }
 

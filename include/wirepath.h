@@ -33,6 +33,7 @@ public:
     void unblock_point(int x, int y);
     void add_soft_cost(int x, int y, double extra);
     bool is_blocked(int x, int y);
+    float get_soft_cost(int x, int y);
     
     std::vector<struct waypoint> *  path_walk(int x1, int y1, int x2, int y2);
 private:

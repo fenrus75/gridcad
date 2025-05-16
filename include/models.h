@@ -52,7 +52,7 @@ public:
     
     void drawAt(class canvas *canvas, float X, float Y, int type) override;
     
-    void calculate(void) override;
+    void calculate(int ttl) override;
 protected:
     SDL_Texture *visual = NULL;
     const char *filename;
@@ -67,7 +67,7 @@ public:
     
     void drawAt(class canvas *canvas, float X, float Y, int type) override;
     
-    void calculate(void) override;
+    void calculate(int ttl) override;
 protected:
     SDL_Texture *visual = NULL;
     const char *filename;
@@ -80,7 +80,7 @@ public:
     virtual ~model_nand(void);
     virtual const char *class_id(void) { return "model_nand:";};
     
-    void calculate(void) override;
+    void calculate(int ttl) override;
 };
 
 class model_and : public model_logic2
@@ -90,7 +90,7 @@ public:
     virtual ~model_and(void);
     virtual const char *class_id(void) { return "model_and:";};
     
-    void calculate(void) override;
+    void calculate(int ttl) override;
 };
 
 class model_nor : public model_logic2
@@ -99,7 +99,7 @@ public:
     model_nor(float X, float Y);
     virtual ~model_nor(void);
     virtual const char *class_id(void) { return "model_nor:";};    
-    void calculate(void) override;
+    void calculate(int ttl) override;
 };
 
 class model_or : public model_logic2
@@ -108,5 +108,5 @@ public:
     model_or(float X, float Y);
     virtual ~model_or(void);
     virtual const char *class_id(void) { return "model_or:";};    
-    void calculate(void) override;
+    void calculate(int ttl) override;
 };

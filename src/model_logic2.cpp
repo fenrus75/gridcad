@@ -30,6 +30,6 @@ void model_logic2::drawAt(class canvas *canvas, float X, float Y, int type)
 }
 
 
-void model_logic2::calculate(void)
+void model_logic2::calculate(int ttl)
 {
 }

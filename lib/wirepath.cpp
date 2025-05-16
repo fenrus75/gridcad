@@ -112,6 +112,15 @@ bool wiregrid::is_blocked(int x, int y)
     return grid[y][x].blocked;
 }
 
+float wiregrid::get_soft_cost(int x, int y)
+{
+    if (x < 0 || x >= width)
+        return 0;
+    if (y < 0 || y >= height)
+        return 0;
+    return grid[y][x].extra_score;
+}
+
 void wiregrid::add_soft_cost(int x, int y, double extra)
 {
     if (x < 0 || x >= width)

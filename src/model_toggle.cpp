@@ -31,6 +31,6 @@ void model_toggle::mouse_select(void)
 {
     value.boolval = !value.boolval;
     printf("TOGGLE to %i\n", value.boolval);
-    ports[0]->update_value(&value);
-    notify();
+    ports[0]->update_value(&value, DEFAULT_TTL);
+    notify(DEFAULT_TTL);
 }

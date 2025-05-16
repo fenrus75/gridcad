@@ -27,6 +27,7 @@ class iconbar;
 struct value;
 
 
+#define DEFAULT_TTL 500
 #define VALUE_TYPE_BOOL 0
 #define VALUE_TYPE_INT 1
 #define VALUE_TYPE_FLOAT 2
@@ -59,7 +60,7 @@ public:
     void eventloop(void);
     
     
-    void drawBox(float X1, float Y1, float X2, float Y2, int color);
+    void drawBox(float X1, float Y1, float X2, float Y2, int color, int alpha = -1);
     void drawCircle(float X, float Y, float R, int color, int color2=COLOR_BACKGROUND_MAIN);
     void drawLine(float X1, float Y1, float X2, float Y2, int color);
     
@@ -80,7 +81,7 @@ public:
     
     
 protected:
-    bool draw_grid = true;
+    bool draw_grid = false;
     class scene *current_scene;
     SDL_Renderer *renderer = NULL;
     SDL_Window *window = NULL;
@@ -144,14 +145,14 @@ public:
     class element *parent = NULL;
     struct value value = {};
     void add_wire(class wire *wire);
-    void update_value(struct value *newvalue);
+    void update_value(struct value *newvalue, int ttl);
     int direction = PORT_IN;;
     
     void draw(class canvas *canvas, int color);
     void draw_wires(class canvas *canva);
     void drawAt(class canvas *canvas, float X, float Y, int color);
     void stop_drag(class canvas *canva);
-    virtual void notify(void);
+    virtual void notify(int ttl);
     class wire *is_wire(float X, float Y);
     
     void remove_wire(class wire *wire);
@@ -191,9 +192,9 @@ public:
     float get_X(void) { return X; };
     float get_Y(void) { return Y; };
     
-    void update_value(class port *port, struct value *value);
-    virtual void notify(void);
-    virtual void calculate();
+    void update_value(class port *port, struct value *value, int ttl);
+    virtual void notify(int ttl);
+    virtual void calculate(int ttl);
     virtual void mouse_select(void);
     bool has_moved(void) { return over_drag_threshold;};
     class wire *is_wire(float X, float Y);
@@ -231,8 +232,8 @@ public:
     void add_port(class port *port);
     void reseat(void);
     
-    void update_value(struct value *newvalue);
-    virtual void notify(void);
+    void update_value(struct value *newvalue, int ttl);
+    virtual void notify(int ttl);
     struct value value;
     bool intersect(float targetX, float targetY);
     

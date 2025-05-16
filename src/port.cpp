@@ -24,31 +24,33 @@ void port::add_wire(class wire * wire)
 	wires.push_back(wire);
 	
 	if (direction == PORT_OUT) {
-		wire->update_value(&value);
+		wire->update_value(&value, DEFAULT_TTL);
 	}
 	wire->add_port(this);
 	
 	if (direction == PORT_IN) {
-		update_value(&(wire->value));
+		update_value(&(wire->value), DEFAULT_TTL);
 	}
 	if (parent)
-		parent->notify();
-	wire->notify();
+		parent->notify(DEFAULT_TTL);
+	wire->notify(DEFAULT_TTL);
 }
 
-void port::update_value(struct value *newvalue)
+void port::update_value(struct value *newvalue, int ttl)
 {
+	if (ttl <= 0)
+		return;
 	if (memcmp(&value, newvalue, sizeof(struct value)) == 0)
 		return;
 		
 	value = *newvalue;
 	for (auto wire:wires) {
-		wire->update_value(newvalue);
+		wire->update_value(newvalue, ttl -1);
 	}
 	
-	notify();
+	notify(ttl -1);
 	if (parent)
-		parent->notify();
+		parent->notify(ttl -1);
 }
 
 
@@ -104,12 +106,14 @@ void port::stop_drag(class canvas *canvas)
 
 }
 
-void port::notify(void)
-{
+void port::notify(int ttl)
+{	
+    if (ttl <= 0)
+    	return;
     if (direction == PORT_IN)
     	return;
     for (auto wire : wires) {
-    	wire->update_value(&value);
+    	wire->update_value(&value, ttl -1);
     }
 }
 

@@ -111,7 +111,7 @@ void element::stop_drag(class canvas *canvas)
     for (auto port : ports)
         port->stop_drag(canvas);
 
-    calculate();
+    calculate(DEFAULT_TTL);
 }
 
 
@@ -174,21 +174,23 @@ void element::fill_grid(class wiregrid *grid)
     }
 }
 
-void element::update_value(class port *port, struct value *value)
+void element::update_value(class port *port, struct value *value, int ttl)
 {
     if (memcmp(value, &port->value, sizeof(struct value)) == 0)
         return; /* short circuit noop updates */
         
-    notify();
+    notify(ttl -1);
     
 }
 
-void element::notify(void)
+void element::notify(int ttl)
 {
-    calculate();
+    if (ttl <= 0)
+        return;
+    calculate(ttl -1);
 }
 
-void element::calculate(void)
+void element::calculate(int ttl)
 {
     /* empty in the base class */
 }

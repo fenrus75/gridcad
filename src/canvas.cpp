@@ -401,8 +401,12 @@ void canvas::draw(void)
 		
 		for (y = 0; y < current_scene->sizeY ; y++)
 			for (x = 0; x < current_scene->sizeX ; x++) {
+				float c = grid->get_soft_cost(x, y);
+				if (c > 0) {
+					drawBox(x + 0.1, y + 0.1, x + 0.9, y + 0.9, COLOR_ELEMENT_GHOST, 64 * c);
+				}
 				if (grid->is_blocked(x,y)) {
-					drawBox(x + 0.1, y + 0.1, x + 0.9, y + 0.9, COLOR_ELEMENT_GHOST);
+					drawBox(x + 0.1, y + 0.1, x + 0.9, y + 0.9, COLOR_ELEMENT_DND);
 				} 
 			}
 		
@@ -460,7 +464,7 @@ float canvas::scr_to_Y(int Y)
 	return Y / scaleY + offsetY;
 }
 
-void canvas::drawBox(float X1, float Y1, float X2, float Y2, int color)
+void canvas::drawBox(float X1, float Y1, float X2, float Y2, int color, int alpha)
 {
 	int x1, y1, x2, y2;
 
@@ -487,9 +491,11 @@ void canvas::drawBox(float X1, float Y1, float X2, float Y2, int color)
 	rect.y = y1;
 	rect.w = x2 - x1;
 	rect.h = y2 - y1;
+	
+	if (alpha < 0)
+		alpha = Alpha(color);
 
-	SDL_SetRenderDrawColor(renderer, R(color), G(color), B(color),
-			       Alpha(color));
+	SDL_SetRenderDrawColor(renderer, R(color), G(color), B(color), alpha);
 	SDL_RenderFillRect(renderer, &rect);
 }
 
