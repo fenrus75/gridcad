@@ -17,9 +17,13 @@ connector::~connector(void)
 
 void connector::draw(class canvas *canvas, int type)
 {
-    canvas->drawCircle(X+0.5, Y+0.5, 0.5, COLOR_WIRE_SOLID);
+    int color = COLOR_VALUE_RED;
+    
+    if (ports[0]->value.boolval)
+        color = COLOR_VALUE_GREEN;
     for (auto port: ports) 
         port->draw_wires(canvas);
+    canvas->drawCircle(X+0.5, Y+0.5, 0.5, COLOR_WIRE_SOLID, color);
 }
 
 void connector::fill_grid(class wiregrid *grid)
