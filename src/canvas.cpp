@@ -252,6 +252,8 @@ void canvas::eventloop(void)
 						port->add_wire(wr2);
 						wr->reseat();
 						wr2->reseat();
+						wr->route(current_scene);
+						wr2->route(current_scene);
 						printf("new split code\n");
 					} else {
 						printf("not new split code\n");
