@@ -1,6 +1,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
+#include <iostream>
 
 #include "gridcad.h"
 #include "models.h"
@@ -20,6 +21,12 @@ int main(int argc, char **argv)
     
     _canvas->eventloop();
     
+    
+    json j;
+    
+    _scene->to_json(j);
+    
+    std::cout << j.dump(4);
 
     delete _canvas;    
     delete _scene;

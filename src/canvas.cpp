@@ -564,3 +564,12 @@ SDL_Texture *canvas::text_to_texture(const char *text)
 	TTF_CloseFont(font);
 	return tx;
 }
+
+
+void canvas::to_json(json& j)
+{
+	j["offsetX"] = offsetX;
+	j["offsetY"] = offsetY;
+	j["scaleX"] = scaleX;
+	j["scaleY"] = scaleY;
+}

@@ -65,3 +65,30 @@ void scene::fill_grid(class wiregrid * grid)
 		elem->fill_grid(grid);
 }
 
+
+void scene::to_json(json &j)
+{
+	unsigned int i;
+	j["sizeX"] = sizeX;
+	j["sizeY"] = sizeY;
+	j["elements"] = json::array();
+	
+	for (i = 0; i < elements.size(); i++) {
+		json p;
+		elements[i]->to_json(p);
+		j["elements"][i] = p;
+	}
+}
+
+void scene::from_json(json &j)
+{
+	unsigned int i;
+	
+	sizeX = j["sizeX"];
+	sizeY = j["sizeY"];
+	for (i = 0; i <j["elements"].size(); i++) {
+		json p = j["elements"][i];
+		std::string cid = j["class_id"];
+		printf("Element type %s\n", cid.c_str());
+	}
+}

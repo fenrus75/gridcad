@@ -34,3 +34,14 @@ void model_toggle::mouse_select(void)
     ports[0]->update_value(&value, DEFAULT_TTL);
     notify(DEFAULT_TTL);
 }
+
+void model_toggle::to_json(json &j)
+{
+     element::to_json(j);
+     j["value"] = value;   
+}
+void model_toggle::from_json(json &j)
+{
+     element::from_json(j);
+     value = j["value"];
+}

@@ -5,6 +5,8 @@
 
 #include <vector>
 
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 
 #define COLOR_BACKGROUND_MAIN 0
 #define COLOR_BACKGROUND_GRID 1
@@ -34,19 +36,17 @@ struct value;
 #define VALUE_TYPE_ARRAY 3
 struct value {
     int type;
-    union {
-        bool boolval;
-        int intval;
-        float floatval;
-        int arrayval[64];
-    };
+    bool boolval;
+    int intval;
+    float floatval;
+    uint64_t arrayval;
 };
-
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(value, type, boolval, intval, floatval, arrayval);
 
 class base
 {
 public:
-    virtual const char * class_id(void) = 0;
+    virtual std::string class_id(void) = 0;
 };
 
 /* gui canvas to draw on */
@@ -79,7 +79,9 @@ public:
     
     class scene *get_scene(void) { return current_scene; };
     
-    
+
+    void to_json(json& j);
+        
 protected:
     bool draw_grid = false;
     class scene *current_scene;
@@ -104,7 +106,7 @@ public:
     scene(void);
     virtual ~scene(void);
     
-    virtual const char *class_id(void) { return "scene:";};
+    virtual std::string class_id(void) { return "scene:";};
 
     float sizeX, sizeY;
     
@@ -118,6 +120,8 @@ public:
     void fill_grid(class wiregrid* grid);
     
     std::vector<class element *> elements;
+    void to_json(json& j);
+    void from_json(json& j);
     
 protected:
     
@@ -138,7 +142,7 @@ class port : public base
 public:
     port(const char *_name, int _direction = PORT_IN);    
     ~port(void);
-    virtual const char *class_id(void) { return "port:";};
+    virtual std::string class_id(void) { return "port:";};
     int X, Y;
     float screenX, screenY;
     const char *name = NULL;
@@ -169,7 +173,7 @@ public:
     element(int sizeX, int sizeY, const char *_name);
     virtual ~element(void);
 
-    virtual const char *class_id(void) { return "element:";};
+    virtual std::string class_id(void) { return "element:";};
     
     void place(int X, int Y);
     
@@ -200,6 +204,8 @@ public:
     class wire *is_wire(float X, float Y);
     
     void reseat(void);
+    virtual void to_json(json& j);
+    virtual void from_json(json& j);
 protected:
 
     const char *name = NULL;
@@ -222,7 +228,7 @@ public:
     wire(int x1, int y1, int x2, int y2, int _color = COLOR_WIRE_SOLID);
     virtual ~wire(void);
 
-    virtual const char *class_id(void) { return "wire:";};
+    virtual std::string class_id(void) { return "wire:";};
     
     void move_target(int x2, int y2);
     void draw(class canvas *, int color = COLOR_WIRE_SOLID);
@@ -261,7 +267,7 @@ public:
     connector(float _X = 0, float _Y =0);
     virtual ~connector();
 
-    virtual const char *class_id(void) { return "connector:";};
+    virtual std::string class_id(void) { return "connector:";};
     void draw(class canvas *canvas, int type) override;
     void fill_grid(class wiregrid* grid) override;
 };

@@ -219,3 +219,25 @@ void element::reseat(void)
     }
 
 }
+
+void element::to_json(json &j)
+{
+    j["class_id"] = class_id();
+    j["sizeX"] = sizeX;
+    j["sizeY"] = sizeY;
+    j["X"] = X;
+    j["Y"] = Y;
+    j["name"] = name;
+    j["ports"] = json::array();
+}
+
+void element::from_json(json &j)
+{
+    sizeX = j["sizeX"];
+    sizeY = j["sizeY"];
+    X = j["X"];
+    Y = j["Y"];
+    /* TODO
+    name = strdup(j["name"]);    
+    */
+}
