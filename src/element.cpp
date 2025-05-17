@@ -153,24 +153,24 @@ void element::fill_grid(class wiregrid *grid)
 {
     int x,y;
 
-    for (x = 1; x < sizeX; x++)
+    for (x = 0; x < sizeX; x++)
         for (y = 0; y < sizeY; y++)
             grid->block_point(X+x, Y+y);
 
-    for (x = 0; x < sizeX + 1; x++)
-        for (y = 0; y < sizeY +1; y++)
+    for (x = -1; x < sizeX + 1; x++)
+        for (y = -1; y < sizeY +1; y++)
             grid->add_soft_cost(X+x, Y+y, 0.6);
 
     for (auto port: ports) {
         grid->block_point(X + port->X, Y + port->Y);
         grid->add_soft_cost(X + port->X + 1, Y + port->Y + 0, 0.3);
-        grid->add_soft_cost(X + port->X - 1, Y + port->Y + 0, 0.3);
+        grid->add_soft_cost(X + port->X + 1, Y + port->Y + 1, 0.6);
+        grid->add_soft_cost(X + port->X + 1, Y + port->Y - 1, 0.6);
         grid->add_soft_cost(X + port->X + 0, Y + port->Y + 1, 0.3);
         grid->add_soft_cost(X + port->X + 0, Y + port->Y - 1, 0.3);
-        grid->add_soft_cost(X + port->X + 1, Y + port->Y + 1, 0.6);
         grid->add_soft_cost(X + port->X - 1, Y + port->Y - 1, 0.6);
+        grid->add_soft_cost(X + port->X - 1, Y + port->Y + 0, 0.3);
         grid->add_soft_cost(X + port->X - 1, Y + port->Y + 1, 0.6);
-        grid->add_soft_cost(X + port->X - 1, Y + port->Y - 1, 0.6);
     }
 }
 

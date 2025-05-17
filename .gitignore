@@ -4,3 +4,4 @@ gridcad
 wiretest
 src/*.o
 fonts/*.ttf
+scene.json
