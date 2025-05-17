@@ -158,6 +158,7 @@ bool port::replace_wire(class wire *from, class wire *to)
 
 void port::to_json(json &j)
 {
+	unsigned int i;
 	j["X"] = X;
 	j["Y"] = Y;
 	j["screenX"] = screenX;
@@ -165,15 +166,18 @@ void port::to_json(json &j)
 	j["name"] = name;
 	j["value"] = value;
 	j["direction"] = direction;
-
-#if 0	
-    class element *parent = NULL;
-    std::vector<class wire*> wires;
-#endif
+	
+	j["wires"] = json::array();
+	for (i = 0; i < wires.size(); i++) {
+		json p;
+		wires[i]->to_json(p);
+		j["wires"][i] = p;
+	}
 }
 
 void port::from_json(json &j)
 {
+	unsigned int i;
 	X = j["X"];
 	Y = j["Y"];
 	screenX = j["screenX"];
@@ -181,9 +185,11 @@ void port::from_json(json &j)
 	name = j["name"];
 	value = j["value"];
 	direction = j["direction"];
+	for (i = 0; i < j["wires"].size(); i++) {
+		class wire *wire;
+		wire = json_wire_factory(j["wires"][i]);
+		add_wire(wire);
+		wire->add_port(this);
+	}
 
-#if 0	
-    class element *parent = NULL;
-    std::vector<class wire*> wires;
-#endif
 }

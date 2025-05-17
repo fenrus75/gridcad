@@ -4,6 +4,8 @@
 #include <algorithm>
 
 #include <sys/time.h>
+#include <map>
+
 
 static int wirecount = 0;
 
@@ -265,4 +267,43 @@ class wire *wire::split(void)
     reseat();
     
     return wr;
+}
+
+void wire::to_json(json &j)
+{
+    j["value"] = value;
+    j["name"] = name;
+    j["selected"] = selected;
+    j["X1"] = X1;
+    j["Y1"] = Y1;
+    j["X2"] = X2;
+    j["Y2"] = Y2;
+    j["color"] = color;
+}    
+void wire::from_json(json &j)
+{
+    value = j["value"];
+    name = j["name"];
+    selected = j["selected"];
+    X1 = j["X1"];
+    Y1 = j["Y1"];
+    X2 = j["X2"];
+    Y2 = j["Y2"];
+    color = j["color"];
+}
+
+
+static std::map<std::string, class wire*> json_wires;
+
+class wire *json_wire_factory(json &jwire)
+{
+    if (json_wires.find(jwire["name"]) != json_wires.end())
+        return json_wires[jwire["name"]];
+    class wire *new_wire = new wire(jwire["X1"], jwire["Y1"], jwire["X2"], jwire["Y2"]);
+    
+    json_wires[jwire["name"]] = new_wire;
+    
+    new_wire->from_json(jwire);
+    
+    return new_wire;
 }

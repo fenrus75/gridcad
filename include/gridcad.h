@@ -256,7 +256,10 @@ public:
     
     class wire *split(void);
     
-    const char *name = NULL;
+    std::string name = "";
+    
+    void to_json(json &j);
+    void from_json(json &j);
     
 protected:
     bool selected = false;
@@ -285,3 +288,4 @@ extern int B(int color);
 extern int Alpha(int color);
 extern int value_color(struct value *value);
 extern class element *element_from_class_id(std::string classid);
+extern class wire *json_wire_factory(json &jwire);
