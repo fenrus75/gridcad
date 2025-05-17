@@ -145,7 +145,7 @@ protected:
 class port : public base
 {
 public:
-    port(const char *_name, int _direction = PORT_IN);    
+    port(std::string _name, int _direction = PORT_IN);    
     ~port(void);
     virtual std::string class_id(void) { return "port:";};
     int X, Y;
@@ -166,6 +166,8 @@ public:
     
     void remove_wire(class wire *wire);
     bool replace_wire(class wire *from, class wire *to);
+    void to_json(json &j);
+    void from_json(json &j);
 private:
     void drawConnector(class canvas *canvas, float X, float Y, int cX, int cY, int type);    
     std::vector<class wire*> wires;

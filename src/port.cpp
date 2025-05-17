@@ -2,11 +2,11 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-port::port(const char *_name, int _direction)
+port::port(std::string _name, int _direction)
 {
 
 	direction = _direction;
-	name = strdup(_name);
+	name = _name;
 	
 }
 
@@ -44,6 +44,7 @@ void port::update_value(struct value *newvalue, int ttl)
 		return;
 		
 	value = *newvalue;
+
 	for (auto wire:wires) {
 		wire->update_value(newvalue, ttl -1);
 	}
@@ -152,4 +153,37 @@ bool port::replace_wire(class wire *from, class wire *to)
 	remove_wire(from);
 	add_wire(to);	
 	return result;
+}
+
+
+void port::to_json(json &j)
+{
+	j["X"] = X;
+	j["Y"] = Y;
+	j["screenX"] = screenX;
+	j["screenY"] = screenY;
+	j["name"] = name;
+	j["value"] = value;
+	j["direction"] = direction;
+
+#if 0	
+    class element *parent = NULL;
+    std::vector<class wire*> wires;
+#endif
+}
+
+void port::from_json(json &j)
+{
+	X = j["X"];
+	Y = j["Y"];
+	screenX = j["screenX"];
+	screenY = j["screenY"];
+	name = j["name"];
+	value = j["value"];
+	direction = j["direction"];
+
+#if 0	
+    class element *parent = NULL;
+    std::vector<class wire*> wires;
+#endif
 }

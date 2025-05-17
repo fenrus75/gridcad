@@ -222,6 +222,7 @@ void element::reseat(void)
 
 void element::to_json(json &j)
 {
+    unsigned int i;
     j["class_id"] = class_id();
     j["sizeX"] = sizeX;
     j["sizeY"] = sizeY;
@@ -229,14 +230,26 @@ void element::to_json(json &j)
     j["Y"] = Y;
     j["name"] = name;
     j["ports"] = json::array();
+    for (i = 0; i < ports.size(); i++) {
+        json p;
+        ports[i]->to_json(p);
+        j["ports"][i] = p;
+    }
 }
 
 void element::from_json(json &j)
 {
+    unsigned int i;
     sizeX = j["sizeX"];
     sizeY = j["sizeY"];
     X = j["X"];
     Y = j["Y"];
+    
+    for (i = 0; i < j["ports"].size(); i++) {
+        json jj = j["ports"][i];
+        ports[i]->from_json(jj);
+    }
+    reseat();
     /* TODO
     name = strdup(j["name"]);    
     */

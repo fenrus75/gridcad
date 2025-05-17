@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <unistd.h>
 
 #include "gridcad.h"
 #include "models.h"
@@ -20,6 +21,7 @@ int main(int argc, char **argv)
     
     _canvas = new canvas(_scene);
     
+    if (access("scene.json", R_OK) == 0)
     {
         json j;
         std::ifstream input("scene.json");
