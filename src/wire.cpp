@@ -19,6 +19,9 @@ wire::wire(int x1, int y1, int x2, int y2, int _color)
     color = _color;
     refcount = 1;
     
+    if (wirecount == 0)
+        wirecount = time(NULL);
+    
     points = NULL;
     value = {};
     sprintf(buffer,"Wire%i", wirecount++);
