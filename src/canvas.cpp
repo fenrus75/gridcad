@@ -245,7 +245,7 @@ void canvas::eventloop(void)
 						if (!port)
 							printf("No port found\n");
 						else
-							printf("Port %s found\n", port->name);
+							printf("Port %s found\n", port->name.c_str());
 						wr->add_port(port);
 						wr2->add_port(port);
 						port->add_wire(wr);
@@ -563,6 +563,11 @@ SDL_Texture *canvas::text_to_texture(const char *text)
 	SDL_FreeSurface(surface);
 	TTF_CloseFont(font);
 	return tx;
+}
+
+SDL_Texture *canvas::text_to_texture(std::string text)
+{
+	return text_to_texture(text.c_str());
 }
 
 

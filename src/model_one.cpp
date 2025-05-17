@@ -15,7 +15,6 @@ model_one::model_one(float _X, float _Y)  : model_zero(_X, _Y)
     add_port(1, 0, "ONE", PORT_OUT, true);    
 
     for (auto port : ports) {
-        printf("Updating %s to %i \n", port->name, value.boolval);
         port->update_value(&value, DEFAULT_TTL);
     }
 }

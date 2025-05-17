@@ -80,6 +80,7 @@ public:
     SDL_Texture *load_image(const char *filename);
     void draw_image(SDL_Texture *image, float X, float Y, float W, float H, int alpha=255);
     SDL_Texture *text_to_texture(const char *text);
+    SDL_Texture *text_to_texture(std::string text);
     
     class scene *get_scene(void) { return current_scene; };
     
@@ -149,7 +150,7 @@ public:
     virtual std::string class_id(void) { return "port:";};
     int X, Y;
     float screenX, screenY;
-    const char *name = NULL;
+    std::string name = "";
     class element *parent = NULL;
     struct value value = {};
     void add_wire(class wire *wire);

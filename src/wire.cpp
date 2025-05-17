@@ -181,6 +181,9 @@ void wire::update_value(struct value *newvalue, int ttl)
         return;
     }
     value = *newvalue;
+    if (ttl < 50) {
+        newvalue->is_error = true;
+    }
     
     /* now to notify the ports we're connected to */
     for (auto port: ports) {
