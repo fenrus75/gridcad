@@ -125,6 +125,9 @@ public:
     void fill_grid(class wiregrid* grid);
     
     std::vector<class element *> elements;
+    void deselect_all(void);
+    class element *selected_element(void);
+    
     void to_json(json& j);
     void from_json(json& j);
     
@@ -213,6 +216,9 @@ public:
     void reseat(void);
     virtual void to_json(json& j);
     virtual void from_json(json& j);
+    void select(void) { selected = true; reseat();};
+    void deselect(void) { selected = false;};
+    bool is_selected(void) { return selected;};
 protected:
 
     const char *name = NULL;
@@ -225,6 +231,7 @@ protected:
     float Xghost = 0, Yghost = 0;
     float Xdnd = 0, Ydnd = 0;
     float X_in_drag = 0, Y_in_drag = 0;
+    bool selected; /* not saved to disk */
     
     std::vector<class port *> ports;
     

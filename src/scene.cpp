@@ -65,6 +65,19 @@ void scene::fill_grid(class wiregrid * grid)
 		elem->fill_grid(grid);
 }
 
+void scene::deselect_all(void)
+{
+	for (auto element : elements)
+		element->deselect();
+}
+class element * scene::selected_element(void)
+{
+	for (auto element : elements)
+		if (element->is_selected())
+			return element;
+	return NULL;
+}
+
 
 void scene::to_json(json &j)
 {
@@ -94,3 +107,4 @@ void scene::from_json(json &j)
 		elements.push_back(element);
 	}
 }
+

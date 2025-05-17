@@ -190,6 +190,7 @@ void port::from_json(json &j)
 		wire = json_wire_factory(j["wires"][i]);
 		add_wire(wire);
 		wire->add_port(this);
+		wire->reseat();
 	}
 
 }

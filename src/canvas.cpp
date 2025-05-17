@@ -114,10 +114,13 @@ void canvas::eventloop(void)
 			}
 			break;
 		case SDL_MOUSEBUTTONDOWN:
+			current_scene->deselect_all();
 			if (!left_mouse_down
 			    && event.button.button == SDL_BUTTON_LEFT) {
 			    	class wire *wr;
 			    	
+				if (dragging)
+					dragging->deselect();
 				dragging = NULL;
 				dragging_port = NULL;
 				left_mouse_down = true;
@@ -226,6 +229,7 @@ void canvas::eventloop(void)
 					if (!dragging->has_moved())  {
 						printf("Click\n");
 						dragging->mouse_select();
+						dragging->select();
 					}
 					dragging->stop_drag(this);
 				}
