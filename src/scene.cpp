@@ -83,12 +83,14 @@ void scene::to_json(json &j)
 void scene::from_json(json &j)
 {
 	unsigned int i;
-	
+
 	sizeX = j["sizeX"];
 	sizeY = j["sizeY"];
 	for (i = 0; i <j["elements"].size(); i++) {
 		json p = j["elements"][i];
-		std::string cid = j["class_id"];
-		printf("Element type %s\n", cid.c_str());
+		std::string cid = p["class_id"];
+		class element *element = element_from_class_id(cid);
+		element->from_json(p);
+		elements.push_back(element);
 	}
 }

@@ -1,5 +1,7 @@
 #include "gridcad.h"
 
+#include <sys/time.h>
+
 #define MAX_COLOR 32
 static int colors[MAX_COLOR][4] =
 {
@@ -14,6 +16,8 @@ static int colors[MAX_COLOR][4] =
  {225, 138, 138, 255},		// COLOR_WRIRE_MOTION
  {255,  64,  64, 255},		// COLOR_VALUE_RED
  {64,  255,  64, 255},		// COLOR_VALUE_GREEN
+ {255, 255, 255, 255},		// COLOR_ERROR_WHITE
+ {  0,   0,   0, 255},		// COLOR_ERROR_BLACK
 };
 
 int R(int color)
@@ -46,6 +50,14 @@ int Alpha(int color)
 
 int value_color(struct value *value)
 {
+      if (value->is_error) {
+          struct timeval tv;
+          gettimeofday(&tv, NULL);
+          if (tv.tv_usec > 500000)
+             return COLOR_ERROR_WHITE;
+          else
+             return COLOR_ERROR_BLACK;
+      }
       switch (value->type) {
          case VALUE_TYPE_BOOL:
               if (value->boolval)

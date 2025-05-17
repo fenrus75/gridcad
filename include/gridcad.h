@@ -4,6 +4,7 @@
 #include <SDL2/SDL.h>
 
 #include <vector>
+#include <string>
 
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
@@ -21,6 +22,8 @@ using json = nlohmann::json;
 #define COLOR_WIRE_MOTION 8
 #define COLOR_VALUE_RED 9
 #define COLOR_VALUE_GREEN 10
+#define COLOR_ERROR_WHITE 11
+#define COLOR_ERROR_BLACK 12
 
 class element;
 class wire;
@@ -40,8 +43,9 @@ struct value {
     int intval;
     float floatval;
     uint64_t arrayval;
+    bool is_error;
 };
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(value, type, boolval, intval, floatval, arrayval);
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(value, type, boolval, intval, floatval, arrayval, is_error);
 
 class base
 {
@@ -277,4 +281,4 @@ extern int G(int color);
 extern int B(int color);
 extern int Alpha(int color);
 extern int value_color(struct value *value);
-
+extern class element *element_from_class_id(std::string classid);

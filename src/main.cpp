@@ -2,6 +2,8 @@
 #include <SDL2/SDL_ttf.h>
 
 #include <iostream>
+#include <fstream>
+#include <string>
 
 #include "gridcad.h"
 #include "models.h"
@@ -18,15 +20,27 @@ int main(int argc, char **argv)
     
     _canvas = new canvas(_scene);
     
+    {
+        json j;
+        std::ifstream input("scene.json");
+        input >> j;
+        _scene->from_json(j);
+    }
+    
     
     _canvas->eventloop();
     
+
+    {    
+        json j;
     
-    json j;
+        _scene->to_json(j);
     
-    _scene->to_json(j);
+        std::ofstream output("scene.json");
     
-    std::cout << j.dump(4);
+        output << j.dump(4);
+        output.close();
+    }
 
     delete _canvas;    
     delete _scene;
