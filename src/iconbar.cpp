@@ -115,15 +115,36 @@ icon::~icon(void)
 }
 
 
+/* X and Y are our box to draw in -- we'll draw centered to that */
 void icon::draw(SDL_Renderer *renderer, float X, float Y, float width, float height)
 {
        SDL_Rect rect;
        const int color = COLOR_WIRE_SOLID;
+       int w,h;
+       int oX = 0, oY = 0;
+       float ratioX, ratioY;
+       float newwidth, newheight;
        
-       rect.x = X;
-       rect.y = Y;
-       rect.w = width;
-       rect.h = height;
+       SDL_QueryTexture(texture, NULL, NULL, &w, &h);
+       
+       ratioX = width / w;
+       ratioY = height / h;
+       
+       if (ratioX > ratioY)
+           ratioX = ratioY;
+       else
+           ratioY = ratioX;
+           
+       newwidth = w * ratioX;
+       newheight = h * ratioY;
+       
+       oX = (width - newwidth) / 2;
+       oY = (height - newheight) / 2; 
+       
+       rect.x = X + oX;
+       rect.y = Y + oY;
+       rect.w = newwidth;
+       rect.h = newheight;
        SDL_SetRenderDrawColor(renderer, R(color), G(color), B(color),
 			       Alpha(color));
        SDL_SetTextureAlphaMod(texture, 255);
