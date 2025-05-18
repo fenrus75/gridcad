@@ -88,7 +88,7 @@ public:
     void to_json(json& j);
         
 protected:
-    bool draw_grid = true;
+    bool draw_grid = false;
     class scene *current_scene;
     SDL_Renderer *renderer = NULL;
     SDL_Window *window = NULL;

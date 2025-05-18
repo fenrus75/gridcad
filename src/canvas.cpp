@@ -112,6 +112,9 @@ void canvas::eventloop(void)
 				}
 				break;
 			}
+			case SDLK_g:
+				draw_grid = !draw_grid;
+				break;
 			break;
 		case SDL_MOUSEBUTTONDOWN:
 			current_scene->deselect_all();
