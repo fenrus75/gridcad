@@ -25,15 +25,14 @@ void model_logic2::drawAt(class canvas *canvas, float X, float Y, int type)
     int alpha = Alpha(type);
     if (!visual) {
         visual = canvas->load_image(filename);    
+        if (selected_filename)
+            visual_selected = canvas->load_image(selected_filename);
     }
-    if (selected) {
-        struct timeval tv;
-        gettimeofday(&tv, NULL);
-        double msec = tv.tv_usec / 1000000.0;
-        msec = msec * 2 * 3.1415;
-        alpha = 128 + 64 + 63 * sin(msec);  
+    if (selected && visual_selected) {
+        canvas->draw_image(visual_selected, X, Y, sizeX, sizeY, alpha);
+    } else {	
+        canvas->draw_image(visual, X, Y, sizeX, sizeY, alpha);
     }
-    canvas->draw_image(visual, X, Y, sizeX, sizeY, alpha);
     for (auto port: ports) {
         port->drawAt(canvas, X, Y, type);
     }

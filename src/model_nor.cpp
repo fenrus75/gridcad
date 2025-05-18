@@ -3,6 +3,7 @@
 
 model_nor::model_nor(float _X, float _Y)  : model_logic2(_X, _Y, "assets/norgate.png")
 {
+    selected_filename = "assets/norgate_selected.png";
 }
 
 model_nor::~model_nor(void)

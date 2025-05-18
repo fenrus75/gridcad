@@ -57,7 +57,9 @@ public:
     void calculate(int ttl) override;
 protected:
     SDL_Texture *visual = NULL;
-    const char *filename;
+    SDL_Texture *visual_selected = NULL;
+    const char *filename = NULL;
+    const char *selected_filename = NULL;
 };
 
 class model_not : public element
@@ -72,6 +74,7 @@ public:
     void calculate(int ttl) override;
 protected:
     SDL_Texture *visual = NULL;
+    SDL_Texture *visual_selected = NULL;
 };
 
 class model_nand : public model_logic2

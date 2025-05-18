@@ -20,8 +20,12 @@ void model_not::drawAt(class canvas *canvas, float X, float Y, int type)
 {
     if (!visual) {
         visual = canvas->load_image("assets/inverter.png");    
+        visual_selected = canvas->load_image("assets/inverter_selected.png");    
     }
-    canvas->draw_image(visual, X, Y, sizeX, sizeY, Alpha(type));
+    if (selected)
+        canvas->draw_image(visual_selected, X, Y, sizeX, sizeY, Alpha(type));
+    else
+        canvas->draw_image(visual, X, Y, sizeX, sizeY, Alpha(type));
     for (auto port: ports) {
         port->drawAt(canvas, X, Y, type);
     }

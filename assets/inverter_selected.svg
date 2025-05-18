@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="300mm"
+   height="300mm"
+   viewBox="0 0 300 300"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   sodipodi:docname="inverter.svg"
+   inkscape:export-filename="inverter.png"
+   inkscape:export-xdpi="101.6"
+   inkscape:export-ydpi="101.6"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="true"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.5095679"
+     inkscape:cx="593.64022"
+     inkscape:cy="571.07208"
+     inkscape:window-width="1536"
+     inkscape:window-height="779"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#ffffff;stroke-width:30"
+       id="rect234"
+       width="220.86749"
+       height="21.228819"
+       x="-0.018644424"
+       y="139.38559" />
+    <rect
+       style="fill:#ffffff;stroke-width:12.2121"
+       id="rect234-6"
+       width="36.598827"
+       height="21.228819"
+       x="264.03073"
+       y="139.38559" />
+    <path
+       sodipodi:type="star"
+       style="fill:#ffffff;stroke-width:30"
+       id="path381"
+       inkscape:flatsided="false"
+       sodipodi:sides="3"
+       sodipodi:cx="62.753906"
+       sodipodi:cy="192.0018"
+       sodipodi:r1="138.32941"
+       sodipodi:r2="69.164703"
+       sodipodi:arg1="-2.0920812"
+       sodipodi:arg2="-1.0448836"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="M -6.1334142,72.045301 97.474767,132.18359 201.08294,192.32188 97.197564,251.98005 -6.6878098,311.63822 -6.410612,191.84176 Z"
+       inkscape:transform-center-x="-34.443659"
+       inkscape:transform-center-y="-0.16004434"
+       transform="translate(14.984676,-41.84176)" />
+    <path
+       sodipodi:type="star"
+       style="fill:#0000ff;stroke-width:30"
+       id="path381-3"
+       inkscape:flatsided="false"
+       sodipodi:sides="3"
+       sodipodi:cx="62.753906"
+       sodipodi:cy="192.0018"
+       sodipodi:r1="138.32941"
+       sodipodi:r2="69.164703"
+       sodipodi:arg1="-2.0920812"
+       sodipodi:arg2="-1.0448836"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="M -6.1334142,72.045301 97.474767,132.18359 201.08294,192.32188 97.197564,251.98005 -6.6878098,311.63822 -6.410612,191.84176 Z"
+       inkscape:transform-center-x="-22.727426"
+       inkscape:transform-center-y="-0.1056053"
+       transform="matrix(0.65984355,0,0,0.65984355,34.337307,23.414452)" />
+    <circle
+       style="fill:#ffffff;stroke-width:53.5865"
+       id="path396"
+       cx="219.00389"
+       cy="149.68764"
+       r="53.58646" />
+    <circle
+       style="fill:#000000;stroke-width:53.5865"
+       id="path396-3"
+       cx="219.00389"
+       cy="149.68764"
+       r="35.724308"
+       inkscape:export-filename="inverter.png"
+       inkscape:export-xdpi="101.6"
+       inkscape:export-ydpi="101.6" />
+  </g>
+</svg>
