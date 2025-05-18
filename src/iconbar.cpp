@@ -45,9 +45,6 @@ void iconbar::draw(void)
     
     for (y = 0; y < 10; y++) {
         for (x = 0; x < 2; x++) {
-            if (icons[x][y]) {
-                icons[x][y]->draw(renderer, rect.x + (0.5 + 2.5 * x) * SCALEX, rect.y + (0.5 + 2.5 * y) * SCALEY, 2 * SCALEX, 2 * SCALEY);
-            } else {
                 box.x = rect.x + (0.5 + 2.5 * x) * SCALEX;
                 box.y = rect.y + (0.5 + 2.5 * y) * SCALEY;
                 box.h = 2 * SCALEY;
@@ -55,7 +52,8 @@ void iconbar::draw(void)
         	SDL_SetRenderDrawColor(renderer, R(color), G(color), B(color),
 			       Alpha(color));
         	SDL_RenderFillRect(renderer, &box);
-            }
+                if (icons[x][y]) 
+                   icons[x][y]->draw(renderer, rect.x + (0.6 + 2.5 * x) * SCALEX, rect.y + (0.6 + 2.5 * y) * SCALEY, 1.8 * SCALEX, 1.8 * SCALEY);
                 
         }    
     }
