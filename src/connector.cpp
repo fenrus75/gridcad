@@ -36,6 +36,10 @@ void connector::draw(class canvas *canvas, int type)
 void connector::fill_grid(class wiregrid *grid)
 {
     grid->block_point(X, Y);
+    grid->add_soft_cost(X + 1, Y + 1, 0.3);
+    grid->add_soft_cost(X + 1, Y - 1, 0.3);
+    grid->add_soft_cost(X - 1, Y + 1, 0.3);
+    grid->add_soft_cost(X - 1, Y - 1, 0.3);
 }
 
 
