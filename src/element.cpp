@@ -118,7 +118,7 @@ void element::stop_drag(class canvas *canvas)
 /* does a mouse press hit this specific element */
 bool element::intersect(float _X, float _Y)
 {
-    if (_X >= X + 1 && _Y >= Y + 1 && _X < X + sizeX && _Y < Y + sizeY)
+    if (_X >= X && _Y >= Y  && _X < X + sizeX && _Y < Y + sizeY)
         return true;
     return false;
 }
