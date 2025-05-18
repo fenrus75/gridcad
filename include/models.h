@@ -15,6 +15,9 @@ public:
     void drawAt(class canvas *canvas, float X, float Y, int type) override;
     void fill_grid(class wiregrid* grid) override;
     bool intersect(float _X, float _Y) override;
+protected:
+    SDL_Texture *visual = NULL;
+    SDL_Texture *visual_selected = NULL;
 };
 
 

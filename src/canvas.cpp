@@ -537,6 +537,22 @@ void canvas::drawCircle(float X, float Y, float _R, int color, int color2)
 			 G(color), B(color), Alpha(color));
 
 }
+void canvas::drawCircle2(float X, float Y, float _R, int color, int color2)
+{
+	int x1, y1;
+
+	x1 = X_to_scr(X);
+	y1 = Y_to_scr(Y);
+
+	/* TODO: clip boxes that are fully outside of the visible window */
+
+	filledCircleRGBA(renderer, x1, y1, _R * scaleX, R(color), G(color),
+			 B(color), Alpha(color));
+	color = color2;
+	filledCircleRGBA(renderer, x1, y1, (_R / 1.4) * scaleX, R(color),
+			 G(color), B(color), Alpha(color));
+
+}
 
 SDL_Texture * canvas::load_image(const char *filename)
 {

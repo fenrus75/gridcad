@@ -25,8 +25,15 @@ model_one::~model_one(void)
 
 void model_one::drawAt(class canvas *canvas, float X, float Y, int type)
 {
-    canvas->drawBox(X,Y,X+1,Y+1, COLOR_ELEMENT_NORMAL);
-    canvas->drawCircle(X+1.5, Y+0.5, 0.5, COLOR_VALUE_GREEN);
+    if (!visual) {
+        visual = canvas->load_image("assets/one.png");    
+        visual_selected = canvas->load_image("assets/one_base.png");
+    }
+    if (selected && visual_selected) {
+        canvas->draw_image(visual_selected, X, Y, sizeX, sizeY, Alpha(type));
+    } else {	
+        canvas->draw_image(visual, X, Y, sizeX, sizeY, Alpha(type));
+    }
     
     for (auto port : ports) {
         port->draw_wires(canvas);

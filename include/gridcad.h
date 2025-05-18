@@ -66,6 +66,7 @@ public:
     
     void drawBox(float X1, float Y1, float X2, float Y2, int color, int alpha = -1);
     void drawCircle(float X, float Y, float R, int color, int color2=COLOR_BACKGROUND_MAIN);
+    void drawCircle2(float X, float Y, float R, int color, int color2=COLOR_BACKGROUND_MAIN);
     void drawLine(float X1, float Y1, float X2, float Y2, int color);
     
     int X_to_scr(float X);
@@ -231,7 +232,7 @@ protected:
     float Xghost = 0, Yghost = 0;
     float Xdnd = 0, Ydnd = 0;
     float X_in_drag = 0, Y_in_drag = 0;
-    bool selected; /* not saved to disk */
+    bool selected = false; /* not saved to disk */
     
     std::vector<class port *> ports;
     

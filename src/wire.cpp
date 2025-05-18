@@ -73,7 +73,7 @@ void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y
             (*step)++;
             if ((*step) >= stepsize) {
                 (*step) = 0;
-                canvas->drawCircle(x1, y1, 0.18, COLOR_WIRE_MOTION, value_color(value));
+                canvas->drawCircle2(x1, y1, 0.18, COLOR_WIRE_MOTION, value_color(value));
             }
             x1 += dx;
             y1 += dy;
