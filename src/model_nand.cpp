@@ -3,6 +3,7 @@
 
 model_nand::model_nand(float _X, float _Y)  : model_logic2(_X, _Y, "assets/nandgate.png")
 {
+    selected_filename = "assets/nandgate_selected.png";
 }
 
 model_nand::~model_nand(void)

@@ -3,6 +3,7 @@
 
 model_and::model_and(float _X, float _Y)  : model_logic2(_X, _Y, "assets/andgate.png")
 {
+    selected_filename = "assets/andgate_selected.png";
 }
 
 model_and::~model_and(void)
