@@ -209,7 +209,7 @@ public:
     void update_value(class port *port, struct value *value, int ttl);
     virtual void notify(int ttl);
     virtual void calculate(int ttl);
-    virtual void mouse_select(void);
+    virtual bool mouse_select(float X, float Y); /* scene absolute */
     bool has_moved(void) { return over_drag_threshold;};
     class wire *is_wire(float X, float Y);
     

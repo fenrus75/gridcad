@@ -37,13 +37,14 @@ public:
 
 
     void drawAt(class canvas *canvas, float X, float Y, int type) override;
-    void mouse_select(void) override;
+    bool mouse_select(float X, float Y) override;
     virtual void to_json(json &j) override;
     virtual void from_json(json &j) override;
 private:
     struct value value = {};
     SDL_Texture *visual_off = NULL;
     SDL_Texture *visual_on = NULL;
+    SDL_Texture *visual_selected = NULL;
 };
 
 

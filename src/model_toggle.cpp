@@ -20,8 +20,11 @@ void model_toggle::drawAt(class canvas *canvas, float X, float Y, int type)
     if (!visual_on) {
         visual_on = canvas->load_image("assets/toggle_on.png");    
         visual_off = canvas->load_image("assets/toggle_off.png");
+        visual_selected = canvas->load_image("assets/toggle_base.png");
     }
-    if (value.boolval) {
+    if (selected) {
+        canvas->draw_image(visual_selected, X, Y, sizeX, sizeY, Alpha(type));
+    } else if (value.boolval) {
         canvas->draw_image(visual_on, X, Y, sizeX, sizeY, Alpha(type));
     } else {	
         canvas->draw_image(visual_off, X, Y, sizeX, sizeY, Alpha(type));
@@ -35,12 +38,19 @@ void model_toggle::drawAt(class canvas *canvas, float X, float Y, int type)
 
 
 
-void model_toggle::mouse_select(void)
+bool model_toggle::mouse_select(float _X, float _Y)
 {
+    /* convert _X and _Y to be relative to the center of the model */
+    _X = _X - X - sizeX/2.0;
+    _Y = _Y - Y - sizeY/2.0;
+    
+    if ( (_X * _X) + (_Y * _Y) > 1.0)  /* click is outside center button */
+         return false;
     value.boolval = !value.boolval;
     printf("TOGGLE to %i\n", value.boolval);
     ports[0]->update_value(&value, DEFAULT_TTL);
     notify(DEFAULT_TTL);
+    return true;
 }
 
 void model_toggle::to_json(json &j)

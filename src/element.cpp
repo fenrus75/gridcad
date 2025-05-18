@@ -195,9 +195,10 @@ void element::calculate(int ttl)
     /* empty in the base class */
 }
 
-void element::mouse_select(void)
+bool element::mouse_select(float X, float Y)
 {
     reseat();
+    return false;
 }
 
 class wire *element::is_wire(float X, float Y)

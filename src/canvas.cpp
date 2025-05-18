@@ -231,8 +231,8 @@ void canvas::eventloop(void)
 					printf("Up\n");
 					if (!dragging->has_moved())  {
 						printf("Click\n");
-						dragging->mouse_select();
-						dragging->select();
+						if (!dragging->mouse_select(x,y))
+							dragging->select();
 					}
 					dragging->stop_drag(this);
 				}
