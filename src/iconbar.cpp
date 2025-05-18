@@ -98,7 +98,7 @@ static const char *image_names[] =
  "assets/nandgate.png",
  "assets/andgate.png",
  "assets/inverter.png",
- "assets/toggle.png",
+ "assets/toggle_off.png",
  "assets/norgate.png",
  "assets/orgate.png",
 };

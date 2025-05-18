@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="300mm"
+   height="300mm"
+   viewBox="0 0 300 300"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   sodipodi:docname="toggle_on.svg"
+   inkscape:export-filename="toggle_on.png"
+   inkscape:export-xdpi="65.024002"
+   inkscape:export-ydpi="65.024002"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="true"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.5095679"
+     inkscape:cx="780.07269"
+     inkscape:cy="610.32102"
+     inkscape:window-width="1536"
+     inkscape:window-height="779"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2">
+    <filter
+       inkscape:label="Button"
+       inkscape:menu="Bevels"
+       inkscape:menu-tooltip="Soft bevel, slightly depressed middle"
+       style="color-interpolation-filters:sRGB;"
+       id="filter1167"
+       x="-0.15224999"
+       y="-0.15224999"
+       width="1.3045"
+       height="1.3045">
+      <feGaussianBlur
+         stdDeviation="2.3"
+         in="SourceAlpha"
+         result="result0"
+         id="feGaussianBlur1141" />
+      <feMorphology
+         in="SourceAlpha"
+         radius="6.6"
+         result="result1"
+         id="feMorphology1143" />
+      <feGaussianBlur
+         stdDeviation="8.9"
+         in="result1"
+         id="feGaussianBlur1145" />
+      <feColorMatrix
+         values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0"
+         result="result91"
+         id="feColorMatrix1147" />
+      <feComposite
+         in="result0"
+         operator="out"
+         result="result2"
+         in2="result91"
+         id="feComposite1149" />
+      <feGaussianBlur
+         stdDeviation="1.7"
+         result="result4"
+         id="feGaussianBlur1151" />
+      <feDiffuseLighting
+         surfaceScale="10"
+         id="feDiffuseLighting1155">
+        <feDistantLight
+           azimuth="225"
+           elevation="45"
+           id="feDistantLight1153" />
+      </feDiffuseLighting>
+      <feBlend
+         in2="SourceGraphic"
+         mode="multiply"
+         id="feBlend1157" />
+      <feComposite
+         in2="SourceAlpha"
+         operator="in"
+         result="result3"
+         id="feComposite1159" />
+      <feSpecularLighting
+         in="result4"
+         surfaceScale="5"
+         specularExponent="17.9"
+         id="feSpecularLighting1163">
+        <feDistantLight
+           azimuth="225"
+           elevation="45"
+           id="feDistantLight1161" />
+      </feSpecularLighting>
+      <feComposite
+         in2="result3"
+         operator="atop"
+         id="feComposite1165" />
+    </filter>
+    <filter
+       inkscape:label="Button"
+       inkscape:menu="Bevels"
+       inkscape:menu-tooltip="Soft bevel, slightly depressed middle"
+       style="color-interpolation-filters:sRGB;"
+       id="filter1195"
+       x="-0.13533343"
+       y="-0.13533343"
+       width="1.2706669"
+       height="1.2706669">
+      <feGaussianBlur
+         stdDeviation="2.3"
+         in="SourceAlpha"
+         result="result0"
+         id="feGaussianBlur1169" />
+      <feMorphology
+         in="SourceAlpha"
+         radius="6.6"
+         result="result1"
+         id="feMorphology1171" />
+      <feGaussianBlur
+         stdDeviation="8.9"
+         in="result1"
+         id="feGaussianBlur1173" />
+      <feColorMatrix
+         values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0"
+         result="result91"
+         id="feColorMatrix1175" />
+      <feComposite
+         in="result0"
+         operator="out"
+         result="result2"
+         in2="result91"
+         id="feComposite1177" />
+      <feGaussianBlur
+         stdDeviation="1.7"
+         result="result4"
+         id="feGaussianBlur1179" />
+      <feDiffuseLighting
+         surfaceScale="10"
+         id="feDiffuseLighting1183">
+        <feDistantLight
+           azimuth="225"
+           elevation="45"
+           id="feDistantLight1181" />
+      </feDiffuseLighting>
+      <feBlend
+         in2="SourceGraphic"
+         mode="multiply"
+         id="feBlend1185" />
+      <feComposite
+         in2="SourceAlpha"
+         operator="in"
+         result="result3"
+         id="feComposite1187" />
+      <feSpecularLighting
+         in="result4"
+         surfaceScale="5"
+         specularExponent="17.9"
+         id="feSpecularLighting1191">
+        <feDistantLight
+           azimuth="225"
+           elevation="45"
+           id="feDistantLight1189" />
+      </feSpecularLighting>
+      <feComposite
+         in2="result3"
+         operator="atop"
+         id="feComposite1193" />
+    </filter>
+    <filter
+       inkscape:label="Button"
+       inkscape:menu="Bevels"
+       inkscape:menu-tooltip="Soft bevel, slightly depressed middle"
+       style="color-interpolation-filters:sRGB;"
+       id="filter1223"
+       x="-0.083532347"
+       y="-0.087000008"
+       width="1.1670647"
+       height="1.174">
+      <feGaussianBlur
+         stdDeviation="2.3"
+         in="SourceAlpha"
+         result="result0"
+         id="feGaussianBlur1197" />
+      <feMorphology
+         in="SourceAlpha"
+         radius="6.6"
+         result="result1"
+         id="feMorphology1199" />
+      <feGaussianBlur
+         stdDeviation="8.9"
+         in="result1"
+         id="feGaussianBlur1201" />
+      <feColorMatrix
+         values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0"
+         result="result91"
+         id="feColorMatrix1203" />
+      <feComposite
+         in="result0"
+         operator="out"
+         result="result2"
+         in2="result91"
+         id="feComposite1205" />
+      <feGaussianBlur
+         stdDeviation="1.7"
+         result="result4"
+         id="feGaussianBlur1207" />
+      <feDiffuseLighting
+         surfaceScale="10"
+         id="feDiffuseLighting1211">
+        <feDistantLight
+           azimuth="225"
+           elevation="45"
+           id="feDistantLight1209" />
+      </feDiffuseLighting>
+      <feBlend
+         in2="SourceGraphic"
+         mode="multiply"
+         id="feBlend1213" />
+      <feComposite
+         in2="SourceAlpha"
+         operator="in"
+         result="result3"
+         id="feComposite1215" />
+      <feSpecularLighting
+         in="result4"
+         surfaceScale="5"
+         specularExponent="17.9"
+         id="feSpecularLighting1219">
+        <feDistantLight
+           azimuth="225"
+           elevation="45"
+           id="feDistantLight1217" />
+      </feSpecularLighting>
+      <feComposite
+         in2="result3"
+         operator="atop"
+         id="feComposite1221" />
+    </filter>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       id="rect234-6"
+       style="fill:#ffffff;stroke-width:12.2121;filter:url(#filter1223)"
+       d="M 150.00015 9.9999064 A 140 140 0 0 0 9.9999064 150.00015 A 140 140 0 0 0 150.00015 289.99987 A 140 140 0 0 0 289.59111 160.61449 L 301.62345 160.61449 L 301.62345 139.38581 L 289.59473 139.38581 A 140 140 0 0 0 150.00015 9.9999064 z M 150.00015 59.999955 A 90 90 0 0 1 239.99982 150.00015 A 90 90 0 0 1 150.00015 239.99982 A 90 90 0 0 1 59.999955 150.00015 A 90 90 0 0 1 150.00015 59.999955 z " />
+    <path
+       id="path349-3-5"
+       style="fill:#1a1a1a;stroke-width:30;filter:url(#filter1195)"
+       d="M 150.00015 59.999955 A 90 90 0 0 0 59.999955 150.00015 A 90 90 0 0 0 150.00015 239.99982 A 90 90 0 0 0 239.99982 150.00015 A 90 90 0 0 0 150.00015 59.999955 z M 150.00015 69.999862 A 80 80 0 0 1 229.99991 150.00015 A 80 80 0 0 1 150.00015 229.99991 A 80 80 0 0 1 69.999862 150.00015 A 80 80 0 0 1 150.00015 69.999862 z " />
+    <circle
+       style="fill:#00ff00;stroke-width:30;filter:url(#filter1167)"
+       id="path349-3-3"
+       cx="150"
+       cy="150"
+       r="80" />
+  </g>
+</svg>
