@@ -141,10 +141,8 @@ class port * element::is_port(float _X, float _Y)
     _Y -= Y;
     
     for (auto port : ports) {
-        float d = sqrtf(  (_X - port->X - 0.5) * (_X - port->X - 0.5) + (_Y - port->Y - 0.5) * (_Y - port->Y - 0.5));
-        if (d > 0.5) 
-            continue;
-        return port;
+        if (floorf(_X) == port->X && floorf(_Y) == port->Y)
+            return port;
     }
     return NULL;
 }

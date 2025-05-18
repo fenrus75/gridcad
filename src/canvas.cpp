@@ -137,7 +137,7 @@ void canvas::eventloop(void)
 				y = scr_to_Y(event.motion.y);
 
 				for (auto elem:	current_scene->elements) {
-					if (elem->intersect(x, y)) {
+					if (elem->intersect(x, y) && !elem->is_port(x,y)) {
 						printf("Start drag: %5.2f %5.2f \n", x, y);
 						dragging = elem;
 					}
@@ -283,8 +283,9 @@ void canvas::eventloop(void)
 				dragging = NULL;
 				dragging_port = NULL;
 				left_mouse_down = false;
-				if (dragging_wire)
+				if (dragging_wire) {
 					delete dragging_wire;
+				}
 				dragging_wire = NULL;
 			}
 			break;
@@ -314,7 +315,7 @@ void canvas::eventloop(void)
 			if (dragging_wire) {
 				bool banned = false;
 				for (auto elem:	current_scene->elements) {
-					if (elem->intersect(x, y))
+					if (elem->intersect(x, y) && !elem->is_port(x,y))
 						banned = true;
 				}
 				if (!banned)
@@ -415,6 +416,9 @@ void canvas::draw(void)
 				if (grid->is_blocked(x,y)) {
 					drawBox(x + 0.1, y + 0.1, x + 0.9, y + 0.9, COLOR_ELEMENT_DND);
 				} 
+				if (current_scene->is_port(x,y)) {
+					drawCircle(x + 0.5, y + 0.5, 2, COLOR_VALUE_RED);
+				}
 			}
 		
 		delete grid;
