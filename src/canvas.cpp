@@ -148,6 +148,7 @@ void canvas::eventloop(void)
 				wr = current_scene->is_wire(x, y);
 				if (wr)
 					printf("WR  %i\n", dragging != NULL);
+					
 				if (!dragging && wr) {
 					class wire *wr2;
 					class element *_element;
@@ -291,7 +292,7 @@ void canvas::eventloop(void)
 			}
 			break;
 		case SDL_MOUSEMOTION:
-			int x,y;
+			float x,y;
 			mouseX = scr_to_X(event.motion.x);
 			mouseY = scr_to_Y(event.motion.y);
 			x = scr_to_X(event.motion.x);

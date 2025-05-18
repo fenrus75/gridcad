@@ -47,12 +47,12 @@ static int current_interval(void)
     return floorf(d);        
 }
 
-double dist(float x1, float y1, float x2, float y2)
+float dist(float x1, float y1, float x2, float y2)
 {
-        double dx, dy,d;
+        float dx, dy,d;
         dx = x2-x1;
         dy = y2-y1;
-        d = sqrt(dx*dx + dy*dy);
+        d = sqrtf(dx*dx + dy*dy);
         return d;
 }
 
@@ -213,16 +213,16 @@ bool wire::intersect(float targetX, float targetY)
     for (auto point: *points) {
         if (first) {
             first = false;
-            prevX = point.X;
-            prevY = point.Y;
+            prevX = point.X + 0.5;
+            prevY = point.Y + 0.5;
             continue;
         }
         double dx, dy,d;
         float x1,y1,x2,y2;
         x1 = prevX;
         y1 = prevY;
-        x2 = point.X;
-        y2 = point.Y;
+        x2 = point.X + 0.5;
+        y2 = point.Y + 0.5;
         
         dx = x2-x1;
         dy = y2-y1;
@@ -238,8 +238,8 @@ bool wire::intersect(float targetX, float targetY)
             x1 += dx;
             y1 += dy;            
         }
-        prevX = point.X;
-        prevY = point.Y;
+        prevX = point.X + 0.5;
+        prevY = point.Y + 0.5;
     }
 
     if (bestdist <= 0.5)
