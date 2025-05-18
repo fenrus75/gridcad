@@ -253,3 +253,8 @@ void element::from_json(json &j)
     name = strdup(j["name"]);    
     */
 }
+
+bool element::want_deleted(void)
+{
+    return false;
+}

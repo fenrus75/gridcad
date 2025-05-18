@@ -117,6 +117,7 @@ public:
     float sizeX, sizeY;
     
     void add_element(class element *element);
+    void remove_element(class element *element);
     
     bool can_place_element(float x, float y, int w, int h, class element *myself = NULL);
 
@@ -125,12 +126,15 @@ public:
     
     void fill_grid(class wiregrid* grid);
     
-    std::vector<class element *> elements;
     void deselect_all(void);
     class element *selected_element(void);
     
     void to_json(json& j);
     void from_json(json& j);
+    void process_delete_requests(void);
+
+    /* needs to become protected */
+    std::vector<class element *> elements;
     
 protected:
     
@@ -172,6 +176,7 @@ public:
     bool replace_wire(class wire *from, class wire *to);
     void to_json(json &j);
     void from_json(json &j);
+    bool has_wires(void) { return wires.size() > 0; };
 private:
     void drawConnector(class canvas *canvas, float X, float Y, int cX, int cY, int type);    
     std::vector<class wire*> wires;
@@ -224,6 +229,7 @@ public:
     void select(void) { selected = true; reseat();};
     void deselect(void) { selected = false;};
     bool is_selected(void) { return selected;};
+    virtual bool want_deleted(void);
 protected:
 
     const char *name = NULL;
@@ -292,6 +298,7 @@ public:
     virtual std::string class_id(void) { return "connector:";};
     void draw(class canvas *canvas, int type) override;
     void fill_grid(class wiregrid* grid) override;
+    bool want_deleted(void) override;
 private:
     SDL_Texture *red = NULL;
     SDL_Texture *green = NULL;

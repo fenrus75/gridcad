@@ -38,3 +38,10 @@ void connector::fill_grid(class wiregrid *grid)
     grid->block_point(X, Y);
 }
 
+
+bool connector::want_deleted(void)
+{
+    if (!ports[0]->has_wires())
+        return true;
+    return false;
+}

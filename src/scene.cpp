@@ -78,6 +78,17 @@ class element * scene::selected_element(void)
 	return NULL;
 }
 
+void scene::remove_element(class element *element)
+{
+	unsigned int i;
+	for (i = 0; i < elements.size(); i++) {
+		if (elements[i] == element) {
+			elements.erase(elements.begin() + i); /* must exit the for loop now */
+			delete element;
+			return;
+		}
+	}
+}
 
 void scene::to_json(json &j)
 {
@@ -108,3 +119,16 @@ void scene::from_json(json &j)
 	}
 }
 
+
+void scene::process_delete_requests(void)
+{
+	std::vector<class element *> todo;
+	
+	for (auto elem : elements) {
+		if (elem->want_deleted())
+			todo.push_back(elem);
+	}
+	
+	for (auto elem : todo)
+		remove_element(elem);
+}
