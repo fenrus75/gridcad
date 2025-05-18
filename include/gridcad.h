@@ -292,6 +292,10 @@ public:
     virtual std::string class_id(void) { return "connector:";};
     void draw(class canvas *canvas, int type) override;
     void fill_grid(class wiregrid* grid) override;
+private:
+    SDL_Texture *red = NULL;
+    SDL_Texture *green = NULL;
+    SDL_Texture *open = NULL;
 };
 
 extern int R(int color);
