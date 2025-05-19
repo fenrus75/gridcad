@@ -110,8 +110,9 @@ void canvas::eventloop(void)
 					hover_wire->remove();
 					delete hover_wire;
 					hover_wire = NULL;
-					current_scene->process_delete_requests();
 				}
+				current_scene->delete_selection();
+				current_scene->process_delete_requests();
 				break;
 			case SDLK_g:
 				draw_grid = !draw_grid;

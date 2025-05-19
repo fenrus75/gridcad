@@ -213,3 +213,11 @@ void port::from_json(json &j)
 	}
 
 }
+
+void port::delete_wires(void)
+{
+	for (auto wire : wires) {
+		wire->remove();
+	}
+	wires.resize(0);
+}

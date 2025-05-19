@@ -132,3 +132,9 @@ void scene::process_delete_requests(void)
 	for (auto elem : todo)
 		remove_element(elem);
 }
+
+void scene::delete_selection(void)
+{
+	for (auto elem : elements)
+		elem->delete_if_selected();
+}

@@ -133,6 +133,7 @@ public:
     void to_json(json& j);
     void from_json(json& j);
     void process_delete_requests(void);
+    void delete_selection(void);
 
     /* needs to become protected */
     std::vector<class element *> elements;
@@ -178,6 +179,7 @@ public:
     void to_json(json &j);
     void from_json(json &j);
     bool has_wires(void) { return wires.size() > 0; };
+    void delete_wires(void);
 private:
     void drawConnector(class canvas *canvas, float X, float Y, int cX, int cY, int type);    
     std::vector<class wire*> wires;
@@ -231,12 +233,14 @@ public:
     void deselect(void) { selected = false;};
     bool is_selected(void) { return selected;};
     virtual bool want_deleted(void);
+    void delete_if_selected(void);
 protected:
 
     const char *name = NULL;
     int sizeX = 1;
     int sizeY = 1;
     bool over_drag_threshold = false;  /* has a drag-and-drop been far enough to avoid spurious drags */
+    bool want_delete = false; /* not saved to disk */
     
     
     float X = 0, Y = 0;

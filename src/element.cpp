@@ -256,5 +256,18 @@ void element::from_json(json &j)
 
 bool element::want_deleted(void)
 {
-    return false;
+    return want_delete;
+}
+
+
+void element::delete_if_selected(void)
+{
+
+	if (!selected)
+		return;
+
+	for (auto port:ports) {
+		port->delete_wires();
+	}	
+	want_delete = true;
 }
