@@ -18,6 +18,7 @@ class element *element_from_class_id(std::string classid)
     ELEMENT(model_one);
     ELEMENT(model_zero);
     ELEMENT(connector);
+    ELEMENT(model_output);
     
     
     printf("Unknown class_id: %s\n", classid.c_str());

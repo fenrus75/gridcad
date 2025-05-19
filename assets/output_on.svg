@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="300mm"
+   height="300mm"
+   viewBox="0 0 300 300"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
+   sodipodi:docname="output_on.svg"
+   inkscape:export-filename="output_base.png"
+   inkscape:export-xdpi="65.024002"
+   inkscape:export-ydpi="65.024002"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="true"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.5095679"
+     inkscape:cx="783.01636"
+     inkscape:cy="610.32102"
+     inkscape:window-width="2194"
+     inkscape:window-height="1162"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       id="rect1"
+       style="fill:#ffd42a;stroke-width:0.264583"
+       d="M 19.673218 6.2306274 C 11.363218 6.2306274 4.6730998 12.920745 4.6730998 21.230745 L 4.6730998 281.2309 C 4.6730998 289.5409 11.363218 296.23101 19.673218 296.23101 L 279.67285 296.23101 C 287.98285 296.23101 294.67297 289.5409 294.67297 281.2309 L 294.67297 21.230745 C 294.67297 12.920745 287.98285 6.2306274 279.67285 6.2306274 L 19.673218 6.2306274 z M 150.00015 59.999955 A 90 90 0 0 1 239.99982 150.00015 A 90 90 0 0 1 150.00015 239.99982 A 90 90 0 0 1 59.999955 150.00015 A 90 90 0 0 1 150.00015 59.999955 z M 150.00015 69.999862 A 80 80 0 0 0 69.999862 150.00015 A 80 80 0 0 0 150.00015 229.99991 A 80 80 0 0 0 229.99991 150.00015 A 80 80 0 0 0 150.00015 69.999862 z " />
+    <path
+       id="path349-3-5"
+       style="fill:#1a1a1a;stroke-width:30"
+       d="M 150.00015 59.999955 A 90 90 0 0 0 59.999955 150.00015 A 90 90 0 0 0 150.00015 239.99982 A 90 90 0 0 0 239.99982 150.00015 A 90 90 0 0 0 150.00015 59.999955 z M 150.00015 69.999862 A 80 80 0 0 1 229.99991 150.00015 A 80 80 0 0 1 150.00015 229.99991 A 80 80 0 0 1 69.999862 150.00015 A 80 80 0 0 1 150.00015 69.999862 z " />
+    <circle
+       style="fill:#808080;stroke-width:30"
+       id="path349-3-3"
+       cx="150"
+       cy="150"
+       r="80" />
+  </g>
+</svg>

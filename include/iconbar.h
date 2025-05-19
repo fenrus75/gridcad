@@ -10,6 +10,7 @@
 #define ICON_TOGGLE 5
 #define ICON_NOR 6
 #define ICON_OR 7
+#define ICON_OUTPUT 8
 
 class icon {
 public:
