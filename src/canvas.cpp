@@ -103,6 +103,7 @@ void canvas::eventloop(void)
 				if (active_icon)
 					active_icon->set_inactive();
 				active_icon = NULL;
+				current_scene->deselect_all();
 				break;
 			case SDLK_BACKSPACE:
 				if (hover_wire) {
@@ -338,8 +339,8 @@ void canvas::eventloop(void)
 				fromY = scr_to_Y(middle_Y);
 				toX = scr_to_X(event.motion.x);
 				toY = scr_to_Y(event.motion.y);
-				offsetX += (toX - fromX);
-				offsetY += (toY - fromY);
+				offsetX -= (toX - fromX);
+				offsetY -= (toY - fromY);
 
 				middle_X = event.motion.x;
 				middle_Y = event.motion.y;
