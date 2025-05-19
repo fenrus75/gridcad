@@ -107,6 +107,18 @@ void wire::draw(class canvas *canvas, int color)
             first = false;
             continue;
         }
+        canvas->draw_shadow_Line(prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, color);
+        prevX = point.X;
+        prevY = point.Y;
+    }
+    first =true;
+    for (auto point: *points) {
+        if (first) {
+            prevX = point.X;
+            prevY = point.Y;
+            first = false;
+            continue;
+        }
         draw_snake_line(canvas, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, color, &step, &value, stepsize);
         prevX = point.X;
         prevY = point.Y;

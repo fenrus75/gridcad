@@ -541,9 +541,6 @@ void canvas::drawLine(float X1, float Y1, float X2, float Y2, int color)
 	/* TODO: clip boxes that are fully outside of the visible window */
 
 	thickLineRGBA(renderer, X_to_scr(X1), Y_to_scr(Y1), X_to_scr(X2),
-		      Y_to_scr(Y2), 0.25 * scaleX, 0, 0, 0, 
-		      64);
-	thickLineRGBA(renderer, X_to_scr(X1), Y_to_scr(Y1), X_to_scr(X2),
 		      Y_to_scr(Y2), 0.2 * scaleX, R(color), G(color), B(color),
 		      Alpha(color));
 	if (Alpha(color) > 250) {
@@ -552,6 +549,14 @@ void canvas::drawLine(float X1, float Y1, float X2, float Y2, int color)
 		filledCircleRGBA(renderer, X_to_scr(X2), Y_to_scr(Y2), 0.1 * scaleX, R(color), G(color),
 			 B(color), Alpha(color));
 	}
+}
+void canvas::draw_shadow_Line(float X1, float Y1, float X2, float Y2, int color)
+{
+	/* TODO: clip boxes that are fully outside of the visible window */
+
+	thickLineRGBA(renderer, X_to_scr(X1), Y_to_scr(Y1), X_to_scr(X2),
+		      Y_to_scr(Y2), 0.25 * scaleX, 0, 0, 0, 
+		      64);
 }
 
 void canvas::drawCircle(float X, float Y, float _R, int color, int color2)

@@ -68,6 +68,7 @@ public:
     void drawCircle(float X, float Y, float R, int color, int color2=COLOR_BACKGROUND_MAIN);
     void drawCircle2(float X, float Y, float R, int color, int color2=COLOR_BACKGROUND_MAIN);
     void drawLine(float X1, float Y1, float X2, float Y2, int color);
+    void draw_shadow_Line(float X1, float Y1, float X2, float Y2, int color);
     
     int X_to_scr(float X);
     int Y_to_scr(float Y);
