@@ -8,7 +8,7 @@ model_output::model_output(float _X, float _Y)  : element(1, 1, NULL)
     X = floorf(_X);
     Y = floorf(_Y);
     
-    add_port(-1, 1, "OutputPad", PORT_OUT);    
+    add_port(-1, 1, "OutputPad", PORT_IN);    
 }
 
 model_output::~model_output(void)
