@@ -8,7 +8,7 @@ model_output::model_output(float _X, float _Y)  : element(1, 1, NULL)
     X = floorf(_X);
     Y = floorf(_Y);
     
-    add_port(-1, 1, "OutputPad", PORT_IN);    
+    add_port(-1, 1, "In", PORT_IN);    
 }
 
 model_output::~model_output(void)
@@ -24,7 +24,7 @@ void model_output::drawAt(class canvas *canvas, float X, float Y, int type)
     }
     if (selected) {
         canvas->draw_image(visual_selected, X, Y, sizeX, sizeY, Alpha(type));
-    } else if (value.boolval) {
+    } else if (ports[0]->value.boolval) {
         canvas->draw_image(visual_on, X, Y, sizeX, sizeY, Alpha(type));
     } else {	
         canvas->draw_image(visual_off, X, Y, sizeX, sizeY, Alpha(type));
@@ -38,28 +38,11 @@ void model_output::drawAt(class canvas *canvas, float X, float Y, int type)
 
 
 
-bool model_output::mouse_select(float _X, float _Y)
-{
-    /* convert _X and _Y to be relative to the center of the model */
-    _X = _X - X - sizeX/2.0;
-    _Y = _Y - Y - sizeY/2.0;
-    
-    if ( (_X * _X) + (_Y * _Y) > 1.0)  /* click is outside center button */
-         return false;
-    value.boolval = !value.boolval;
-    printf("TOGGLE to %i\n", value.boolval);
-    ports[0]->update_value(&value, DEFAULT_TTL);
-    notify(DEFAULT_TTL);
-    return true;
-}
-
 void model_output::to_json(json &j)
 {
      element::to_json(j);
-     j["value"] = value;   
 }
 void model_output::from_json(json &j)
 {
      element::from_json(j);
-     value = j["value"];
 }

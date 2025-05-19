@@ -130,7 +130,6 @@ public:
 
 
     void drawAt(class canvas *canvas, float X, float Y, int type) override;
-    bool mouse_select(float X, float Y) override;
     virtual void to_json(json &j) override;
     virtual void from_json(json &j) override;
 private:
