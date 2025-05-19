@@ -222,6 +222,10 @@ void canvas::eventloop(void)
 			if ( event.button.button == SDL_BUTTON_RIGHT) {
 				printf("Right button\n");
 			}
+			if (event.button.button == SDL_BUTTON_MIDDLE) {
+				middle_X = event.motion.x;
+				middle_Y = event.motion.y;
+			}
 			break;
 		case SDL_MOUSEBUTTONUP:
 			if (event.button.button == SDL_BUTTON_LEFT) {
@@ -290,6 +294,10 @@ void canvas::eventloop(void)
 				}
 				dragging_wire = NULL;
 			}
+			if (event.button.button == SDL_BUTTON_MIDDLE) {
+				middle_X = event.motion.x;
+				middle_Y = event.motion.y;
+			}
 			break;
 		case SDL_MOUSEMOTION:
 			float x,y;
@@ -322,6 +330,20 @@ void canvas::eventloop(void)
 				}
 				if (!banned)
 					dragging_wire->move_target(mouseX, mouseY);
+			}
+
+			if (event.motion.state & SDL_BUTTON_MMASK) {
+				float fromX, fromY, toX, toY;
+				fromX = scr_to_X(middle_X);
+				fromY = scr_to_Y(middle_Y);
+				toX = scr_to_X(event.motion.x);
+				toY = scr_to_Y(event.motion.y);
+				offsetX += (toX - fromX);
+				offsetY += (toY - fromY);
+
+				middle_X = event.motion.x;
+				middle_Y = event.motion.y;
+
 			}
 			break;
 			

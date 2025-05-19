@@ -100,8 +100,9 @@ protected:
     class iconbar *icon_bar = NULL;
     class icon *active_icon = NULL;
     bool left_mouse_down = false;
-    float mouseX, mouseY;
-    float click_start_X, click_start_Y;
+    float mouseX = 0.0, mouseY = 0.0;
+    float click_start_X = 0.0, click_start_Y = 0.0;
+    int middle_X = 0, middle_Y = 0;
     
 };
 
