@@ -11,6 +11,7 @@
 #define ICON_NOR 6
 #define ICON_OR 7
 #define ICON_OUTPUT 8
+#define ICON_XOR 9
 
 class icon {
 public:

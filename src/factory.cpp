@@ -12,6 +12,7 @@ class element *element_from_class_id(std::string classid)
     ELEMENT(model_toggle);
     ELEMENT(model_not);        
     ELEMENT(model_or);
+    ELEMENT(model_xor);
     ELEMENT(model_nor);
     ELEMENT(model_and);
     ELEMENT(model_nand);
