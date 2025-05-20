@@ -14,7 +14,6 @@ void take_undo_snapshot(class scene *scene)
 	scene->to_json(J);
 
 	s = J.dump();
-	printf("Undo: %s \n", s.c_str());
 	undo_list.push_back(s);
 	if (undo_list.size() > UNDO_DEPTH)
 		undo_list.erase(undo_list.begin() + 0);
