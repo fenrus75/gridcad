@@ -221,3 +221,10 @@ void port::delete_wires(void)
 	}
 	wires.resize(0);
 }
+
+void port::fill_grid(class wiregrid *grid)
+{
+	for (auto wire : wires) {
+		wire->fill_grid(grid);
+	}
+}

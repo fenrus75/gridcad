@@ -178,6 +178,7 @@ public:
     void stop_drag(class canvas *canva);
     virtual void notify(int ttl);
     class wire *is_wire(float X, float Y);
+    void fill_grid(class wiregrid *grid);
     
     void remove_wire(class wire *wire);
     bool replace_wire(class wire *from, class wire *to);
@@ -283,6 +284,7 @@ public:
     void select(void) { selected = true;};
     void deselect(void) { selected = false;};
     void remove(void);
+    void fill_grid(class wiregrid* grid);
     
     class wire *split(void);
     
@@ -293,6 +295,7 @@ public:
     
 protected:
     bool selected = false;
+    bool being_routed = false; /* not saved in json */
     std::vector<class port *> ports;
     int X1 = 0, Y1 = 0, X2 = 0, Y2 = 0;
     int color = 0;

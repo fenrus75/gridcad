@@ -1,5 +1,6 @@
 
 #include "gridcad.h"
+#include "wirepath.h"
 
 #include <algorithm>
 
@@ -138,6 +139,7 @@ void wire::move_target(int X, int Y)
 
 void wire::route(class scene *scene)
 {
+    being_routed = true;
     if (points)
         delete points;
         
@@ -158,6 +160,7 @@ void wire::route(class scene *scene)
             std::reverse(points->begin(), points->end());
         }
     }
+    being_routed = false;
 }
 
 void wire::get_ref(void)
@@ -325,4 +328,52 @@ class wire *json_wire_factory(json &jwire)
     new_wire->from_json(jwire);
     
     return new_wire;
+}
+
+
+
+static void grid_line(class wiregrid *grid, float x1, float y1, float x2, float y2)
+{
+        double dx, dy,d;
+        
+        dx = x2-x1;
+        dy = y2-y1;
+        d = dist(x1,y1,x2,y2);;
+        dx = dx/d/12.0;
+        dy = dy/d/12.0;
+        
+        
+        while (dist(x1,y1,x2,y2) > 1/10.0) {
+            if (grid->get_soft_cost(x1, y1) < 0.001)
+                grid->add_soft_cost(x1, y1, 0.25);
+            x1 += dx;
+            y1 += dy;
+        }
+        
+        
+    
+}
+
+void wire::fill_grid(class wiregrid *grid)
+{
+    int prevX, prevY;
+    bool first = true;
+        
+    if (!points)
+        return;
+    if (being_routed)
+        return;
+        
+    first =true;
+    for (auto point: *points) {
+        if (first) {
+            prevX = point.X;
+            prevY = point.Y;
+            first = false;
+            continue;
+        }
+        grid_line(grid, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5);
+        prevX = point.X;
+        prevY = point.Y;
+    }
 }

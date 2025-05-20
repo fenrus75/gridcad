@@ -170,6 +170,9 @@ void element::fill_grid(class wiregrid *grid)
         grid->add_soft_cost(X + port->X - 1, Y + port->Y + 0, 0.3);
         grid->add_soft_cost(X + port->X - 1, Y + port->Y + 1, 0.6);
     }
+    
+    for (auto port : ports)
+        port->fill_grid(grid);
 }
 
 void element::update_value(class port *port, struct value *value, int ttl)

@@ -455,15 +455,15 @@ void canvas::draw(void)
 		for (y = 0; y < current_scene->sizeY ; y++)
 			for (x = 0; x < current_scene->sizeX ; x++) {
 				float c = grid->get_soft_cost(x, y);
-				if (c > 0) {
+				if (c > 0.01) {
 					drawBox(x + 0.1, y + 0.1, x + 0.9, y + 0.9, COLOR_ELEMENT_GHOST, 64 * c);
 				}
 				if (grid->is_blocked(x,y)) {
 					drawBox(x + 0.1, y + 0.1, x + 0.9, y + 0.9, COLOR_ELEMENT_DND);
 				} 
-				if (current_scene->is_port(x,y)) {
-					drawCircle(x + 0.5, y + 0.5, 2, COLOR_VALUE_RED);
-				}
+//				if (current_scene->is_port(x,y)) {
+//					drawCircle(x + 0.5, y + 0.5, 2, COLOR_VALUE_RED);
+//				}
 			}
 		
 		delete grid;
