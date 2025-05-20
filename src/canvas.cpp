@@ -13,9 +13,9 @@
 canvas::canvas(class scene *_scene)
 {
 	window =
-	    SDL_CreateWindow("FOO BAR", SDL_WINDOWPOS_UNDEFINED,
+	    SDL_CreateWindow("GridCad", SDL_WINDOWPOS_UNDEFINED,
 			     SDL_WINDOWPOS_UNDEFINED, 1024, 768, SDL_WINDOW_RESIZABLE);
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 	
 	main_area_rect.x = 0;
@@ -51,10 +51,14 @@ void canvas::eventloop(void)
 	SDL_Event event;
 	int ret = 0;
 	bool leave = false;
+	draw();
 
 	while (!leave) {
+#if 0
 		if (!ret)
 			SDL_Delay(1);
+#endif
+//		ret = SDL_WaitEventTimeout(&event, 5);
 		ret = SDL_PollEvent(&event);
 		
 		switch (event.type) {
@@ -417,8 +421,9 @@ void canvas::eventloop(void)
 				icon_bar->resize(ui_area_rect);
 			}
 			break;
-		}		
-		draw();
+		}
+		if (!ret)		
+			draw();	
 	}
 }
 
