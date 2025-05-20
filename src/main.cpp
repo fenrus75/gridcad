@@ -31,7 +31,8 @@ int main(int argc, char **argv)
     
     
     _canvas->eventloop();
-    
+
+	_scene = _canvas->get_scene();
 
     {    
         json j;

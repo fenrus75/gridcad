@@ -85,6 +85,7 @@ public:
     SDL_Texture *text_to_texture(std::string text);
     
     class scene *get_scene(void) { return current_scene; };
+    class scene *swap_scene(class scene *scene);
     
 
     void to_json(json& j);
@@ -324,3 +325,5 @@ extern int value_color(struct value *value);
 extern class element *element_from_class_id(std::string classid);
 extern class wire *json_wire_factory(json &jwire);
 extern void clear_wire_factory(void);
+extern void take_undo_snapshot(class scene *scene);
+extern class scene *get_undo(void);

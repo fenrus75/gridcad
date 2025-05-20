@@ -106,6 +106,7 @@ void canvas::eventloop(void)
 				current_scene->deselect_all();
 				break;
 			case SDLK_BACKSPACE:
+				take_undo_snapshot(current_scene);
 				if (hover_wire) {
 					hover_wire->remove();
 					delete hover_wire;
@@ -116,6 +117,15 @@ void canvas::eventloop(void)
 				break;
 			case SDLK_g:
 				draw_grid = !draw_grid;
+				break;
+			case SDLK_z:
+				if (event.key.keysym.mod & KMOD_LCTRL) {
+					printf("UNDO\n");
+					class scene *oldscene;
+					oldscene = swap_scene(get_undo());
+					if (oldscene)
+						delete(oldscene);
+				}
 				break;
 			}
 			break;
@@ -155,6 +165,7 @@ void canvas::eventloop(void)
 					class wire *wr2;
 					class element *_element;
 					class port *port;
+					take_undo_snapshot(current_scene);
 					_element = new connector(x, y);
 				        current_scene->add_element(_element);
 					
@@ -168,7 +179,6 @@ void canvas::eventloop(void)
 					wr2->reseat();
 					wr->route(current_scene);
 					wr2->route(current_scene);
-					
 					
 				}
 				if (dragging)
@@ -211,6 +221,7 @@ void canvas::eventloop(void)
 				
 				if (event.motion.x < main_area_rect.w && floating) {
 					printf("Adding element\n");
+					take_undo_snapshot(current_scene);
 					current_scene->add_element(floating);
 					floating->stop_drag(this);
 					if (active_icon)
@@ -237,6 +248,7 @@ void canvas::eventloop(void)
 				y = scr_to_Y(event.motion.y);
 				if (dragging) {
 					printf("Up\n");
+					take_undo_snapshot(current_scene);
 					if (!dragging->has_moved())  {
 						printf("Click\n");
 						if (!dragging->mouse_select(x,y))
@@ -244,10 +256,13 @@ void canvas::eventloop(void)
 					}
 					dragging->stop_drag(this);
 					current_scene->rewire_section(dragging);
+
 				}
 				if (dragging_port && !current_scene->is_port(x, y)) {
 					class wire *wr;
 					class element *_element;
+
+					take_undo_snapshot(current_scene);
 					
 					wr = current_scene->is_wire(x, y);
 					if (wr) {
@@ -276,17 +291,20 @@ void canvas::eventloop(void)
 						_element = new connector(x, y);
 					        current_scene->add_element(_element);
 					}
+
 				}
 				if (dragging_port && current_scene->is_port(x, y)) {
 					class port *port2 = current_scene->is_port(x, y);
 					
 					if (dragging_port != port2) {
+						take_undo_snapshot(current_scene);
 						dragging_port->add_wire(dragging_wire);
 						port2->add_wire(dragging_wire);
 						dragging_wire->reseat();
 						dragging_wire->route(current_scene);
 						dragging_wire = NULL;
 						printf("Connection made\n");
+
 					}
 				} 
 				dragging = NULL;
@@ -639,4 +657,15 @@ void canvas::to_json(json& j)
 	j["offsetY"] = offsetY;
 	j["scaleX"] = scaleX;
 	j["scaleY"] = scaleY;
+}
+
+class scene * canvas::swap_scene(class scene *scene)
+{
+	class scene *tmp;
+
+	if (!scene)
+		return NULL;
+	tmp = current_scene;
+	current_scene = scene;
+	return tmp;
 }
