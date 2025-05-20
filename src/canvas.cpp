@@ -243,6 +243,7 @@ void canvas::eventloop(void)
 							dragging->select();
 					}
 					dragging->stop_drag(this);
+					current_scene->rewire_section(dragging);
 				}
 				if (dragging_port && !current_scene->is_port(x, y)) {
 					class wire *wr;

@@ -20,6 +20,7 @@ scene::~scene(void)
 void scene::add_element(class element * element)
 {
 	elements.push_back(element);
+	rewire_section(element->get_X(), element->get_Y(), element->get_width(), element->get_height());
 }
 
 bool scene::can_place_element(float x, float y, int w, int h,
@@ -137,4 +138,25 @@ void scene::delete_selection(void)
 {
 	for (auto elem : elements)
 		elem->delete_if_selected();
+}
+
+
+void scene::rewire_section(int x1, int y1, int w, int h)
+{
+	int x, y;
+
+	for (y = y1 - 1 ; y <= y1 + h + 1; y++)
+		for (x = x1 -1 ; x <= x1 + w + 1; x++) {
+			class wire *wire;
+			wire = is_wire(x, y);
+			if (wire) {
+				wire->reseat();
+				wire->route(this);
+			}
+		}
+}
+
+void scene::rewire_section(class element *element)
+{
+	rewire_section(element->get_X(), element->get_Y(), element->get_width(), element->get_height());
 }

@@ -138,6 +138,9 @@ public:
 
     /* needs to become protected */
     std::vector<class element *> elements;
+    void rewire_section(int x1, int y1, int w, int h);
+    void rewire_section(class element *element);
+
     
 protected:
     
@@ -219,6 +222,8 @@ public:
     
     float get_X(void) { return X; };
     float get_Y(void) { return Y; };
+    float get_width(void) { return sizeX; };
+    float get_height(void) { return sizeY; };
     
     void update_value(class port *port, struct value *value, int ttl);
     virtual void notify(int ttl);
