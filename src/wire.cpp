@@ -310,6 +310,10 @@ void wire::from_json(json &j)
 
 static std::map<std::string, class wire*> json_wires;
 
+void clear_wire_factory(void)
+{
+	json_wires.clear();
+}
 class wire *json_wire_factory(json &jwire)
 {
     if (json_wires.find(jwire["name"]) != json_wires.end())

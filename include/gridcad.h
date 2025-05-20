@@ -323,3 +323,4 @@ extern int Alpha(int color);
 extern int value_color(struct value *value);
 extern class element *element_from_class_id(std::string classid);
 extern class wire *json_wire_factory(json &jwire);
+extern void clear_wire_factory(void);
