@@ -368,6 +368,31 @@ bool canvas::handleEvent(SDL_Event &event)
 			mouseY = scr_to_Y(event.motion.y);
 			x = scr_to_X(event.motion.x);
 			y = scr_to_Y(event.motion.y);
+
+			if (in_area_select) {
+				float X1,Y1,X2,Y2;
+				if (area_select_X1 > mouseX){ 
+					X1 = mouseX; 
+					X2 = area_select_X1;
+				} else {
+					X1= area_select_X1;
+					X2 = mouseX;
+				}
+
+				if (area_select_Y1 > mouseX){ 
+					Y1 = mouseY; 
+					Y2 = area_select_Y1;
+				} else {
+					Y1= area_select_Y1;
+					Y2 = mouseY;
+				}
+
+				current_scene->deselect_all();
+				for (auto elem : current_scene->elements) {
+					if (elem->get_X() >= X1 && elem->get_X()+elem->get_width() <= X2 && elem->get_Y() >= Y1 && elem->get_Y()+elem->get_height() <= Y2)
+						elem->select();
+				}
+			}
 			
 			if (hover_wire)
 				hover_wire->deselect();
