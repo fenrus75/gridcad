@@ -47,6 +47,7 @@ bool model_toggle::mouse_select(float _X, float _Y)
     if ( (_X * _X) + (_Y * _Y) > 1.0)  /* click is outside center button */
          return false;
     value.boolval = !value.boolval;
+    value.valid = true;
     printf("TOGGLE to %i\n", value.boolval);
     ports[0]->update_value(&value, DEFAULT_TTL);
     notify(DEFAULT_TTL);

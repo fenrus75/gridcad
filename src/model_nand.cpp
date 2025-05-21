@@ -18,6 +18,7 @@ void model_nand::calculate(int ttl)
     
     result.type = VALUE_TYPE_BOOL;
     result.boolval = !(ports[0]->value.boolval && ports[1]->value.boolval);
+    result.valid = true;
     
     ports[2]->update_value(&result, ttl -1);
     

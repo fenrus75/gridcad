@@ -44,8 +44,9 @@ struct value {
     float floatval;
     uint64_t arrayval;
     bool is_error;
+    bool valid;
 };
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(value, type, boolval, intval, floatval, arrayval, is_error);
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE_WITH_DEFAULT(value, type, boolval, intval, floatval, arrayval, is_error, valid);
 
 class base
 {

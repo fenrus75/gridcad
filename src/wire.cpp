@@ -196,6 +196,8 @@ void wire::update_value(struct value *newvalue, int ttl)
 {
     if (ttl <= 0)
         return;
+    if (!newvalue->valid)
+	return;
     if (memcmp(&value, newvalue, sizeof(struct value)) == 0) {
         /* no change -- early exit to kill oscillations */
         return;
@@ -275,12 +277,12 @@ the current and new wire have one loose side */
 class wire *wire::split(void)
 {
     class wire *wr = new wire(0, 0, 0, 0, color);
-    
+
+    wr->update_value(&value, 100);    
     if (ports.size() > 0) {
         ports[0]->replace_wire(this, wr);
         ports.erase(ports.begin() + 0);
     }
-         
     wr->reseat();
     reseat();
     

@@ -40,6 +40,8 @@ void port::update_value(struct value *newvalue, int ttl)
 {
 	if (ttl <= 0)
 		return;
+	if (!newvalue->valid)
+		return;
 	if (memcmp(&value, newvalue, sizeof(struct value)) == 0)
 		return;
 		

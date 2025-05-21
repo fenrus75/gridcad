@@ -3,14 +3,26 @@
 
 model_zero::model_zero(float _X, float _Y)  : element(1, 1, NULL)
 {
+    struct value value;
     sizeX = 2;
     sizeY = 1;    
     X = floorf(_X);
     Y = floorf(_Y);
+
     
-    ports.resize(0);
+    memset(&value, 0, sizeof(struct value));
+    value.boolval = false;
+    value.valid = true;
+
+    ports.clear();
 
     add_port(1, 0, "ZERO", PORT_OUT);    
+
+
+    for (auto port : ports) {
+        port->update_value(&value, DEFAULT_TTL);
+    }
+
 }
 
 model_zero::~model_zero(void)
