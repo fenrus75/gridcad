@@ -306,6 +306,7 @@ public:
     
     void to_json(json &j);
     void from_json(json &j);
+    void set_new_name(void);
     
 protected:
     bool selected = false;
@@ -340,5 +341,8 @@ extern int B(int color);
 extern int Alpha(int color);
 extern int value_color(struct value *value);
 extern class element *element_from_class_id(std::string classid);
+
+extern bool wire_factory_force_new_name;
+
 extern class wire *json_wire_factory(json &jwire);
 extern void clear_wire_factory(void);

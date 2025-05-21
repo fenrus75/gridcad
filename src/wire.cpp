@@ -26,7 +26,7 @@ wire::wire(int x1, int y1, int x2, int y2, int _color)
     points = NULL;
     value = {};
     sprintf(buffer,"Wire%i", wirecount++);
-    name = strdup(buffer);
+    name = buffer;
     
 }
 
@@ -34,6 +34,14 @@ wire::~wire(void)
 {
     if (points)
         delete points;
+}
+
+void wire::set_new_name(void)
+{
+    char buffer[128];
+    sprintf(buffer,"Wire%i", wirecount++);
+    name = buffer;
+
 }
 
 /* returns a value of 0 - 60 based on the current time, suitable for animations */
@@ -317,6 +325,8 @@ void clear_wire_factory(void)
 {
 	json_wires.clear();
 }
+
+bool wire_factory_force_new_name;
 class wire *json_wire_factory(json &jwire)
 {
     if (json_wires.find(jwire["name"]) != json_wires.end())
@@ -326,6 +336,9 @@ class wire *json_wire_factory(json &jwire)
     json_wires[jwire["name"]] = new_wire;
     
     new_wire->from_json(jwire);
+    
+    if (wire_factory_force_new_name)
+        new_wire->set_new_name();
     
     return new_wire;
 }
