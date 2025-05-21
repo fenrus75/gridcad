@@ -139,7 +139,6 @@ void scene::from_json(json &j)
 
 }
 
-
 void scene::process_delete_requests(void)
 {
 	std::vector<class element *> todo;
@@ -185,3 +184,4 @@ void scene::remove_orphans(void)
 	for (auto elem : elements)
 		elem->remove_orphans();
 }
+

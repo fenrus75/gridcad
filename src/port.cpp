@@ -72,7 +72,8 @@ void port::drawAt(class canvas * canvas, float _X, float _Y, int type)
 	if (!out_red)
 		out_red = canvas->load_image("assets/port_out_red.png");
 
-	draw_wires(canvas);
+        if (type != DRAW_GHOST && type != DRAW_DND)
+		draw_wires(canvas);
 	if (direction == PORT_IN) {
 		drawConnector(canvas, _X, _Y, X, Y, COLOR_ELEMENT_CONNECTOR + type);
 	} else { 

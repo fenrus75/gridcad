@@ -93,6 +93,7 @@ public:
     void to_json(json& j);
     class scene *get_undo(void);
     void take_undo_snapshot(class scene *scene);
+    void from_json_to_floating(json &j);
 
 
          

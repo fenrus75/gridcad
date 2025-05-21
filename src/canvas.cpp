@@ -137,6 +137,17 @@ bool canvas::handleEvent(SDL_Event &event)
 				}
 				break;
 			break;
+			case SDLK_v:
+				if (event.key.keysym.mod & KMOD_LCTRL) {
+					printf("paste\n");
+					json p = json::parse(clipboard);
+					from_json_to_floating(p);
+					for (auto elem : floating) {
+						elem->start_drag(mouseX, mouseY);
+					}
+				}
+				break;
+			break;
 		}
 		case SDL_KEYUP:
 			if ((event.key.keysym.mod & (KMOD_LSHIFT))) 
@@ -747,4 +758,24 @@ class scene *canvas::get_undo(void)
 	J = json::parse(s);
 	scene->from_json(J);
 	return scene;
+}
+
+void canvas::from_json_to_floating(json &j)
+{
+	unsigned int i;
+	bool saved = wire_factory_force_new_name;
+
+  	wire_factory_force_new_name = true;
+	clear_wire_factory();
+
+	for (i = 0; i <j["elements"].size(); i++) {
+		json p = j["elements"][i];
+		std::string cid = p["class_id"];
+		class element *element = element_from_class_id(cid);
+		element->from_json(p);
+		floating.push_back(element);
+	}
+	clear_wire_factory();
+	wire_factory_force_new_name = saved;
+
 }
