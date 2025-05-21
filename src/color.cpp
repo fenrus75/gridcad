@@ -18,6 +18,7 @@ static int colors[MAX_COLOR][4] =
  {64,  255,  64, 255},		// COLOR_VALUE_GREEN
  {255, 255, 255, 255},		// COLOR_ERROR_WHITE
  {  0,   0,   0, 255},		// COLOR_ERROR_BLACK
+ {  170,  170,   255, 64},		// COLOR_AREA_SELECT
 };
 
 int R(int color)

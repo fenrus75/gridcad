@@ -176,7 +176,6 @@ bool canvas::handleEvent(SDL_Event &event)
 
 				x = scr_to_X(event.motion.x);
 				y = scr_to_Y(event.motion.y);
-
 				for (auto elem:	current_scene->elements) {
 					if (elem->intersect(x, y) && !elem->is_port(x,y)) {
 						printf("Start drag: %5.2f %5.2f \n", x, y);
@@ -188,6 +187,14 @@ bool canvas::handleEvent(SDL_Event &event)
 				wr = current_scene->is_wire(x, y);
 				if (wr)
 					printf("WR  %i\n", dragging != NULL);
+
+
+				if (!dragging && !wr && floating.size() == 0) {
+					in_area_select = true;
+					area_select_X1 = x;
+					area_select_Y1 = y;	
+					break;
+				}
 					
 				if (!dragging && wr) {
 					class wire *wr2;
@@ -274,6 +281,12 @@ bool canvas::handleEvent(SDL_Event &event)
 				float x, y;
 				x = scr_to_X(event.motion.x);
 				y = scr_to_Y(event.motion.y);
+
+				if (in_area_select) {
+					in_area_select = false;
+					/* cause all the things inside to be selected */
+					break;
+				}
 				if (dragging) {
 					printf("Up\n");
 					take_undo_snapshot(current_scene);
@@ -548,6 +561,11 @@ void canvas::draw(void)
 		dragging_wire->draw(this, color);
 	}
 
+
+	if (in_area_select) {
+		drawBox(area_select_X1, area_select_Y1, mouseX, mouseY, COLOR_AREA_SELECT, 64);
+	}
+
 	SDL_RenderPresent(renderer);
 }
 
@@ -602,6 +620,7 @@ void canvas::drawBox(float X1, float Y1, float X2, float Y2, int color, int alph
 	if (alpha < 0)
 		alpha = Alpha(color);
 
+	printf("Alpha is %i \n", alpha);
 	SDL_SetRenderDrawColor(renderer, R(color), G(color), B(color), alpha);
 	SDL_RenderFillRect(renderer, &rect);
 }

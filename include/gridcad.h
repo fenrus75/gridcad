@@ -24,6 +24,7 @@ using json = nlohmann::json;
 #define COLOR_VALUE_GREEN 10
 #define COLOR_ERROR_WHITE 11
 #define COLOR_ERROR_BLACK 12
+#define COLOR_AREA_SELECT 13
 
 class element;
 class wire;
@@ -115,6 +116,8 @@ protected:
     int middle_X = 0, middle_Y = 0;
     bool shift_down = false; /* not saved in json */
     std::vector<std::string> undo_list;
+    bool in_area_select = false;
+    float area_select_X1 = 0.0, area_select_Y1 = 0.0;
     
 };
 
