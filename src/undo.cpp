@@ -15,7 +15,7 @@ void take_undo_snapshot(class scene *scene)
 
 	s = J.dump();
 
-	if (undo_list.size() > 0 && s != undo_list[undo_list.size() -1])
+	if (undo_list.size()== 0 || s != undo_list[undo_list.size() -1])
 		undo_list.push_back(s);
 	if (undo_list.size() > UNDO_DEPTH)
 		undo_list.erase(undo_list.begin() + 0);
