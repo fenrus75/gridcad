@@ -699,3 +699,43 @@ class scene * canvas::swap_scene(class scene *scene)
 	current_scene = scene;
 	return tmp;
 }
+
+#define UNDO_DEPTH 16
+
+
+
+static std::vector<std::string> undo_list;
+
+void canvas::take_undo_snapshot(class scene *scene)
+{
+	json J;
+	std::string s;
+
+	scene->to_json(J);
+
+	s = J.dump();
+
+	if (undo_list.size()== 0 || s != undo_list[undo_list.size() -1])
+		undo_list.push_back(s);
+	if (undo_list.size() > UNDO_DEPTH)
+		undo_list.erase(undo_list.begin() + 0);
+}
+
+
+class scene *canvas::get_undo(void)
+{
+	class scene *scene;
+	std::string s;
+	json J;
+
+	if (undo_list.size() == 0)
+		return NULL;
+
+	scene = new class scene();
+	s = undo_list[undo_list.size() -1];
+
+	undo_list.pop_back();
+	J = json::parse(s);
+	scene->from_json(J);
+	return scene;
+}

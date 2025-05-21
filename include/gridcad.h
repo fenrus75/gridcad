@@ -91,7 +91,11 @@ public:
     
 
     void to_json(json& j);
-        
+    class scene *get_undo(void);
+    void take_undo_snapshot(class scene *scene);
+
+
+         
 protected:
     bool draw_grid = false;
     class scene *current_scene;
@@ -108,6 +112,7 @@ protected:
     float click_start_X = 0.0, click_start_Y = 0.0;
     int middle_X = 0, middle_Y = 0;
     bool shift_down = false; /* not saved in json */
+    std::vector<std::string> undo_list;
     
 };
 
@@ -336,5 +341,3 @@ extern int value_color(struct value *value);
 extern class element *element_from_class_id(std::string classid);
 extern class wire *json_wire_factory(json &jwire);
 extern void clear_wire_factory(void);
-extern void take_undo_snapshot(class scene *scene);
-extern class scene *get_undo(void);
