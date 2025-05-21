@@ -54,6 +54,7 @@ void canvas::eventloop(void)
 	draw();
 
 	while (!leave) {
+		bool freshsplit = false;
 #if 0
 		if (!ret)
 			SDL_Delay(1);
@@ -183,12 +184,12 @@ void canvas::eventloop(void)
 					wr2->reseat();
 					wr->route(current_scene);
 					wr2->route(current_scene);
-					
+					freshsplit = true;
 				}
 				if (dragging)
 					dragging->start_drag(x, y);
 
-				if (!dragging) {
+				if (!dragging && !freshsplit) {
 					dragging_port = current_scene->is_port(x, y);
 					if (dragging_port) {
 						dragging_port->screenX = x;
