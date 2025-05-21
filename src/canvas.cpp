@@ -95,9 +95,7 @@ bool canvas::handleEvent(SDL_Event &event)
 					scaleY--;
 				break;
 			case SDLK_ESCAPE:
-				if (floating)
-					delete floating;
-				floating = NULL;
+				floating.clear();
 				if (active_icon)
 					active_icon->set_inactive();
 				active_icon = NULL;
@@ -209,31 +207,30 @@ bool canvas::handleEvent(SDL_Event &event)
 					active_icon->set_inactive();
 				if (active_icon != this_icon && this_icon) {
 					active_icon = this_icon;
-					delete floating;
-					floating = NULL;
+					floating.clear();;
 				}				
 				else
 					if (this_icon)
 						active_icon = NULL;
 					
 				if (active_icon) {
-					if (!floating)
-						floating = active_icon->create_element();
+					if (floating.size() == 0)
+						floating.push_back(active_icon->create_element());
 				} else {
-					delete floating;
-					floating = NULL;
+					floating.clear();;
 				}
 				
 				
-				if (event.motion.x < main_area_rect.w && floating) {
+				if (event.motion.x < main_area_rect.w && floating.size() > 0) {
 					printf("Adding element\n");
 					take_undo_snapshot(current_scene);
-					current_scene->add_element(floating);
-					floating->stop_drag(this);
+					for (auto flt : floating) {
+						current_scene->add_element(flt);
+						flt->stop_drag(this);
+					}
+					floating.clear();
 					if (active_icon)
-						floating = active_icon->create_element();
-					else
-						floating = NULL;
+						floating.push_back(active_icon->create_element());
 				}
 
 
@@ -346,8 +343,8 @@ bool canvas::handleEvent(SDL_Event &event)
 						      scr_to_X(event.motion.x),
 						      scr_to_Y(event.motion.y));
 			}
-			if (floating) {
-				floating->update_drag(this, current_scene,
+			for (auto flt : floating) {
+				flt->update_drag(this, current_scene,
 						      scr_to_X(event.motion.x),
 						      scr_to_Y(event.motion.y));
 			}
@@ -511,9 +508,9 @@ void canvas::draw(void)
 		dragging->draw(this, DRAW_GHOST);
 		dragging->draw(this, DRAW_DND);
 	}
-	if (floating) {
-		floating->draw(this, DRAW_GHOST);
-		floating->draw(this, DRAW_DND);
+	for (auto flt : floating) {
+		flt->draw(this, DRAW_GHOST);
+		flt->draw(this, DRAW_DND);
 	}
 
 	if (dragging_wire) {

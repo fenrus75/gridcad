@@ -102,7 +102,8 @@ protected:
     SDL_Renderer *renderer = NULL;
     SDL_Window *window = NULL;
     SDL_Rect main_area_rect, ui_area_rect;
-    class element *dragging = NULL, *floating = NULL;
+    class element *dragging = NULL;
+    std::vector<class element *> floating;
     class port *dragging_port = NULL;
     class wire *dragging_wire = NULL, *hover_wire = NULL;
     class iconbar *icon_bar = NULL;
