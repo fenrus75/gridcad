@@ -118,6 +118,7 @@ protected:
     std::vector<std::string> undo_list;
     bool in_area_select = false;
     float area_select_X1 = 0.0, area_select_Y1 = 0.0;
+    SDL_Texture *area_select_texture = NULL;
     
 };
 

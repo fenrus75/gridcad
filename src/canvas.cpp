@@ -563,7 +563,27 @@ void canvas::draw(void)
 
 
 	if (in_area_select) {
-		drawBox(area_select_X1, area_select_Y1, mouseX, mouseY, COLOR_AREA_SELECT, 64);
+		float X1,Y1,X2,Y2;
+		if (!area_select_texture)
+			area_select_texture = load_image("assets/area_select.png");
+
+		if (area_select_X1 > mouseX){ 
+			X1 = mouseX; 
+			X2 = area_select_X1;
+		} else {
+			X1= area_select_X1;
+			X2 = mouseX;
+		}
+
+		if (area_select_Y1 > mouseX){ 
+			Y1 = mouseY; 
+			Y2 = area_select_Y1;
+		} else {
+			Y1= area_select_Y1;
+			Y2 = mouseY;
+		}
+
+		draw_image(area_select_texture, X1, Y1, X2-X1, Y2-Y1, 64);
 	}
 
 	SDL_RenderPresent(renderer);
@@ -620,7 +640,6 @@ void canvas::drawBox(float X1, float Y1, float X2, float Y2, int color, int alph
 	if (alpha < 0)
 		alpha = Alpha(color);
 
-	printf("Alpha is %i \n", alpha);
 	SDL_SetRenderDrawColor(renderer, R(color), G(color), B(color), alpha);
 	SDL_RenderFillRect(renderer, &rect);
 }
