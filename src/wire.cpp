@@ -293,7 +293,6 @@ void wire::to_json(json &j)
 {
     j["value"] = value;
     j["name"] = name;
-    j["selected"] = selected;
     j["X1"] = X1;
     j["Y1"] = Y1;
     j["X2"] = X2;
@@ -304,7 +303,6 @@ void wire::from_json(json &j)
 {
     value = j["value"];
     name = j["name"];
-    selected = j["selected"];
     X1 = j["X1"];
     Y1 = j["Y1"];
     X2 = j["X2"];
