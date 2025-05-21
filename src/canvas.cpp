@@ -10,6 +10,8 @@
 #include "iconbar.h"
 
 
+static std::string clipboard;
+
 canvas::canvas(class scene *_scene)
 {
 	window =
@@ -124,8 +126,18 @@ bool canvas::handleEvent(SDL_Event &event)
 						delete(oldscene);
 				}
 				break;
-			}
+			case SDLK_c:
+				if (event.key.keysym.mod & KMOD_LCTRL) {
+					printf("copy\n");
+					json p;
+					
+					current_scene->selection_to_json(p);
+					clipboard = p.dump();
+					printf("clipboard is %s\n", clipboard.c_str());
+				}
+				break;
 			break;
+		}
 		case SDL_KEYUP:
 			if ((event.key.keysym.mod & (KMOD_LSHIFT))) 
 				shift_down = true;

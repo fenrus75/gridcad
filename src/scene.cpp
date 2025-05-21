@@ -108,13 +108,14 @@ void scene::to_json(json &j)
 void scene::selection_to_json(json &j)
 {
 	unsigned int i;
+	unsigned int q = 0;
 	j["elements"] = json::array();
 	
 	for (i = 0; i < elements.size(); i++) {
 		if (elements[i]->is_selected()) {
 			json p;
 			elements[i]->to_json(p);
-			j["elements"][i] = p;
+			j["elements"][q++] = p;
 		}
 	}
 }
