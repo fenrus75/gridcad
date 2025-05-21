@@ -233,6 +233,9 @@ bool wire::intersect(float targetX, float targetY)
     float bestdist = 10000;
     bool first = true;
     float prevX, prevY;
+
+    if (!points)
+	return false;
     
     /* TODO we should do fancy "point to a line" math.... */
     for (auto point: *points) {

@@ -144,6 +144,7 @@ bool canvas::handleEvent(SDL_Event &event)
 					from_json_to_floating(p);
 					for (auto elem : floating) {
 						elem->start_drag(mouseX, mouseY);
+						elem->reseat();
 					}
 				}
 				break;
@@ -236,26 +237,26 @@ bool canvas::handleEvent(SDL_Event &event)
 					if (this_icon)
 						active_icon = NULL;
 					
-				if (active_icon) {
-					if (floating.size() == 0)
-						floating.push_back(active_icon->create_element());
-				} else {
-					floating.clear();;
-				}
 				
 				
 				if (event.motion.x < main_area_rect.w && floating.size() > 0) {
-					printf("Adding element\n");
 					take_undo_snapshot(current_scene);
 					for (auto flt : floating) {
 						current_scene->add_element(flt);
 						flt->stop_drag(this);
+						flt->reseat();
 					}
 					floating.clear();
 					if (active_icon)
 						floating.push_back(active_icon->create_element());
 				}
 
+				if (active_icon) {
+					if (floating.size() == 0)
+						floating.push_back(active_icon->create_element());
+				} else {
+					floating.clear();;
+				}
 
 			}
 			if ( event.button.button == SDL_BUTTON_RIGHT) {
