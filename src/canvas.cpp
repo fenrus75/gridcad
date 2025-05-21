@@ -46,23 +46,12 @@ canvas::~canvas(void)
 	SDL_DestroyWindow(window);
 }
 
-void canvas::eventloop(void)
-{
-	SDL_Event event;
-	int ret = 0;
-	bool leave = false;
-	draw();
 
-	while (!leave) {
-		bool freshsplit = false;
-#if 0
-		if (!ret)
-			SDL_Delay(1);
-#endif
-//		ret = SDL_WaitEventTimeout(&event, 5);
-		ret = SDL_PollEvent(&event);
-		
-		switch (event.type) {
+bool canvas::handleEvent(SDL_Event &event)
+{
+	bool freshsplit = false;
+	bool leave = false;
+	switch (event.type) {
 		case SDL_QUIT:
 			leave = true;
 			break;
@@ -426,6 +415,27 @@ void canvas::eventloop(void)
 			}
 			break;
 		}
+	return leave;
+}
+
+void canvas::eventloop(void)
+{
+	SDL_Event event;
+	int ret = 0;
+	bool leave = false;
+	draw();
+
+	while (!leave) {
+#if 0
+		if (!ret)
+			SDL_Delay(1);
+#endif
+//		ret = SDL_WaitEventTimeout(&event, 5);
+		ret = SDL_PollEvent(&event);
+
+		if (ret)
+			leave |= handleEvent(event);
+		
 		if (!ret)		
 			draw();	
 	}

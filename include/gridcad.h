@@ -87,6 +87,7 @@ public:
     
     class scene *get_scene(void) { return current_scene; };
     class scene *swap_scene(class scene *scene);
+    bool handleEvent(SDL_Event &event);
     
 
     void to_json(json& j);
