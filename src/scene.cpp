@@ -105,6 +105,20 @@ void scene::to_json(json &j)
 	}
 }
 
+void scene::selection_to_json(json &j)
+{
+	unsigned int i;
+	j["elements"] = json::array();
+	
+	for (i = 0; i < elements.size(); i++) {
+		if (elements[i]->is_selected()) {
+			json p;
+			elements[i]->to_json(p);
+			j["elements"][i] = p;
+		}
+	}
+}
+
 void scene::from_json(json &j)
 {
 	unsigned int i;

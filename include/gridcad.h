@@ -136,6 +136,7 @@ public:
     class element *selected_element(void);
     
     void to_json(json& j);
+    void selection_to_json(json& j);
     void from_json(json& j);
     void process_delete_requests(void);
     void delete_selection(void);
