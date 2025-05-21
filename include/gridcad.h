@@ -107,6 +107,7 @@ protected:
     float mouseX = 0.0, mouseY = 0.0;
     float click_start_X = 0.0, click_start_Y = 0.0;
     int middle_X = 0, middle_Y = 0;
+    bool shift_down = false; /* not saved in json */
     
 };
 

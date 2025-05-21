@@ -56,6 +56,10 @@ bool canvas::handleEvent(SDL_Event &event)
 			leave = true;
 			break;
 		case SDL_KEYDOWN:
+			if ((event.key.keysym.mod & (KMOD_LSHIFT)))
+				shift_down = true;
+			else
+				shift_down = false;
 			switch (event.key.keysym.sym) {
 			case SDLK_UP:
 				offsetY--;
@@ -124,8 +128,15 @@ bool canvas::handleEvent(SDL_Event &event)
 				break;
 			}
 			break;
+		case SDL_KEYUP:
+			if ((event.key.keysym.mod & (KMOD_LSHIFT))) 
+				shift_down = true;
+			else
+				shift_down = false;
+			break;
 		case SDL_MOUSEBUTTONDOWN:
-			current_scene->deselect_all();
+			if (!shift_down)
+				current_scene->deselect_all();
 			if (!left_mouse_down
 			    && event.button.button == SDL_BUTTON_LEFT) {
 			    	class wire *wr;
