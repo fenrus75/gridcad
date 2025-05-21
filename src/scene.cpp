@@ -164,3 +164,9 @@ void scene::rewire_section(class element *element)
 {
 	rewire_section(element->get_X(), element->get_Y(), element->get_width(), element->get_height());
 }
+
+void scene::remove_orphans(void)
+{
+	for (auto elem : elements)
+		elem->remove_orphans();
+}

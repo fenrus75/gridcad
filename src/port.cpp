@@ -216,17 +216,24 @@ void port::from_json(json &j)
 
 }
 
-void port::delete_wires(void)
+void port::remove_wires(void)
 {
 	for (auto wire : wires) {
 		wire->remove();
 	}
-	wires.resize(0);
+	wires.clear();
 }
 
 void port::fill_grid(class wiregrid *grid)
 {
 	for (auto wire : wires) {
 		wire->fill_grid(grid);
+	}
+}
+
+void port::remove_orphans(void)
+{
+	for (auto wire : wires) {
+		wire->remove_if_orphan();
 	}
 }

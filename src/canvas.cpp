@@ -119,6 +119,7 @@ void canvas::eventloop(void)
 				}
 				current_scene->delete_selection();
 				current_scene->process_delete_requests();
+				current_scene->remove_orphans();
 				break;
 			case SDLK_g:
 				draw_grid = !draw_grid;
@@ -244,6 +245,7 @@ void canvas::eventloop(void)
 				middle_X = event.motion.x;
 				middle_Y = event.motion.y;
 			}
+			current_scene->remove_orphans();
 			break;
 		case SDL_MOUSEBUTTONUP:
 			if (event.button.button == SDL_BUTTON_LEFT) {
@@ -324,6 +326,7 @@ void canvas::eventloop(void)
 				middle_X = event.motion.x;
 				middle_Y = event.motion.y;
 			}
+			current_scene->remove_orphans();
 			break;
 		case SDL_MOUSEMOTION:
 			float x,y;

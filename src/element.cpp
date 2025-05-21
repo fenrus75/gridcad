@@ -270,7 +270,14 @@ void element::delete_if_selected(void)
 		return;
 
 	for (auto port:ports) {
-		port->delete_wires();
+		port->remove_wires();
 	}	
 	want_delete = true;
+}
+
+void element::remove_orphans(void)
+{
+	for (auto port:ports) {
+		port->remove_orphans();
+	}	
 }

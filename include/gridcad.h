@@ -142,6 +142,7 @@ public:
     std::vector<class element *> elements;
     void rewire_section(int x1, int y1, int w, int h);
     void rewire_section(class element *element);
+    void remove_orphans(void);
 
     
 protected:
@@ -186,7 +187,8 @@ public:
     void to_json(json &j);
     void from_json(json &j);
     bool has_wires(void) { return wires.size() > 0; };
-    void delete_wires(void);
+    void remove_wires(void);
+    void remove_orphans(void);
 private:
     void drawConnector(class canvas *canvas, float X, float Y, int cX, int cY, int type);    
     std::vector<class wire*> wires;
@@ -243,6 +245,7 @@ public:
     bool is_selected(void) { return selected;};
     virtual bool want_deleted(void);
     void delete_if_selected(void);
+    void remove_orphans(void);
 protected:
 
     const char *name = NULL;
@@ -285,6 +288,7 @@ public:
     void select(void) { selected = true;};
     void deselect(void) { selected = false;};
     void remove(void);
+    void remove_if_orphan(void);
     void fill_grid(class wiregrid* grid);
     
     class wire *split(void);
