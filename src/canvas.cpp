@@ -126,6 +126,13 @@ bool canvas::handleEvent(SDL_Event &event)
 						delete(oldscene);
 				}
 				break;
+			case SDLK_a:
+				if (event.key.keysym.mod & KMOD_LCTRL) {
+					for (auto elem : current_scene->elements) {
+						elem->select();
+					}
+				}
+				break;
 			case SDLK_c:
 				if (event.key.keysym.mod & KMOD_LCTRL) {
 					printf("copy\n");
@@ -189,7 +196,7 @@ bool canvas::handleEvent(SDL_Event &event)
 					printf("WR  %i\n", dragging != NULL);
 
 
-				if (!dragging && !wr && floating.size() == 0) {
+				if (!dragging && !wr && floating.size() == 0 && !current_scene->is_port(x,y)) {
 					in_area_select = true;
 					area_select_X1 = x;
 					area_select_Y1 = y;	
