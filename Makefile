@@ -411,6 +411,22 @@ src/wire.o: /usr/include/bits/types/sigset_t.h
 src/wire.o: /usr/include/bits/types/__sigset_t.h
 src/wire.o: /usr/include/bits/types/struct_timespec.h
 src/wire.o: /usr/include/bits/endian.h /usr/include/bits/endianness.h
+test/wiretest.o: /usr/include/stdio.h /usr/include/bits/libc-header-start.h
+test/wiretest.o: /usr/include/features.h /usr/include/features-time64.h
+test/wiretest.o: /usr/include/bits/wordsize.h /usr/include/bits/timesize.h
+test/wiretest.o: /usr/include/stdc-predef.h /usr/include/sys/cdefs.h
+test/wiretest.o: /usr/include/bits/long-double.h /usr/include/gnu/stubs.h
+test/wiretest.o: /usr/include/bits/types.h /usr/include/bits/typesizes.h
+test/wiretest.o: /usr/include/bits/time64.h
+test/wiretest.o: /usr/include/bits/types/__fpos_t.h
+test/wiretest.o: /usr/include/bits/types/__mbstate_t.h
+test/wiretest.o: /usr/include/bits/types/__fpos64_t.h
+test/wiretest.o: /usr/include/bits/types/__FILE.h
+test/wiretest.o: /usr/include/bits/types/FILE.h
+test/wiretest.o: /usr/include/bits/types/struct_FILE.h
+test/wiretest.o: /usr/include/bits/types/cookie_io_functions_t.h
+test/wiretest.o: /usr/include/bits/stdio_lim.h /usr/include/bits/floatn.h
+test/wiretest.o: /usr/include/bits/floatn-common.h
 include/gridcad.o: include/wirepath.h /usr/include/SDL2/SDL.h
 include/gridcad.o: /usr/include/SDL2/SDL_main.h
 include/gridcad.o: /usr/include/SDL2/SDL_stdinc.h
