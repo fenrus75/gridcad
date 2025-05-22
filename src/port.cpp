@@ -193,6 +193,7 @@ void port::to_json(json &j)
 	j["name"] = name;
 	j["value"] = value;
 	j["direction"] = direction;
+	j["bus_width"] = bus_width;
 	
 	j["wires"] = json::array();
 	for (i = 0; i < wires.size(); i++) {
@@ -212,6 +213,7 @@ void port::from_json(json &j)
 	name = j["name"];
 	value = j["value"];
 	direction = j["direction"];
+	bus_width = j.value("bus_width", 1);
 	for (i = 0; i < j["wires"].size(); i++) {
 		class wire *wire;
 		wire = json_wire_factory(j["wires"][i]);
