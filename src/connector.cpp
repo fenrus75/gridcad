@@ -1,6 +1,6 @@
 #include "gridcad.h"
 
-connector::connector(float _X, float _Y)  : element(3, 3, NULL)
+connector::connector(float _X, float _Y)  : element(3, 3, "")
 {
     sizeX = 1;
     sizeY = 1;    

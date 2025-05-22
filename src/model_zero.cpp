@@ -1,7 +1,7 @@
 #include "gridcad.h"
 #include "models.h"
 
-model_zero::model_zero(float _X, float _Y)  : element(1, 1, NULL)
+model_zero::model_zero(float _X, float _Y)  : element(1, 1, "")
 {
     struct value value;
     sizeX = 2;

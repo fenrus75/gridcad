@@ -1,7 +1,7 @@
 #include "gridcad.h"
 #include "models.h"
 
-model_toggle::model_toggle(float _X, float _Y)  : element(1, 1, NULL)
+model_toggle::model_toggle(float _X, float _Y)  : element(1, 1, "")
 {
     sizeX = 3;
     sizeY = 3;    

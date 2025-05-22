@@ -3,22 +3,18 @@
 
 #include "gridcad.h"
 
-element::element(int _sizeX, int _sizeY, const char *_name)
+element::element(int _sizeX, int _sizeY, std::string _name)
 {
     sizeX = _sizeX;
     sizeY = _sizeY;
     place(0,0);
-    if (_name)
-        name = strdup(_name);
-    else
-        name = strdup("NONAME"); /* TODO: generate a unimque name */
+    name = _name;
 }
 
 element::~element()
 {
-    free((void*)name);
     for (auto port : ports) {
-        free(port);
+        delete port;
     }
 }
 

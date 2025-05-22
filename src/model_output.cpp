@@ -1,7 +1,7 @@
 #include "gridcad.h"
 #include "models.h"
 
-model_output::model_output(float _X, float _Y)  : element(1, 1, NULL)
+model_output::model_output(float _X, float _Y)  : element(1, 1, "")
 {
     sizeX = 3;
     sizeY = 3;    

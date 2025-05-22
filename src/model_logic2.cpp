@@ -3,7 +3,7 @@
 
 #include <sys/time.h>
 #include <math.h>
-model_logic2::model_logic2(float _X, float _Y, const char *_filename)  : element(_X, _Y, NULL)
+model_logic2::model_logic2(float _X, float _Y, const char *_filename)  : element(_X, _Y, "")
 {
     ports.resize(0);
     

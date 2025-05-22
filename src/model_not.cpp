@@ -1,7 +1,7 @@
 #include "gridcad.h"
 #include "models.h"
 
-model_not::model_not(float _X, float _Y)  : element(_X, _Y, NULL)
+model_not::model_not(float _X, float _Y)  : element(_X, _Y, "")
 {
     ports.resize(0);
     

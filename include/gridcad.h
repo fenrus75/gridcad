@@ -195,7 +195,7 @@ class port : public base
 {
 public:
     port(std::string _name, int _direction = PORT_IN, int bus_width = 1);    
-    ~port(void);
+    virtual ~port(void);
     virtual std::string class_id(void) { return "port:";};
     int X, Y;
     float screenX, screenY;
@@ -236,7 +236,7 @@ private:
 class element : public base
 {
 public:    
-    element(int sizeX, int sizeY, const char *_name);
+    element(int sizeX, int sizeY, std::string _name);
     virtual ~element(void);
 
     virtual std::string class_id(void) { return "element:";};
@@ -252,7 +252,7 @@ public:
     
     virtual bool intersect(float X, float Y);
     
-    const char * get_name(void) { return name; };
+    const std::string  get_name(void) { return name; };
     
     void add_port(int X, int Y, const char *name, int direction = 0, bool initval = false);
     virtual void fill_grid(class wiregrid* grid);
@@ -282,7 +282,7 @@ public:
     void remove_orphans(void);
 protected:
 
-    const char *name = NULL;
+    std::string name = "";
     int sizeX = 1;
     int sizeY = 1;
     bool over_drag_threshold = false;  /* has a drag-and-drop been far enough to avoid spurious drags */
