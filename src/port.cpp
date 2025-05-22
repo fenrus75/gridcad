@@ -2,11 +2,12 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-port::port(std::string _name, int _direction)
+port::port(std::string _name, int _direction, int _bus_width)
 {
 
 	direction = _direction;
 	name = _name;
+	bus_width = _bus_width;
 	
 }
 
@@ -63,8 +64,12 @@ void port::drawAt(class canvas * canvas, float _X, float _Y, int type)
 	if (!label) {
 		label = canvas->text_to_texture(name);
 	}
-	if (!in_open)
-		in_open = canvas->load_image("assets/port_in_open.png");
+	if (!in_open) {
+		if (bus_width == 1)
+			in_open = canvas->load_image("assets/port_in_open.png");
+		else
+			in_open = canvas->load_image("assets/port_in_open_bus.png");
+	}
 	if (!in_used)
 		in_used = canvas->load_image("assets/port_in_connected.png");
 	if (!out_green)

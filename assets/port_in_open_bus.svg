@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="100mm"
+   height="100mm"
+   viewBox="0 0 100 100"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   sodipodi:docname="port_in_open_bus.svg"
+   inkscape:export-filename="port_in_open_bus.png"
+   inkscape:export-xdpi="65.024002"
+   inkscape:export-ydpi="65.024002"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="true"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="1.5927917"
+     inkscape:cx="159.15452"
+     inkscape:cy="188.97637"
+     inkscape:window-width="1536"
+     inkscape:window-height="779"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2">
+    <filter
+       inkscape:label="Button"
+       inkscape:menu="Bevels"
+       inkscape:menu-tooltip="Soft bevel, slightly depressed middle"
+       style="color-interpolation-filters:sRGB;"
+       id="filter600"
+       x="-0.24354437"
+       y="-0.24354437"
+       width="1.4870887"
+       height="1.4870887">
+      <feGaussianBlur
+         stdDeviation="2.3"
+         in="SourceAlpha"
+         result="result0"
+         id="feGaussianBlur574" />
+      <feMorphology
+         in="SourceAlpha"
+         radius="6.6"
+         result="result1"
+         id="feMorphology576" />
+      <feGaussianBlur
+         stdDeviation="8.9"
+         in="result1"
+         id="feGaussianBlur578" />
+      <feColorMatrix
+         values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0"
+         result="result91"
+         id="feColorMatrix580" />
+      <feComposite
+         in="result0"
+         operator="out"
+         result="result2"
+         in2="result91"
+         id="feComposite582" />
+      <feGaussianBlur
+         stdDeviation="1.7"
+         result="result4"
+         id="feGaussianBlur584" />
+      <feDiffuseLighting
+         surfaceScale="10"
+         id="feDiffuseLighting588">
+        <feDistantLight
+           azimuth="225"
+           elevation="45"
+           id="feDistantLight586" />
+      </feDiffuseLighting>
+      <feBlend
+         in2="SourceGraphic"
+         mode="multiply"
+         id="feBlend590" />
+      <feComposite
+         in2="SourceAlpha"
+         operator="in"
+         result="result3"
+         id="feComposite592" />
+      <feSpecularLighting
+         in="result4"
+         surfaceScale="5"
+         specularExponent="17.9"
+         id="feSpecularLighting596">
+        <feDistantLight
+           azimuth="225"
+           elevation="45"
+           id="feDistantLight594" />
+      </feSpecularLighting>
+      <feComposite
+         in2="result3"
+         operator="atop"
+         id="feComposite598" />
+    </filter>
+    <filter
+       inkscape:label="Button"
+       inkscape:menu="Bevels"
+       inkscape:menu-tooltip="Soft bevel, slightly depressed middle"
+       style="color-interpolation-filters:sRGB;"
+       id="filter473"
+       x="-0.24354437"
+       y="-0.24354437"
+       width="1.4870887"
+       height="1.4870887">
+      <feGaussianBlur
+         stdDeviation="2.3"
+         in="SourceAlpha"
+         result="result0"
+         id="feGaussianBlur447" />
+      <feMorphology
+         in="SourceAlpha"
+         radius="6.6"
+         result="result1"
+         id="feMorphology449" />
+      <feGaussianBlur
+         stdDeviation="8.9"
+         in="result1"
+         id="feGaussianBlur451" />
+      <feColorMatrix
+         values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0"
+         result="result91"
+         id="feColorMatrix453" />
+      <feComposite
+         in="result0"
+         operator="out"
+         result="result2"
+         in2="result91"
+         id="feComposite455" />
+      <feGaussianBlur
+         stdDeviation="1.7"
+         result="result4"
+         id="feGaussianBlur457" />
+      <feDiffuseLighting
+         surfaceScale="10"
+         id="feDiffuseLighting461">
+        <feDistantLight
+           azimuth="225"
+           elevation="45"
+           id="feDistantLight459" />
+      </feDiffuseLighting>
+      <feBlend
+         in2="SourceGraphic"
+         mode="multiply"
+         id="feBlend463" />
+      <feComposite
+         in2="SourceAlpha"
+         operator="in"
+         result="result3"
+         id="feComposite465" />
+      <feSpecularLighting
+         in="result4"
+         surfaceScale="5"
+         specularExponent="17.9"
+         id="feSpecularLighting469">
+        <feDistantLight
+           azimuth="225"
+           elevation="45"
+           id="feDistantLight467" />
+      </feSpecularLighting>
+      <feComposite
+         in2="result3"
+         operator="atop"
+         id="feComposite471" />
+    </filter>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       id="rect234"
+       style="fill:#ffffff;stroke-width:20.1885;filter:url(#filter473)"
+       d="M 39.38571 -0.011368815 L 39.38571 6.2895386 A 45 45 0 0 0 35.339962 7.4998006 L 7.4998006 7.4998006 L 7.4998006 35.339962 A 45 45 0 0 0 6.2895386 39.38571 L -0.011368815 39.38571 L -0.011368815 60.614388 L 6.2895386 60.614388 A 45 45 0 0 0 7.4998006 64.660136 L 7.4998006 92.49978 L 35.338411 92.49978 A 45 45 0 0 0 39.38571 93.710559 L 39.38571 100.01147 L 60.614388 100.01147 L 60.614388 93.710559 A 45 45 0 0 0 64.661686 92.49978 L 92.49978 92.49978 L 92.49978 64.661686 A 45 45 0 0 0 93.710559 60.614388 L 100.01147 60.614388 L 100.01147 39.38571 L 93.727096 39.38571 A 45 45 0 0 0 92.49978 35.290352 L 92.49978 7.4998006 L 64.708712 7.4998006 A 45 45 0 0 0 60.614388 6.2730021 L 60.614388 -0.011368815 L 39.38571 -0.011368815 z M 22.499919 22.499919 L 77.500179 22.499919 L 77.500179 77.500179 L 22.499919 77.500179 L 22.499919 22.499919 z " />
+  </g>
+</svg>

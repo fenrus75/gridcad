@@ -81,7 +81,6 @@ public:
     virtual ~canvas(void);
     
     void draw(void);
-    void eventloop(void);
     
     
     void drawBox(float X1, float Y1, float X2, float Y2, int color, int alpha = -1);
@@ -195,7 +194,7 @@ protected:
 class port : public base
 {
 public:
-    port(std::string _name, int _direction = PORT_IN);    
+    port(std::string _name, int _direction = PORT_IN, int bus_width = 1);    
     ~port(void);
     virtual std::string class_id(void) { return "port:";};
     int X, Y;
@@ -222,7 +221,9 @@ public:
     bool has_wires(void) { return wires.size() > 0; };
     void remove_wires(void);
     void remove_orphans(void);
+    int get_bus_width(void) { return bus_width; };
 private:
+    int bus_width = 1;
     void drawConnector(class canvas *canvas, float X, float Y, int cX, int cY, int type);    
     std::vector<class wire*> wires;
     SDL_Texture *label = NULL;

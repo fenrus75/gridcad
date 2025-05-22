@@ -512,31 +512,6 @@ bool canvas::handleEvent(SDL_Event &event)
 	return leave;
 }
 
-void canvas::eventloop(void)
-{
-	SDL_Event event;
-	int ret = 0;
-	bool leave = false;
-	draw();
-
-	exit(0);
-
-	while (!leave) {
-#if 0
-		if (!ret)
-			SDL_Delay(1);
-#endif
-//		ret = SDL_WaitEventTimeout(&event, 5);
-		ret = SDL_PollEvent(&event);
-
-		if (ret)
-			leave |= handleEvent(event);
-		
-		if (!ret)		
-			draw();	
-	}
-}
-
 void canvas::draw(void)
 {
 	/* first, draw the lighter gray background */
