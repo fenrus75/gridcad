@@ -213,7 +213,7 @@ bool canvas::handleEvent(SDL_Event &event)
 					printf("WR  %i\n", dragging != NULL);
 
 
-				if (!dragging && !wr && floating.size() == 0 && !current_scene->is_port(x,y)) {
+				if (!dragging && !wr && floating.size() == 0 && !current_scene->is_port(x,y) && event.motion.x < main_area_rect.w) {
 					in_area_select = true;
 					area_select_X1 = x;
 					area_select_Y1 = y;	
@@ -258,6 +258,8 @@ bool canvas::handleEvent(SDL_Event &event)
 				}
 				
 				this_icon = icon_bar->current_icon(event.motion.x, event.motion.y);
+				if (this_icon)
+					printf("ICON CLICK\n");
 				if (active_icon && this_icon)
 					active_icon->set_inactive();
 				if (active_icon != this_icon && this_icon) {
