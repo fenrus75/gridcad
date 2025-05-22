@@ -30,6 +30,7 @@ subdirs:
 	done
 	
 depend:
+	echo "# DO NOT DELETE THIS LINE -- make depend depends on it." > Makefile.deps
 	makedepend -f Makefile.deps -- $(CFLAGS) -Iinclude/-- src/*cpp test/*cpp include/*.h
 	
 .PHONY: all subdirs
