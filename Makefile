@@ -10,8 +10,8 @@ gridcad: $(OBJS) include/gridcad.h Makefile
 	g++ $(CFLAGS) -O3 -Wall -march=native $(OBJS) -flto=4 -o gridcad -lSDL2_image -lSDL2_gfx -lSDL2_ttf -lSDL2 
 	
 	
-wiretest: $(OBJS) include/gridcad.h Makefile test/wiretest.cpp
-	g++ $(CFLAGS) -O3 -Wall -march=native lib/wirepath.cpp test/wiretest.cpp -flto -g -o wiretest -lSDL2_image -lSDL2_gfx -lSDL2_ttf -lSDL2 
+wiretest: $(OBJS) include/gridcad.h Makefile test/wiretest.o
+	g++ $(CFLAGS) -O3 -Wall -march=native lib/wirepath.o test/wiretest.o -flto -g -o wiretest -lSDL2_image -lSDL2_gfx -lSDL2_ttf -lSDL2 
 	
 .cpp.o:
 	g++ $(CXXFLAGS) -fvisibility=hidden -Iinclude/ -O3 -Wall -march=native -flto -g -c $< -o $@
@@ -30,7 +30,7 @@ subdirs:
 	done
 	
 depend:
-	makedepend -f Makefile -- $(CFLAGS) -Iinclude/-- src/*cpp include/*.h
+	makedepend -f Makefile -- $(CFLAGS) -Iinclude/-- src/*cpp test/*cpp include/*.h
 
 
 .PHONY: all subdirs
