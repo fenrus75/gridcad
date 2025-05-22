@@ -102,6 +102,7 @@ public:
     void draw_image(SDL_Texture *image, float X, float Y, float W, float H, int alpha=255);
     SDL_Texture *text_to_texture(const char *text);
     SDL_Texture *text_to_texture(std::string text);
+    void draw_text(std::string text, float X, float Y, float W, float H);
     
     class scene *get_scene(void) { return current_scene; };
     class scene *swap_scene(class scene *scene);
@@ -113,7 +114,6 @@ public:
     void take_undo_snapshot(class scene *scene);
     void from_json_to_floating(json &j);
     unsigned int get_window_ID(void) { return windowID;};
-
          
 protected:
     bool draw_grid = false;

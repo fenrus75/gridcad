@@ -242,6 +242,7 @@ void element::from_json(json &j)
     sizeY = j["sizeY"];
     X = j["X"];
     Y = j["Y"];
+    name = j["name"];
     
     for (i = 0; i < j["ports"].size(); i++) {
         json jj = j["ports"][i];
