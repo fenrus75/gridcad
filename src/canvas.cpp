@@ -144,6 +144,19 @@ bool canvas::handleEvent(SDL_Event &event)
 				}
 				break;
 			break;
+			case SDLK_x:
+				if (event.key.keysym.mod & KMOD_LCTRL) {
+					json p;
+					
+ 					take_undo_snapshot(current_scene);
+					current_scene->selection_to_json(p);
+					clipboard = p.dump();
+					current_scene->delete_selection();
+					current_scene->process_delete_requests();
+					current_scene->remove_orphans();
+				}
+				break;
+			break;
 			case SDLK_v:
 				if (event.key.keysym.mod & KMOD_LCTRL) {
 					printf("paste\n");
