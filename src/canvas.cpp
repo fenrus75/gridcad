@@ -19,6 +19,8 @@ canvas::canvas(class scene *_scene)
 			     SDL_WINDOWPOS_UNDEFINED, 1024, 768, SDL_WINDOW_RESIZABLE);
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
+	windowID = SDL_GetWindowID(window);
 	
 	main_area_rect.x = 0;
 	main_area_rect.y = 0;
@@ -55,7 +57,9 @@ bool canvas::handleEvent(SDL_Event &event)
 	bool leave = false;
 	switch (event.type) {
 		case SDL_QUIT:
+			printf("QUIT\n");
 			leave = true;
+			return true;
 			break;
 		case SDL_KEYDOWN:
 			if ((event.key.keysym.mod & (KMOD_LSHIFT)))
@@ -514,6 +518,8 @@ void canvas::eventloop(void)
 	int ret = 0;
 	bool leave = false;
 	draw();
+
+	exit(0);
 
 	while (!leave) {
 #if 0

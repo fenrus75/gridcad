@@ -68,6 +68,8 @@ public:
 	void run(void);
 
 private:
+	std::string name;
+	
 	std::vector<class canvas *> canvases;
 };
 
@@ -111,7 +113,7 @@ public:
     class scene *get_undo(void);
     void take_undo_snapshot(class scene *scene);
     void from_json_to_floating(json &j);
-
+    unsigned int get_window_ID(void) { return windowID;};
 
          
 protected:
@@ -135,6 +137,7 @@ protected:
     bool in_area_select = false;
     float area_select_X1 = 0.0, area_select_Y1 = 0.0;
     SDL_Texture *area_select_texture = NULL;
+    unsigned int windowID;
     
 };
 
