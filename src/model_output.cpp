@@ -29,7 +29,10 @@ void model_output::drawAt(class canvas *canvas, float X, float Y, int type)
     } else {	
         canvas->draw_image(visual_off, X, Y, sizeX, sizeY, Alpha(type));
     }
-//    canvas->drawCircle(X+1.5, Y+1.5, 1.5, COLOR_WIRE_SOLID, value_color(&value));
+    if (name != "") {
+      canvas->draw_text(name, X, Y + sizeY, sizeX, 1);
+    }
+
     for (auto port : ports) {
         port->drawAt(canvas, X,Y, COLOR_WIRE_SOLID);
         port->draw_wires(canvas);
