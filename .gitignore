@@ -5,3 +5,4 @@ wiretest
 src/*.o
 fonts/*.ttf
 scene.json
+Makefile.deps.bak
