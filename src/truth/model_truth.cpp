@@ -1,6 +1,7 @@
 #include "gridcad.h"
 #include "model_truth.h"
 #include "port.h"
+#include "truthcanvas.h"
 
 model_truth::model_truth(float _X, float _Y):element(1, 1, "")
 {
@@ -56,6 +57,11 @@ void model_truth::drawAt(class canvas * canvas, float X, float Y, int type)
 
 bool model_truth::mouse_select(float _X, float _Y)
 {
+	if (!canvas) {
+		printf("Spawning a new window\n");
+		canvas = new class truthcanvas(this);
+		register_new_canvas(canvas);	
+	}
 	return false;
 }
 

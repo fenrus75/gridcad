@@ -27,4 +27,5 @@ private:
     SDL_Texture *visual_rb= NULL;
     SDL_Texture *visual_text = NULL;
     SDL_Texture *visual_selected = NULL;
+    class truthcanvas *canvas = NULL;
 };

@@ -63,7 +63,7 @@ void document::run(void)
 	SDL_Event event;
 	int ret = 0;
 	bool leave = false;
-	
+
 	for (auto canvas:canvases)
 		canvas->draw();
 
@@ -91,7 +91,7 @@ void document::run(void)
 			printf("Want to quit\n");
 
 		if (!ret && !leave) {
-			for (auto canvas:	canvases)
+			for (auto canvas: canvases)
 				canvas->draw();
 		}
 	}
