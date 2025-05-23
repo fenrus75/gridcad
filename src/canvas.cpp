@@ -5,11 +5,16 @@
 
 #include <stdio.h>
 
+
+
 #include "gridcad.h"
 #include "connector.h"
 #include "wire.h"
 #include "port.h"
 #include "iconbar.h"
+
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 
 
 static std::string clipboard;

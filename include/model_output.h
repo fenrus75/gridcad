@@ -1,7 +1,7 @@
 #pragma once
 
 #include "gridcad.h"
-
+#include "value.h"
 
 class model_output : public element
 {

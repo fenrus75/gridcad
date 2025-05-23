@@ -1,6 +1,7 @@
 #pragma once
 #include "gridcad.h"
 #include "wirepath.h"
+#include "value.h"
 
 class wire : public base
 {

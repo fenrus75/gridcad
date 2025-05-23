@@ -1,6 +1,6 @@
 #pragma once
 #include "gridcad.h"
-
+#include "value.h"
 #define PORT_IN 0
 #define PORT_OUT 1
 #define PORT_INOUT 2

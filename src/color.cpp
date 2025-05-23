@@ -1,4 +1,5 @@
 #include "gridcad.h"
+#include "value.h"
 
 #include <sys/time.h>
 

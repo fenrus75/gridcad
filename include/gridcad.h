@@ -10,7 +10,7 @@
 #include <vector>
 #include <string>
 
-#include <nlohmann/json.hpp>
+#include <nlohmann/json_fwd.hpp>
 using json = nlohmann::json;
 
 #define COLOR_BACKGROUND_MAIN 0
@@ -38,21 +38,6 @@ class basecanvas;
 struct value;
 
 
-#define DEFAULT_TTL 500
-#define VALUE_TYPE_BOOL 0
-#define VALUE_TYPE_INT 1
-#define VALUE_TYPE_FLOAT 2
-#define VALUE_TYPE_ARRAY 3
-struct value {
-    int type;
-    bool boolval;
-    int intval;
-    float floatval;
-    uint64_t arrayval;
-    bool is_error;
-    bool valid;
-};
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE_WITH_DEFAULT(value, type, boolval, intval, floatval, arrayval, is_error, valid);
 
 class base
 {

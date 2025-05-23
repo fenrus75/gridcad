@@ -9,6 +9,10 @@
 #include <string>
 #include <unistd.h>
 
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+
+
 static std::vector<class basecanvas *> canvases;
 
 
