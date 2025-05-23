@@ -15,13 +15,13 @@ static std::string clipboard;
 canvas::canvas(class scene *_scene)
 {
 	window =
-	    SDL_CreateWindow("GridCad", SDL_WINDOWPOS_UNDEFINED,
-			     SDL_WINDOWPOS_UNDEFINED, 1024, 768, SDL_WINDOW_RESIZABLE);
+		SDL_CreateWindow("GridCad", SDL_WINDOWPOS_UNDEFINED,
+				SDL_WINDOWPOS_UNDEFINED, 1024, 768, SDL_WINDOW_RESIZABLE);
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
 	windowID = SDL_GetWindowID(window);
-	
+
 	main_area_rect.x = 0;
 	main_area_rect.y = 0;
 	main_area_rect.w = 820;
@@ -51,131 +51,130 @@ canvas::~canvas(void)
 bool canvas::handleEvent_drawingarea(SDL_Event &event)
 {
 	bool freshsplit = false;
-			if (!shift_down)
-				current_scene->deselect_all();
-			if (!left_mouse_down
-			    && event.button.button == SDL_BUTTON_LEFT) {
-			    	class wire *wr;
-			    	
-				if (dragging)
-					dragging->deselect();
-				dragging = NULL;
-				dragging_port = NULL;
-				left_mouse_down = true;
-				float x, y;
-				
-				click_start_X = event.motion.x;
-				click_start_Y = event.motion.y;
+	if (!shift_down)
+		current_scene->deselect_all();
+	if (!left_mouse_down
+			&& event.button.button == SDL_BUTTON_LEFT) {
+		class wire *wr;
 
-				x = scr_to_X(event.motion.x);
-				y = scr_to_Y(event.motion.y);
-				for (auto elem:	current_scene->elements) {
-					if (elem->intersect(x, y) && !elem->is_port(x,y)) {
-						printf("Start drag: %5.2f %5.2f \n", x, y);
-						dragging = elem;
-					}
-				}
-				
-				
-				wr = current_scene->is_wire(x, y);
-				if (wr)
-					printf("WR  %i\n", dragging != NULL);
+		if (dragging)
+			dragging->deselect();
+		dragging = NULL;
+		dragging_port = NULL;
+		left_mouse_down = true;
+		float x, y;
 
+		click_start_X = event.motion.x;
+		click_start_Y = event.motion.y;
 
-				if (!dragging && !wr && floating.size() == 0 && !current_scene->is_port(x,y)) {
-					in_area_select = true;
-					area_select_X1 = x;
-					area_select_Y1 = y;	
-					return false;
-				}
-					
-				if (!dragging && wr) {
-					class wire *wr2;
-					class element *_element;
-					class port *port;
-					take_undo_snapshot(current_scene);
-					_element = new connector(x, y);
-				        current_scene->add_element(_element);
-					
-					wr2 = wr->split();
-					port = current_scene->is_port(x,y);
-					wr->add_port(port);
-					wr2->add_port(port);
-					port->add_wire(wr);
-					port->add_wire(wr2);
-					wr->reseat();
-					wr2->reseat();
-					wr->route(current_scene);
-					wr2->route(current_scene);
-					freshsplit = true;
-				}
-				if (dragging)
-					dragging->start_drag(x, y);
-
-				if (!dragging && !freshsplit) {
-					dragging_port = current_scene->is_port(x, y);
-					if (dragging_port) {
-						dragging_port->screenX = x;
-						dragging_port->screenY = y;
-
-						dragging_wire =
-						    new wire(floorf(x),
-							     floorf(y),
-							     floorf(x),
-							     floorf(y));
-					}
-				}
-				
-				
-				if (floating.size() > 0) {
-					take_undo_snapshot(current_scene);
-					for (auto flt : floating) {
-						current_scene->add_element(flt);
-						flt->stop_drag(this);
-						flt->reseat();
-					}
-					floating.clear();
-					if (active_icon)
-						floating.push_back(active_icon->create_element());
-				}
-
-
+		x = scr_to_X(event.motion.x);
+		y = scr_to_Y(event.motion.y);
+		for (auto elem:	current_scene->elements) {
+			if (elem->intersect(x, y) && !elem->is_port(x,y)) {
+				printf("Start drag: %5.2f %5.2f \n", x, y);
+				dragging = elem;
 			}
-			if ( event.button.button == SDL_BUTTON_RIGHT) {
-				printf("Right button\n");
+		}
+
+
+		wr = current_scene->is_wire(x, y);
+		if (wr)
+			printf("WR  %i\n", dragging != NULL);
+
+
+		if (!dragging && !wr && floating.size() == 0 && !current_scene->is_port(x,y)) {
+			in_area_select = true;
+			area_select_X1 = x;
+			area_select_Y1 = y;	
+			return false;
+		}
+
+		if (!dragging && wr) {
+			class wire *wr2;
+			class element *_element;
+			class port *port;
+			take_undo_snapshot(current_scene);
+			_element = new connector(x, y);
+			current_scene->add_element(_element);
+
+			wr2 = wr->split();
+			port = current_scene->is_port(x,y);
+			wr->add_port(port);
+			wr2->add_port(port);
+			port->add_wire(wr);
+			port->add_wire(wr2);
+			wr->reseat();
+			wr2->reseat();
+			wr->route(current_scene);
+			wr2->route(current_scene);
+			freshsplit = true;
+		}
+		if (dragging)
+			dragging->start_drag(x, y);
+
+		if (!dragging && !freshsplit) {
+			dragging_port = current_scene->is_port(x, y);
+			if (dragging_port) {
+				dragging_port->screenX = x;
+				dragging_port->screenY = y;
+
+				dragging_wire =
+					new wire(floorf(x),
+							floorf(y),
+							floorf(x),
+							floorf(y));
 			}
-			if (event.button.button == SDL_BUTTON_MIDDLE) {
-				middle_X = event.motion.x;
-				middle_Y = event.motion.y;
+		}
+
+
+		if (floating.size() > 0) {
+			take_undo_snapshot(current_scene);
+			for (auto flt : floating) {
+				current_scene->add_element(flt);
+				flt->stop_drag(this);
+				flt->reseat();
 			}
-			current_scene->remove_orphans();
+			floating.clear();
+			if (active_icon)
+				floating.push_back(active_icon->create_element());
+		}
+
+
+	}
+	if ( event.button.button == SDL_BUTTON_RIGHT) {
+		printf("Right button\n");
+	}
+	if (event.button.button == SDL_BUTTON_MIDDLE) {
+		middle_X = event.motion.x;
+		middle_Y = event.motion.y;
+	}
+	current_scene->remove_orphans();
 	return false;
 }
 
 bool canvas::handleEvent_iconarea(SDL_Event &event)
 {
-				class icon *this_icon;
-				this_icon = icon_bar->current_icon(event.motion.x, event.motion.y);
-				if (this_icon)
-					printf("ICON CLICK\n");
-				if (active_icon && this_icon)
-					active_icon->set_inactive();
-				if (active_icon != this_icon && this_icon) {
-					active_icon = this_icon;
-					floating.clear();;
-				}				
-				else
-					if (this_icon)
-						active_icon = NULL;
-					
+	class icon *this_icon;
+	this_icon = icon_bar->current_icon(event.motion.x, event.motion.y);
+	if (this_icon)
+		printf("ICON CLICK\n");
+	if (active_icon && this_icon)
+		active_icon->set_inactive();
+	if (active_icon != this_icon && this_icon) {
+		active_icon = this_icon;
+		floating.clear();;
+	} else {
+		if (this_icon)
+			active_icon = NULL;
+	}
 
-				if (active_icon) {
-					if (floating.size() == 0)
-						floating.push_back(active_icon->create_element());
-				} else {
-					floating.clear();;
-				}
-				
+	if (active_icon) {
+		if (floating.size() == 0)
+			floating.push_back(active_icon->create_element());
+	} else {
+		floating.clear();;
+	}
+
 	return false;
 }
 
