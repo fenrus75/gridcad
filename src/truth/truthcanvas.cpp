@@ -40,7 +40,7 @@ void truthcanvas::draw(void)
     }
     for (y = 0; y < element->outvalues.size(); y++) {
          for (x = 0; x < element->outvalues[y].size(); x++) {
-                 drawBox(1.1 + (x + inputs) *5, 1.1 + y * 2, 5.8 + (x+inputs) * 5, 2.8 + y * 2, COLOR_BACKGROUND_MAIN);
+                 drawBox(1.4 + (x + inputs) *5, 1.1 + y * 2, 6.1 + (x+inputs) * 5, 2.8 + y * 2, COLOR_BACKGROUND_MAIN);
                  if (y == 0)
                      draw_text(element->outvalues[y][x].name,     1 + (x+inputs) * 5, 1 + y * 2, 4, 1.8);
                  else
