@@ -15,5 +15,5 @@ public:
 private:
 	std::string name;
 	
-	std::vector<class basecanvas *> canvases;
 };
+

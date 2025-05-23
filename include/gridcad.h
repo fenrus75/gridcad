@@ -270,4 +270,7 @@ extern bool wire_factory_force_new_name;
 extern class wire *json_wire_factory(json &jwire);
 extern void clear_wire_factory(void);
 
+extern void register_new_canvas(class basecanvas *canvas);
+
+
 #endif

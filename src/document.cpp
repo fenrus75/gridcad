@@ -9,6 +9,9 @@
 #include <string>
 #include <unistd.h>
 
+static std::vector<class basecanvas *> canvases;
+
+
 document::document(std::string _name)
 {
 	class canvas *_canvas;
@@ -24,7 +27,7 @@ document::document(std::string _name)
 
 	_canvas = new canvas(_scene);
 
-	canvases.push_back(_canvas);
+	register_new_canvas(_canvas);
 
 	if (access((name + ".json").c_str(), R_OK) == 0) {
 		json j;
@@ -93,4 +96,12 @@ void document::run(void)
 		}
 	}
 
+}
+
+
+
+
+void register_new_canvas(class basecanvas *canvas)
+{
+	canvases.push_back(canvas);
 }
