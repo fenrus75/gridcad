@@ -23,13 +23,13 @@ truthcanvas::truthcanvas(class model_truth *_element)
 
     for (y = 1; y < element->invalues.size(); y++) {
          for (x = 0; x < element->invalues[y].size(); x++) {
-             add_widget(new class tristate(1.1 + x * 5, 1.1 + y * 2, 4.8, 1.8, &_element->invalues[y][x]));    
+             add_widget(new class tristate(1.1 + x * 5, 1.1 + y * 2, 4.8, 1.8, &_element->invalues[y][x], x, y));    
          }
     }
 
     for (y = 1; y < element->outvalues.size(); y++) {
          for (x = 0; x < element->outvalues[y].size(); x++) {
-             add_widget(new class tristate(1.4 + (x+inputs) * 5, 1.1 + y * 2, 4.8, 1.8, &_element->outvalues[y][x]));    
+             add_widget(new class tristate(1.4 + (x+inputs) * 5, 1.1 + y * 2, 4.8, 1.8, &_element->outvalues[y][x], x+inputs, y));    
          }
     }
     
@@ -59,10 +59,34 @@ bool truthcanvas::handleEvent(SDL_Event &event)
 {
     for (auto widget : widgets)
         widget->handle_event(event);
+        
+    switch (event.type) {
+    case SDL_MOUSEBUTTONDOWN:
+          float x, y;
+	  x = scr_to_X(event.motion.x);
+	  y = scr_to_Y(event.motion.y);
+          for (auto widget:widgets)
+             if (widget->intersect(x, y)) {
+               deselect_all();
+               selectX = widget->get_gridX();
+               selectY = widget->get_gridY();
+               widget->select();
+              }
+               
+          break;
+   
+    };
+    
     return false;
 }
 
 void truthcanvas::add_widget(class widget *widget)
 {
      widgets.push_back(widget);
+}
+
+void truthcanvas::deselect_all(void)
+{
+    for (auto widget : widgets)
+       widget->deselect();
 }

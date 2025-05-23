@@ -13,9 +13,13 @@ public:
     bool handleEvent(SDL_Event &event) override;
     void add_widget(class widget *widget);
     
+    void deselect_all(void);
+    
 private:
     class model_truth *element;
     std::vector<class widget *> widgets;
+    
+    int selectX, selectY;
 };
 
 
