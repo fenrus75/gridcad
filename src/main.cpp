@@ -7,6 +7,7 @@
 #include <unistd.h>
 
 #include "gridcad.h"
+#include "document.h"
 
 int main(int argc, char **argv)
 {
