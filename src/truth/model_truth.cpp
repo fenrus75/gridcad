@@ -4,7 +4,7 @@
 
 model_truth::model_truth(float _X, float _Y):element(1, 1, "")
 {
-	sizeX = 4;
+	sizeX = 8;
 	sizeY = 4;
 	X = floorf(_X);
 	Y = floorf(_Y);
@@ -46,7 +46,7 @@ void model_truth::drawAt(class canvas * canvas, float X, float Y, int type)
 		canvas->draw_image(visual_mm, X + 1, Y + 1, sizeX - 2, sizeY - 2, Alpha(type));
 	}
 
-	canvas->draw_image(visual_text, X + 0.2, Y + 0.2, sizeX - 0.4, sizeY - 0.4, Alpha(type));
+	canvas->draw_image(visual_text, X + 0.2, Y + 0.2, sizeX - 0.4, sizeY - 0.4, Alpha(type), true);
 
 	for (auto port:ports) {
 		port->drawAt(canvas, X, Y, COLOR_WIRE_SOLID);

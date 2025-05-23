@@ -129,13 +129,32 @@ SDL_Texture * basecanvas::load_image(const char *filename)
 	return IMG_LoadTexture(renderer, filename);
 }
 
-void basecanvas::draw_image(SDL_Texture *image, float X, float Y, float W, float H, int alpha) 
+void basecanvas::draw_image(SDL_Texture *image, float X, float Y, float W, float H, int alpha, bool keep_aspect) 
 {
 	SDL_Rect rect;
-	rect.x = X_to_scr(X);
-	rect.y = Y_to_scr(Y);
-	rect.w = W * scaleX;
-	rect.h = H * scaleY;
+	SDL_Point size;
+	float w, h;
+
+	
+	SDL_QueryTexture(image, NULL, NULL, &size.x, &size.y);
+
+	if (keep_aspect) { 
+	h = H;
+	w = 1.0 * size.x / size.y * h;
+	if (w > W) {
+		w = W;
+		h = 1.0 * size.y / size.x * w;
+	}
+	} else {
+		w = W;
+		h = H;
+ 	}
+	rect.x = X_to_scr(X) + (W-w)/2 * scaleX;
+	rect.y = Y_to_scr(Y) + (H-h)/2 * scaleY;
+	rect.w = w * scaleX;
+	rect.h = h * scaleY;
+		
+
 	
 	SDL_SetTextureAlphaMod(image, alpha);
 	
@@ -150,7 +169,7 @@ SDL_Texture *basecanvas::text_to_texture(const char *text)
 	SDL_Surface *surface;
 	TTF_Font *font;
 		
-	font = TTF_OpenFont("fonts/Roboto-Medium-webfont.ttf", 14);
+	font = TTF_OpenFont("fonts/Roboto-Medium-webfont.ttf", 28);
 	surface = TTF_RenderUTF8_Blended(font, text, white);
 	tx = SDL_CreateTextureFromSurface(renderer, surface);
 	SDL_FreeSurface(surface);

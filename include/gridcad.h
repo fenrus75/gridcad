@@ -101,7 +101,7 @@ public:
     void draw_shadow_Line(float X1, float Y1, float X2, float Y2, int color);
 
     SDL_Texture *load_image(const char *filename);
-    void draw_image(SDL_Texture *image, float X, float Y, float W, float H, int alpha=255);
+    void draw_image(SDL_Texture *image, float X, float Y, float W, float H, int alpha=255, bool keepaspect = false);
     SDL_Texture *text_to_texture(const char *text);
     SDL_Texture *text_to_texture(std::string text);
     void draw_text(std::string text, float X, float Y, float W, float H);
