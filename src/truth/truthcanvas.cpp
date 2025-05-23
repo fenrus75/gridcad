@@ -48,10 +48,15 @@ void truthcanvas::draw(void)
                     
          }
      }
+    for (auto widget : widgets)
+      widget->draw(this);
+      
     SDL_RenderPresent(renderer);
 }
 
 bool truthcanvas::handleEvent(SDL_Event &event)
 {
+    for (auto widget : widgets)
+        widget->handle_event(event);
     return false;
 }

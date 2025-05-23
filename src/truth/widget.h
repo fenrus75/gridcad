@@ -1,6 +1,7 @@
 #pragma once
 
 #include "gridcad.h"
+#include "model_truth.h"
 
 class widget {
 public:
@@ -21,7 +22,6 @@ protected:
 
 class label : public widget {
 public:
-    label(void);
     label(float X, float Y, float W, float H, std::string text);
     virtual ~label(void);
 
@@ -29,6 +29,17 @@ public:
     void handle_event(SDL_Event &event) override;
 private:
     std::string text;
+};
+
+class tristate : public widget {
+public:
+    tristate(float X, float Y, float W, float H, struct truthvalue *tv);
+    virtual ~tristate(void);
+
+    void draw(class basecanvas *canvas) override;
+    void handle_event(SDL_Event &event) override;
+private:
+    struct truthvalue *tv = NULL;
 };
 
 
