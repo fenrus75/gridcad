@@ -17,13 +17,14 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
     icons[0][0] = new icon(renderer, ICON_ZERO);
     icons[1][0] = new icon(renderer, ICON_ONE);
     icons[0][1] = new icon(renderer, ICON_NOT);
-    icons[1][1] = new icon(renderer, ICON_TOGGLE);
     icons[0][2] = new icon(renderer, ICON_NAND);
     icons[1][2] = new icon(renderer, ICON_AND);
     icons[0][3] = new icon(renderer, ICON_NOR);
     icons[1][3] = new icon(renderer, ICON_OR);
     icons[0][4] = new icon(renderer, ICON_XOR);
+    icons[0][5] = new icon(renderer, ICON_TOGGLE);
     icons[1][5] = new icon(renderer, ICON_OUTPUT);
+    icons[1][1] = new icon(renderer, ICON_TRUTH);
 }
 
 iconbar::~iconbar(void)
@@ -105,6 +106,7 @@ static const char *image_names[] =
  "assets/orgate.png",
  "assets/output_on.png",
  "assets/xorgate.png",
+ "assets/model_truth/truthtable_icon.png",
 };
 
 icon::icon(SDL_Renderer *renderer, int _type)
@@ -180,6 +182,8 @@ class element * icon::create_element(void)
               return new model_xor(-10, -10);
           case ICON_OUTPUT:
               return new model_output(-10, -10);
+          case ICON_TRUTH:
+              return new model_truth(-10, -10);
           default:
              return NULL;
      }
