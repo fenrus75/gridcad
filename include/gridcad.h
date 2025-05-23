@@ -70,17 +70,29 @@ public:
 private:
 	std::string name;
 	
-	std::vector<class canvas *> canvases;
+	std::vector<class basecanvas *> canvases;
 };
 
+
+class basecanvas
+{
+public:
+    basecanvas(void) {};
+    virtual ~basecanvas(void) {};
+    virtual bool handleEvent(SDL_Event &event) { return false;};
+    virtual void draw(void) {};
+    unsigned int get_window_ID(void) { return windowID;};
+protected:
+    unsigned int windowID;    
+};
 /* gui canvas to draw on */
-class canvas
+class canvas : public basecanvas
 {
 public:
     canvas (class scene *_scene);
     virtual ~canvas(void);
     
-    void draw(void);
+    void draw(void) override;
     
     
     void drawBox(float X1, float Y1, float X2, float Y2, int color, int alpha = -1);
@@ -106,14 +118,13 @@ public:
     
     class scene *get_scene(void) { return current_scene; };
     class scene *swap_scene(class scene *scene);
-    bool handleEvent(SDL_Event &event);
+    bool handleEvent(SDL_Event &event) override;
     
 
     void to_json(json& j);
     class scene *get_undo(void);
     void take_undo_snapshot(class scene *scene);
     void from_json_to_floating(json &j);
-    unsigned int get_window_ID(void) { return windowID;};
          
 protected:
     bool draw_grid = false;
@@ -136,7 +147,6 @@ protected:
     bool in_area_select = false;
     float area_select_X1 = 0.0, area_select_Y1 = 0.0;
     SDL_Texture *area_select_texture = NULL;
-    unsigned int windowID;
     
 };
 
