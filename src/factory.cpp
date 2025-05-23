@@ -1,6 +1,16 @@
 #include "gridcad.h"
 
-#include "models.h"
+#include "model_toggle.h"
+#include "model_not.h"
+#include "model_or.h"
+#include "model_xor.h"
+#include "model_nor.h"
+#include "model_and.h"
+#include "model_nand.h"
+#include "model_one.h"
+#include "model_zero.h"
+#include "model_output.h"
+#include "model_truth.h"
 
 
 #define ELEMENT(x)  if (classid == #x":") return new x(0, 0);

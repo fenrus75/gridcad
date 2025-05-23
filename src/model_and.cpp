@@ -1,5 +1,5 @@
 #include "gridcad.h"
-#include "models.h"
+#include "model_and.h"
 
 model_and::model_and(float _X, float _Y)  : model_logic2(_X, _Y, "assets/andgate.png")
 {

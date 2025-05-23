@@ -1,5 +1,5 @@
 #include "gridcad.h"
-#include "models.h"
+#include "model_nand.h"
 
 model_nand::model_nand(float _X, float _Y)  : model_logic2(_X, _Y, "assets/nandgate.png")
 {

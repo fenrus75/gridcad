@@ -1,5 +1,5 @@
 #include "gridcad.h"
-#include "models.h"
+#include "model_zero.h"
 
 model_zero::model_zero(float _X, float _Y)  : element(1, 1, "")
 {

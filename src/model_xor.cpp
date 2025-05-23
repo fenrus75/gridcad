@@ -1,5 +1,5 @@
 #include "gridcad.h"
-#include "models.h"
+#include "model_xor.h"
 
 model_xor::model_xor(float _X, float _Y)  : model_logic2(_X, _Y, "assets/xorgate.png")
 {

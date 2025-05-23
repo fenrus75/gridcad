@@ -1,5 +1,5 @@
 #include "gridcad.h"
-#include "models.h"
+#include "model_or.h"
 
 model_or::model_or(float _X, float _Y)  : model_logic2(_X, _Y, "assets/orgate.png")
 {

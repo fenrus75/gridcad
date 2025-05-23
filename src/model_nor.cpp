@@ -1,5 +1,5 @@
 #include "gridcad.h"
-#include "models.h"
+#include "model_nor.h"
 
 model_nor::model_nor(float _X, float _Y)  : model_logic2(_X, _Y, "assets/norgate.png")
 {

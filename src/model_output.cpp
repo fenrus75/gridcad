@@ -1,5 +1,5 @@
 #include "gridcad.h"
-#include "models.h"
+#include "model_output.h"
 
 model_output::model_output(float _X, float _Y)  : element(1, 1, "Output")
 {
