@@ -15,7 +15,7 @@ public:
     void deselect(void) { _selected = false; };
     bool selected(void) { return _selected; };
     
-    bool intersect(float X, float Y) { return (X>= X1 && X <= X2 && Y >= Y1 && Y <= Y2);};
+    virtual bool intersect(float X, float Y) { return (X>= X1 && X <= X2 && Y >= Y1 && Y <= Y2);};
     int get_gridX(void) { return gridX; };
     int get_gridY(void) { return gridY; };
     
@@ -32,6 +32,7 @@ public:
 
     void draw(class basecanvas *canvas) override;
     void handle_event(SDL_Event &event) override;
+    bool intersect(float X, float Y) override { return false;};
 private:
     std::string text;
 };

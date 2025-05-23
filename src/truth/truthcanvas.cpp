@@ -61,6 +61,50 @@ bool truthcanvas::handleEvent(SDL_Event &event)
         widget->handle_event(event);
         
     switch (event.type) {
+    case SDL_KEYDOWN:
+         switch (event.key.keysym.sym) {
+	 case SDLK_UP:
+	       for (auto widget : widgets)
+	          if (widget->get_gridX() == selectX && widget->get_gridY() == selectY-1) {
+                     deselect_all();
+                     selectX = widget->get_gridX();
+                     selectY = widget->get_gridY();
+                     widget->select();
+                     break;
+	          }
+               break;
+	 case SDLK_DOWN:
+	       for (auto widget : widgets)
+	          if (widget->get_gridX() == selectX && widget->get_gridY() == selectY+1) {
+                     deselect_all();
+                     selectX = widget->get_gridX();
+                     selectY = widget->get_gridY();
+                     widget->select();
+                     break;
+	          }
+               break;
+	 case SDLK_LEFT:
+	       for (auto widget : widgets)
+	          if (widget->get_gridX() == selectX-1 && widget->get_gridY() == selectY) {
+                     deselect_all();
+                     selectX = widget->get_gridX();
+                     selectY = widget->get_gridY();
+                     widget->select();
+                     break;
+	          }
+               break;
+	 case SDLK_RIGHT:
+	       for (auto widget : widgets)
+	          if (widget->get_gridX() == selectX+1 && widget->get_gridY() == selectY) {
+                     deselect_all();
+                     selectX = widget->get_gridX();
+                     selectY = widget->get_gridY();
+                     widget->select();
+                     break;
+	          }
+               break;
+         }
+         break;
     case SDL_MOUSEBUTTONDOWN:
           float x, y;
 	  x = scr_to_X(event.motion.x);
