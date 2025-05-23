@@ -195,6 +195,7 @@ bool canvas::handleEvent(SDL_Event &event)
 			leave = true;
 			return true;
 			break;
+
 		case SDL_KEYDOWN:
 			if ((event.key.keysym.mod & (KMOD_LSHIFT)))
 				shift_down = true;
@@ -522,7 +523,15 @@ bool canvas::handleEvent(SDL_Event &event)
 		case SDL_POLLSENTINEL:
 			break;
 		case SDL_WINDOWEVENT:
-			if (event.window.event == SDL_WINDOWEVENT_RESIZED) {			
+			switch( event.window.event) {
+			case SDL_WINDOWEVENT_SHOWN:
+				window_shown = true;
+			        break;
+			            
+		        case SDL_WINDOWEVENT_HIDDEN:
+		        	window_shown = false;
+		        	break;
+			case SDL_WINDOWEVENT_RESIZED:
 				main_area_rect.w = event.window.data1 - 220;;
 				main_area_rect.h = event.window.data2;
 				ui_area_rect.x = main_area_rect.w;
@@ -530,6 +539,7 @@ bool canvas::handleEvent(SDL_Event &event)
 				ui_area_rect.w = event.window.data1 - main_area_rect.w;
 				ui_area_rect.h = event.window.data2;
 				icon_bar->resize(ui_area_rect);
+				break;
 			}
 			break;
 		}
@@ -636,7 +646,8 @@ void canvas::draw(void)
 		draw_image(area_select_texture, X1, Y1, X2-X1, Y2-Y1, 64);
 	}
 
-	SDL_RenderPresent(renderer);
+	if (window_shown)
+		SDL_RenderPresent(renderer);
 }
 
 

@@ -106,6 +106,7 @@ public:
          
 protected:
     bool draw_grid = false;
+    bool window_shown = true;
     class scene *current_scene;
     SDL_Rect main_area_rect, ui_area_rect;
     class element *dragging = NULL;
