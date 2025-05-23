@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef __INCLUDE_GUARD_
+#define __INCLUDE_GUARD_
+
 #include "wirepath.h"
 #include <SDL2/SDL.h>
 
@@ -30,6 +33,7 @@ class element;
 class wire;
 class port;
 class iconbar;
+class basecanvas;
 struct value;
 
 
@@ -77,14 +81,40 @@ private:
 class basecanvas
 {
 public:
-    basecanvas(void) {};
-    virtual ~basecanvas(void) {};
-    virtual bool handleEvent(SDL_Event &event) { return false;};
-    virtual void draw(void) {};
+    basecanvas(void);
+    virtual ~basecanvas(void);
+    virtual bool handleEvent(SDL_Event &event) = 0;
+    virtual void draw(void) = 0;
     unsigned int get_window_ID(void) { return windowID;};
+
+
+    int X_to_scr(float X);
+    int Y_to_scr(float Y);
+    float scr_to_X(int X);
+    float scr_to_Y(int Y);
+    
+
+    void drawBox(float X1, float Y1, float X2, float Y2, int color, int alpha = -1);
+    void drawCircle(float X, float Y, float R, int color, int color2=COLOR_BACKGROUND_MAIN);
+    void drawCircle2(float X, float Y, float R, int color, int color2=COLOR_BACKGROUND_MAIN);
+    void drawLine(float X1, float Y1, float X2, float Y2, int color);
+    void draw_shadow_Line(float X1, float Y1, float X2, float Y2, int color);
+
+    SDL_Texture *load_image(const char *filename);
+    void draw_image(SDL_Texture *image, float X, float Y, float W, float H, int alpha=255);
+    SDL_Texture *text_to_texture(const char *text);
+    SDL_Texture *text_to_texture(std::string text);
+    void draw_text(std::string text, float X, float Y, float W, float H);
+
 protected:
-    unsigned int windowID;    
+    float offsetX = 0.0;
+    float offsetY = 0.0;
+    float scaleX = 25.0, scaleY = 25.0;
+    unsigned int windowID = 0;    
+    SDL_Renderer *renderer = NULL;
+    SDL_Window *window = NULL;
 };
+
 /* gui canvas to draw on */
 class canvas : public basecanvas
 {
@@ -93,28 +123,6 @@ public:
     virtual ~canvas(void);
     
     void draw(void) override;
-    
-    
-    void drawBox(float X1, float Y1, float X2, float Y2, int color, int alpha = -1);
-    void drawCircle(float X, float Y, float R, int color, int color2=COLOR_BACKGROUND_MAIN);
-    void drawCircle2(float X, float Y, float R, int color, int color2=COLOR_BACKGROUND_MAIN);
-    void drawLine(float X1, float Y1, float X2, float Y2, int color);
-    void draw_shadow_Line(float X1, float Y1, float X2, float Y2, int color);
-    
-    int X_to_scr(float X);
-    int Y_to_scr(float Y);
-    float scr_to_X(int X);
-    float scr_to_Y(int Y);
-    
-    float offsetX, offsetY;
-    float scaleX, scaleY;
-    
-    
-    SDL_Texture *load_image(const char *filename);
-    void draw_image(SDL_Texture *image, float X, float Y, float W, float H, int alpha=255);
-    SDL_Texture *text_to_texture(const char *text);
-    SDL_Texture *text_to_texture(std::string text);
-    void draw_text(std::string text, float X, float Y, float W, float H);
     
     class scene *get_scene(void) { return current_scene; };
     class scene *swap_scene(class scene *scene);
@@ -129,8 +137,6 @@ public:
 protected:
     bool draw_grid = false;
     class scene *current_scene;
-    SDL_Renderer *renderer = NULL;
-    SDL_Window *window = NULL;
     SDL_Rect main_area_rect, ui_area_rect;
     class element *dragging = NULL;
     std::vector<class element *> floating;
@@ -381,3 +387,5 @@ extern bool wire_factory_force_new_name;
 
 extern class wire *json_wire_factory(json &jwire);
 extern void clear_wire_factory(void);
+
+#endif
