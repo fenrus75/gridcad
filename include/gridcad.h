@@ -5,6 +5,7 @@
 
 #include "wirepath.h"
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
 #include <vector>
 #include <string>
@@ -96,6 +97,7 @@ protected:
     unsigned int windowID = 0;    
     SDL_Renderer *renderer = NULL;
     SDL_Window *window = NULL;
+    TTF_Font *font = NULL;
 };
 
 /* gui canvas to draw on */

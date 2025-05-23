@@ -3,6 +3,11 @@
 #include "gridcad.h"
 
 
+struct truthvalue {
+    unsigned char Token;
+    std::string name;
+};
+
 class model_truth : public element
 {
 public:
@@ -15,6 +20,10 @@ public:
     bool mouse_select(float X, float Y) override;
     virtual void to_json(json &j) override;
     virtual void from_json(json &j) override;
+    
+    std::vector<std::vector<struct truthvalue>> invalues;
+    std::vector<std::vector<struct truthvalue>> outvalues;
+    
 private:
     SDL_Texture *visual_lt = NULL;
     SDL_Texture *visual_mt = NULL;
@@ -28,4 +37,8 @@ private:
     SDL_Texture *visual_text = NULL;
     SDL_Texture *visual_selected = NULL;
     class truthcanvas *canvas = NULL;
+    
+    unsigned int inputs = 2;
+    unsigned int outputs = 1;
+    
 };

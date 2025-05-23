@@ -276,7 +276,11 @@ bool canvas::handleEvent(SDL_Event &event)
 					printf("clipboard is %s\n", clipboard.c_str());
 				}
 				break;
-			break;
+			case SDLK_q:
+				if (event.key.keysym.mod & KMOD_LCTRL) {
+					return true;
+				}
+				break;
 			case SDLK_x:
 				if (event.key.keysym.mod & KMOD_LCTRL) {
 					json p;
@@ -289,7 +293,6 @@ bool canvas::handleEvent(SDL_Event &event)
 					current_scene->remove_orphans();
 				}
 				break;
-			break;
 			case SDLK_v:
 				if (event.key.keysym.mod & KMOD_LCTRL) {
 					printf("paste\n");

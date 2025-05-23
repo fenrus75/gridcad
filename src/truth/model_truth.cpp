@@ -5,10 +5,32 @@
 
 model_truth::model_truth(float _X, float _Y):element(1, 1, "")
 {
+	unsigned int i;
 	sizeX = 8;
 	sizeY = 4;
 	X = floorf(_X);
 	Y = floorf(_Y);
+	
+	inputs = 2;
+	outputs = 1;
+	
+	invalues.resize(1 + (1 << inputs)); /* row 0 is the title bar/names */
+	outvalues.resize(invalues.size());
+	for (i = 0; i < invalues.size(); i++)
+		invalues[i].resize(inputs);
+	for (i = 0; i < outvalues.size(); i++)
+		outvalues[i].resize(outputs);
+		
+	for (i = 0; i < inputs; i++) {
+		char buf[128];
+		sprintf(buf, "In%i", i);
+		invalues[0][i].name = buf;
+	}
+	for (i = 0; i < outputs; i++) {
+		char buf[128];
+		sprintf(buf, "Out%i", i);
+		outvalues[0][i].name = buf;
+	}
 }
 
 model_truth::~model_truth(void)

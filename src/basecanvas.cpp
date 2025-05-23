@@ -167,13 +167,12 @@ SDL_Texture *basecanvas::text_to_texture(const char *text)
 	const SDL_Color white = {255, 255, 255, 255};
 	SDL_Texture *tx;
 	SDL_Surface *surface;
-	TTF_Font *font;
 		
-	font = TTF_OpenFont("fonts/Roboto-Medium-webfont.ttf", 28);
+	if (!font)
+		font = TTF_OpenFont("fonts/Roboto-Medium-webfont.ttf", 28);
 	surface = TTF_RenderUTF8_Blended(font, text, white);
 	tx = SDL_CreateTextureFromSurface(renderer, surface);
 	SDL_FreeSurface(surface);
-	TTF_CloseFont(font);
 	return tx;
 }
 
