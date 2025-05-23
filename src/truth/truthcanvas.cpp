@@ -16,7 +16,7 @@ truthcanvas::truthcanvas(class model_truth *_element)
     windowID = SDL_GetWindowID(window);
 
     for (x = 0; x < element->invalues[0].size(); x++) 
-        add_widget(new class label(1.1 + x *5, 1.1, 4.8, 1.8, _element->invalues[0][x].name));    
+        add_widget(new class label(1.1 + x*5, 1.1, 4.8, 1.8, _element->invalues[0][x].name));    
     for (x = 0; x < element->outvalues[0].size(); x++) 
         add_widget(new class label(1.4 + (x+inputs) *5, 1.1, 4.8, 1.8, _element->outvalues[0][x].name));    
 
