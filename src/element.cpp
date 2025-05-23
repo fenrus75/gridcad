@@ -2,6 +2,7 @@
 #include <math.h>
 
 #include "gridcad.h"
+#include "port.h"
 
 element::element(int _sizeX, int _sizeY, std::string _name)
 {

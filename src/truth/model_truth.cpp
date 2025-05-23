@@ -1,5 +1,6 @@
 #include "gridcad.h"
 #include "model_truth.h"
+#include "port.h"
 
 model_truth::model_truth(float _X, float _Y):element(1, 1, "")
 {

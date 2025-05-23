@@ -1,7 +1,7 @@
 #pragma once
 
 #include "gridcad.h"
-
+#include "port.h"
 
 class model_logic2 : public element
 {

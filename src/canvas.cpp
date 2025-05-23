@@ -6,7 +6,9 @@
 #include <stdio.h>
 
 #include "gridcad.h"
-
+#include "connector.h"
+#include "wire.h"
+#include "port.h"
 #include "iconbar.h"
 
 

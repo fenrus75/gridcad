@@ -1,4 +1,6 @@
 #include "gridcad.h"
+#include "connector.h"
+#include "port.h"
 
 connector::connector(float _X, float _Y)  : element(3, 3, "")
 {

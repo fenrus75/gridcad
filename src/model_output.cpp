@@ -1,5 +1,6 @@
 #include "gridcad.h"
 #include "model_output.h"
+#include "port.h"
 
 model_output::model_output(float _X, float _Y)  : element(1, 1, "Output")
 {

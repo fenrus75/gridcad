@@ -1,5 +1,6 @@
 #include "gridcad.h"
 #include "model_toggle.h"
+#include "port.h"
 
 model_toggle::model_toggle(float _X, float _Y)  : element(1, 1, "Input")
 {

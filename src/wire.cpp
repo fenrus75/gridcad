@@ -1,6 +1,8 @@
 
 #include "gridcad.h"
 #include "wirepath.h"
+#include "wire.h"
+#include "port.h"
 
 #include <algorithm>
 

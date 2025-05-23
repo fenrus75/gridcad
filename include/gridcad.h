@@ -206,51 +206,6 @@ protected:
 #define DRAW_DND 2
 #define DRAW_ORIGIN 3
 
-#define PORT_IN 0
-#define PORT_OUT 1
-#define PORT_INOUT 2
-
-class port : public base
-{
-public:
-    port(std::string _name, int _direction = PORT_IN, int bus_width = 1);    
-    virtual ~port(void);
-    virtual std::string class_id(void) { return "port:";};
-    int X, Y;
-    float screenX, screenY;
-    std::string name = "";
-    class element *parent = NULL;
-    struct value value = {};
-    void add_wire(class wire *wire);
-    void update_value(struct value *newvalue, int ttl);
-    int direction = PORT_IN;;
-    
-    void draw(class canvas *canvas, int color);
-    void draw_wires(class canvas *canva);
-    void drawAt(class canvas *canvas, float X, float Y, int color);
-    void stop_drag(class canvas *canva);
-    virtual void notify(int ttl);
-    class wire *is_wire(float X, float Y);
-    void fill_grid(class wiregrid *grid);
-    
-    void remove_wire(class wire *wire);
-    bool replace_wire(class wire *from, class wire *to);
-    void to_json(json &j);
-    void from_json(json &j);
-    bool has_wires(void) { return wires.size() > 0; };
-    void remove_wires(void);
-    void remove_orphans(void);
-    int get_bus_width(void) { return bus_width; };
-private:
-    int bus_width = 1;
-    void drawConnector(class canvas *canvas, float X, float Y, int cX, int cY, int type);    
-    std::vector<class wire*> wires;
-    SDL_Texture *label = NULL;
-    SDL_Texture *in_open = NULL;
-    SDL_Texture *in_used = NULL;
-    SDL_Texture *out_green = NULL;
-    SDL_Texture *out_red = NULL;
-};
 
 class element : public base
 {
@@ -318,66 +273,7 @@ protected:
     
 };
 
-class wire : public base{
-public:
-    wire(int x1, int y1, int x2, int y2, int _color = COLOR_WIRE_SOLID);
-    virtual ~wire(void);
 
-    virtual std::string class_id(void) { return "wire:";};
-    
-    void move_target(int x2, int y2);
-    void draw(class canvas *, int color = COLOR_WIRE_SOLID);
-    void route(class scene *);
-    
-    void get_ref(void);
-    void add_port(class port *port);
-    void reseat(void);
-    
-    void update_value(struct value *newvalue, int ttl);
-    virtual void notify(int ttl);
-    struct value value;
-    bool intersect(float targetX, float targetY);
-    
-    void select(void) { selected = true;};
-    void deselect(void) { selected = false;};
-    void remove(void);
-    void remove_if_orphan(void);
-    void fill_grid(class wiregrid* grid);
-    
-    class wire *split(void);
-    
-    std::string name = "";
-    
-    void to_json(json &j);
-    void from_json(json &j);
-    void set_new_name(void);
-    
-protected:
-    bool selected = false;
-    bool being_routed = false; /* not saved in json */
-    std::vector<class port *> ports;
-    int X1 = 0, Y1 = 0, X2 = 0, Y2 = 0;
-    int color = 0;
-    int refcount = 0;
-    std::vector<struct waypoint> *points = NULL;
-};
-
-
-class connector : public element
-{
-public:
-    connector(float _X = 0, float _Y =0);
-    virtual ~connector();
-
-    virtual std::string class_id(void) { return "connector:";};
-    void draw(class canvas *canvas, int type) override;
-    void fill_grid(class wiregrid* grid) override;
-    bool want_deleted(void) override;
-private:
-    SDL_Texture *red = NULL;
-    SDL_Texture *green = NULL;
-    SDL_Texture *open = NULL;
-};
 
 extern int R(int color);
 extern int G(int color);

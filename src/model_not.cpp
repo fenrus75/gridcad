@@ -1,5 +1,6 @@
 #include "gridcad.h"
 #include "model_not.h"
+#include "port.h"
 
 model_not::model_not(float _X, float _Y)  : element(_X, _Y, "")
 {

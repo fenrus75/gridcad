@@ -1,5 +1,6 @@
 #include "gridcad.h"
 #include "model_logic2.h"
+#include "port.h"
 
 #include <sys/time.h>
 #include <math.h>

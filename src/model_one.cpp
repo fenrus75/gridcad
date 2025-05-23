@@ -1,5 +1,6 @@
 #include "gridcad.h"
 #include "model_one.h"
+#include "port.h"
 
 model_one::model_one(float _X, float _Y)  : model_zero(_X, _Y)
 {

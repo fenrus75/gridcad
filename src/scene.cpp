@@ -1,8 +1,7 @@
 #include <stdio.h>
 
 #include "gridcad.h"
-
-#include "iconbar.h"
+#include "wire.h"
 
 
 scene::scene(void)

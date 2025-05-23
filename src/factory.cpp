@@ -11,7 +11,7 @@
 #include "model_zero.h"
 #include "model_output.h"
 #include "model_truth.h"
-
+#include "connector.h"
 
 #define ELEMENT(x)  if (classid == #x":") return new x(0, 0);
 class element *element_from_class_id(std::string classid)

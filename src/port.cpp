@@ -1,4 +1,7 @@
 #include "gridcad.h"
+#include "wire.h"
+#include "port.h"
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
