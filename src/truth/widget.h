@@ -48,9 +48,6 @@ public:
 private:
     char *tv = NULL;
     bool is_input;
-    SDL_Texture *tt_one = NULL;
-    SDL_Texture *tt_zero = NULL;
-    SDL_Texture *tt_dc = NULL;
 };
 
 
