@@ -78,13 +78,16 @@ void document::run(void)
 			leave = true;
 
 		if (ret) {
-			for (auto canvas:	canvases) {
+			for (unsigned int i = 0; i < canvases.size(); i++)  {
+				auto canvas = canvases[i];
 				bool thisret = false;
 				if (event.window.windowID == canvas->get_window_ID()) {
 					thisret = canvas->handleEvent(event);
 					if (thisret) {
-						printf("Want to quit now\n");
-						leave = true;
+						canvases.erase(canvases.begin() + i);
+						if (canvases.size() == 0)
+							leave = true;
+						break;
 					}
 				}
 

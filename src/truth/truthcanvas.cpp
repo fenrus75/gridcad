@@ -111,6 +111,14 @@ bool truthcanvas::handleEvent(SDL_Event &event)
                
           break;
    
+    case SDL_WINDOWEVENT:
+         if (event.window.event == SDL_WINDOWEVENT_CLOSE) {  /* user clicked the 'x' */
+              SDL_DestroyWindow(window); /* TODO: THis leaks like a sieve */
+              window = NULL;
+              return true;
+              /* need to unregister from the document side */
+         }
+         break;
     };
     
     return false;
