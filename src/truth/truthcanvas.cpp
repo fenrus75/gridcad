@@ -2,12 +2,12 @@
 #include "truthcanvas.h"
 #include "model_truth.h"
 
+
+
 truthcanvas::truthcanvas(class model_truth *_element)
 {
-    unsigned int x,y;
 
     element = _element;
-    unsigned int inputs = element->get_inputs();
 
     window = SDL_CreateWindow("GridCad Truth Table", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_RESIZABLE);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
@@ -15,15 +15,7 @@ truthcanvas::truthcanvas(class model_truth *_element)
 
     windowID = SDL_GetWindowID(window);
 
-    for (x = 0; x < element->values[0].size(); x++) 
-        add_widget(new class label(1.1 + x*5, 1.1, 4.8, 1.8, _element->names[x]));    
-
-
-    for (y = 0; y < element->values.size(); y++) {
-         for (x = 0; x < element->values[y].size(); x++) {
-             add_widget(new class tristate(1.1 + x * 5, 1.1 + (y + 1) * 2, 4.8, 1.8, &_element->values[y][x], x, y, x < inputs));    
-         }
-    }
+    fill_grid();
     unhide();
     draw();    
 }
@@ -31,6 +23,36 @@ truthcanvas::truthcanvas(class model_truth *_element)
 
 truthcanvas::~truthcanvas(void)
 {
+}
+
+void truthcanvas::clear_widgets(void)
+{
+    unsigned int i;
+    
+    for (i = 0; i < widgets.size(); i++) {
+        auto widget = widgets[i];
+        delete widget;
+        widgets[i] = nullptr;
+    }
+    widgets.clear();
+}
+
+void truthcanvas::fill_grid(void)
+{
+	unsigned int x,y;
+	unsigned int inputs = element->get_inputs();
+	
+	clear_widgets();
+
+	for (x = 0; x < element->names.size(); x++) 
+		add_widget(new class label(1.1 + x*5, 1.1, 4.8, 1.8, element->names[x]));    
+
+
+	for (y = 0; y < element->values.size(); y++) {
+		for (x = 0; x < element->values[y].size(); x++) {
+			add_widget(new class tristate(1.1 + x * 5, 1.1 + (y + 1) * 2, 4.8, 1.8, &element->values[y][x], x, y, x < inputs));    
+		}
+	}
 }
 
 void truthcanvas::draw(void)

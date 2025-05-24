@@ -15,6 +15,8 @@ public:
     
     void deselect_all(void);
     void unhide(void);
+    void fill_grid(void);
+    void clear_widgets(void);
     
 private:
     class model_truth *element;

@@ -19,9 +19,12 @@ model_truth::model_truth(float _X, float _Y):element(1, 1, "")
 		values[i].resize(inputs + outputs);
 		for (unsigned int j = 0; j < inputs; j ++) {
 			if ( (i >> j) & 1)
-				values[i][j] = '1';
+				values[i][inputs - j - 1] = '1';
 			else
-				values[i][j] = '0';
+				values[i][inputs - j - 1] = '0';
+		}
+		for (unsigned int j = 0; j < outputs; j ++) {
+			values[i][inputs + j] = 'X';
 		}
 	}
 		
@@ -85,9 +88,19 @@ bool model_truth::mouse_select(float _X, float _Y)
 void model_truth::to_json(json & j)
 {
 	element::to_json(j);
+	j["names"] = names;
+	j["values"] = values;
+	j["inputs"] = inputs;
+	j["outputs"] = outputs;
 }
 
 void model_truth::from_json(json & j)
 {
 	element::from_json(j);
+
+	names = j["names"];
+	values = j["values"];	
+	inputs = j["inputs"];
+	outputs = j["outputs"];
+		
 }
