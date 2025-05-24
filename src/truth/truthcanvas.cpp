@@ -53,7 +53,6 @@ void truthcanvas::fill_grid(void)
 	
 	clear_widgets();
 	
-	printf("%i inputs\n", inputs);
 	add_widget(new class button(calcX(inputs-1, inputs), 2, 2.4,1.8, "assets/model_truth/minus.png", ACTION_DEL_INPUT, this));
 	add_widget(new class button(calcX(inputs-1, inputs)+2.5, 2, 2.4,1.8, "assets/model_truth/plus.png", ACTION_ADD_INPUT, this));
 
@@ -77,6 +76,9 @@ void truthcanvas::draw(void)
 			       G(COLOR_BACKGROUND_GRID),
 			       B(COLOR_BACKGROUND_GRID),
 			       Alpha(COLOR_BACKGROUND_GRID));
+			       
+    if (need_fill_grid)
+        fill_grid();
 			       
     SDL_RenderClear(renderer);
     
@@ -179,5 +181,10 @@ void truthcanvas::unhide(void)
 void truthcanvas::add_output(void)
 {
      element->add_output();
-     fill_grid();
+     need_fill_grid = true;
+}
+void truthcanvas::del_output(void)
+{
+     element->del_output();
+     need_fill_grid = true;  /* we can't actually redo the grid since this is called from places inside iterators over the grid */
 }

@@ -36,6 +36,7 @@ void button::select(void)
         canvas->add_output();
         break;
     case ACTION_DEL_OUTPUT:
+        canvas->del_output();
         break;
     }
 }

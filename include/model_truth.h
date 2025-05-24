@@ -22,6 +22,7 @@ public:
     int get_output(void) { return outputs;};
     
     void add_output(void);
+    void del_output(void);
     
 private:
     class truthcanvas *canvas = NULL;

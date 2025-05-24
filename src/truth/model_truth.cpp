@@ -114,8 +114,22 @@ void model_truth::add_output(void)
 		values[y].push_back('X');
 	outputs++;
 	sprintf(buf, "Out%i", outputs -1);
-	names.resize(names.size() + 1);
-	names[names.size()-1] = buf;
+	names.push_back(buf);
+	
+	/* TODO -- spwan a port as well */
+}
+
+void model_truth::del_output(void)
+{
+	unsigned int y;
+	
+	if (outputs <= 1)
+		return;
+	
+	for (y = 0; y < values.size(); y++)
+		values[y].pop_back();
+	outputs--;
+	names.pop_back();
 	
 	/* TODO -- spwan a port as well */
 }

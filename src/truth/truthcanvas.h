@@ -19,10 +19,12 @@ public:
     void clear_widgets(void);
     
     void add_output(void);
+    void del_output(void);
     
 private:
     class model_truth *element;
     std::vector<class widget *> widgets;
+    bool need_fill_grid = false;
     
     int selectX, selectY;
 };
