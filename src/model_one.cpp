@@ -27,14 +27,10 @@ model_one::~model_one(void)
 
 void model_one::drawAt(class canvas *canvas, float X, float Y, int type)
 {
-    if (!visual) {
-        visual = canvas->load_image("assets/one.png");    
-        visual_selected = canvas->load_image("assets/one_base.png");
-    }
-    if (selected && visual_selected) {
-        canvas->draw_image(visual_selected, X, Y, sizeX, sizeY, Alpha(type));
+    if (selected) {
+        canvas->draw_image("assets/one_base.png", X, Y, sizeX, sizeY, Alpha(type));
     } else {	
-        canvas->draw_image(visual, X, Y, sizeX, sizeY, Alpha(type));
+        canvas->draw_image("assets/one.png", X, Y, sizeX, sizeY, Alpha(type));
     }
     
     for (auto port : ports) {

@@ -129,6 +129,11 @@ SDL_Texture * basecanvas::load_image(const char *filename)
 	return IMG_LoadTexture(renderer, filename);
 }
 
+SDL_Texture * basecanvas::load_image(std::string filename)
+{
+	return load_image(filename.c_str());
+}
+
 void basecanvas::draw_image(SDL_Texture *image, float X, float Y, float W, float H, int alpha, bool keep_aspect) 
 {
 	SDL_Rect rect;
@@ -159,6 +164,18 @@ void basecanvas::draw_image(SDL_Texture *image, float X, float Y, float W, float
 	SDL_SetTextureAlphaMod(image, alpha);
 	
 	SDL_RenderCopy(renderer, image, NULL, &rect);
+}
+
+void basecanvas::draw_image(std::string filename, float X, float Y, float W, float H, int alpha, bool keep_aspect) 
+{
+	SDL_Texture *image;
+	if (texture_cache.find(filename) != texture_cache.end()) {
+		image = texture_cache[filename];
+	} else {
+		image = load_image(filename);
+		texture_cache[filename] = image;
+	}
+	draw_image(image, X,Y,W,H,alpha,keep_aspect);
 }
 
 

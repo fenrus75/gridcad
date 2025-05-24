@@ -32,14 +32,10 @@ model_zero::~model_zero(void)
 
 void model_zero::drawAt(class canvas *canvas, float X, float Y, int type)
 {
-    if (!visual) {
-        visual = canvas->load_image("assets/zero.png");    
-        visual_selected = canvas->load_image("assets/zero_base.png");
-    }
-    if (selected && visual_selected) {
-        canvas->draw_image(visual_selected, X, Y, sizeX, sizeY, Alpha(type));
+    if (selected) {
+        canvas->draw_image("assets/zero_base.png", X, Y, sizeX, sizeY, Alpha(type));
     } else {	
-        canvas->draw_image(visual, X, Y, sizeX, sizeY, Alpha(type));
+        canvas->draw_image("assets/zero.png", X, Y, sizeX, sizeY, Alpha(type));
     }
 
     for (auto port : ports) {

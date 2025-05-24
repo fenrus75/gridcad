@@ -9,6 +9,7 @@
 
 #include <vector>
 #include <string>
+#include <map>
 
 #include <nlohmann/json_fwd.hpp>
 using json = nlohmann::json;
@@ -70,7 +71,9 @@ public:
     void draw_shadow_Line(float X1, float Y1, float X2, float Y2, int color);
 
     SDL_Texture *load_image(const char *filename);
+    SDL_Texture *load_image(std::string filename);
     void draw_image(SDL_Texture *image, float X, float Y, float W, float H, int alpha=255, bool keepaspect = false);
+    void draw_image(std::string filename, float X, float Y, float W, float H, int alpha=255, bool keepaspect = false);
     SDL_Texture *text_to_texture(const char *text);
     SDL_Texture *text_to_texture(std::string text);
     void draw_text(std::string text, float X, float Y, float W, float H);
@@ -83,6 +86,7 @@ protected:
     SDL_Renderer *renderer = NULL;
     SDL_Window *window = NULL;
     TTF_Font *font = NULL;
+    std::map<std::string, SDL_Texture *> texture_cache;
 };
 
 /* gui canvas to draw on */
