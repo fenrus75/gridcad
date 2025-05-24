@@ -16,12 +16,12 @@ truthcanvas::truthcanvas(class model_truth *_element)
     windowID = SDL_GetWindowID(window);
 
     for (x = 0; x < element->values[0].size(); x++) 
-        add_widget(new class label(1.1 + x*5, 1.1, 4.8, 1.8, _element->values[0][x].name));    
+        add_widget(new class label(1.1 + x*5, 1.1, 4.8, 1.8, _element->names[x]));    
 
 
-    for (y = 1; y < element->values.size(); y++) {
+    for (y = 0; y < element->values.size(); y++) {
          for (x = 0; x < element->values[y].size(); x++) {
-             add_widget(new class tristate(1.1 + x * 5, 1.1 + y * 2, 4.8, 1.8, &_element->values[y][x], x, y, x < inputs));    
+             add_widget(new class tristate(1.1 + x * 5, 1.1 + (y + 1) * 2, 4.8, 1.8, &_element->values[y][x], x, y, x < inputs));    
          }
     }
     

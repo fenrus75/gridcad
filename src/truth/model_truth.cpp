@@ -14,19 +14,20 @@ model_truth::model_truth(float _X, float _Y):element(1, 1, "")
 	inputs = 2;
 	outputs = 1;
 	
-	values.resize(1 + (1 << inputs)); /* row 0 is the title bar/names */
+	values.resize((1 << inputs)); /* row 0 is the title bar/names */
 	for (i = 0; i < values.size(); i++)
 		values[i].resize(inputs + outputs);
 		
+	names.resize(inputs + outputs);
 	for (i = 0; i < inputs; i++) {
 		char buf[128];
 		sprintf(buf, "In%i", i);
-		values[0][i].name = buf;
+		names[i] = buf;
 	}
 	for (i = 0; i < outputs; i++) {
 		char buf[128];
 		sprintf(buf, "Out%i", i);
-		values[0][inputs + i].name = buf;
+		names[inputs + i] = buf;
 	}
 }
 

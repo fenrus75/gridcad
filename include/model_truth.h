@@ -3,11 +3,6 @@
 #include "gridcad.h"
 
 
-struct truthvalue {
-    unsigned char Token;
-    std::string name;
-};
-
 class model_truth : public element
 {
 public:
@@ -21,7 +16,8 @@ public:
     virtual void to_json(json &j) override;
     virtual void from_json(json &j) override;
     
-    std::vector<std::vector<struct truthvalue>> values;
+    std::vector<std::vector<char>> values;
+    std::vector<std::string> names;
     int get_inputs(void) { return inputs;};
     int get_output(void) { return outputs;};
     
