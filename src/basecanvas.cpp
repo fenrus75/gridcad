@@ -139,6 +139,11 @@ void basecanvas::draw_image(SDL_Texture *image, float X, float Y, float W, float
 	SDL_Rect rect;
 	SDL_Point size;
 	float w, h;
+	
+	if (!image) {
+		printf("Attempting to draw a null texture\n");
+		return;
+	}
 
 	
 	SDL_QueryTexture(image, NULL, NULL, &size.x, &size.y);
@@ -169,6 +174,7 @@ void basecanvas::draw_image(SDL_Texture *image, float X, float Y, float W, float
 void basecanvas::draw_image(std::string filename, float X, float Y, float W, float H, int alpha, bool keep_aspect) 
 {
 	SDL_Texture *image;
+	
 	if (texture_cache.find(filename) != texture_cache.end()) {
 		image = texture_cache[filename];
 	} else {
@@ -213,7 +219,7 @@ void basecanvas::draw_text(std::string text, float X, float Y, float W, float H)
 	}
 		
 	draw_image(texture, X + (W - w)/2, Y + (H - h)/2, w, h); 
-	SDL_DestroyTexture(texture);
+//	SDL_DestroyTexture(texture);
 }
 
 SDL_Texture *basecanvas::text_to_texture(std::string text)
