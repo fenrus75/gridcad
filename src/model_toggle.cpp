@@ -18,17 +18,12 @@ model_toggle::~model_toggle(void)
 
 void model_toggle::drawAt(class canvas *canvas, float X, float Y, int type)
 {
-    if (!visual_on) {
-        visual_on = canvas->load_image("assets/toggle_on.png");    
-        visual_off = canvas->load_image("assets/toggle_off.png");
-        visual_selected = canvas->load_image("assets/toggle_base.png");
-    }
     if (selected) {
-        canvas->draw_image(visual_selected, X, Y, sizeX, sizeY, Alpha(type));
+        canvas->draw_image("assets/toggle_base.png", X, Y, sizeX, sizeY, Alpha(type));
     } else if (value.boolval) {
-        canvas->draw_image(visual_on, X, Y, sizeX, sizeY, Alpha(type));
+        canvas->draw_image("assets/toggle_on.png", X, Y, sizeX, sizeY, Alpha(type));
     } else {	
-        canvas->draw_image(visual_off, X, Y, sizeX, sizeY, Alpha(type));
+        canvas->draw_image("assets/toggle_off.png", X, Y, sizeX, sizeY, Alpha(type));
     }
     
     if (name != "") {

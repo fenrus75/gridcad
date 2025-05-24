@@ -12,7 +12,4 @@ public:
     void fill_grid(class wiregrid* grid) override;
     bool want_deleted(void) override;
 private:
-    SDL_Texture *red = NULL;
-    SDL_Texture *green = NULL;
-    SDL_Texture *open = NULL;
 };

@@ -173,6 +173,9 @@ void basecanvas::draw_image(std::string filename, float X, float Y, float W, flo
 		image = texture_cache[filename];
 	} else {
 		image = load_image(filename);
+		if (!image) {
+			printf("Failure to load %s\n", filename.c_str());
+		}
 		texture_cache[filename] = image;
 	}
 	draw_image(image, X,Y,W,H,alpha,keep_aspect);
@@ -215,7 +218,18 @@ void basecanvas::draw_text(std::string text, float X, float Y, float W, float H)
 
 SDL_Texture *basecanvas::text_to_texture(std::string text)
 {
-	return text_to_texture(text.c_str());
+	SDL_Texture *image;
+	if (text_cache.find(text) != text_cache.end()) {
+		image = text_cache[text];
+	} else {
+		image = text_to_texture(text.c_str());;
+		if (!image) {
+			printf("Failure to render  %s\n", text.c_str());
+		}
+		text_cache[text] = image;
+	}
+	
+	return image;
 }
 
 void basecanvas::draw(void)

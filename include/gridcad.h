@@ -87,6 +87,7 @@ protected:
     SDL_Window *window = NULL;
     TTF_Font *font = NULL;
     std::map<std::string, SDL_Texture *> texture_cache;
+    std::map<std::string, SDL_Texture *> text_cache;
 };
 
 /* gui canvas to draw on */

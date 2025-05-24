@@ -22,17 +22,6 @@ public:
     int get_output(void) { return outputs;};
     
 private:
-    SDL_Texture *visual_lt = NULL;
-    SDL_Texture *visual_mt = NULL;
-    SDL_Texture *visual_rt = NULL;
-    SDL_Texture *visual_lm = NULL;
-    SDL_Texture *visual_mm = NULL;
-    SDL_Texture *visual_rm = NULL;
-    SDL_Texture *visual_lb= NULL;
-    SDL_Texture *visual_mb= NULL;
-    SDL_Texture *visual_rb= NULL;
-    SDL_Texture *visual_text = NULL;
-    SDL_Texture *visual_selected = NULL;
     class truthcanvas *canvas = NULL;
     
     unsigned int inputs = 2;

@@ -16,8 +16,5 @@ public:
     virtual void from_json(json &j) override;
 private:
     struct value value = {};
-    SDL_Texture *visual_off = NULL;
-    SDL_Texture *visual_on = NULL;
-    SDL_Texture *visual_selected = NULL;
 };
 

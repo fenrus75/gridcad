@@ -41,8 +41,4 @@ private:
     void drawConnector(class canvas *canvas, float X, float Y, int cX, int cY, int type);    
     std::vector<class wire*> wires;
     SDL_Texture *label = NULL;
-    SDL_Texture *in_open = NULL;
-    SDL_Texture *in_used = NULL;
-    SDL_Texture *out_green = NULL;
-    SDL_Texture *out_red = NULL;
 };

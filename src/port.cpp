@@ -67,18 +67,6 @@ void port::drawAt(class canvas * canvas, float _X, float _Y, int type)
 	if (!label) {
 		label = canvas->text_to_texture(name);
 	}
-	if (!in_open) {
-		if (bus_width == 1)
-			in_open = canvas->load_image("assets/port_in_open.png");
-		else
-			in_open = canvas->load_image("assets/port_in_open_bus.png");
-	}
-	if (!in_used)
-		in_used = canvas->load_image("assets/port_in_connected.png");
-	if (!out_green)
-		out_green = canvas->load_image("assets/port_out_green.png");
-	if (!out_red)
-		out_red = canvas->load_image("assets/port_out_red.png");
 
         if (type != DRAW_GHOST && type != DRAW_DND)
 		draw_wires(canvas);
@@ -106,14 +94,14 @@ void port::drawConnector(class canvas * canvas, float X, float Y, int cX, int cY
 {
 	if (direction == PORT_IN) {
 		if (wires.size() == 0)
-			canvas->draw_image(in_open, cX + X, cY + Y, 1, 1, Alpha(type));		
+			canvas->draw_image("assets/port_in_open.png", cX + X, cY + Y, 1, 1, Alpha(type));		
 		else
-			canvas->draw_image(in_used, cX + X, cY + Y, 1, 1, Alpha(type));		
+			canvas->draw_image("assets/port_in_connected.png", cX + X, cY + Y, 1, 1, Alpha(type));		
 	} else {
 		if (value.boolval)
-			canvas->draw_image(out_green, cX + X, cY + Y, 1, 1, Alpha(type));		
+			canvas->draw_image("assets/port_out_green.png", cX + X, cY + Y, 1, 1, Alpha(type));		
 		else
-			canvas->draw_image(out_red, cX + X, cY + Y, 1, 1, Alpha(type));		
+			canvas->draw_image("assets/port_out_red.png", cX + X, cY + Y, 1, 1, Alpha(type));		
 	}
 //	canvas->drawCircle(cX + X + 0.5, cY + Y + 0.5, 0.51, type);
 	if (label) {

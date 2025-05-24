@@ -18,17 +18,12 @@ model_output::~model_output(void)
 
 void model_output::drawAt(class canvas *canvas, float X, float Y, int type)
 {
-    if (!visual_on) {
-        visual_on = canvas->load_image("assets/output_on.png");    
-        visual_off = canvas->load_image("assets/output_off.png");
-        visual_selected = canvas->load_image("assets/output_base.png");
-    }
     if (selected) {
-        canvas->draw_image(visual_selected, X, Y, sizeX, sizeY, Alpha(type));
+        canvas->draw_image("assets/output_base.png", X, Y, sizeX, sizeY, Alpha(type));
     } else if (ports[0]->value.boolval) {
-        canvas->draw_image(visual_on, X, Y, sizeX, sizeY, Alpha(type));
+        canvas->draw_image("assets/output_on.png", X, Y, sizeX, sizeY, Alpha(type));
     } else {	
-        canvas->draw_image(visual_off, X, Y, sizeX, sizeY, Alpha(type));
+        canvas->draw_image("assets/output_off.png", X, Y, sizeX, sizeY, Alpha(type));
     }
     if (name != "") {
       canvas->draw_text(name, X, Y + sizeY, sizeX, 1);
