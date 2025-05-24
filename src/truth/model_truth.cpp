@@ -133,3 +133,43 @@ void model_truth::del_output(void)
 	
 	/* TODO -- spwan a port as well */
 }
+
+static bool compare_line(std::vector<char> A, std::vector<char> B)
+{
+	unsigned int x;
+	for (x = 0; x < A.size(); x++) {
+		if (A[x] < B[x])
+			return true;
+		if (A[x] > B[x])
+			return false;
+	}
+	
+	return false;
+}
+
+
+void model_truth::add_input(void)
+{
+	unsigned int y;
+	char buf[128];
+	
+	printf("Adding input\n");
+
+	std::vector<std::vector<char>> values2;	
+	
+	values2 = values;
+	
+	sprintf(buf, "In%i", inputs);
+	names.insert(names.begin() + inputs , buf);
+	for (y = 0; y < values.size(); y++) {
+		values[y].insert(values[y].begin() + inputs , '0');
+		values2[y].insert(values2[y].begin() + inputs , '1');
+	}
+	values.insert(values.end(), values2.begin(), values2.end());
+	inputs++;
+	
+	std::sort(values.begin(), values.end(), compare_line);
+	
+	/* TODO -- spwan a port as well */
+}
+

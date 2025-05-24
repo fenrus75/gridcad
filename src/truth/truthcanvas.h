@@ -20,6 +20,8 @@ public:
     
     void add_output(void);
     void del_output(void);
+    void add_input(void);
+    void del_input(void);
     
 private:
     class model_truth *element;

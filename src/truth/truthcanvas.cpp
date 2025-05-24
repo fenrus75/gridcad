@@ -188,3 +188,8 @@ void truthcanvas::del_output(void)
      element->del_output();
      need_fill_grid = true;  /* we can't actually redo the grid since this is called from places inside iterators over the grid */
 }
+void truthcanvas::add_input(void)
+{
+     element->add_input();
+     need_fill_grid = true;
+}
