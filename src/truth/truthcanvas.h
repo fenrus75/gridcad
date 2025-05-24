@@ -14,6 +14,7 @@ public:
     void add_widget(class widget *widget);
     
     void deselect_all(void);
+    void unhide(void);
     
 private:
     class model_truth *element;

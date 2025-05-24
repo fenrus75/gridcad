@@ -90,6 +90,8 @@ bool model_truth::mouse_select(float _X, float _Y)
 		printf("Spawning a new window\n");
 		canvas = new class truthcanvas(this);
 		register_new_canvas(canvas);	
+	} else {
+		canvas->unhide();
 	}
 	return false;
 }

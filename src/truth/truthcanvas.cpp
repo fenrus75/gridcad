@@ -24,6 +24,7 @@ truthcanvas::truthcanvas(class model_truth *_element)
              add_widget(new class tristate(1.1 + x * 5, 1.1 + (y + 1) * 2, 4.8, 1.8, &_element->values[y][x], x, y, x < inputs));    
          }
     }
+    unhide();
     draw();    
 }
 
@@ -113,10 +114,7 @@ bool truthcanvas::handleEvent(SDL_Event &event)
    
     case SDL_WINDOWEVENT:
          if (event.window.event == SDL_WINDOWEVENT_CLOSE) {  /* user clicked the 'x' */
-              SDL_DestroyWindow(window); /* TODO: THis leaks like a sieve */
-              window = NULL;
-              return true;
-              /* need to unregister from the document side */
+              SDL_HideWindow(window); /* TODO: THis leaks like a sieve */
          }
          break;
     };
@@ -133,4 +131,9 @@ void truthcanvas::deselect_all(void)
 {
     for (auto widget : widgets)
        widget->deselect();
+}
+
+void truthcanvas::unhide(void)
+{
+    SDL_ShowWindow(window);
 }
