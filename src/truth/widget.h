@@ -11,7 +11,7 @@ public:
     virtual void draw(class basecanvas *canvas) = 0;
     virtual void handle_event(SDL_Event &event) = 0;
     
-    void select(void) { _selected = true; };
+    virtual void select(void) { _selected = true; };
     void deselect(void) { _selected = false; };
     bool selected(void) { return _selected; };
     
@@ -48,21 +48,24 @@ public:
 private:
     char *tv = NULL;
     bool is_input;
+    SDL_Texture *one = NULL, *zero = NULL, *dc = NULL;
 };
 
 #define ACTION_ADD_INPUT 1
 #define ACTION_DEL_INPUT 2
 #define ACTION_ADD_OUTPUT 3
-#define ACTIOM_DEL_OUTPUT 4
+#define ACTION_DEL_OUTPUT 4
 
 class button : public widget {
 public:
-    button(float X, float Y, float W, float H, std::string icon, int action);
+    button(float X, float Y, float W, float H, std::string icon, int action, class truthcanvas *canvas);
     virtual ~button(void);
 
     void draw(class basecanvas *canvas) override;
     void handle_event(SDL_Event &event) override;
+    void select(void) override;
 private:
     int action = 0;
     std::string icon = "";
+    class truthcanvas *canvas;
 };

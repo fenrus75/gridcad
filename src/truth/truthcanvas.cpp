@@ -37,20 +37,36 @@ void truthcanvas::clear_widgets(void)
     widgets.clear();
 }
 
+
+static float calcX(int x, int inputs)
+{
+    if (x < inputs)
+        return (1.1 + x * 5);
+    else
+        return (1.4 + x * 5);
+}
+
 void truthcanvas::fill_grid(void)
 {
 	unsigned int x,y;
 	unsigned int inputs = element->get_inputs();
 	
 	clear_widgets();
+	
+	printf("%i inputs\n", inputs);
+	add_widget(new class button(calcX(inputs-1, inputs), 2, 2.4,1.8, "assets/model_truth/minus.png", ACTION_DEL_INPUT, this));
+	add_widget(new class button(calcX(inputs-1, inputs)+2.5, 2, 2.4,1.8, "assets/model_truth/plus.png", ACTION_ADD_INPUT, this));
+
+	add_widget(new class button(calcX(element->values[0].size()-1, inputs), 2, 2.4,1.8, "assets/model_truth/minus.png", ACTION_DEL_OUTPUT, this));
+	add_widget(new class button(calcX(element->values[0].size()-1, inputs)+2.5, 2, 2.4,1.8, "assets/model_truth/plus.png", ACTION_ADD_OUTPUT, this));
 
 	for (x = 0; x < element->names.size(); x++) 
-		add_widget(new class label(1.1 + x*5, 1.1, 4.8, 1.8, element->names[x]));    
+		add_widget(new class label(calcX(x, inputs), 3+1.1, 4.8, 1.8, element->names[x]));    
 
 
 	for (y = 0; y < element->values.size(); y++) {
 		for (x = 0; x < element->values[y].size(); x++) {
-			add_widget(new class tristate(1.1 + x * 5, 1.1 + (y + 1) * 2, 4.8, 1.8, &element->values[y][x], x, y, x < inputs));    
+			add_widget(new class tristate(calcX(x, inputs), 3+1.1 + (y + 1) * 2, 4.8, 1.8, &element->values[y][x], x, y, x < inputs));    
 		}
 	}
 }
@@ -158,4 +174,10 @@ void truthcanvas::deselect_all(void)
 void truthcanvas::unhide(void)
 {
     SDL_ShowWindow(window);
+}
+
+void truthcanvas::add_output(void)
+{
+     element->add_output();
+     fill_grid();
 }

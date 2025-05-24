@@ -18,6 +18,8 @@ public:
     void fill_grid(void);
     void clear_widgets(void);
     
+    void add_output(void);
+    
 private:
     class model_truth *element;
     std::vector<class widget *> widgets;

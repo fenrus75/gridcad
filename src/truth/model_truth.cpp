@@ -104,3 +104,18 @@ void model_truth::from_json(json & j)
 	outputs = j["outputs"];
 		
 }
+
+void model_truth::add_output(void)
+{
+	unsigned int y;
+	char buf[128];
+	
+	for (y = 0; y < values.size(); y++)
+		values[y].push_back('X');
+	outputs++;
+	sprintf(buf, "Out%i", outputs -1);
+	names.resize(names.size() + 1);
+	names[names.size()-1] = buf;
+	
+	/* TODO -- spwan a port as well */
+}
