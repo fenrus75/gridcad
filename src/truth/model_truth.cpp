@@ -15,8 +15,17 @@ model_truth::model_truth(float _X, float _Y):element(1, 1, "")
 	outputs = 1;
 	
 	values.resize((1 << inputs)); /* row 0 is the title bar/names */
-	for (i = 0; i < values.size(); i++)
+	for (i = 0; i < values.size(); i++) {
 		values[i].resize(inputs + outputs);
+		for (unsigned int j = 0; j < inputs; j ++) {
+			if ( (i >> j) & 1)
+				values[i][j] = '1';
+			else
+				values[i][j] = '0';
+		}
+	}
+		
+	
 		
 	names.resize(inputs + outputs);
 	for (i = 0; i < inputs; i++) {

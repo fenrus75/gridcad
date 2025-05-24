@@ -9,7 +9,7 @@ truthcanvas::truthcanvas(class model_truth *_element)
     element = _element;
     unsigned int inputs = element->get_inputs();
 
-    window = SDL_CreateWindow("GridCad Truth Table", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1024, 768, SDL_WINDOW_RESIZABLE);
+    window = SDL_CreateWindow("GridCad Truth Table", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_RESIZABLE);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
@@ -24,7 +24,7 @@ truthcanvas::truthcanvas(class model_truth *_element)
              add_widget(new class tristate(1.1 + x * 5, 1.1 + (y + 1) * 2, 4.8, 1.8, &_element->values[y][x], x, y, x < inputs));    
          }
     }
-    
+    draw();    
 }
 
 
