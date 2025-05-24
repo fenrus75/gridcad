@@ -21,8 +21,9 @@ public:
     virtual void to_json(json &j) override;
     virtual void from_json(json &j) override;
     
-    std::vector<std::vector<struct truthvalue>> invalues;
-    std::vector<std::vector<struct truthvalue>> outvalues;
+    std::vector<std::vector<struct truthvalue>> values;
+    int get_inputs(void) { return inputs;};
+    int get_output(void) { return outputs;};
     
 private:
     SDL_Texture *visual_lt = NULL;

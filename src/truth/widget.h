@@ -39,7 +39,7 @@ private:
 
 class tristate : public widget {
 public:
-    tristate(float X, float Y, float W, float H, struct truthvalue *tv, int x, int y);
+    tristate(float X, float Y, float W, float H, struct truthvalue *tv, int x, int y, bool is_input);
     virtual ~tristate(void);
 
     void draw(class basecanvas *canvas) override;
@@ -47,6 +47,10 @@ public:
     
 private:
     struct truthvalue *tv = NULL;
+    bool is_input;
+    SDL_Texture *tt_one = NULL;
+    SDL_Texture *tt_zero = NULL;
+    SDL_Texture *tt_dc = NULL;
 };
 
 
