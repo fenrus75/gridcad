@@ -193,3 +193,8 @@ void truthcanvas::add_input(void)
      element->add_input();
      need_fill_grid = true;
 }
+void truthcanvas::del_input(void)
+{
+     element->del_input();
+     need_fill_grid = true;
+}

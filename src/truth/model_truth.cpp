@@ -147,6 +147,17 @@ static bool compare_line(std::vector<char> A, std::vector<char> B)
 	return false;
 }
 
+static bool same_inputs(std::vector<char> A, std::vector<char> B, unsigned int inputs)
+{
+	unsigned int x;
+	for (x = 0; x < inputs; x++) {
+		if (A[x] != B[x])
+			return false;
+	}
+	
+	return true;
+}
+
 
 void model_truth::add_input(void)
 {
@@ -169,6 +180,29 @@ void model_truth::add_input(void)
 	inputs++;
 	
 	std::sort(values.begin(), values.end(), compare_line);
+	
+	/* TODO -- spwan a port as well */
+}
+
+void model_truth::del_input(void)
+{
+	unsigned int y;
+	char buf[128];
+	
+	sprintf(buf, "In%i", inputs);
+	names.erase(names.begin() + inputs-1);
+	for (y = 0; y < values.size(); y++) {
+		values[y].erase(values[y].begin() + inputs -1);
+	}
+	inputs--;
+
+	/* we go backwards to avoid O(N^2) operations */	
+	for (y = values.size() -1; y > 0; y--) {
+		if (same_inputs(values[y], values[y-1], inputs)) {
+			values.erase(values.begin() + y);
+		}
+	}
+	
 	
 	/* TODO -- spwan a port as well */
 }
