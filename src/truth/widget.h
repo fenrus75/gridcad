@@ -50,4 +50,19 @@ private:
     bool is_input;
 };
 
+#define ACTION_ADD_INPUT 1
+#define ACTION_DEL_INPUT 2
+#define ACTION_ADD_OUTPUT 3
+#define ACTIOM_DEL_OUTPUT 4
 
+class button : public widget {
+public:
+    button(float X, float Y, float W, float H, std::string icon, int action);
+    virtual ~button(void);
+
+    void draw(class basecanvas *canvas) override;
+    void handle_event(SDL_Event &event) override;
+private:
+    int action = 0;
+    std::string icon = "";
+};
