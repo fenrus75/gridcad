@@ -10,6 +10,7 @@ element::element(int _sizeX, int _sizeY, std::string _name)
     sizeY = _sizeY;
     place(0,0);
     name = _name;
+    uuid = generate_semi_uuid();
 }
 
 element::~element()
@@ -241,6 +242,7 @@ void element::to_json(json &j)
     j["X"] = X;
     j["Y"] = Y;
     j["name"] = name;
+    j["uuid"] = uuid;
     j["ports"] = json::array();
     for (i = 0; i < ports.size(); i++) {
         json p;
@@ -256,6 +258,7 @@ void element::from_json(json &j)
     sizeY = j["sizeY"];
     X = j["X"];
     Y = j["Y"];
+    uuid = j.value("uuid", generate_semi_uuid());
     name = j["name"];
     
     while (ports.size() < j["ports"].size())

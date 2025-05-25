@@ -240,7 +240,7 @@ public:
     virtual void handle_event(SDL_Event &event) {};
     
 protected:
-
+    std::string uuid = "";
     std::string name = "";
     int sizeX = 1;
     int sizeY = 1;
@@ -276,4 +276,5 @@ extern void clear_wire_factory(void);
 extern void register_new_canvas(class basecanvas *canvas);
 extern void labelevent(SDL_Event &event, std::string *text);
 
+extern std::string generate_semi_uuid(void);
 #endif
