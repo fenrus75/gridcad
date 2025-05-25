@@ -11,7 +11,7 @@ label::~label(void)
 {
 }
 
-void label::draw(class basecanvas *canvas)
+void label::draw(class truthcanvas *canvas)
 {
     canvas->draw_text(text, X1, Y1, X2-X1, Y2-Y1);
 }

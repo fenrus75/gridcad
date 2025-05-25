@@ -1,7 +1,7 @@
 #include "gridcad.h"
 #include "truthcanvas.h"
 #include "model_truth.h"
-
+#include <cstdlib>
 
 
 truthcanvas::truthcanvas(class model_truth *_element)
@@ -46,12 +46,67 @@ static float calcX(int x, int inputs)
         return (1.4 + x * 5);
 }
 
+static int hdist(std::vector<char> A, std::vector<char> B)
+{
+	unsigned int x;
+	int dist = 0;
+	
+	for (x = 0; x < A.size(); x++) {
+		if (A[x]=='0' &&  B[x]=='1')
+			dist++;
+		if (A[x]=='1' &&  B[x]=='0')
+			dist++;
+	}
+	
+	return dist;
+}
+
+static int hdist_first(std::vector<char> A, std::vector<char> B)
+{
+	unsigned int x;
+	
+	for (x = 0; x < A.size(); x++) {
+		if (A[x]=='0' &&  B[x]=='1')
+			return x;;
+		if (A[x]=='1' &&  B[x]=='0')
+			return x;
+	}
+	return -1;
+}
+
+void truthcanvas::do_canX(unsigned int Y)
+{
+     unsigned int y;
+     unsigned int x;
+     
+     for (x = 0; x < canX[Y].size(); x++)
+        canX[Y][x] = false;
+     for (y = 0; y < canX.size(); y++) {
+         if (y == Y)
+            continue;
+         if (hdist(element->values[y], element->values[Y]) == 1) {
+            int off = hdist_first(element->values[y], element->values[Y]);
+            if (off >=0)
+                canX[Y][off] = true;
+         }   
+     }
+}
+
 void truthcanvas::fill_grid(void)
 {
 	unsigned int x,y;
 	unsigned int inputs = element->get_inputs();
 	
 	clear_widgets();
+	canX.resize(element->values.size());
+	for (y = 0; y < canX.size(); y++) {
+	  canX[y].resize(element->values[0].size());
+	  for (x = 0; x < canX[y].size(); x++)
+	     canX[y][x] = false;
+        }
+	  
+	  
+         
 	
 	add_widget(new class button(calcX(inputs-1, inputs), 2, 2.4,1.8, "assets/model_truth/minus.png", ACTION_DEL_INPUT, this));
 	add_widget(new class button(calcX(inputs-1, inputs)+2.5, 2, 2.4,1.8, "assets/model_truth/plus.png", ACTION_ADD_INPUT, this));
@@ -79,6 +134,9 @@ void truthcanvas::draw(void)
 			       
     if (need_fill_grid)
         fill_grid();
+        
+    unsigned int row = rand() % canX.size();
+    do_canX(row);
 			       
     SDL_RenderClear(renderer);
     
@@ -98,7 +156,7 @@ bool truthcanvas::handleEvent(SDL_Event &event)
          switch (event.key.keysym.sym) {
 	 case SDLK_UP:
 	       for (auto widget : widgets)
-	          if (widget->get_gridX() == selectX && widget->get_gridY() == selectY-1) {
+	          if (widget->get_gridX() == selectX && widget->get_gridY() == selectY-1 && selectY >= 1) {
                      deselect_all();
                      selectX = widget->get_gridX();
                      selectY = widget->get_gridY();

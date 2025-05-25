@@ -35,39 +35,31 @@ void tristate::handle_event(SDL_Event &event)
 	}
 }
 
-void tristate::draw(class basecanvas *canvas)
+void tristate::draw(class truthcanvas *canvas)
 {
 
-	if (_selected)
+	if (_selected) {
 	        canvas->drawBox(X1 + 0.1, Y1 + 0.1, X2 - 0.1, Y2- 0.1, COLOR_ELEMENT_ORIGIN);
-	else
-	        canvas->drawBox(X1 + 0.1, Y1 + 0.1, X2 - 0.1, Y2- 0.1, COLOR_BACKGROUND_MAIN);
+	} else {
+		if (canvas->is_canX(gridX, gridY))
+		        canvas->drawBox(X1 + 0.1, Y1 + 0.1, X2 - 0.1, Y2- 0.1, COLOR_BACKGROUND_YELLOW);
+		else
+		        canvas->drawBox(X1 + 0.1, Y1 + 0.1, X2 - 0.1, Y2- 0.1, COLOR_BACKGROUND_MAIN);
+	}
 	        
 	if (is_input) {	        
-		if (!zero)
-			zero = canvas->load_image("assets/model_truth/tt_in_zero.png");
-		if (!one)
-			one = canvas->load_image("assets/model_truth/tt_in_one.png");
-		if (!dc)
-			dc = canvas->load_image("assets/model_truth/tt_in_dc.png");
 		if (*tv == '0')
-			canvas->draw_image(zero, X1,Y1, X2-X1, Y2-Y1, 255, true);
+			canvas->draw_image("assets/model_truth/tt_in_zero.png", X1,Y1, X2-X1, Y2-Y1, 255, true);
 		else if (*tv == '1')
-			canvas->draw_image(one, X1,Y1, X2-X1, Y2-Y1, 255, true);
+			canvas->draw_image("assets/model_truth/tt_in_one.png", X1,Y1, X2-X1, Y2-Y1, 255, true);
 		else
-			canvas->draw_image(dc, X1,Y1, X2-X1, Y2-Y1, 255, true);
+			canvas->draw_image("assets/model_truth/tt_in_dc.png", X1,Y1, X2-X1, Y2-Y1, 255, true);
 	} else {
-		if (!zero)
-			zero = canvas->load_image("assets/model_truth/tt_out_zero.png");
-		if (!one)
-			one = canvas->load_image("assets/model_truth/tt_out_one.png");
-		if (!dc)
-			dc = canvas->load_image("assets/model_truth/tt_out_dc.png");
 		if (*tv == '0')
-			canvas->draw_image(zero, X1,Y1, X2-X1, Y2-Y1, 255, true);
+			canvas->draw_image("assets/model_truth/tt_out_zero.png", X1,Y1, X2-X1, Y2-Y1, 255, true);
 		else if (*tv == '1')
-			canvas->draw_image(one, X1,Y1, X2-X1, Y2-Y1, 255, true);
+			canvas->draw_image("assets/model_truth/tt_out_one.png", X1,Y1, X2-X1, Y2-Y1, 255, true);
 		else
-			canvas->draw_image(dc, X1,Y1, X2-X1, Y2-Y1, 255, true);
+			canvas->draw_image("assets/model_truth/tt_out_dc.png", X1,Y1, X2-X1, Y2-Y1, 255, true);
 	}
 }

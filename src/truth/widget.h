@@ -2,13 +2,14 @@
 
 #include "gridcad.h"
 #include "model_truth.h"
+#include "truthcanvas.h"
 
 class widget {
 public:
     widget(float X, float Y, float W, float H);
     virtual ~widget();
     
-    virtual void draw(class basecanvas *canvas) = 0;
+    virtual void draw(class truthcanvas *canvas) = 0;
     virtual void handle_event(SDL_Event &event) = 0;
     
     virtual void select(void) { _selected = true; };
@@ -22,7 +23,7 @@ public:
 protected:
     float X1 = 0.0, Y1 = 0.0, X2 = 0.0, Y2 = 0.0;
     bool _selected = false;
-    int gridX = 0, gridY = 0;
+    int gridX = -5, gridY = -5;
 };
 
 class label : public widget {
@@ -30,7 +31,7 @@ public:
     label(float X, float Y, float W, float H, std::string text);
     virtual ~label(void);
 
-    void draw(class basecanvas *canvas) override;
+    void draw(class truthcanvas *canvas) override;
     void handle_event(SDL_Event &event) override;
     bool intersect(float X, float Y) override { return false;};
 private:
@@ -42,13 +43,12 @@ public:
     tristate(float X, float Y, float W, float H, char *tv, int x, int y, bool is_input);
     virtual ~tristate(void);
 
-    void draw(class basecanvas *canvas) override;
+    void draw(class truthcanvas *canvas) override;
     void handle_event(SDL_Event &event) override;
     
 private:
     char *tv = NULL;
     bool is_input;
-    SDL_Texture *one = NULL, *zero = NULL, *dc = NULL;
 };
 
 #define ACTION_ADD_INPUT 1
@@ -61,7 +61,7 @@ public:
     button(float X, float Y, float W, float H, std::string icon, int action, class truthcanvas *canvas);
     virtual ~button(void);
 
-    void draw(class basecanvas *canvas) override;
+    void draw(class truthcanvas *canvas) override;
     void handle_event(SDL_Event &event) override;
     void select(void) override;
 private:

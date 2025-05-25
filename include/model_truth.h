@@ -2,6 +2,7 @@
 
 #include "gridcad.h"
 
+class truthcanvas;
 
 class model_truth : public element
 {

@@ -14,7 +14,7 @@ button::~button(void)
 }
 
 
-void button::draw(class basecanvas *canvas) 
+void button::draw(class truthcanvas *canvas) 
 {
     canvas->draw_image(icon, X1, Y1, X2-X1, Y2-Y1, 255, true);    
 }

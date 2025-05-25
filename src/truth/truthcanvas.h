@@ -23,12 +23,16 @@ public:
     void add_input(void);
     void del_input(void);
     
+    bool is_canX(int x, int y) {return canX[y][x];};
+    
 private:
     class model_truth *element;
     std::vector<class widget *> widgets;
     bool need_fill_grid = false;
     
     int selectX, selectY;
+    std::vector<std::vector<bool>> canX;
+    void do_canX(unsigned int row);
 };
 
 

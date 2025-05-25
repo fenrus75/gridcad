@@ -30,6 +30,7 @@ using json = nlohmann::json;
 #define COLOR_ERROR_WHITE 11
 #define COLOR_ERROR_BLACK 12
 #define COLOR_AREA_SELECT 13
+#define COLOR_BACKGROUND_YELLOW 14
 
 class element;
 class wire;
