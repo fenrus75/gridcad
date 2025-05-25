@@ -265,7 +265,9 @@ bool canvas::handle_event(SDL_Event &event)
 				}
 				break;
 			case SDLK_g:
-				draw_grid = !draw_grid;
+				if (!someone_in_editmode) {
+					draw_grid = !draw_grid;
+				}
 				break;
 			case SDLK_z:
 				if (event.key.keysym.mod & KMOD_LCTRL) {

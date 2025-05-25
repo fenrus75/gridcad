@@ -141,7 +141,7 @@ void basecanvas::draw_image(SDL_Texture *image, float X, float Y, float W, float
 	float w, h;
 	
 	if (!image) {
-		printf("Attempting to draw a null texture\n");
+//		printf("Attempting to draw a null texture\n");
 		return;
 	}
 

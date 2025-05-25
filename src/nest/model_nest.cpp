@@ -1,7 +1,7 @@
 #include "gridcad.h"
 
 #include "model_nest.h"
-
+#include <sys/time.h>
 
 model_nest::model_nest(float _X, float _Y) : element(_X,_Y, "SubScreen")
 {
@@ -19,8 +19,23 @@ model_nest::~model_nest(void)
 
 void model_nest::drawAt(class canvas *canvas, float X, float Y, int type)
 {
-	canvas->draw_image("assets/nest/nest_back.png", X, Y, sizeX, sizeY, Alpha(type));
-	canvas->draw_image("assets/nest/icon.png", X+0.15, Y+0.15, sizeX-0.3, sizeY-0.3, Alpha(type), true);
+	if (!selected) {
+		canvas->draw_image("assets/nest/nest_back.png", X, Y, sizeX, sizeY, Alpha(type));
+		canvas->draw_image("assets/nest/icon.png", X+0.15, Y+0.15, sizeX-0.3, sizeY-0.3, Alpha(type), true);
+	} else {
+		canvas->draw_image("assets/nest/nest_selected.png", X, Y, sizeX, sizeY, Alpha(type));
+	}
+
+	if (selected && single && edit_mode) {
+          struct timeval tv;
+          gettimeofday(&tv, NULL);
+          if (tv.tv_usec > 500000)
+             canvas->draw_text(name + "|", X, Y + sizeY, sizeX, 1);
+          else
+             canvas->draw_text(name + " ", X, Y + sizeY, sizeX, 1);
+        } else {
+     		 canvas->draw_text(name + " ", X, Y + sizeY, sizeX, 1);
+     	}
 	
 }
 

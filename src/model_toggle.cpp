@@ -38,7 +38,7 @@ void model_toggle::drawAt(class canvas *canvas, float X, float Y, int type)
              canvas->draw_text(name + " ", X, Y + sizeY, sizeX, 1);
       }
       else {
-          canvas->draw_text(name, X, Y + sizeY, sizeX, 1);
+          canvas->draw_text(name + " ", X, Y + sizeY, sizeX, 1);
       }
     }
 //    canvas->draw_circle(X+1.5, Y+1.5, 1.5, COLOR_WIRE_SOLID, value_color(&value));

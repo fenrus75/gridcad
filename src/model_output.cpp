@@ -35,7 +35,7 @@ void model_output::drawAt(class canvas *canvas, float X, float Y, int type)
           else
              canvas->draw_text(name + " ", X, Y + sizeY, sizeX, 1);
     } else {
-      canvas->draw_text(name, X, Y + sizeY, sizeX, 1);
+      canvas->draw_text(name + " ", X, Y + sizeY, sizeX, 1);
     }
 
     for (auto port : ports) {
