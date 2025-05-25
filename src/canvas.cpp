@@ -342,8 +342,11 @@ bool canvas::handle_event(SDL_Event &event)
 					take_undo_snapshot(current_scene);
 					if (!dragging->has_moved())  {
 						printf("Click\n");
-						if (!dragging->mouse_select(x,y))
+						if (!dragging->mouse_select(x,y)) {
 							dragging->select();
+							if (current_scene->selected_count() == 1)
+								dragging->select_single();
+						}
 					}
 					dragging->stop_drag(this);
 					current_scene->rewire_section(dragging);
@@ -548,6 +551,9 @@ bool canvas::handle_event(SDL_Event &event)
 			}
 			break;
 		}
+		
+	for (auto elem : current_scene->elements)
+		elem->handle_event(event);
 	return leave;
 }
 

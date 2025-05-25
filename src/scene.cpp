@@ -154,7 +154,8 @@ void scene::process_delete_requests(void)
 void scene::delete_selection(void)
 {
 	for (auto elem : elements)
-		elem->delete_if_selected();
+	        if (!elem->in_edit_mode())
+			elem->delete_if_selected();
 }
 
 
@@ -184,3 +185,12 @@ void scene::remove_orphans(void)
 		elem->remove_orphans();
 }
 
+unsigned int scene::selected_count(void)
+{
+	unsigned int count = 0;
+	for (auto elem : elements)
+		if (elem->is_selected()) 
+			count++;
+			
+	return count;
+}

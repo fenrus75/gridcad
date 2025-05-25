@@ -172,6 +172,7 @@ public:
     void rewire_section(class element *element);
     void remove_orphans(void);
 
+    unsigned int selected_count(void);
     
 protected:
     
@@ -226,12 +227,18 @@ public:
     void reseat(void);
     virtual void to_json(json& j);
     virtual void from_json(json& j);
-    void select(void) { selected = true; reseat();};
-    void deselect(void) { selected = false;};
+    void select(void) { selected = true; single = false; reseat();};
+    void select_single(void) { selected = true; single = true; reseat();};
+    void deselect(void) { selected = false; single = false;};
     bool is_selected(void) { return selected;};
     virtual bool want_deleted(void);
     void delete_if_selected(void);
     void remove_orphans(void);
+    
+    virtual bool in_edit_mode(void) { return false; };
+    
+    virtual void handle_event(SDL_Event &event) {};
+    
 protected:
 
     std::string name = "";
@@ -246,6 +253,7 @@ protected:
     float Xdnd = 0, Ydnd = 0;
     float X_in_drag = 0, Y_in_drag = 0;
     bool selected = false; /* not saved to disk */
+    bool single = false; /* only selected item in the scene - not saved to disk */
     
     std::vector<class port *> ports;
     
@@ -266,6 +274,6 @@ extern class wire *json_wire_factory(json &jwire);
 extern void clear_wire_factory(void);
 
 extern void register_new_canvas(class basecanvas *canvas);
-
+extern void labelevent(SDL_Event &event, std::string *text);
 
 #endif

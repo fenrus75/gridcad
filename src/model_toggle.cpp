@@ -2,6 +2,8 @@
 #include "model_toggle.h"
 #include "port.h"
 
+#include <sys/time.h>
+
 model_toggle::model_toggle(float _X, float _Y)  : element(1, 1, "Input")
 {
     sizeX = 3;
@@ -27,7 +29,17 @@ void model_toggle::drawAt(class canvas *canvas, float X, float Y, int type)
     }
     
     if (name != "") {
-      canvas->draw_text(name, X, Y + sizeY, sizeX, 1);
+      if (selected && single && edit_mode) {
+          struct timeval tv;
+          gettimeofday(&tv, NULL);
+          if (tv.tv_usec > 500000)
+             canvas->draw_text(name + "|", X, Y + sizeY, sizeX, 1);
+          else
+             canvas->draw_text(name + " ", X, Y + sizeY, sizeX, 1);
+      }
+      else {
+          canvas->draw_text(name, X, Y + sizeY, sizeX, 1);
+      }
     }
 //    canvas->draw_circle(X+1.5, Y+1.5, 1.5, COLOR_WIRE_SOLID, value_color(&value));
     for (auto port : ports) {
@@ -63,4 +75,22 @@ void model_toggle::from_json(json &j)
 {
      element::from_json(j);
      value = j["value"];
+}
+
+
+void model_toggle::handle_event(SDL_Event &event)
+{
+    if (!selected || !single)
+        return;
+    switch (event.type) {
+	case SDL_KEYDOWN:        
+        	switch (event.key.keysym.sym) {
+                case SDLK_RETURN:
+                    edit_mode = !edit_mode;
+                    break;
+                }
+                break;
+        }
+    if (edit_mode)
+      labelevent(event, &name);
 }
