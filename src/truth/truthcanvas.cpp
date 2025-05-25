@@ -140,8 +140,10 @@ void truthcanvas::draw(void)
 			       B(COLOR_BACKGROUND_GRID),
 			       Alpha(COLOR_BACKGROUND_GRID));
 			       
-    if (need_fill_grid)
+    if (need_fill_grid) {
+        need_fill_grid = false;
         fill_grid();
+    }
         
     unsigned int row = rand() % canX.size();
     do_canX(row);

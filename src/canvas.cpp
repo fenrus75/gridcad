@@ -541,6 +541,10 @@ bool canvas::handleEvent(SDL_Event &event)
 				ui_area_rect.h = event.window.data2;
 				icon_bar->resize(ui_area_rect);
 				break;
+			case SDL_WINDOWEVENT_CLOSE:   /* user clicked the 'x' */
+				SDL_HideWindow(window);
+				leave = true;
+				break;
 			}
 			break;
 		}

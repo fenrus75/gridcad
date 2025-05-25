@@ -84,8 +84,7 @@ void document::run(void)
 				if (event.window.windowID == canvas->get_window_ID()) {
 					thisret = canvas->handleEvent(event);
 					if (thisret) {
-						canvases.erase(canvases.begin() + i);
-						if (canvases.size() == 0)
+						if (i == 0)
 							leave = true;
 						break;
 					}
