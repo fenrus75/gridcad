@@ -61,6 +61,12 @@ void label::handle_event(SDL_Event &event)
                     c = '-';
                     *text += c;
                     break;
+                case SDLK_EQUALS:
+                    c= '=';
+                    if (event.key.keysym.mod & (KMOD_LSHIFT))
+                        c = '+';
+                    *text += c;
+                    break;                
                 case SDLK_a:
                 case SDLK_b:
                 case SDLK_c:

@@ -626,6 +626,11 @@ void canvas::draw(void)
 		dragging_wire->draw(this, color);
 	}
 
+	for (auto const elem: current_scene->elements) {
+		if (elem != dragging)
+			elem->draw_phase2(this, DRAW_NORMAL);
+	}
+
 
 	if (in_area_select) {
 		float X1,Y1,X2,Y2;

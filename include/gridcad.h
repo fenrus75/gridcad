@@ -196,6 +196,7 @@ public:
     
     virtual void drawAt(class canvas *canvas, float X, float Y, int type);
     virtual void draw(class canvas *canvas, int type);
+    virtual void draw_phase2(class canvas *canvas, int type);
     
     void start_drag(float X, float Y);
     void update_drag(class canvas *canvas, class scene *scene,  float X, float Y);

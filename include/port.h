@@ -23,6 +23,7 @@ public:
     void draw(class canvas *canvas, int color);
     void draw_wires(class canvas *canva);
     void drawAt(class canvas *canvas, float X, float Y, int color);
+    void drawAt2(class canvas *canvas, float X, float Y, int color);
     void stop_drag(class canvas *canva);
     virtual void notify(int ttl);
     class wire *is_wire(float X, float Y);

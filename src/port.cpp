@@ -73,6 +73,15 @@ void port::drawAt(class canvas * canvas, float _X, float _Y, int type)
 	}
 }
 
+void port::drawAt2(class canvas * canvas, float _X, float _Y, int type)
+{
+	if (direction == PORT_IN) {
+		drawConnector(canvas, _X, _Y, X, Y, COLOR_ELEMENT_CONNECTOR + type);
+	} else { 
+		drawConnector(canvas, _X, _Y, X, Y, value_color(&value));
+	}
+}
+
 void port::draw_wires(class canvas * canvas)
 {
 	for (auto wire : wires) {
@@ -99,7 +108,7 @@ void port::drawConnector(class canvas * canvas, float X, float Y, int cX, int cY
 		else
 			canvas->draw_image("assets/port_out_red.png", cX + X, cY + Y, 1, 1, Alpha(type));		
 	}
-        canvas->draw_text(name, cX + X, cY + Y + 1, 1, 0.3);
+        canvas->draw_text(name, cX + X, cY + Y + 0.35, 1, 0.3);
 }
 
 void port::stop_drag(class canvas *canvas)

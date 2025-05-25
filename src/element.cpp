@@ -66,6 +66,19 @@ void element::draw(class canvas *canvas, int type)
     }
 }
 
+void element::draw_phase2(class canvas *canvas, int type)
+{
+    switch (type) {
+        case DRAW_NORMAL:
+            for (auto port:ports)
+                port->drawAt2(canvas, X, Y, type);
+            break;
+            
+        default:
+            {}        
+    }
+}
+
 void element::start_drag(float _X, float _Y)
 {
     over_drag_threshold = false;
