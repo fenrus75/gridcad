@@ -3,16 +3,23 @@
 #include "port.h"
 #include "truthcanvas.h"
 
+#include <algorithm>
+
 model_truth::model_truth(float _X, float _Y):element(1, 1, "")
 {
 	unsigned int i;
-	sizeX = 8;
+	sizeX = 4;
 	sizeY = 4;
 	X = floorf(_X);
 	Y = floorf(_Y);
 	
 	inputs = 2;
 	outputs = 1;
+	
+	add_port(-1, 1, "In0", PORT_IN);
+	add_port(-1, 2, "In1", PORT_IN);
+	
+	add_port(sizeX, 1, "Out1", PORT_OUT);
 	
 	values.resize((1 << inputs)); /* row 0 is the title bar/names */
 	for (i = 0; i < values.size(); i++) {
@@ -116,12 +123,16 @@ void model_truth::add_output(void)
 	sprintf(buf, "Out%i", outputs -1);
 	names.push_back(buf);
 	
-	/* TODO -- spwan a port as well */
+	add_port(sizeX, outputs, buf);
+	
+	sizeY = std::max(outputs + 2, std::max(inputs + 2, 4U));
+	
 }
 
 void model_truth::del_output(void)
 {
 	unsigned int y;
+	class port *port;
 	
 	if (outputs <= 1)
 		return;
@@ -130,8 +141,12 @@ void model_truth::del_output(void)
 		values[y].pop_back();
 	outputs--;
 	names.pop_back();
+
+	port = ports[ports.size() - 1];
+	ports.pop_back();
+	port->remove_wires();
+	delete port;	
 	
-	/* TODO -- spwan a port as well */
 }
 
 static bool compare_line(std::vector<char> A, std::vector<char> B)
@@ -163,6 +178,7 @@ void model_truth::add_input(void)
 {
 	unsigned int y;
 	char buf[128];
+	class port *_port;
 	
 	printf("Adding input\n");
 
@@ -180,20 +196,34 @@ void model_truth::add_input(void)
 	inputs++;
 	
 	std::sort(values.begin(), values.end(), compare_line);
+
+	_port = new port(buf, PORT_IN);
+        _port->X = -1;
+        _port->Y = inputs;
+        _port->parent = this;
+        ports.insert(ports.begin() + inputs - 1, _port);
+
+	sizeY = std::max(outputs + 2, std::max(inputs + 2, 4U));
 	
-	/* TODO -- spwan a port as well */
 }
 
 void model_truth::del_input(void)
 {
 	unsigned int y;
 	char buf[128];
+	class port *port;
 	
 	sprintf(buf, "In%i", inputs);
 	names.erase(names.begin() + inputs-1);
 	for (y = 0; y < values.size(); y++) {
 		values[y].erase(values[y].begin() + inputs -1);
 	}
+	
+	port = ports[inputs - 1];
+	ports.erase(ports.begin() + inputs - 1);
+	port->remove_wires();
+	delete port;	
+	
 	inputs--;
 
 	/* we go backwards to avoid O(N^2) operations */	
@@ -204,7 +234,6 @@ void model_truth::del_input(void)
 	}
 	
 	
-	/* TODO -- spwan a port as well */
 }
 
 static int hdist(std::vector<char> A, std::vector<char> B)

@@ -245,6 +245,8 @@ void element::from_json(json &j)
     Y = j["Y"];
     name = j["name"];
     
+    while (ports.size() < j["ports"].size())
+        add_port(0,0, "");
     for (i = 0; i < j["ports"].size(); i++) {
         json jj = j["ports"][i];
         ports[i]->from_json(jj);
