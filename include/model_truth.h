@@ -29,10 +29,12 @@ public:
     void del_input(void);
     void calculate(int ttl) override;
     void names_to_ports(void);
+    void handle_event(SDL_Event &event) override;
     
 private:
     class truthcanvas *canvas = NULL;
-    
+
+    bool edit_mode = false;    
     unsigned int inputs = 2;
     unsigned int outputs = 1;
     long int previous_click = -1;

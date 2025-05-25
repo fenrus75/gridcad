@@ -3,9 +3,10 @@
 #include "port.h"
 #include "truthcanvas.h"
 
+#include <sys/time.h>
 #include <algorithm>
 
-model_truth::model_truth(float _X, float _Y):element(1, 1, "")
+model_truth::model_truth(float _X, float _Y):element(1, 1, "Truth Table")
 {
 	unsigned int i;
 	sizeX = 4;
@@ -73,6 +74,16 @@ void model_truth::drawAt(class canvas * canvas, float X, float Y, int type)
 	}
 
 	canvas->draw_image("assets/model_truth/truthtable_text.png", X + 0.2, Y + 0.2, sizeX - 0.4, sizeY - 0.4, Alpha(type), true);
+	if (selected && single && edit_mode) {
+        	struct timeval tv;
+        	gettimeofday(&tv, NULL);
+        	if (tv.tv_usec > 500000)
+        		canvas->draw_text(name + "|", X, Y + sizeY, sizeX, 1);
+	        else
+	        	canvas->draw_text(name + " ", X, Y + sizeY, sizeX, 1);
+	} else {
+		canvas->draw_text(name + " ", X, Y + sizeY, sizeX, 1);
+	}
 
 	for (auto port:ports) {
 		port->drawAt(canvas, X, Y, COLOR_WIRE_SOLID);
@@ -332,4 +343,21 @@ void model_truth::names_to_ports(void)
 	printf("Updating names\n");
 	for (x = 0; x < names.size(); x++)
 		ports[x]->update_name(names[x]);
+}
+
+void model_truth::handle_event(SDL_Event &event)
+{
+    if (!selected || !single)
+        return;
+    switch (event.type) {
+	case SDL_KEYDOWN:        
+        	switch (event.key.keysym.sym) {
+                case SDLK_RETURN:
+                    edit_mode = !edit_mode;
+                    break;
+                }
+                break;
+        }
+    if (edit_mode)
+      labelevent(event, &name);
 }
