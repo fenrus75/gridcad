@@ -236,3 +236,8 @@ void port::remove_orphans(void)
 		wire->remove_if_orphan();
 	}
 }
+
+void port::update_name(std::string newname)
+{
+	name = newname;
+}
