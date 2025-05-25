@@ -2,6 +2,8 @@
 #include "model_output.h"
 #include "port.h"
 
+#include <sys/time.h>
+
 model_output::model_output(float _X, float _Y)  : element(1, 1, "Output")
 {
     sizeX = 3;
@@ -25,7 +27,14 @@ void model_output::drawAt(class canvas *canvas, float X, float Y, int type)
     } else {	
         canvas->draw_image("assets/output_off.png", X, Y, sizeX, sizeY, Alpha(type));
     }
-    if (name != "") {
+    if (selected && single && edit_mode) {
+          struct timeval tv;
+          gettimeofday(&tv, NULL);
+          if (tv.tv_usec > 500000)
+             canvas->draw_text(name + "|", X, Y + sizeY, sizeX, 1);
+          else
+             canvas->draw_text(name + " ", X, Y + sizeY, sizeX, 1);
+    } else {
       canvas->draw_text(name, X, Y + sizeY, sizeX, 1);
     }
 
@@ -44,4 +53,21 @@ void model_output::to_json(json &j)
 void model_output::from_json(json &j)
 {
      element::from_json(j);
+}
+
+void model_output::handle_event(SDL_Event &event)
+{
+    if (!selected || !single)
+        return;
+    switch (event.type) {
+	case SDL_KEYDOWN:        
+        	switch (event.key.keysym.sym) {
+                case SDLK_RETURN:
+                    edit_mode = !edit_mode;
+                    break;
+                }
+                break;
+        }
+    if (edit_mode)
+      labelevent(event, &name);
 }

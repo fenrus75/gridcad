@@ -14,7 +14,11 @@ public:
     void drawAt(class canvas *canvas, float X, float Y, int type) override;
     virtual void to_json(json &j) override;
     virtual void from_json(json &j) override;
+    void handle_event(SDL_Event &event);
+    
+    bool in_edit_mode(void) { return edit_mode && single && selected;};
 private:
     struct value value = {};
+    bool edit_mode = false;
 };
 
