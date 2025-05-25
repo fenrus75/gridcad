@@ -40,7 +40,7 @@ private:
 
 class tristate : public widget {
 public:
-    tristate(float X, float Y, float W, float H, char *tv, int x, int y, bool is_input);
+    tristate(float X, float Y, float W, float H, char *tv, int x, int y, bool is_input, class truthcanvas *canvas);
     virtual ~tristate(void);
 
     void draw(class truthcanvas *canvas) override;
@@ -49,6 +49,7 @@ public:
 private:
     char *tv = NULL;
     bool is_input;
+    class truthcanvas *canvas = NULL;
 };
 
 #define ACTION_ADD_INPUT 1

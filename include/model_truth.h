@@ -21,7 +21,8 @@ public:
     std::vector<std::string> names;
     int get_inputs(void) { return inputs;};
     int get_output(void) { return outputs;};
-    
+    void turn_from_X(unsigned int X, unsigned int Y);    
+    void turn_to_X(unsigned int X, unsigned int Y);
     void add_output(void);
     void del_output(void);
     void add_input(void);

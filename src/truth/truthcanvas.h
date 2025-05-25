@@ -24,6 +24,9 @@ public:
     void del_input(void);
     
     bool is_canX(int x, int y) {return canX[y][x];};
+    void clear_canX(void);
+    void turn_from_X(unsigned int X, unsigned int Y);
+    void turn_to_X(unsigned int X, unsigned int Y);
     
 private:
     class model_truth *element;

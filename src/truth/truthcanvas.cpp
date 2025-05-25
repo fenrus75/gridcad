@@ -74,20 +74,28 @@ static int hdist_first(std::vector<char> A, std::vector<char> B)
 	return -1;
 }
 
-void truthcanvas::do_canX(unsigned int Y)
+void truthcanvas::clear_canX(void)
 {
      unsigned int y;
      unsigned int x;
-     
-     for (x = 0; x < canX[Y].size(); x++)
-        canX[Y][x] = false;
+     for (y = 0; y < canX.size(); y++)     
+         for (x = 0; x < canX[y].size(); x++)
+            canX[y][x] = false;
+}
+
+void truthcanvas::do_canX(unsigned int Y)
+{
+     unsigned int y;
+
      for (y = 0; y < canX.size(); y++) {
          if (y == Y)
             continue;
          if (hdist(element->values[y], element->values[Y]) == 1) {
             int off = hdist_first(element->values[y], element->values[Y]);
-            if (off >=0)
+            if (off >=0) {
                 canX[Y][off] = true;
+                canX[y][off] = true;
+            }
          }   
      }
 }
@@ -120,7 +128,7 @@ void truthcanvas::fill_grid(void)
 
 	for (y = 0; y < element->values.size(); y++) {
 		for (x = 0; x < element->values[y].size(); x++) {
-			add_widget(new class tristate(calcX(x, inputs), 3+1.1 + (y + 1) * 2, 4.8, 1.8, &element->values[y][x], x, y, x < inputs));    
+			add_widget(new class tristate(calcX(x, inputs), 3+1.1 + (y + 1) * 2, 4.8, 1.8, &element->values[y][x], x, y, x < inputs, this));    
 		}
 	}
 }
@@ -254,5 +262,17 @@ void truthcanvas::add_input(void)
 void truthcanvas::del_input(void)
 {
      element->del_input();
+     need_fill_grid = true;
+}
+
+void truthcanvas::turn_from_X(unsigned int X, unsigned int Y)
+{
+     element->turn_from_X(X,Y);
+     need_fill_grid = true;
+}
+
+void truthcanvas::turn_to_X(unsigned int X, unsigned int Y)
+{
+     element->turn_to_X(X,Y);
      need_fill_grid = true;
 }

@@ -24,7 +24,7 @@ model_truth::model_truth(float _X, float _Y):element(1, 1, "")
 				values[i][inputs - j - 1] = '0';
 		}
 		for (unsigned int j = 0; j < outputs; j ++) {
-			values[i][inputs + j] = 'X';
+			values[i][inputs + j] = '0';
 		}
 	}
 		
@@ -111,7 +111,7 @@ void model_truth::add_output(void)
 	char buf[128];
 	
 	for (y = 0; y < values.size(); y++)
-		values[y].push_back('X');
+		values[y].push_back('0');
 	outputs++;
 	sprintf(buf, "Out%i", outputs -1);
 	names.push_back(buf);
@@ -207,3 +207,50 @@ void model_truth::del_input(void)
 	/* TODO -- spwan a port as well */
 }
 
+static int hdist(std::vector<char> A, std::vector<char> B)
+{
+	unsigned int x;
+	int dist = 0;
+	
+	for (x = 0; x < A.size(); x++) {
+		if (A[x]=='0' &&  B[x]=='1')
+			dist++;
+		if (A[x]=='1' &&  B[x]=='0')
+			dist++;
+	}
+	
+	return dist;
+}
+
+
+void model_truth::turn_to_X(unsigned int X, unsigned int Y)
+{
+	unsigned int y;
+	
+	if (values[Y][X] == 'X')
+		return;
+
+	values[Y][X] = 'X';
+	/* at this point there is another line that has a hamming distance of 0 -- which we need to delete */
+	for (y = 0; y < values[Y].size(); y++) {
+		if (y == Y)
+			continue;
+		if (hdist(values[y], values[Y]) == 0) {
+			values.erase(values.begin() + y);
+			break;
+		}
+	}	
+}
+void model_truth::turn_from_X(unsigned int X, unsigned int Y)
+{
+	std::vector<char> line;
+	
+	if (values[Y][X] != 'X')
+		return;
+	
+	values[Y][X] = '0';
+	line = values[Y];
+	line[X] = '1';
+	values.push_back(line);
+	std::sort(values.begin(), values.end(), compare_line);	
+}

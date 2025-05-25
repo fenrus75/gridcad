@@ -2,12 +2,13 @@
 #include "widget.h"
 
 
-tristate::tristate(float X, float Y, float W, float H, char *_tv, int _gridX, int _gridY, bool _is_input) : widget(X,Y,W,H)
+tristate::tristate(float X, float Y, float W, float H, char *_tv, int _gridX, int _gridY, bool _is_input, class truthcanvas *_canvas) : widget(X,Y,W,H)
 {
 	tv = _tv;
 	gridX = _gridX;
 	gridY = _gridY;
 	is_input = _is_input;
+	canvas = _canvas;
 }
 
 tristate::~tristate(void)
@@ -22,13 +23,30 @@ void tristate::handle_event(SDL_Event &event)
 	case SDL_KEYDOWN:
         	switch (event.key.keysym.sym) {
 		case SDLK_0:
-			*tv = '0';
+			canvas->clear_canX();
+			if (is_input) {
+				if (*tv == 'X')
+					canvas->turn_from_X(gridX, gridY);
+			} else {
+				*tv = '0';
+			}
 			break;	
 		case SDLK_1:
-			*tv = '1';
+			canvas->clear_canX();
+			if (is_input) {
+				if (*tv == 'X')
+					canvas->turn_from_X(gridX, gridY);
+			} else {
+				*tv = '1';
+			}
 			break;	
 		case SDLK_x:
-			*tv = 'X';
+			canvas->clear_canX();
+			if (is_input) {
+				canvas->turn_to_X(gridX, gridY);
+			} else {
+				*tv = 'X';
+			}
 			break;	
 		}
 	break;
