@@ -190,6 +190,10 @@ bool canvas::handle_event_iconarea(SDL_Event &event)
 bool canvas::handle_event(SDL_Event &event)
 {
 	bool leave = false;
+	bool someone_in_editmode = false;
+	for (auto elem : current_scene->elements)
+		if (elem->in_edit_mode())
+		   someone_in_editmode = true;
 	switch (event.type) {
 		case SDL_QUIT:
 			printf("QUIT\n");
@@ -226,15 +230,19 @@ bool canvas::handle_event(SDL_Event &event)
 			case SDLK_PLUS:
 			case SDLK_KP_PLUS:
 			case SDLK_EQUALS:
-				scaleX++;
-				scaleY++;
+				if (!someone_in_editmode) {
+					scaleX++;
+					scaleY++;
+				}
 				break;
 			case SDLK_MINUS:
 			case SDLK_KP_MINUS:
-				if (scaleX > 1)
-					scaleX--;
-				if (scaleY > 1)
-					scaleY--;
+				if (!someone_in_editmode) {
+					if (scaleX > 1)
+						scaleX--;
+					if (scaleY > 1)
+						scaleY--;
+				}
 				break;
 			case SDLK_ESCAPE:
 				floating.clear();
@@ -244,15 +252,17 @@ bool canvas::handle_event(SDL_Event &event)
 				current_scene->deselect_all();
 				break;
 			case SDLK_BACKSPACE:
-				take_undo_snapshot(current_scene);
-				if (hover_wire) {
-					hover_wire->remove();
-					delete hover_wire;
-					hover_wire = NULL;
+				if (!someone_in_editmode) {
+					take_undo_snapshot(current_scene);
+					if (hover_wire) {
+						hover_wire->remove();
+						delete hover_wire;
+						hover_wire = NULL;
+					}
+					current_scene->delete_selection();
+					current_scene->process_delete_requests();
+					current_scene->remove_orphans();
 				}
-				current_scene->delete_selection();
-				current_scene->process_delete_requests();
-				current_scene->remove_orphans();
 				break;
 			case SDLK_g:
 				draw_grid = !draw_grid;
