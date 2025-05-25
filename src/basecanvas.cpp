@@ -33,7 +33,7 @@ float basecanvas::scr_to_Y(int Y)
 	return Y / scaleY + offsetY;
 }
 
-void basecanvas::drawBox(float X1, float Y1, float X2, float Y2, int color, int alpha)
+void basecanvas::draw_box(float X1, float Y1, float X2, float Y2, int color, int alpha)
 {
 	int x1, y1, x2, y2;
 
@@ -68,7 +68,7 @@ void basecanvas::drawBox(float X1, float Y1, float X2, float Y2, int color, int 
 	SDL_RenderFillRect(renderer, &rect);
 }
 
-void basecanvas::drawLine(float X1, float Y1, float X2, float Y2, int color)
+void basecanvas::draw_line(float X1, float Y1, float X2, float Y2, int color)
 {
 	/* TODO: clip boxes that are fully outside of the visible window */
 
@@ -91,7 +91,7 @@ void basecanvas::draw_shadow_Line(float X1, float Y1, float X2, float Y2, int co
 		      64);
 }
 
-void basecanvas::drawCircle(float X, float Y, float _R, int color, int color2)
+void basecanvas::draw_circle(float X, float Y, float _R, int color, int color2)
 {
 	int x1, y1;
 
@@ -107,7 +107,7 @@ void basecanvas::drawCircle(float X, float Y, float _R, int color, int color2)
 			 G(color), B(color), Alpha(color));
 
 }
-void basecanvas::drawCircle2(float X, float Y, float _R, int color, int color2)
+void basecanvas::draw_circle2(float X, float Y, float _R, int color, int color2)
 {
 	int x1, y1;
 
@@ -242,7 +242,7 @@ void basecanvas::draw(void)
 {
 }
 
-bool basecanvas::handleEvent(SDL_Event &event)
+bool basecanvas::handle_event(SDL_Event &event)
 {
 	return false;
 }

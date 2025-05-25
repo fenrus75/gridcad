@@ -289,8 +289,6 @@ void model_truth::calculate(int ttl)
 	std::vector<char> inp;
 	unsigned int x, y;
 	
-	printf("Truth calculate\n");
-	
 	if (ttl < 1)
 		return;
 		
@@ -304,18 +302,14 @@ void model_truth::calculate(int ttl)
 	
 	for (y = 0; y < values.size(); y++) {
 		if (hdist(inp, values[y]) == 0) {
-			printf("Found a match at line %i \n", y);
 			for (x = 0; x < outputs; x++) {
 				struct value value = {};
 				value.valid = true;
 				value.boolval = values[y][inputs + x] == '1';
-				printf("port %i -> %c\n", x, values[y][inputs + x]);
 //				ports[inputs + x]->value.boolval = values[y][inputs + x] == '1';
 				//ports[inputs + x]->value.valid = true;
 //				ports[inputs + x]->notify(ttl - 1);
 				ports[inputs + x]->update_value(&value, ttl-1);
-				if (ports[inputs + x]->value.boolval)
-					printf("%i on\n", x);
 			}
 		}
 		

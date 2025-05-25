@@ -30,9 +30,9 @@ void element::drawAt(class canvas *canvas, float X, float Y, int type)
 {
     assert (type <= DRAW_ORIGIN);
     
-    canvas->drawBox(X + 1, Y + 1, X + sizeX , Y + sizeY , COLOR_ELEMENT_NORMAL + type);
+    canvas->draw_box(X + 1, Y + 1, X + sizeX , Y + sizeY , COLOR_ELEMENT_NORMAL + type);
     if (type == DRAW_NORMAL || type == DRAW_ORIGIN)
-        canvas->drawBox(X + 1.2, Y + 1.2, X + sizeX - 0.2, Y + sizeY - 0.2, COLOR_ELEMENT_INSIDE);
+        canvas->draw_box(X + 1.2, Y + 1.2, X + sizeX - 0.2, Y + sizeY - 0.2, COLOR_ELEMENT_INSIDE);
     
     /* TODO: real connectors */
     for (auto port: ports) {

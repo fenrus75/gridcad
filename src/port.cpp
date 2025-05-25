@@ -103,7 +103,7 @@ void port::drawConnector(class canvas * canvas, float X, float Y, int cX, int cY
 		else
 			canvas->draw_image("assets/port_out_red.png", cX + X, cY + Y, 1, 1, Alpha(type));		
 	}
-//	canvas->drawCircle(cX + X + 0.5, cY + Y + 0.5, 0.51, type);
+//	canvas->draw_circle(cX + X + 0.5, cY + Y + 0.5, 0.51, type);
 	if (label) {
 		double w,h;
 		SDL_Point size;

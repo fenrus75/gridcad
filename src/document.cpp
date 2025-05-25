@@ -82,7 +82,7 @@ void document::run(void)
 				auto canvas = canvases[i];
 				bool thisret = false;
 				if (event.window.windowID == canvas->get_window_ID()) {
-					thisret = canvas->handleEvent(event);
+					thisret = canvas->handle_event(event);
 					if (thisret) {
 						if (i == 0)
 							leave = true;

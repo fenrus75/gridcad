@@ -10,7 +10,7 @@ public:
     truthcanvas(class model_truth *element);
     virtual ~truthcanvas();
     void draw(void) override;
-    bool handleEvent(SDL_Event &event) override;
+    bool handle_event(SDL_Event &event) override;
     void add_widget(class widget *widget);
     
     void deselect_all(void);

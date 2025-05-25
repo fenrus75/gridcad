@@ -60,12 +60,12 @@ void tristate::draw(class truthcanvas *canvas)
 {
 
 	if (_selected) {
-	        canvas->drawBox(X1 + 0.1, Y1 + 0.1, X2 - 0.1, Y2- 0.1, COLOR_ELEMENT_ORIGIN);
+	        canvas->draw_box(X1 + 0.1, Y1 + 0.1, X2 - 0.1, Y2- 0.1, COLOR_ELEMENT_ORIGIN);
 	} else {
 		if (canvas->is_canX(gridX, gridY))
-		        canvas->drawBox(X1 + 0.1, Y1 + 0.1, X2 - 0.1, Y2- 0.1, COLOR_BACKGROUND_YELLOW);
+		        canvas->draw_box(X1 + 0.1, Y1 + 0.1, X2 - 0.1, Y2- 0.1, COLOR_BACKGROUND_YELLOW);
 		else
-		        canvas->drawBox(X1 + 0.1, Y1 + 0.1, X2 - 0.1, Y2- 0.1, COLOR_BACKGROUND_MAIN);
+		        canvas->draw_box(X1 + 0.1, Y1 + 0.1, X2 - 0.1, Y2- 0.1, COLOR_BACKGROUND_MAIN);
 	}
 	        
 	if (is_input) {	        

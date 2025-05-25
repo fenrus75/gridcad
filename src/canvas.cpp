@@ -56,7 +56,7 @@ canvas::~canvas(void)
 	SDL_DestroyWindow(window);
 }
 
-bool canvas::handleEvent_drawingarea(SDL_Event &event)
+bool canvas::handle_event_drawingarea(SDL_Event &event)
 {
 	bool freshsplit = false;
 	if (!shift_down)
@@ -160,7 +160,7 @@ bool canvas::handleEvent_drawingarea(SDL_Event &event)
 	return false;
 }
 
-bool canvas::handleEvent_iconarea(SDL_Event &event)
+bool canvas::handle_event_iconarea(SDL_Event &event)
 {
 	class icon *this_icon;
 	this_icon = icon_bar->current_icon(event.motion.x, event.motion.y);
@@ -187,7 +187,7 @@ bool canvas::handleEvent_iconarea(SDL_Event &event)
 }
 
 
-bool canvas::handleEvent(SDL_Event &event)
+bool canvas::handle_event(SDL_Event &event)
 {
 	bool leave = false;
 	switch (event.type) {
@@ -321,9 +321,9 @@ bool canvas::handleEvent(SDL_Event &event)
 			break;
 		case SDL_MOUSEBUTTONDOWN:
 			if (event.motion.x < main_area_rect.w) 
-				canvas::handleEvent_drawingarea(event);
+				canvas::handle_event_drawingarea(event);
 			else
-				canvas::handleEvent_iconarea(event);
+				canvas::handle_event_iconarea(event);
 			break;
 		case SDL_MOUSEBUTTONUP:
 			if (event.button.button == SDL_BUTTON_LEFT) {
@@ -568,7 +568,7 @@ void canvas::draw(void)
 	while (Y < current_scene->sizeY) {
 		X = 0;
 		while (X < current_scene->sizeX) {
-			drawBox(X + 0.2, Y + 0.2, X + 9.8, Y + 9.8,
+			draw_box(X + 0.2, Y + 0.2, X + 9.8, Y + 9.8,
 				COLOR_BACKGROUND_MAIN);
 			X = X + 10;
 		}
@@ -585,13 +585,13 @@ void canvas::draw(void)
 			for (x = 0; x < current_scene->sizeX ; x++) {
 				float c = grid->get_soft_cost(x, y);
 				if (c > 0.01) {
-					drawBox(x + 0.1, y + 0.1, x + 0.9, y + 0.9, COLOR_ELEMENT_GHOST, 64 * c);
+					draw_box(x + 0.1, y + 0.1, x + 0.9, y + 0.9, COLOR_ELEMENT_GHOST, 64 * c);
 				}
 				if (grid->is_blocked(x,y)) {
-					drawBox(x + 0.1, y + 0.1, x + 0.9, y + 0.9, COLOR_ELEMENT_DND);
+					draw_box(x + 0.1, y + 0.1, x + 0.9, y + 0.9, COLOR_ELEMENT_DND);
 				} 
 //				if (current_scene->is_port(x,y)) {
-//					drawCircle(x + 0.5, y + 0.5, 2, COLOR_VALUE_RED);
+//					draw_circle(x + 0.5, y + 0.5, 2, COLOR_VALUE_RED);
 //				}
 			}
 		

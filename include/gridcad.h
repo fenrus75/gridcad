@@ -54,7 +54,7 @@ class basecanvas
 public:
     basecanvas(void);
     virtual ~basecanvas(void);
-    virtual bool handleEvent(SDL_Event &event) = 0;
+    virtual bool handle_event(SDL_Event &event) = 0;
     virtual void draw(void) = 0;
     unsigned int get_window_ID(void) { return windowID;};
 
@@ -65,10 +65,10 @@ public:
     float scr_to_Y(int Y);
     
 
-    void drawBox(float X1, float Y1, float X2, float Y2, int color, int alpha = -1);
-    void drawCircle(float X, float Y, float R, int color, int color2=COLOR_BACKGROUND_MAIN);
-    void drawCircle2(float X, float Y, float R, int color, int color2=COLOR_BACKGROUND_MAIN);
-    void drawLine(float X1, float Y1, float X2, float Y2, int color);
+    void draw_box(float X1, float Y1, float X2, float Y2, int color, int alpha = -1);
+    void draw_circle(float X, float Y, float R, int color, int color2=COLOR_BACKGROUND_MAIN);
+    void draw_circle2(float X, float Y, float R, int color, int color2=COLOR_BACKGROUND_MAIN);
+    void draw_line(float X1, float Y1, float X2, float Y2, int color);
     void draw_shadow_Line(float X1, float Y1, float X2, float Y2, int color);
 
     SDL_Texture *load_image(const char *filename);
@@ -102,7 +102,7 @@ public:
     
     class scene *get_scene(void) { return current_scene; };
     class scene *swap_scene(class scene *scene);
-    bool handleEvent(SDL_Event &event) override;
+    bool handle_event(SDL_Event &event) override;
     
 
     void to_json(json& j);
@@ -131,8 +131,8 @@ protected:
     float area_select_X1 = 0.0, area_select_Y1 = 0.0;
     SDL_Texture *area_select_texture = NULL;
 
-    bool handleEvent_iconarea(SDL_Event &event);
-    bool handleEvent_drawingarea(SDL_Event &event);
+    bool handle_event_iconarea(SDL_Event &event);
+    bool handle_event_drawingarea(SDL_Event &event);
     
 };
 
