@@ -35,13 +35,9 @@ void element::drawAt(class canvas *canvas, float X, float Y, int type)
     if (type == DRAW_NORMAL || type == DRAW_ORIGIN)
         canvas->draw_box(X + 1.2, Y + 1.2, X + sizeX - 0.2, Y + sizeY - 0.2, COLOR_ELEMENT_INSIDE);
     
-    /* TODO: real connectors */
     for (auto port: ports) {
         port->drawAt(canvas, X, Y, type);
     }
-//    for (auto wire : wires) {
-//       wire->draw(scene);
-//    }
 }
 
 
@@ -268,9 +264,6 @@ void element::from_json(json &j)
         ports[i]->from_json(jj);
     }
     reseat();
-    /* TODO
-    name = strdup(j["name"]);    
-    */
 }
 
 bool element::want_deleted(void)
