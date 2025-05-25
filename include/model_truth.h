@@ -35,5 +35,6 @@ private:
     
     unsigned int inputs = 2;
     unsigned int outputs = 1;
+    long int previous_click = -1;
     
 };

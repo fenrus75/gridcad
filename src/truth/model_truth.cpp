@@ -80,8 +80,16 @@ void model_truth::drawAt(class canvas * canvas, float X, float Y, int type)
 	}
 }
 
+
 bool model_truth::mouse_select(float _X, float _Y)
 {
+	long int click = time(NULL);
+
+	if (click - previous_click > 1) {
+		previous_click = click;
+		return false;
+	}	
+	
 	if (!canvas) {
 		printf("Spawning a new window\n");
 		canvas = new class truthcanvas(this);
@@ -89,6 +97,7 @@ bool model_truth::mouse_select(float _X, float _Y)
 	} else {
 		canvas->unhide();
 	}
+	previous_click = click;
 	return false;
 }
 
