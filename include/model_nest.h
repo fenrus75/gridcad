@@ -14,10 +14,10 @@ public:
 
     void drawAt(class canvas *canvas, float X, float Y, int type) override;
     bool mouse_select(float X, float Y) override;
-/*
-    virtual void to_json(json &j) override;
-    virtual void from_json(json &j) override;
-    */
+
+    void to_json(json &j) override;
+    void from_json(json &j) override;
+
     void calculate(int ttl) override;
     void handle_event(SDL_Event&) override;
     bool in_edit_mode(void) override { return edit_mode && single && selected;};    

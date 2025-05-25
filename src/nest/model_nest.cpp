@@ -2,6 +2,7 @@
 
 #include "model_nest.h"
 #include <sys/time.h>
+#include <nlohmann/json.hpp>
 
 model_nest::model_nest(float _X, float _Y) : element(_X,_Y, "SubScreen")
 {
@@ -81,4 +82,17 @@ void model_nest::handle_event(SDL_Event &event)
         }
     if (edit_mode)
       labelevent(event, &name);
+}
+
+void model_nest::to_json(json &j)
+{
+     json p;
+     element::to_json(j);
+     _scene->to_json(p);
+     j["scene"] = p;   
+}
+void model_nest::from_json(json &j)
+{
+     element::from_json(j);
+     _scene->from_json(j["scene"]);
 }
