@@ -123,7 +123,7 @@ void truthcanvas::fill_grid(void)
 	add_widget(new class button(calcX(element->values[0].size()-1, inputs)+2.5, 2, 2.4,1.8, "assets/model_truth/plus.png", ACTION_ADD_OUTPUT, this));
 
 	for (x = 0; x < element->names.size(); x++) 
-		add_widget(new class label(calcX(x, inputs), 3+1.1, 4.8, 1.8, element->names[x]));    
+		add_widget(new class label(calcX(x, inputs), 3+1.1, 4.8, 1.8, &element->names[x]));    
 
 
 	for (y = 0; y < element->values.size(); y++) {
@@ -160,6 +160,10 @@ bool truthcanvas::handle_event(SDL_Event &event)
 {
     for (auto widget : widgets)
         widget->handle_event(event);
+        
+    if (event.type == SDL_KEYDOWN) {
+         element->names_to_ports();
+    }
         
     switch (event.type) {
     case SDL_KEYDOWN:

@@ -64,10 +64,6 @@ void port::update_value(struct value *newvalue, int ttl)
 
 void port::drawAt(class canvas * canvas, float _X, float _Y, int type)
 {
-	if (!label) {
-		label = canvas->text_to_texture(name);
-	}
-
         if (type != DRAW_GHOST && type != DRAW_DND)
 		draw_wires(canvas);
 	if (direction == PORT_IN) {
@@ -103,17 +99,7 @@ void port::drawConnector(class canvas * canvas, float X, float Y, int cX, int cY
 		else
 			canvas->draw_image("assets/port_out_red.png", cX + X, cY + Y, 1, 1, Alpha(type));		
 	}
-//	canvas->draw_circle(cX + X + 0.5, cY + Y + 0.5, 0.51, type);
-	if (label) {
-		double w,h;
-		SDL_Point size;
-		SDL_QueryTexture(label, NULL, NULL, &size.x, &size.y);
-		
-		h = 0.3;
-		w = size.x / size.y * h;
-		
-		canvas->draw_image(label, cX + X + (1 - w)/2, cY + Y + 1, w, h); 
-	}
+        canvas->draw_text(name, cX + X, cY + Y + 1, 1, 0.3);
 }
 
 void port::stop_drag(class canvas *canvas)
@@ -240,4 +226,5 @@ void port::remove_orphans(void)
 void port::update_name(std::string newname)
 {
 	name = newname;
+	printf("port new name is %s\n", name.c_str());
 }

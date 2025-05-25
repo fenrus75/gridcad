@@ -41,5 +41,4 @@ private:
     int bus_width = 1;
     void drawConnector(class canvas *canvas, float X, float Y, int cX, int cY, int type);    
     std::vector<class wire*> wires;
-    SDL_Texture *label = NULL;
 };

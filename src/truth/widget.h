@@ -28,14 +28,14 @@ protected:
 
 class label : public widget {
 public:
-    label(float X, float Y, float W, float H, std::string text);
+    label(float X, float Y, float W, float H, std::string *text);
     virtual ~label(void);
 
     void draw(class truthcanvas *canvas) override;
     void handle_event(SDL_Event &event) override;
-    bool intersect(float X, float Y) override { return false;};
+//    bool intersect(float X, float Y) override { return false;};
 private:
-    std::string text;
+    std::string *text = NULL;
 };
 
 class tristate : public widget {

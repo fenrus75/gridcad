@@ -28,6 +28,7 @@ public:
     void add_input(void);
     void del_input(void);
     void calculate(int ttl) override;
+    void names_to_ports(void);
     
 private:
     class truthcanvas *canvas = NULL;
