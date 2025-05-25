@@ -123,7 +123,7 @@ void model_truth::add_output(void)
 	sprintf(buf, "Out%i", outputs -1);
 	names.push_back(buf);
 	
-	add_port(sizeX, outputs, buf);
+	add_port(sizeX, outputs, buf, PORT_OUT);
 	
 	sizeY = std::max(outputs + 2, std::max(inputs + 2, 4U));
 	
@@ -282,4 +282,42 @@ void model_truth::turn_from_X(unsigned int X, unsigned int Y)
 	line[X] = '1';
 	values.push_back(line);
 	std::sort(values.begin(), values.end(), compare_line);	
+}
+
+void model_truth::calculate(int ttl)
+{
+	std::vector<char> inp;
+	unsigned int x, y;
+	
+	printf("Truth calculate\n");
+	
+	if (ttl < 1)
+		return;
+		
+	inp.resize(inputs);
+	for (x = 0; x < inputs; x++) {
+		if (ports[x]->value.boolval)
+			inp[x] = '1';
+		else
+			inp[x] = '0';
+	}
+	
+	for (y = 0; y < values.size(); y++) {
+		if (hdist(inp, values[y]) == 0) {
+			printf("Found a match at line %i \n", y);
+			for (x = 0; x < outputs; x++) {
+				struct value value = {};
+				value.valid = true;
+				value.boolval = values[y][inputs + x] == '1';
+				printf("port %i -> %c\n", x, values[y][inputs + x]);
+//				ports[inputs + x]->value.boolval = values[y][inputs + x] == '1';
+				//ports[inputs + x]->value.valid = true;
+//				ports[inputs + x]->notify(ttl - 1);
+				ports[inputs + x]->update_value(&value, ttl-1);
+				if (ports[inputs + x]->value.boolval)
+					printf("%i on\n", x);
+			}
+		}
+		
+	}
 }

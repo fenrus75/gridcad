@@ -158,11 +158,11 @@ void wire::route(class scene *scene)
     scene->fill_grid(grid);
     
     points = grid->path_walk(X1, Y1, X2, Y2);
-    printf("Walk is %i %i -> %i %i \n", X1, Y1, X2, Y2);
-    for (auto p: *points) {
-        printf("X, Y : %i, %i\n", p.X, p.Y);
-    }
-    printf("----\n");
+//    printf("Walk is %i %i -> %i %i \n", X1, Y1, X2, Y2);
+//    for (auto p: *points) {
+//        printf("X, Y : %i, %i\n", p.X, p.Y);
+//    }
+//    printf("----\n");
     delete(grid);
 
     for (auto port : ports) {

@@ -29,6 +29,7 @@ void tristate::handle_event(SDL_Event &event)
 					canvas->turn_from_X(gridX, gridY);
 			} else {
 				*tv = '0';
+				canvas->values_changed();
 			}
 			break;	
 		case SDLK_1:
@@ -38,6 +39,7 @@ void tristate::handle_event(SDL_Event &event)
 					canvas->turn_from_X(gridX, gridY);
 			} else {
 				*tv = '1';
+				canvas->values_changed();
 			}
 			break;	
 		case SDLK_x:
@@ -46,6 +48,7 @@ void tristate::handle_event(SDL_Event &event)
 				canvas->turn_to_X(gridX, gridY);
 			} else {
 				*tv = 'X';
+				canvas->values_changed();
 			}
 			break;	
 		}

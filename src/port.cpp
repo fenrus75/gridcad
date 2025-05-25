@@ -55,8 +55,8 @@ void port::update_value(struct value *newvalue, int ttl)
 		wire->update_value(newvalue, ttl -1);
 	}
 	
-	notify(ttl -1);
-	if (parent)
+//	notify(ttl -1);
+	if (parent && direction != PORT_OUT)
 		parent->notify(ttl -1);
 }
 

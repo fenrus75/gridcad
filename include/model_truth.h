@@ -27,6 +27,7 @@ public:
     void del_output(void);
     void add_input(void);
     void del_input(void);
+    void calculate(int ttl) override;
     
 private:
     class truthcanvas *canvas = NULL;

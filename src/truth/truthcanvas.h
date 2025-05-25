@@ -27,6 +27,7 @@ public:
     void clear_canX(void);
     void turn_from_X(unsigned int X, unsigned int Y);
     void turn_to_X(unsigned int X, unsigned int Y);
+    void values_changed(void);
     
 private:
     class model_truth *element;

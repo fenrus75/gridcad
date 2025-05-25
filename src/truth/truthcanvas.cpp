@@ -250,31 +250,42 @@ void truthcanvas::add_output(void)
 {
      element->add_output();
      need_fill_grid = true;
+     element->calculate(20);
 }
 void truthcanvas::del_output(void)
 {
      element->del_output();
      need_fill_grid = true;  /* we can't actually redo the grid since this is called from places inside iterators over the grid */
+     element->calculate(20);
 }
 void truthcanvas::add_input(void)
 {
      element->add_input();
      need_fill_grid = true;
+     element->calculate(20);
 }
 void truthcanvas::del_input(void)
 {
      element->del_input();
      need_fill_grid = true;
+     element->calculate(20);
 }
 
 void truthcanvas::turn_from_X(unsigned int X, unsigned int Y)
 {
      element->turn_from_X(X,Y);
      need_fill_grid = true;
+     element->calculate(20);
 }
 
 void truthcanvas::turn_to_X(unsigned int X, unsigned int Y)
 {
      element->turn_to_X(X,Y);
      need_fill_grid = true;
+     element->calculate(20);
+}
+
+void truthcanvas::values_changed(void)
+{
+     element->calculate(20);
 }
