@@ -38,8 +38,10 @@ public:
     void remove_orphans(void);
     int get_bus_width(void) { return bus_width; };
     void update_name(std::string newname);
+    void link_uuid(std::string _uuid);
 private:
     int bus_width = 1;
     void drawConnector(class canvas *canvas, float X, float Y, int cX, int cY, int type);    
     std::vector<class wire*> wires;
+    std::string linked_uuid = "";
 };

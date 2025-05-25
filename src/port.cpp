@@ -180,6 +180,7 @@ void port::to_json(json &j)
 	j["value"] = value;
 	j["direction"] = direction;
 	j["bus_width"] = bus_width;
+	j["linked_uuid"] = linked_uuid;
 	
 	j["wires"] = json::array();
 	for (i = 0; i < wires.size(); i++) {
@@ -200,6 +201,7 @@ void port::from_json(json &j)
 	value = j["value"];
 	direction = j["direction"];
 	bus_width = j.value("bus_width", 1);
+	linked_uuid = j.value("linked_uuid", "");
 	for (i = 0; i < j["wires"].size(); i++) {
 		class wire *wire;
 		wire = json_wire_factory(j["wires"][i]);
@@ -236,4 +238,9 @@ void port::update_name(std::string newname)
 {
 	name = newname;
 	printf("port new name is %s\n", name.c_str());
+}
+
+void port::link_uuid(std::string _uuid)
+{
+	linked_uuid = _uuid;
 }
