@@ -51,11 +51,13 @@ void label::handle_event(SDL_Event &event)
                     c = '_';
                     *text += c;
                     break;
-                case SDLK_PLUS:                
+                case SDLK_PLUS:   
+                case SDLK_KP_PLUS:             
                     c = '+';
                     *text += c;
                     break;
                 case SDLK_MINUS:                
+                case SDLK_KP_MINUS:
                     c = '-';
                     *text += c;
                     break;
