@@ -78,6 +78,7 @@ public:
     SDL_Texture *text_to_texture(const char *text);
     SDL_Texture *text_to_texture(std::string text);
     void draw_text(std::string text, float X, float Y, float W, float H);
+    void unhide(void);
 
 protected:
     float offsetX = 0.0;

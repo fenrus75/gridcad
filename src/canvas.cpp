@@ -756,3 +756,4 @@ void canvas::from_json_to_floating(json &j)
 	wire_factory_force_new_name = saved;
 
 }
+

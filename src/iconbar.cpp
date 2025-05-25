@@ -11,6 +11,7 @@
 #include "model_zero.h"
 #include "model_output.h"
 #include "model_truth.h"
+#include "model_nest.h"
 
 #include <SDL2/SDL_image.h>
 
@@ -34,7 +35,8 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
     icons[0][4] = new icon(renderer, ICON_XOR);
     icons[0][5] = new icon(renderer, ICON_TOGGLE);
     icons[1][5] = new icon(renderer, ICON_OUTPUT);
-    icons[1][1] = new icon(renderer, ICON_TRUTH);
+    icons[1][6] = new icon(renderer, ICON_TRUTH);
+    icons[0][6] = new icon(renderer, ICON_NEST);
 }
 
 iconbar::~iconbar(void)
@@ -117,6 +119,7 @@ static const char *image_names[] =
  "assets/output_on.png",
  "assets/xorgate.png",
  "assets/model_truth/truthtable_icon.png",
+ "assets/nest/nest_icon.png"
 };
 
 icon::icon(SDL_Renderer *renderer, int _type)
@@ -194,6 +197,8 @@ class element * icon::create_element(void)
               return new model_output(-10, -10);
           case ICON_TRUTH:
               return new model_truth(-10, -10);
+          case ICON_NEST:
+              return new model_nest(-10, -10);
           default:
              return NULL;
      }

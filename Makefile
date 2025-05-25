@@ -1,18 +1,22 @@
 all: gridcad subdirs
 
 
+#LTO :=
+LTO := -flto=4
+
 SUBDIRS := fonts
 
+NEST := src/nest/model_nest.o
 TRUTH := src/truth/model_truth.o src/truth/truthcanvas.o src/truth/widget.o src/truth/label.o src/truth/tristate.o src/truth/button.o
-MODELS :=  src/model_logic2.o src/model_nand.o src/model_and.o src/model_not.o src/model_toggle.o src/model_nor.o src/model_or.o src/model_output.o src/model_xor.o  $(TRUTH)
+MODELS :=  src/model_logic2.o src/model_nand.o src/model_and.o src/model_not.o src/model_toggle.o src/model_nor.o src/model_or.o src/model_output.o src/model_xor.o  $(TRUTH) $(NEST)
 OBJS := src/main.o src/document.o src/canvas.o src/scene.o src/color.o src/element.o src/wire.o src/connector.o src/port.o src/model_zero.o src/model_one.o src/iconbar.o lib/wirepath.o src/factory.o src/basecanvas.o $(MODELS) src/event.o src/uuid.o
 
 gridcad: $(OBJS) include/gridcad.h Makefile Makefile.deps
-	g++ $(CFLAGS) -O3 -Wall -march=native $(OBJS) -flto=4 -o gridcad -lSDL2_image -lSDL2_gfx -lSDL2_ttf -lSDL2 
+	g++ $(CFLAGS) -O3 -Wall -march=native $(OBJS) $(LTO) -o gridcad -lSDL2_image -lSDL2_gfx -lSDL2_ttf -lSDL2 
 	
 	
 wiretest: $(OBJS) include/gridcad.h Makefile test/wiretest.o
-	g++ $(CFLAGS) -O3 -Wall -march=native lib/wirepath.o test/wiretest.o -flto -g -o wiretest -lSDL2_image -lSDL2_gfx -lSDL2_ttf -lSDL2 
+	g++ $(CFLAGS) -O3 -Wall -march=native lib/wirepath.o test/wiretest.o $(LTO) -g -o wiretest -lSDL2_image -lSDL2_gfx -lSDL2_ttf -lSDL2 
 	
 .cpp.o:
 	g++ $(CXXFLAGS) -fvisibility=hidden -Iinclude/ -O3 -Wall -march=native -flto -g -c $< -o $@

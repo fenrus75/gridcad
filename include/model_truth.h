@@ -30,7 +30,7 @@ public:
     void calculate(int ttl) override;
     void names_to_ports(void);
     void handle_event(SDL_Event &event) override;
-    
+    bool in_edit_mode(void) override { return edit_mode && single && selected;};    
 private:
     class truthcanvas *canvas = NULL;
 

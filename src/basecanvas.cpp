@@ -246,3 +246,8 @@ bool basecanvas::handle_event(SDL_Event &event)
 {
 	return false;
 }
+
+void basecanvas::unhide(void)
+{
+	SDL_ShowWindow(window);
+}
