@@ -107,6 +107,47 @@ void model_nest::from_json(json &j)
      	canvas->get_scene()->from_json(j["scene"]);
 }
 
+static bool compare_north(class port *A, class port *B)
+{
+	if (A->get_linked_element()->get_X() < B->get_linked_element()->get_X())
+		return true;
+	if (A->get_linked_element()->get_X() > B->get_linked_element()->get_X())
+		return false;
+	if (A->get_linked_element()->get_Y() < B->get_linked_element()->get_Y())
+		return true;
+	return false;
+}
+static bool compare_south(class port *A, class port *B)
+{
+	if (A->get_linked_element()->get_X() < B->get_linked_element()->get_X())
+		return true;
+	if (A->get_linked_element()->get_X() > B->get_linked_element()->get_X())
+		return false;
+	if (A->get_linked_element()->get_Y() > B->get_linked_element()->get_Y())
+		return true;
+	return false;
+}
+static bool compare_west(class port *A, class port *B)
+{
+	if (A->get_linked_element()->get_Y() < B->get_linked_element()->get_Y())
+		return true;
+	if (A->get_linked_element()->get_Y() > B->get_linked_element()->get_Y())
+		return false;
+	if (A->get_linked_element()->get_X() < B->get_linked_element()->get_X())
+		return true;
+	return false;
+}
+static bool compare_east(class port *A, class port *B)
+{
+	if (A->get_linked_element()->get_Y() < B->get_linked_element()->get_Y())
+		return true;
+	if (A->get_linked_element()->get_Y() > B->get_linked_element()->get_Y())
+		return false;
+	if (A->get_linked_element()->get_X() > B->get_linked_element()->get_X())
+		return true;
+	return false;
+}
+
 void model_nest::regen_ports(void)
 {
 	north.clear();
@@ -193,6 +234,11 @@ void model_nest::regen_ports(void)
 	
 	sizeX = std::max(west.size() + 2U, std::max(east.size() + 2, 4UL));	
 	sizeY = std::max(north.size() + 2U, std::max(south.size() + 2, 4UL));
+	
+	std::sort(north.begin(), north.end(), compare_north);
+	std::sort(south.begin(), south.end(), compare_south);
+	std::sort(east.begin(), east.end(), compare_east);
+	std::sort(west.begin(), west.end(), compare_west);
 	
 	for (unsigned int i = 0; i < north.size(); i++) {
 		north[i]->X = i + 1;
