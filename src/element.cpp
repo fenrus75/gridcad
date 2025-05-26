@@ -290,3 +290,9 @@ void element::remove_orphans(void)
 		port->remove_orphans();
 	}	
 }
+
+/* needed for cut-and-paste so that pasted elements have unique UUIDs */
+void element::reset_uuid(void)
+{
+    uuid = generate_semi_uuid();
+}

@@ -4,10 +4,12 @@
 #include "wire.h"
 
 
-scene::scene(void)
+scene::scene(std::string _name, std::string _parent)
 {
 	sizeX = 200;
 	sizeY = 200;
+	name = name;
+	parental_name = _parent;
 }
 
 scene::~scene(void)
@@ -190,3 +192,4 @@ unsigned int scene::selected_count(void)
 			
 	return count;
 }
+

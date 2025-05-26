@@ -27,7 +27,7 @@ document::document(std::string _name)
 	TTF_Init();
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2");
 
-	_scene = new scene();
+	_scene = new scene("main");
 
 	_canvas = new canvas(_scene);
 

@@ -110,6 +110,8 @@ public:
     class scene *get_undo(void);
     void take_undo_snapshot(class scene *scene);
     void from_json_to_floating(json &j);
+    
+    void update_window_title(void);
          
 protected:
     bool draw_grid = false;
@@ -141,7 +143,7 @@ protected:
 class scene : public base
 {
 public:
-    scene(void);
+    scene(std::string name, std::string parent = "");
     virtual ~scene(void);
     
     virtual std::string class_id(void) { return "scene:";};
@@ -175,8 +177,13 @@ public:
 
     unsigned int selected_count(void);
     
-protected:
+    std::string get_name(void) { return name; };
+    std::string get_full_name(void) { return parental_name + "/" + name;};
+    void update_name(std::string _name) { name = _name;};
     
+protected:
+    std::string name = "";
+    std::string parental_name = "";    
 };
 
 
@@ -241,6 +248,7 @@ public:
     virtual void handle_event(SDL_Event &event) {};
     
     std::string get_uuid(void) { return uuid;};
+    void reset_uuid(void);
     
 protected:
     std::string uuid = "";

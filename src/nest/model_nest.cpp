@@ -14,7 +14,7 @@ model_nest::model_nest(float _X, float _Y) : element(_X,_Y, "SubScreen")
 	sizeY = 4;
 	X = floorf(_X);
 	Y = floorf(_Y);    
-	_scene = new class scene();
+	_scene = new class scene(name);
 }
 
 model_nest::~model_nest(void)
@@ -183,6 +183,10 @@ void model_nest::regen_ports(void)
 	/* refresh the scene from the canvas -- undo can have replaced it */
 	if (canvas)
 		_scene = canvas->get_scene();
+		
+	_scene->update_name(name);
+	if (canvas)
+		canvas->update_window_title();
 		
 	bX1 = 60000000;
 	bX2 = -1000;

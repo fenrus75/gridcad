@@ -21,8 +21,11 @@ static std::string clipboard;
 
 canvas::canvas(class scene *_scene)
 {
+	std::string s;
+	
+	s = "GridCad " + _scene->get_full_name();
 	window =
-		SDL_CreateWindow("GridCad", SDL_WINDOWPOS_UNDEFINED,
+		SDL_CreateWindow(s.c_str(), SDL_WINDOWPOS_UNDEFINED,
 				SDL_WINDOWPOS_UNDEFINED, 1024, 768, SDL_WINDOW_RESIZABLE);
 //	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
@@ -138,6 +141,7 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 		if (floating.size() > 0) {
 			take_undo_snapshot(current_scene);
 			for (auto flt : floating) {
+				flt->reset_uuid();
 				current_scene->add_element(flt);
 				flt->stop_drag(this);
 				flt->reseat();
@@ -732,7 +736,7 @@ class scene *canvas::get_undo(void)
 	if (undo_list.size() == 0)
 		return NULL;
 
-	scene = new class scene();
+	scene = new class scene(current_scene->get_name());
 	s = undo_list[undo_list.size() -1];
 
 	undo_list.pop_back();
@@ -761,3 +765,11 @@ void canvas::from_json_to_floating(json &j)
 
 }
 
+
+void canvas::update_window_title(void)
+{
+	std::string s;
+	
+	s = "GridCad " + _scene->get_full_name();
+	SDL_SetWindowTitle(window, s.c_str());
+}
