@@ -15,6 +15,7 @@ public:
     virtual void to_json(json &j) override;
     virtual void from_json(json &j) override;
     void handle_event(SDL_Event &event);
+    struct value get_value(void);
     
     bool in_edit_mode(void) override { return edit_mode && single && selected;};
 private:

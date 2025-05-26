@@ -71,3 +71,8 @@ void model_output::handle_event(SDL_Event &event)
     if (edit_mode)
       labelevent(event, &name);
 }
+
+struct value model_output::get_value(void)
+{
+    return ports[0]->value;
+}

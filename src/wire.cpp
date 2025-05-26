@@ -398,6 +398,8 @@ void wire::fill_grid(class wiregrid *grid)
 
 void wire::remove_if_orphan(void)
 {
-	if (ports.size() < 2)
+	if (ports.size() < 2) {
+	        printf("Removing orphan\n");
 		remove();
+        }
 }

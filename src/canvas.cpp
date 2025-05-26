@@ -726,6 +726,8 @@ class scene *canvas::get_undo(void)
 	class scene *scene;
 	std::string s;
 	json J;
+	
+	clear_wire_factory();
 
 	if (undo_list.size() == 0)
 		return NULL;

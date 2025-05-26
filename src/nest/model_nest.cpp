@@ -1,6 +1,8 @@
 #include "gridcad.h"
 
 #include "model_nest.h"
+#include "model_toggle.h"
+#include "model_output.h"
 #include "port.h"
 #include <algorithm>
 #include <sys/time.h>
@@ -45,6 +47,25 @@ void model_nest::drawAt(class canvas *canvas, float X, float Y, int type)
 
 void model_nest::calculate(int ttl)
 {
+	for (auto port: ports) {
+		if (port->direction == PORT_IN) {
+			class model_toggle *tog;
+			tog = (class model_toggle *)port->get_linked_element();
+			if (tog)
+				tog->update_value(&(port->value), ttl-1);
+		}
+	}
+	for (auto port: ports) {
+		if (port->direction == PORT_OUT) {
+			class model_output *tog;
+			struct value val;
+			tog = (class model_output *)port->get_linked_element();
+			if (tog) {
+				val = tog->get_value();
+				port->update_value(&val, ttl-1);
+			}
+		}
+	}
 }
 
 
@@ -209,6 +230,7 @@ void model_nest::regen_ports(void)
 			}
 		}
 		if (!found) {
+			printf("Adding new port \n");
 			class port *_port;
 			int direction = PORT_IN;
 			if (elem->class_id() == "model_output:")
