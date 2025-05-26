@@ -72,7 +72,7 @@ void document::run(void)
 		canvas->draw();
 
 	while (!leave) {
-		ret = SDL_PollEvent(&event);
+		ret = SDL_WaitEventTimeout(&event, 5);
 
 		if (event.type == SDL_QUIT)
 			leave = true;

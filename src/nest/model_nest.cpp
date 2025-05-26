@@ -1,6 +1,8 @@
 #include "gridcad.h"
 
 #include "model_nest.h"
+#include "port.h"
+#include <algorithm>
 #include <sys/time.h>
 #include <nlohmann/json.hpp>
 
@@ -10,7 +12,7 @@ model_nest::model_nest(float _X, float _Y) : element(_X,_Y, "SubScreen")
 	sizeY = 4;
 	X = floorf(_X);
 	Y = floorf(_Y);    
-	_scene = new scene();
+	_scene = new class scene();
 }
 
 model_nest::~model_nest(void)
@@ -49,6 +51,8 @@ void model_nest::calculate(int ttl)
 bool model_nest::mouse_select(float _X, float _Y)
 {
 	long int click = time(NULL);
+	
+	regen_ports();
 
 	if (click - previous_click > 1) {
 		previous_click = click;
@@ -88,11 +92,182 @@ void model_nest::to_json(json &j)
 {
      json p;
      element::to_json(j);
-     _scene->to_json(p);
+     if (!canvas)
+	     _scene->to_json(p);
+     else
+     		canvas->get_scene()->to_json(p);
      j["scene"] = p;   
 }
 void model_nest::from_json(json &j)
 {
      element::from_json(j);
-     _scene->from_json(j["scene"]);
+     if (!canvas)
+	     _scene->from_json(j["scene"]);
+     else
+     	canvas->get_scene()->from_json(j["scene"]);
+}
+
+void model_nest::regen_ports(void)
+{
+	north.clear();
+	south.clear();
+	east.clear();
+	west.clear();
+	
+	printf("regen_ports\n");
+	
+	/* refresh the scene from the canvas -- undo can have replaced it */
+	if (canvas)
+		_scene = canvas->get_scene();
+		
+	bX1 = 60000000;
+	bX2 = -1000;
+	bY1 = 60000000;
+	bY2 = -10000;
+	
+	for (auto elem : _scene->elements) {
+		if (bX1 > elem->get_X())
+			bX1 = elem->get_X();
+		if (bX2 < elem->get_X())
+			bX2 = elem->get_X();
+		if (bY1 > elem->get_Y())
+			bY1 = elem->get_Y();
+		if (bY2 < elem->get_Y())
+			bY2 = elem->get_Y();
+			
+	}
+	
+	/* slightly enlarge the bounding box -- makes a lot of math easier */
+	bX2 += 0.1;
+	bY2 += 0.1;
+	bX1 -= 0.1;
+	bY1 -= 0.1;
+	
+	/* approach: walk the list of all elements in the scene, find matched uuid pairs
+	   from our port list .. if no match, create a new port.
+	   Move the found/new port into one of the four wind directions.
+	   At the end, what's left in the port list is extra and goes away
+	 */
+	for (auto elem : _scene->elements) {
+		bool found = false;
+		if (elem->class_id() != "model_toggle:" && elem->class_id() != "model_output:") {
+			continue;
+		}
+			
+		for (unsigned int i = 0; i < ports.size(); i++) {
+			class port *_port = ports[i];
+			if (elem->get_uuid() == _port->get_linked_uuid()) {
+				_port->set_linked_element(elem);
+				_port->update_name(elem->get_name());
+				place_port(_port);
+				ports.erase(ports.begin() + i);
+				found = true;
+				break;
+			}
+		}
+		if (!found) {
+			class port *_port;
+			int direction = PORT_IN;
+			if (elem->class_id() == "model_output:")
+				direction = PORT_OUT;
+			_port = new port(elem->get_name(), direction);
+			_port->X = 0;
+			_port->Y = 0;;
+			_port->parent = this;
+			_port->value.boolval = {};	
+			_port->set_linked_element(elem);
+			_port->link_uuid(elem->get_uuid());
+			place_port(_port);
+		}
+		
+	}
+	
+	/* what is left needs to go away */
+	while (ports.size() > 0) {
+		class port *_port;
+		_port = ports[0];
+		_port->remove_wires();
+		ports.erase(ports.begin());
+		delete _port;
+	}
+	
+	sizeX = std::max(west.size() + 2U, std::max(east.size() + 2, 4UL));	
+	sizeY = std::max(north.size() + 2U, std::max(south.size() + 2, 4UL));
+	
+	for (unsigned int i = 0; i < north.size(); i++) {
+		north[i]->X = i + 1;
+		north[i]->Y = -1;
+	}
+	for (unsigned int i = 0; i < south.size(); i++) {
+		south[i]->X = i + 1;
+		south[i]->Y = sizeX;
+	}
+	for (unsigned int i = 0; i < west.size(); i++) {
+		west[i]->X = -1;
+		west[i]->Y = i + 1;
+	}
+	for (unsigned int i = 0; i < east.size(); i++) {
+		east[i]->X = sizeX;
+		east[i]->Y = i + 1;
+	}
+
+	
+	
+	
+	ports.insert(ports.end(), north.begin(), north.end());
+	ports.insert(ports.end(), south.begin(), south.end());
+	ports.insert(ports.end(), east.begin(), east.end());
+	ports.insert(ports.end(), west.begin(), west.end());
+}
+
+static float dist(float X1, float Y1, float X2, float Y2)
+{
+	return sqrtf( (X2-X1)*(X2-X1) + (Y2-Y1)*(Y2-Y1));
+}
+
+void model_nest::place_port(class port *port)
+{
+	float rX, rY;
+	float dN,dS,dE,dW;
+	
+	rX = (port->get_linked_element()->get_X() - bX1) / (bX2 - bX1);
+	rY = (port->get_linked_element()->get_Y() - bY1) / (bY2 - bY1);
+	
+	/* first, the easy cases: at or too near the border */
+	if (rX < 0.05) {
+		west.push_back(port);
+		return;
+	}
+	if (rX > 0.95) {
+		east.push_back(port);
+		return;
+	}
+	if (rY < 0.05) {
+		north.push_back(port);
+		return;
+	}
+	if (rY > 0.95) {
+		south.push_back(port);
+		return;
+	}
+
+	/* then -- just pick the nearest based on the mid points of the edges of the relative square */
+	dW = dist(0,0.5, rX, rY);
+	dE = dist(1,0.5, rX, rY);
+	dN = dist(0.5,0, rX, rY);
+	dS = dist(0.5,1, rX, rY);
+	
+	if (dW <= dE && dW <= dN && dW <= dS) {
+		west.push_back(port);
+		return;
+	}
+	if (dE <= dN && dE <= dS) {
+		east.push_back(port);
+		return;
+	}
+	if (dN <= dS) {
+		north.push_back(port);
+		return;
+	}
+	south.push_back(port);	
 }

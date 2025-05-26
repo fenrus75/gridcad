@@ -114,7 +114,7 @@ public:
 protected:
     bool draw_grid = false;
     bool window_shown = true;
-    class scene *current_scene;
+    class scene *current_scene = NULL;
     SDL_Rect main_area_rect, ui_area_rect;
     class element *dragging = NULL;
     std::vector<class element *> floating;
@@ -239,6 +239,8 @@ public:
     virtual bool in_edit_mode(void) { return false; };
     
     virtual void handle_event(SDL_Event &event) {};
+    
+    std::string get_uuid(void) { return uuid;};
     
 protected:
     std::string uuid = "";

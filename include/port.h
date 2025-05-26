@@ -39,9 +39,13 @@ public:
     int get_bus_width(void) { return bus_width; };
     void update_name(std::string newname);
     void link_uuid(std::string _uuid);
+    std::string get_linked_uuid(void) { return linked_uuid; };
+    void set_linked_element(class element* elem) { linked_element = elem; };
+    class element *get_linked_element(void) { return linked_element; };
 private:
     int bus_width = 1;
     void drawConnector(class canvas *canvas, float X, float Y, int cX, int cY, int type);    
     std::vector<class wire*> wires;
     std::string linked_uuid = "";
+    class element *linked_element = NULL;
 };

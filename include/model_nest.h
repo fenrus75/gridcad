@@ -21,9 +21,14 @@ public:
     void calculate(int ttl) override;
     void handle_event(SDL_Event&) override;
     bool in_edit_mode(void) override { return edit_mode && single && selected;};    
+    void regen_ports(void);
 private:
-    class canvas *canvas = NULL;
-    long int previous_click = -1; 
+
+    float bX1,bY1,bX2,bY2; /* bounding box of the scene -- no save*/
     class scene *_scene = NULL;
-    bool edit_mode = NULL;
+    class canvas *canvas = NULL;
+    long int previous_click = -1;  /* no save */
+    bool edit_mode = NULL; /* no save */
+    std::vector<class port *> north, south, east, west; /* nosave */
+    void place_port(class port *port);
 };
