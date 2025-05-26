@@ -38,6 +38,8 @@ public:
     void from_json(json &j);
     void set_new_name(void);
     
+    bool is_empty(void) { return ports.size() == 0; };
+    
 protected:
     bool selected = false;
     bool being_routed = false; /* not saved in json */

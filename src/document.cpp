@@ -60,6 +60,7 @@ document::~document(void)
 
 	TTF_Quit();
 	SDL_Quit();
+	delete _canvas;
 }
 
 void document::run(void)

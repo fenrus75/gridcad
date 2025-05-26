@@ -14,6 +14,9 @@ scene::scene(std::string _name, std::string _parent)
 
 scene::~scene(void)
 {
+	for (auto elem: elements) {
+		delete elem;
+	}
 }
 
 

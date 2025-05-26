@@ -19,6 +19,8 @@ model_nest::model_nest(float _X, float _Y) : element(_X,_Y, "SubScreen")
 
 model_nest::~model_nest(void)
 {
+	if (canvas)
+		delete canvas;
 }
 
 

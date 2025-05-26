@@ -18,7 +18,7 @@
 class icon {
 public:
     icon(SDL_Renderer *renderer, int type);
-    ~icon(void);
+    virtual ~icon(void);
     
     virtual class element *create_element(void);
     void draw (SDL_Renderer *renderer, float X1, float Y1, float width, float height);
@@ -33,7 +33,7 @@ private:
 class iconbar {
 public:
     iconbar(SDL_Renderer *_renderer, SDL_Rect _rect);
-    ~iconbar(void);
+    virtual ~iconbar(void);
     
     void resize(SDL_Rect _rect);
     

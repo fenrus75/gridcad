@@ -57,6 +57,8 @@ canvas::~canvas(void)
 {
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
+	delete current_scene;
+	delete icon_bar;  icon_bar = NULL;
 }
 
 bool canvas::handle_event_drawingarea(SDL_Event &event)

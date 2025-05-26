@@ -41,6 +41,14 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
 
 iconbar::~iconbar(void)
 {
+     unsigned int y,x;
+     printf("iconbar destructor\n");
+     for (y = 0; y < icons.size(); y++) {
+          for (x = 0; x < icons[y].size(); x++) {
+             delete icons[y][x];
+             icons[y][x] = NULL;
+          }
+     }
 }
 
 void iconbar::resize(SDL_Rect _rect)

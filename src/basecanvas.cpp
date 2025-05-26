@@ -9,6 +9,10 @@ basecanvas::basecanvas(void)
 
 basecanvas::~basecanvas(void)
 {
+//	printf("basecanvas destructor\n");
+//	if (font)
+//		TTF_CloseFont(font);
+//	font = NULL;
 }
 
 
