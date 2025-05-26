@@ -54,8 +54,6 @@ void model_toggle::update_value(struct value *newvalue, int ttl)
 {
     if (!newvalue->valid)
       return;
-    if (memcmp(newvalue, &value, sizeof(struct value)) == 0)
-      return;
     if (ttl <= 1)
       return;
     value = *newvalue;
