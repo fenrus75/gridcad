@@ -105,6 +105,8 @@ void model_nest::from_json(json &j)
 	     _scene->from_json(j["scene"]);
      else
      	canvas->get_scene()->from_json(j["scene"]);
+     	
+     regen_ports();
 }
 
 static bool compare_north(class port *A, class port *B)
