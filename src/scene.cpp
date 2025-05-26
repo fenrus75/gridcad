@@ -123,8 +123,6 @@ void scene::from_json(json &j)
 {
 	unsigned int i;
 
-	clear_wire_factory();
-
 	sizeX = j["sizeX"];
 	sizeY = j["sizeY"];
 	for (i = 0; i <j["elements"].size(); i++) {
@@ -134,8 +132,6 @@ void scene::from_json(json &j)
 		element->from_json(p);
 		elements.push_back(element);
 	}
-	clear_wire_factory();
-
 }
 
 void scene::process_delete_requests(void)

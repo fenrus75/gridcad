@@ -239,7 +239,7 @@ void model_nest::regen_ports(void)
 			_port->X = 0;
 			_port->Y = 0;;
 			_port->parent = this;
-			_port->value.boolval = {};	
+			_port->value = {};	
 			_port->set_linked_element(elem);
 			_port->link_uuid(elem->get_uuid());
 			place_port(_port);

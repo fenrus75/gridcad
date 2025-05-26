@@ -185,6 +185,7 @@ void wire::add_port(class port *port)
             return;
     }
     ports.push_back(port);
+    printf("Adding port %s \n", port->name.c_str());
     if (port->direction != PORT_IN) {
         update_value(&port->value, DEFAULT_TTL);
     }
@@ -291,6 +292,7 @@ class wire *wire::split(void)
 {
     class wire *wr = new wire(0, 0, 0, 0, color);
 
+    printf("Splitting wire\n");
     wr->update_value(&value, 100);    
     if (ports.size() > 0) {
         ports[0]->replace_wire(this, wr);
@@ -332,15 +334,24 @@ void clear_wire_factory(void)
 }
 
 bool wire_factory_force_new_name;
+
 class wire *json_wire_factory(json &jwire)
 {
-    if (json_wires.find(jwire["name"]) != json_wires.end())
-        return json_wires[jwire["name"]];
+    class wire *_wire;
+    if (json_wires.find(jwire["name"]) != json_wires.end()) {
+        std::string s = jwire["name"];
+        _wire = json_wires[s];
+        json_wires.erase(s);
+        printf("Wire factory match found for %s  factory size %lu\n", s.c_str(), json_wires.size());
+        return _wire;
+    }
     class wire *new_wire = new wire(jwire["X1"], jwire["Y1"], jwire["X2"], jwire["Y2"]);
     
     json_wires[jwire["name"]] = new_wire;
     
     new_wire->from_json(jwire);
+    
+    printf("New wire created: %s  total factory size %lu\n", new_wire->name.c_str(), json_wires.size());
     
     if (wire_factory_force_new_name)
         new_wire->set_new_name();
@@ -399,7 +410,7 @@ void wire::fill_grid(class wiregrid *grid)
 void wire::remove_if_orphan(void)
 {
 	if (ports.size() < 2) {
-	        printf("Removing orphan\n");
+	        printf("Removing orphan  %lu\n",ports.size());
 		remove();
         }
 }

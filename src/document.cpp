@@ -39,7 +39,7 @@ document::document(std::string _name)
 		input >> j;
 		_scene->from_json(j);
 	}
-
+	clear_wire_factory();
 }
 
 document::~document(void)

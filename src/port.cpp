@@ -46,7 +46,7 @@ void port::update_value(struct value *newvalue, int ttl)
 		return;
 	if (!newvalue->valid)
 		return;
-	if (memcmp(&value, newvalue, sizeof(struct value)) == 0)
+	if (value.valid && memcmp(&value, newvalue, sizeof(struct value)) == 0)
 		return;
 		
 	value = *newvalue;
