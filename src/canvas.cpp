@@ -770,6 +770,6 @@ void canvas::update_window_title(void)
 {
 	std::string s;
 	
-	s = "GridCad " + _scene->get_full_name();
+	s = "GridCad " + current_scene->get_full_name();
 	SDL_SetWindowTitle(window, s.c_str());
 }

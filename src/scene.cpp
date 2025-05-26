@@ -98,6 +98,8 @@ void scene::to_json(json &j)
 	j["sizeX"] = sizeX;
 	j["sizeY"] = sizeY;
 	j["elements"] = json::array();
+	j["name"] = name;
+	j["parental_name"] = parental_name;
 	
 	for (i = 0; i < elements.size(); i++) {
 		json p;
@@ -111,6 +113,9 @@ void scene::selection_to_json(json &j)
 	unsigned int i;
 	unsigned int q = 0;
 	j["elements"] = json::array();
+	
+	name = j.value("name", "");
+	parental_name = j.value("parental_name", "");
 	
 	for (i = 0; i < elements.size(); i++) {
 		if (elements[i]->is_selected()) {
