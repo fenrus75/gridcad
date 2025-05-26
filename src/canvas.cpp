@@ -27,8 +27,8 @@ canvas::canvas(class scene *_scene)
 	window =
 		SDL_CreateWindow(s.c_str(), SDL_WINDOWPOS_UNDEFINED,
 				SDL_WINDOWPOS_UNDEFINED, 1024, 768, SDL_WINDOW_RESIZABLE);
-//	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+//	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
 	windowID = SDL_GetWindowID(window);
@@ -68,8 +68,14 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 		current_scene->deselect_all();
 	if (!left_mouse_down
 			&& event.button.button == SDL_BUTTON_LEFT) {
+			
 		class wire *wr;
-
+		bool is_port = false;
+//		bool is_element = false;
+		bool is_wire = false;
+		
+		/* priority order port > element > wire */
+		
 		if (dragging)
 			dragging->deselect();
 		dragging = NULL;
@@ -82,6 +88,9 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 
 		x = scr_to_X(event.motion.x);
 		y = scr_to_Y(event.motion.y);
+		
+		is_port = current_scene->is_port(x,y);
+		
 		for (auto elem:	current_scene->elements) {
 			if (elem->intersect(x, y) && !elem->is_port(x,y)) {
 				printf("Start drag: %5.2f %5.2f \n", x, y);
@@ -92,17 +101,19 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 
 		wr = current_scene->is_wire(x, y);
 		if (wr)
+			is_wire = true;
+		if (is_wire)
 			printf("WR  %i\n", dragging != NULL);
 
 
-		if (!dragging && !wr && floating.size() == 0 && !current_scene->is_port(x,y)) {
+		if (!dragging && !is_wire && floating.size() == 0 && !is_port) {
 			in_area_select = true;
 			area_select_X1 = x;
 			area_select_Y1 = y;	
 			return false;
 		}
 
-		if (!dragging && wr) {
+		if (!dragging && wr && !is_port) {
 			class wire *wr2;
 			class element *_element;
 			class port *port;

@@ -47,6 +47,7 @@ void wire::set_new_name(void)
 }
 
 /* returns a value of 0 - 60 based on the current time, suitable for animations */
+/* TODO: this should be a global value for a whole frame -- not for each individual wire */
 static int current_interval(void)
 {
     struct timeval tv;
@@ -82,7 +83,7 @@ void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y
         
         while (dist(x1,y1,x2,y2) > 1/10.0) {
             (*step)++;
-            if ((*step) >= stepsize) {
+            if ((*step) > stepsize) {
                 (*step) = 0;
                 canvas->draw_circle2(x1, y1, 0.18, COLOR_WIRE_MOTION, value_color(value));
             }

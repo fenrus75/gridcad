@@ -73,7 +73,7 @@ void document::run(void)
 		canvas->draw();
 
 	while (!leave) {
-		ret = SDL_WaitEventTimeout(&event, 5);
+		ret = SDL_WaitEventTimeout(&event, 1);
 
 		if (event.type == SDL_QUIT)
 			leave = true;
