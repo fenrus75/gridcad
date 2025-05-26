@@ -91,7 +91,9 @@ void document::run(void)
 				}
 
 			}
-		}
+		} else {
+//			SDL_sleep(1);
+		 }
 
 		if (leave)
 			printf("Want to quit\n");

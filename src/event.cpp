@@ -7,7 +7,8 @@ void labelevent(SDL_Event &event, std::string *text)
 	case SDL_KEYDOWN:
         	switch (event.key.keysym.sym) {
 		case SDLK_BACKSPACE:
-		    text->pop_back();
+			if (text->size()>0)
+			    text->pop_back();
                     break;    
                 case SDLK_0:
                 case SDLK_1:
