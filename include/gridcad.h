@@ -249,6 +249,7 @@ public:
     
     std::string get_uuid(void) { return uuid;};
     void reset_uuid(void);
+    void delete_element(void);
     
 protected:
     std::string uuid = "";

@@ -283,6 +283,9 @@ void wire::remove(void)
     for (auto port : ports) {
         port->remove_wire(this);
     }
+    if (points)
+        delete points;
+    points = NULL;
 }
 
 

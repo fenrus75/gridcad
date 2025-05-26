@@ -279,9 +279,16 @@ void element::delete_if_selected(void)
 	if (!selected)
 		return;
 
+        delete_element();
+}
+void element::delete_element(void)
+{
+
 	for (auto port:ports) {
 		port->remove_wires();
+		delete port;
 	}	
+	ports.clear();
 	want_delete = true;
 }
 
