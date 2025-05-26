@@ -50,6 +50,19 @@ void model_toggle::drawAt(class canvas *canvas, float X, float Y, int type)
 
 
 
+void model_toggle::update_value(struct value *newvalue, int ttl)
+{
+    if (!newvalue->valid)
+      return;
+    if (memcmp(newvalue, &value, sizeof(struct value)) == 0)
+      return;
+    if (ttl <= 1)
+      return;
+    value = *newvalue;
+    ports[0]->update_value(&value, ttl - 1);
+    notify(ttl - 1);
+}
+
 bool model_toggle::mouse_select(float _X, float _Y)
 {
     /* convert _X and _Y to be relative to the center of the model */
@@ -60,9 +73,8 @@ bool model_toggle::mouse_select(float _X, float _Y)
          return false;
     value.boolval = !value.boolval;
     value.valid = true;
-    printf("TOGGLE to %i\n", value.boolval);
-    ports[0]->update_value(&value, DEFAULT_TTL);
-    notify(DEFAULT_TTL);
+    
+    update_value(&value, DEFAULT_TTL);
     return true;
 }
 
