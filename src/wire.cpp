@@ -85,7 +85,16 @@ void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y
             (*step)++;
             if ((*step) >= stepsize) {
                 (*step) = 0;
-                canvas->draw_circle2(x1, y1, 0.18, COLOR_WIRE_MOTION, value_color(value));
+		if (value->type == VALUE_TYPE_INT){ 
+			char buf[128];
+			std::string s;
+			sprintf(buf, "%i", value->intval);
+			s = buf;
+			canvas->draw_box(x1, y1, 0.36, 0.36, COLOR_WIRE_MOTION);
+	                canvas->draw_text(s, x1+0.05, y1+0.05, 0.26, 0.26);
+		} else {
+	                canvas->draw_circle2(x1, y1, 0.18, COLOR_WIRE_MOTION, value_color(value));
+		}
             }
             x1 += dx;
             y1 += dy;
@@ -210,7 +219,7 @@ void wire::update_value(struct value *newvalue, int ttl)
         return;
     if (!newvalue->valid)
 	return;
-    if (memcmp(&value, newvalue, sizeof(struct value)) == 0) {
+    if (value.valid && memcmp(&value, newvalue, sizeof(struct value)) == 0) {
         /* no change -- early exit to kill oscillations */
         return;
     }
