@@ -34,6 +34,8 @@ private:
     bool edit_mode = NULL; /* no save */
     std::vector<class port *> north, south, east, west; /* nosave */
     void place_port(class port *port);
+    void maybe_regen_ports(void);
+    uint64_t previous_generation_count = 0;
     std::string icon = "";
     std::string icon_selected = "";
 };

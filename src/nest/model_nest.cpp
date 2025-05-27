@@ -26,6 +26,7 @@ model_nest::~model_nest(void)
 
 void model_nest::drawAt(class canvas *canvas, float X, float Y, int type)
 {
+	maybe_regen_ports();
 	if (!selected) {
 		if (icon == "") {
 			canvas->draw_image("assets/nest/nest_back.png", X, Y, sizeX, sizeY, Alpha(type));
@@ -67,6 +68,7 @@ void model_nest::drawAt(class canvas *canvas, float X, float Y, int type)
 
 void model_nest::calculate(int ttl)
 {
+	maybe_regen_ports();
 	for (auto port: ports) {
 		if (port->direction == PORT_IN) {
 			class model_toggle *tog;
@@ -384,5 +386,18 @@ void model_nest::load_scene_from_json(std::string logic)
 {
      json j = json::parse(logic);
      _scene->from_json(j);
+     regen_ports();
 }
 
+
+
+void model_nest::maybe_regen_ports(void)
+{
+	if (canvas)
+		_scene = canvas->get_scene();
+
+	if (previous_generation_count != _scene->get_generation_count()) {
+		regen_ports();
+		previous_generation_count = _scene->get_generation_count();
+	}
+}

@@ -180,10 +180,12 @@ public:
     std::string get_name(void) { return name; };
     std::string get_full_name(void) { return parental_name + "/" + name;};
     void update_name(std::string _name) { name = _name;};
+    uint64_t get_generation_count(void) { return generation_count; };
     
 protected:
     std::string name = "";
     std::string parental_name = "";    
+    uint64_t generation_count = 0;
 };
 
 
@@ -253,6 +255,7 @@ public:
     
     virtual void rotate_ports(void) {};
     void update_name(std::string _name) { name = _name;};
+
     
 protected:
     std::string uuid = "";

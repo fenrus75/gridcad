@@ -25,6 +25,7 @@ void scene::add_element(class element * element)
 {
 	elements.push_back(element);
 	rewire_section(element->get_X(), element->get_Y(), element->get_width(), element->get_height());
+        generation_count++;
 }
 
 bool scene::can_place_element(float x, float y, int w, int h,
@@ -93,6 +94,7 @@ void scene::remove_element(class element *element)
 			return;
 		}
 	}
+        generation_count++;
 }
 
 void scene::to_json(json &j)
@@ -153,8 +155,10 @@ void scene::process_delete_requests(void)
 			todo.push_back(elem);
 	}
 	
-	for (auto elem : todo)
+	for (auto elem : todo) {
 		remove_element(elem);
+	        generation_count++;
+	}
 }
 
 void scene::delete_selection(void)
