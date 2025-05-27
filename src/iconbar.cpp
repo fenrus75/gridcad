@@ -77,7 +77,7 @@ void iconbar::draw(void)
     int color = 0;
     SDL_Rect box;
     
-    for (y = 0; y < 10; y++) {
+    for (y = 0; y < 15; y++) {
         for (x = 0; x < 2; x++) {
                 box.x = rect.x + (0.5 + 2.5 * x) * SCALEX;
                 box.y = rect.y + (0.5 + 2.5 * y) * SCALEY;
