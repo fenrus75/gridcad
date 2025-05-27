@@ -40,8 +40,18 @@ void model_nest::drawAt(class canvas *canvas, float X, float Y, int type)
              canvas->draw_text(name + "|", X, Y + sizeY, sizeX, 1);
           else
              canvas->draw_text(name + " ", X, Y + sizeY, sizeX, 1);
-        } else {
-     		 canvas->draw_text(name + " ", X, Y + sizeY, sizeX, 1);
+         } else {
+     	     canvas->draw_text(name + " ", X, Y + sizeY, sizeX, 1);
+     	 }
+     	 
+     	for (auto port:ports) {
+     		int dx = 0, dy = 0;
+     		if (port->X == -1) dx = 1;
+     		if (port->X == sizeX) dx = - 1;
+     		if (port->Y == -1) dy = 1;
+     		if (port->Y == sizeY) dy = -1;
+     		
+     		canvas->draw_text(port->name, X + port->X + dx, Y + port->Y +dy, 1, 1);
      	}
 	
 }
@@ -270,18 +280,27 @@ void model_nest::regen_ports(void)
 	std::sort(east.begin(), east.end(), compare_east);
 	std::sort(west.begin(), west.end(), compare_west);
 	
+	/* center */
+	unsigned int offset = (sizeY - north.size())/2;
+	
 	for (unsigned int i = 0; i < north.size(); i++) {
-		north[i]->X = i + 1;
+		north[i]->X = i + offset;
 		north[i]->Y = -1;
 	}
+	
+	offset = (sizeY - south.size())/2;
 	for (unsigned int i = 0; i < south.size(); i++) {
 		south[i]->X = i + 1;
 		south[i]->Y = sizeX;
 	}
+	
+	offset = (sizeX - west.size())/2;
 	for (unsigned int i = 0; i < west.size(); i++) {
 		west[i]->X = -1;
 		west[i]->Y = i + 1;
 	}
+	
+	offset = (sizeX - east.size())/2;
 	for (unsigned int i = 0; i < east.size(); i++) {
 		east[i]->X = sizeX;
 		east[i]->Y = i + 1;

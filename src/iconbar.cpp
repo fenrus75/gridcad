@@ -115,6 +115,11 @@ class icon * iconbar::current_icon(int ScreenX, int ScreenY)
     
 }
 
+void iconbar::handle_event(SDL_Event &event)
+{
+     return;
+}
+
 static const char *image_names[] = 
 {"assets/zero.png",
  "assets/one.png",

@@ -38,11 +38,12 @@ public:
     void resize(SDL_Rect _rect);
     
     void draw(void);
-    
+    void handle_event(SDL_Event &event);    
     class icon *current_icon(int ScreenX, int ScreenY);
 private:
     SDL_Rect rect;
     std::vector<std::vector<class icon *>> icons;
+    std::vector<std::vector<class icon *>> library;
     SDL_Renderer *renderer;
 };
 
