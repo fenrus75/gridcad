@@ -24,6 +24,7 @@ public:
     void regen_ports(void);
     
     void load_scene_from_json(std::string);
+    void set_icon(std::string _icon, std::string _selected) { icon = _icon; icon_selected = _selected;};
 private:
 
     float bX1,bY1,bX2,bY2; /* bounding box of the scene -- no save*/
@@ -33,4 +34,6 @@ private:
     bool edit_mode = NULL; /* no save */
     std::vector<class port *> north, south, east, west; /* nosave */
     void place_port(class port *port);
+    std::string icon = "";
+    std::string icon_selected = "";
 };

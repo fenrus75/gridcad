@@ -27,10 +27,18 @@ model_nest::~model_nest(void)
 void model_nest::drawAt(class canvas *canvas, float X, float Y, int type)
 {
 	if (!selected) {
-		canvas->draw_image("assets/nest/nest_back.png", X, Y, sizeX, sizeY, Alpha(type));
-		canvas->draw_image("assets/nest/icon.png", X+0.15, Y+0.15, sizeX-0.3, sizeY-0.3, Alpha(type), true);
+		if (icon == "") {
+			canvas->draw_image("assets/nest/nest_back.png", X, Y, sizeX, sizeY, Alpha(type));
+			canvas->draw_image("assets/nest/icon.png", X+0.15, Y+0.15, sizeX-0.3, sizeY-0.3, Alpha(type), true);	
+		} else {
+			canvas->draw_image(icon, X, Y, sizeX, sizeY, Alpha(type));
+		}
 	} else {
-		canvas->draw_image("assets/nest/nest_selected.png", X, Y, sizeX, sizeY, Alpha(type));
+		if (icon_selected == "") 
+			canvas->draw_image("assets/nest/nest_selected.png", X, Y, sizeX, sizeY, Alpha(type));
+		else {
+			canvas->draw_image(icon_selected, X, Y, sizeX, sizeY, Alpha(type));
+		}
 	}
 
 	if (selected && single && edit_mode) {
@@ -130,6 +138,8 @@ void model_nest::to_json(json &j)
      else
      		canvas->get_scene()->to_json(p);
      j["scene"] = p;   
+     j["icon"] = icon;
+     j["icon_selected"] = icon_selected;
 }
 void model_nest::from_json(json &j)
 {
@@ -139,6 +149,8 @@ void model_nest::from_json(json &j)
      else
      	canvas->get_scene()->from_json(j["scene"]);
      	
+     icon = j.value("icon", "");
+     icon_selected = j.value("icon_selected", "");
      regen_ports();
 }
 

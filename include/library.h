@@ -8,6 +8,7 @@ struct library_block {
     std::string logic; /* json format */
     
     std::string icon; /* file path */
+    std::string icon_selected; /* file path */
 };
 
 extern std::vector<struct library_block> library;

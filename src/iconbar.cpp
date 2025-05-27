@@ -245,5 +245,6 @@ class element *icon::library_element(void)
      element = new model_nest(-10, -10);
      element->load_scene_from_json(lib.logic);
      element->update_name(lib.name);
+     element->set_icon(lib.icon, lib.icon_selected);
      return element;
 }

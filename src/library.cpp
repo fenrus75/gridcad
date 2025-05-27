@@ -31,6 +31,7 @@ void populate_library(std::string directory)
                 block.logic += line;
             }
             block.icon = path + ".png";
+            block.icon_selected = path + ".selected.png";
             library.push_back(block);
         }
     }
