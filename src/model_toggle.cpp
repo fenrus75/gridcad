@@ -11,7 +11,7 @@ model_toggle::model_toggle(float _X, float _Y)  : element(1, 1, "Input")
     X = floorf(_X);
     Y = floorf(_Y);
     
-    add_port(sizeX, 1, "Toggle", PORT_OUT);    
+    add_port(sizeX, 1, "Input", PORT_OUT);    
 }
 
 model_toggle::~model_toggle(void)
@@ -28,17 +28,21 @@ void model_toggle::drawAt(class canvas *canvas, float X, float Y, int type)
         canvas->draw_image("assets/toggle_off.png", X, Y, sizeX, sizeY, Alpha(type));
     }
     
+    float dY = 0;
+    float dX = 0;
+    if (ports[0]->Y == sizeY)  /* if our port is at the bottom, we move the text by one */
+	dX = 1.2;
     if (name != "") {
       if (selected && single && edit_mode) {
           struct timeval tv;
           gettimeofday(&tv, NULL);
           if (tv.tv_usec > 500000)
-             canvas->draw_text(name + "|", X, Y + sizeY, sizeX, 1);
+             canvas->draw_text(name + "|", X + dX, Y + sizeY +dY, sizeX, 1);
           else
-             canvas->draw_text(name + " ", X, Y + sizeY, sizeX, 1);
+             canvas->draw_text(name + " ", X + dX, Y + sizeY + dY, sizeX, 1);
       }
       else {
-          canvas->draw_text(name + " ", X, Y + sizeY, sizeX, 1);
+          canvas->draw_text(name + " ", X + dX, Y + sizeY + dY, sizeX, 1);
       }
     }
 //    canvas->draw_circle(X+1.5, Y+1.5, 1.5, COLOR_WIRE_SOLID, value_color(&value));
