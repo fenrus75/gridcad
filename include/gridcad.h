@@ -251,6 +251,8 @@ public:
     void reset_uuid(void);
     void delete_element(void);
     
+    virtual void rotate_ports(void) {};
+    
 protected:
     std::string uuid = "";
     std::string name = "";

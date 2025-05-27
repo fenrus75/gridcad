@@ -39,6 +39,7 @@ public:
     void set_new_name(void);
     
     bool is_empty(void) { return ports.size() == 0; };
+    void redo_wires(void) { delete points; points = NULL; };
     
 protected:
     bool selected = false;

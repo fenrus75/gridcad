@@ -250,3 +250,11 @@ void port::link_uuid(std::string _uuid)
 {
 	linked_uuid = _uuid;
 }
+
+void port::route_wires(void)
+{
+	for (auto wire : wires) {
+		wire->reseat();
+		wire->redo_wires();
+	}
+}

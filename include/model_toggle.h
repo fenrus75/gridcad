@@ -20,6 +20,7 @@ public:
     void update_value(struct value *value, int ttl);
     
     bool in_edit_mode(void) override { return edit_mode && single && selected;};
+    void rotate_ports(void) override;
 private:
     struct value value = {};
     bool edit_mode = false;

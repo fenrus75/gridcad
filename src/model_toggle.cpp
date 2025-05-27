@@ -104,3 +104,23 @@ void model_toggle::handle_event(SDL_Event &event)
     if (edit_mode)
       labelevent(event, &name);
 }
+
+void model_toggle::rotate_ports(void)
+{
+    for (auto port : ports) {
+        float x,y,_x,_y;
+        x = port->X - (sizeX-1)/2.0;
+        y = port->Y - (sizeY-1)/2.0;
+        
+        _x = y;
+        _y = -x;
+        
+        port->X = _x + (sizeX-1)/2.0 ;
+        port->Y = _y + (sizeY-1)/2.0;
+        port->screenX = X + port->X;
+        port->screenY = Y + port->Y;
+        
+        port->route_wires();
+    }
+    reseat();
+}

@@ -281,6 +281,13 @@ bool canvas::handle_event(SDL_Event &event)
 					current_scene->remove_orphans();
 				}
 				break;
+			case SDLK_SPACE:
+				for (auto elem : current_scene->elements) {
+					if (!elem->is_selected())
+						continue;
+					elem->rotate_ports();
+				}
+				break;
 			case SDLK_g:
 				if (!someone_in_editmode) {
 					draw_grid = !draw_grid;
