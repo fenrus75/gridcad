@@ -12,7 +12,7 @@ using json = nlohmann::json;
 struct value {
     int type;
     bool boolval;
-    int intval;
+    uint64_t intval;
     float floatval;
     uint64_t arrayval;
     bool is_error;

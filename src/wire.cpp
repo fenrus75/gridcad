@@ -88,7 +88,7 @@ void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y
 		if (value->type == VALUE_TYPE_INT){ 
 			char buf[128];
 			std::string s;
-			sprintf(buf, "%i", value->intval);
+			sprintf(buf, "%li", value->intval);
 			s = buf;
 			canvas->draw_box(x1-0.18, y1-0.18, x1+0.18, y1+0.18, COLOR_WIRE_MOTION);
 			canvas->draw_box(x1-0.12, y1-0.12, x1+0.12, y1+0.12, COLOR_BACKGROUND_MAIN);

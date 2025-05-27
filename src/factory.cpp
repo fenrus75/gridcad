@@ -13,6 +13,7 @@
 #include "model_truth.h"
 #include "model_nest.h"
 #include "model_4to1.h"
+#include "model_1to4.h"
 #include "connector.h"
 
 #define ELEMENT(x)  if (classid == #x":") return new x(0, 0);
@@ -35,6 +36,7 @@ class element *element_from_class_id(std::string classid)
     ELEMENT(model_truth);
     ELEMENT(model_nest);
     ELEMENT(model_4to1);
+    ELEMENT(model_1to4);
     
     
     printf("Unknown class_id: %s\n", classid.c_str());
