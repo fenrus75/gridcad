@@ -21,7 +21,7 @@ public:
     
     void update_value(struct value *newvalue, int ttl);
     virtual void notify(int ttl);
-    struct value value;
+    struct value value = {};
     bool intersect(float targetX, float targetY);
     
     void select(void) { selected = true;};

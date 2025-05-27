@@ -16,6 +16,6 @@ public:
 //    void rotate_ports(void) override;
 
 protected:
-    struct value value;
+    struct value value = {};
 };
 

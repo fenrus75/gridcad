@@ -26,7 +26,7 @@ void populate_library(std::string directory)
 	    block.name = block.name.substr(0, block.name.size()-5);
             std::ifstream input(path);
             
-            std::string line;
+            std::string line = "";
             
             while (std::getline(input, line)) {
                 block.logic += line;
