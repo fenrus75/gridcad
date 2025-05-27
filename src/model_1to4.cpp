@@ -39,7 +39,7 @@ void model_1to4::drawAt(class canvas *canvas, float X, float Y, int type)
 
 void model_1to4::calculate(int ttl)
 {
-    struct value out;
+    struct value out = {};
     
     if (ttl <= 1) {
         printf("1to4 ttl exceeded\n");
@@ -53,11 +53,13 @@ void model_1to4::calculate(int ttl)
     }
     for (unsigned int i = 0; i < ports.size(); i++) {
         
+        out.valid = true;
+        out.type = VALUE_TYPE_BOOL;
         out.boolval = false;
         if (((value.intval >> i) & 1) && ports[i]->direction == PORT_IN)
             out.boolval = true;
         if (ports[i]->direction == PORT_OUT) {
-            printf("Port %i out %i\n", i, out.boolval);
+            printf("Port %i out %i at ttl %i\n", i, out.boolval, ttl);
             ports[i]->update_value(&out, ttl - 1);
         }
     }
