@@ -41,6 +41,14 @@ void model_output::drawAt(class canvas *canvas, float X, float Y, int type)
       canvas->draw_text(name + " ", X + dX, Y + sizeY, sizeX, 1);
     }
 
+    if (ports[0]->value.type == VALUE_TYPE_INT) {
+	char buf[128];
+	std::string s;
+	sprintf(buf, "%li", ports[0]->value.intval);
+	s = buf;
+	canvas->draw_text(s, X+ 0.6, Y + 0.6, 1.8,1.8);
+    }
+
     for (auto port : ports) {
         port->drawAt(canvas, X,Y, COLOR_WIRE_SOLID);
         port->draw_wires(canvas);
