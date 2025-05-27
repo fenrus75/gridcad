@@ -291,4 +291,5 @@ extern void register_new_canvas(class basecanvas *canvas);
 extern void labelevent(SDL_Event &event, std::string *text);
 
 extern std::string generate_semi_uuid(void);
+extern void populate_library(std::string directory);
 #endif

@@ -12,6 +12,8 @@
 int main(int argc, char **argv)
 {
 	class document *document;
+	
+	populate_library("library/");
 
 	document = new class document("scene");
 

@@ -17,6 +17,7 @@
 
 iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
 {
+    unsigned int li;
     icons.resize(2);
     
     icons[0].resize(10);
@@ -37,6 +38,12 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
     icons[1][5] = new icon(renderer, ICON_OUTPUT);
     icons[1][6] = new icon(renderer, ICON_TRUTH);
     icons[0][6] = new icon(renderer, ICON_NEST);
+    
+    for (li = 0; li < library.size(); li++) {
+        icons[li % 2][li / 2 + 7] = new icon(renderer, ICON_LIBRARY);
+        icons[li % 2][li / 2 + 7]->assign_library_element(library[li]);
+    }
+    
 }
 
 iconbar::~iconbar(void)
@@ -75,8 +82,9 @@ void iconbar::draw(void)
         	SDL_SetRenderDrawColor(renderer, R(color), G(color), B(color),
 			       Alpha(color));
         	SDL_RenderFillRect(renderer, &box);
-                if (icons[x][y]) 
+                if (icons[x][y])
                    icons[x][y]->draw(renderer, rect.x + (0.6 + 2.5 * x) * SCALEX, rect.y + (0.6 + 2.5 * y) * SCALEY, 1.8 * SCALEX, 1.8 * SCALEY);
+                
                 
         }    
     }
@@ -121,7 +129,8 @@ void iconbar::handle_event(SDL_Event &event)
 }
 
 static const char *image_names[] = 
-{"assets/zero.png",
+{"library images",
+ "assets/zero.png",
  "assets/one.png",
  "assets/nandgate.png",
  "assets/andgate.png",
@@ -137,14 +146,22 @@ static const char *image_names[] =
 
 icon::icon(SDL_Renderer *renderer, int _type)
 {
+    _renderer = renderer;
     type = _type;
     active = false;
-    texture = IMG_LoadTexture(renderer, image_names[type]);
+    if (type != ICON_LIBRARY)
+       texture = IMG_LoadTexture(renderer, image_names[type]);
 }
 
 icon::~icon(void)
 {
 }
+
+void icon::assign_library_element(struct library_block block) 
+{ 
+  lib = block;
+  texture = IMG_LoadTexture(_renderer, lib.icon.c_str() );
+};
 
 
 /* X and Y are our box to draw in -- we'll draw centered to that */
@@ -158,7 +175,7 @@ void icon::draw(SDL_Renderer *renderer, float X, float Y, float width, float hei
        float newwidth, newheight;
        
        SDL_QueryTexture(texture, NULL, NULL, &w, &h);
-       
+
        ratioX = width / w;
        ratioY = height / h;
        
@@ -177,6 +194,7 @@ void icon::draw(SDL_Renderer *renderer, float X, float Y, float width, float hei
        rect.y = Y + oY;
        rect.w = newwidth;
        rect.h = newheight;
+      
        SDL_SetRenderDrawColor(renderer, R(color), G(color), B(color),
 			       Alpha(color));
        SDL_SetTextureAlphaMod(texture, 255);
