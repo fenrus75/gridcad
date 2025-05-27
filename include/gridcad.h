@@ -200,7 +200,7 @@ protected:
 class element : public base
 {
 public:    
-    element(int sizeX, int sizeY, std::string _name);
+    element(int sizeX, int sizeY, std::string _name, std::string _parent = "");
     virtual ~element(void);
 
     virtual std::string class_id(void) { return "element:";};
@@ -218,6 +218,7 @@ public:
     virtual bool intersect(float X, float Y);
     
     const std::string  get_name(void) { return name; };
+    const std::string  get_full_name(void) { return parental_name + "/" + name; };
     
     void add_port(int X, int Y, const char *name, int direction = 0, bool initval = false);
     virtual void fill_grid(class wiregrid* grid);
@@ -257,11 +258,13 @@ public:
     
     virtual void rotate_ports(void) {};
     void update_name(std::string _name) { name = _name;};
+    void update_parental_name(std::string _name) { parental_name = _name;};
 
     
 protected:
     std::string uuid = "";
     std::string name = "";
+    std::string parental_name = "";    
     int sizeX = 1;
     int sizeY = 1;
     int angle = 0;

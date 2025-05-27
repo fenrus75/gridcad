@@ -26,6 +26,7 @@ void scene::add_element(class element * element)
 	elements.push_back(element);
 	rewire_section(element->get_X(), element->get_Y(), element->get_width(), element->get_height());
         generation_count++;
+	element->update_parental_name(get_full_name());
 }
 
 bool scene::can_place_element(float x, float y, int w, int h,

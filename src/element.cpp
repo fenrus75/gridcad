@@ -4,12 +4,13 @@
 #include "gridcad.h"
 #include "port.h"
 
-element::element(int _sizeX, int _sizeY, std::string _name)
+element::element(int _sizeX, int _sizeY, std::string _name, std::string _parent)
 {
     sizeX = _sizeX;
     sizeY = _sizeY;
     place(0,0);
     name = _name;
+    parental_name = _parent;
     uuid = generate_semi_uuid();
 }
 
@@ -239,6 +240,7 @@ void element::to_json(json &j)
     j["X"] = X;
     j["Y"] = Y;
     j["name"] = name;
+    j["parental_name"] = parental_name;
     j["uuid"] = uuid;
     j["ports"] = json::array();
     j["angle"] = angle;
@@ -259,6 +261,7 @@ void element::from_json(json &j)
     angle = j.value("angle", 0);
     uuid = j.value("uuid", generate_semi_uuid());
     name = j["name"];
+    parental_name = j.value("parental_name", "");
     
     while (ports.size() < j["ports"].size())
         add_port(0,0, "");
