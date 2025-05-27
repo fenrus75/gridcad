@@ -206,6 +206,8 @@ void icon::draw(SDL_Renderer *renderer, float X, float Y, float width, float hei
 class element * icon::create_element(void)
 {
      switch (type) {
+          case ICON_LIBRARY:
+              return library_element();
           case ICON_NAND:
               return new model_nand(-10, -10);
           case ICON_ONE:
@@ -236,3 +238,12 @@ class element * icon::create_element(void)
 }
 
 
+class element *icon::library_element(void)
+{
+     class model_nest *element;
+     
+     element = new model_nest(-10, -10);
+     element->load_scene_from_json(lib.logic);
+     element->update_name(lib.name);
+     return element;
+}

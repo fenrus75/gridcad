@@ -34,6 +34,7 @@ private:
     struct library_block lib;
     SDL_Renderer *_renderer;
     SDL_Texture *texture;
+    class element *library_element(void);
 };
 
 class iconbar {

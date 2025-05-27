@@ -252,6 +252,7 @@ public:
     void delete_element(void);
     
     virtual void rotate_ports(void) {};
+    void update_name(std::string _name) { name = _name;};
     
 protected:
     std::string uuid = "";

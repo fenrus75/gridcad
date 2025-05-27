@@ -24,7 +24,12 @@ void populate_library(std::string directory)
             struct library_block block;
             block.name = path;
             std::ifstream input(path);
-            input >> block.logic;
+            
+            std::string line;
+            
+            while (std::getline(input, line)) {
+                block.logic += line;
+            }
             block.icon = path + ".png";
             library.push_back(block);
         }

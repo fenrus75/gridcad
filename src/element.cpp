@@ -253,8 +253,8 @@ void element::from_json(json &j)
     unsigned int i;
     sizeX = j["sizeX"];
     sizeY = j["sizeY"];
-    X = j["X"];
-    Y = j["Y"];
+    X = j.value("X", 0);
+    Y = j.value("Y", 0);
     uuid = j.value("uuid", generate_semi_uuid());
     name = j["name"];
     

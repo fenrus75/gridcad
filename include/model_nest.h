@@ -22,6 +22,8 @@ public:
     void handle_event(SDL_Event&) override;
     bool in_edit_mode(void) override { return edit_mode && single && selected;};    
     void regen_ports(void);
+    
+    void load_scene_from_json(std::string);
 private:
 
     float bX1,bY1,bX2,bY2; /* bounding box of the scene -- no save*/

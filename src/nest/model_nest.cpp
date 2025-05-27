@@ -366,3 +366,11 @@ void model_nest::place_port(class port *port)
 	}
 	south.push_back(port);	
 }
+
+
+void model_nest::load_scene_from_json(std::string logic)
+{
+     json j = json::parse(logic);
+     _scene->from_json(j);
+}
+
