@@ -250,7 +250,7 @@ public:
     
     virtual bool in_edit_mode(void) { return false; };
     
-    virtual void handle_event(SDL_Event &event) {};
+    virtual void handle_event(class canvas *canvas, SDL_Event &event) {};
     
     std::string get_uuid(void) { return uuid;};
     void reset_uuid(void);

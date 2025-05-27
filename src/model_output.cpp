@@ -58,7 +58,7 @@ void model_output::from_json(json &j)
      element::from_json(j);
 }
 
-void model_output::handle_event(SDL_Event &event)
+void model_output::handle_event(class canvas *canvas, SDL_Event &event)
 {
     if (!selected || !single)
         return;

@@ -19,7 +19,7 @@ public:
     void from_json(json &j) override;
 
     void calculate(int ttl) override;
-    void handle_event(SDL_Event&) override;
+    void handle_event(class canvas *canvas, SDL_Event&) override;
     bool in_edit_mode(void) override { return edit_mode && single && selected;};    
     void regen_ports(void);
     
@@ -38,4 +38,5 @@ private:
     uint64_t previous_generation_count = 0;
     std::string icon = "";
     std::string icon_selected = "";
+    float mouseX = -100, mouseY = -100; /* nosave */
 };

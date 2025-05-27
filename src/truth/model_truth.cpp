@@ -345,7 +345,7 @@ void model_truth::names_to_ports(void)
 		ports[x]->update_name(names[x]);
 }
 
-void model_truth::handle_event(SDL_Event &event)
+void model_truth::handle_event(class canvas *canvas, SDL_Event &event)
 {
     if (!selected || !single)
         return;

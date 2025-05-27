@@ -589,7 +589,7 @@ bool canvas::handle_event(SDL_Event &event)
 		}
 		
 	for (auto elem : current_scene->elements)
-		elem->handle_event(event);
+		elem->handle_event(this, event);
 	return leave;
 }
 

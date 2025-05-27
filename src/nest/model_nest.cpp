@@ -8,6 +8,11 @@
 #include <sys/time.h>
 #include <nlohmann/json.hpp>
 
+static float dist(float X1, float Y1, float X2, float Y2)
+{
+	return sqrtf( (X2-X1)*(X2-X1) + (Y2-Y1)*(Y2-Y1));
+}
+
 model_nest::model_nest(float _X, float _Y) : element(_X,_Y, "SubScreen")
 {
 	sizeX = 4;
@@ -60,7 +65,8 @@ void model_nest::drawAt(class canvas *canvas, float X, float Y, int type)
      		if (port->Y == -1) dy = 1;
      		if (port->Y == sizeY) dy = -1;
      		
-     		canvas->draw_text(port->name, X + port->X + dx, Y + port->Y +dy, 1, 1);
+		if (dist(mouseX, mouseY, X + port->X, Y + port->Y) < 10)
+	     		canvas->draw_text(port->name, X + port->X + dx, Y + port->Y +dy, 1, 1);
      	}
 	
 }
@@ -114,8 +120,15 @@ bool model_nest::mouse_select(float _X, float _Y)
 }
 
 
-void model_nest::handle_event(SDL_Event &event)
+void model_nest::handle_event(class canvas *thiscanvas, SDL_Event &event)
 {
+    switch (event.type) {
+	case SDL_MOUSEMOTION:
+		mouseX = thiscanvas->scr_to_X(event.motion.x); 
+	        mouseY = thiscanvas->scr_to_Y(event.motion.y);
+
+		break;
+    }
     if (!selected || !single)
         return;
     switch (event.type) {
@@ -126,7 +139,7 @@ void model_nest::handle_event(SDL_Event &event)
                     break;
                 }
                 break;
-        }
+    }
     if (edit_mode)
       labelevent(event, &name);
 }
@@ -329,10 +342,6 @@ void model_nest::regen_ports(void)
 	ports.insert(ports.end(), west.begin(), west.end());
 }
 
-static float dist(float X1, float Y1, float X2, float Y2)
-{
-	return sqrtf( (X2-X1)*(X2-X1) + (Y2-Y1)*(Y2-Y1));
-}
 
 void model_nest::place_port(class port *port)
 {

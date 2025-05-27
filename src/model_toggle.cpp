@@ -93,7 +93,7 @@ void model_toggle::from_json(json &j)
 }
 
 
-void model_toggle::handle_event(SDL_Event &event)
+void model_toggle::handle_event(class canvas *canvas, SDL_Event &event)
 {
     if (!selected || !single)
         return;
