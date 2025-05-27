@@ -27,15 +27,18 @@ void model_output::drawAt(class canvas *canvas, float X, float Y, int type)
     } else {	
         canvas->draw_image("assets/output_off.png", X, Y, sizeX, sizeY, Alpha(type));
     }
+    float dX = 0.0;
+    if (ports[0]->Y == sizeY)
+	dX = 1.2;
     if (selected && single && edit_mode) {
           struct timeval tv;
           gettimeofday(&tv, NULL);
           if (tv.tv_usec > 500000)
-             canvas->draw_text(name + "|", X, Y + sizeY, sizeX, 1);
+             canvas->draw_text(name + "|", X + dX, Y + sizeY, sizeX, 1);
           else
-             canvas->draw_text(name + " ", X, Y + sizeY, sizeX, 1);
+             canvas->draw_text(name + " ", X + dX, Y + sizeY, sizeX, 1);
     } else {
-      canvas->draw_text(name + " ", X, Y + sizeY, sizeX, 1);
+      canvas->draw_text(name + " ", X + dX, Y + sizeY, sizeX, 1);
     }
 
     for (auto port : ports) {
