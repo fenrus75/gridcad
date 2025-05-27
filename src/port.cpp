@@ -243,7 +243,6 @@ void port::remove_orphans(void)
 void port::update_name(std::string newname)
 {
 	name = newname;
-	printf("port new name is %s\n", name.c_str());
 }
 
 void port::link_uuid(std::string _uuid)

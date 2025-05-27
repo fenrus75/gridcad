@@ -107,6 +107,7 @@ void model_toggle::handle_event(SDL_Event &event)
         }
     if (edit_mode)
       labelevent(event, &name);
+    ports[0]->update_name(name);
 }
 
 void model_toggle::rotate_ports(void)

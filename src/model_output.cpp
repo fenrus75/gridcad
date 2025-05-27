@@ -11,7 +11,7 @@ model_output::model_output(float _X, float _Y)  : element(1, 1, "Output")
     X = floorf(_X);
     Y = floorf(_Y);
     
-    add_port(-1, 1, "In", PORT_IN);    
+    add_port(-1, 1, "Output", PORT_IN);    
 }
 
 model_output::~model_output(void)
@@ -73,6 +73,7 @@ void model_output::handle_event(SDL_Event &event)
         }
     if (edit_mode)
       labelevent(event, &name);
+    ports[0]->update_name(name);
 }
 
 struct value model_output::get_value(void)
