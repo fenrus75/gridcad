@@ -43,7 +43,7 @@ static float calcX(int x, int inputs)
     if (x < inputs)
         return (1.1 + x * 5);
     else
-        return (1.4 + x * 5);
+        return (1.9 + x * 5);
 }
 
 static int hdist(std::vector<char> A, std::vector<char> B)
