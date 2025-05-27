@@ -51,13 +51,16 @@ void model_1to4::calculate(int ttl)
         if (ports[i]->direction == PORT_IN)
             value = ports[i]->value;
     }
+    printf("Value is %li \n", value.intval);
     for (unsigned int i = 0; i < ports.size(); i++) {
         
         out.valid = true;
         out.type = VALUE_TYPE_BOOL;
         out.boolval = false;
-        if (((value.intval >> i) & 1) && ports[i]->direction == PORT_IN)
+        if ((value.intval & (1<<i)) && ports[i]->direction == PORT_OUT) {
             out.boolval = true;
+	    printf(".... true for %i \n", i);
+	}
         if (ports[i]->direction == PORT_OUT) {
             printf("Port %i out %i at ttl %i\n", i, out.boolval, ttl);
             ports[i]->update_value(&out, ttl - 1);
