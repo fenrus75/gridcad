@@ -7,11 +7,11 @@
    viewBox="0 0 200 600"
    version="1.1"
    id="svg1"
-   inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
    sodipodi:docname="4to1.svg"
    inkscape:export-filename="4to1.png"
-   inkscape:export-xdpi="34.209999"
-   inkscape:export-ydpi="34.209999"
+   inkscape:export-xdpi="64"
+   inkscape:export-ydpi="64"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -27,14 +27,15 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      inkscape:zoom="0.30016078"
-     inkscape:cx="934.49918"
-     inkscape:cy="817.895"
-     inkscape:window-width="2194"
-     inkscape:window-height="1162"
+     inkscape:cx="891.18905"
+     inkscape:cy="819.56077"
+     inkscape:window-width="1536"
+     inkscape:window-height="779"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer1" />
+     inkscape:current-layer="layer1"
+     showgrid="false" />
   <defs
      id="defs1">
     <filter
@@ -43,9 +44,9 @@
        inkscape:menu-tooltip="Soft bevel, slightly depressed middle"
        style="color-interpolation-filters:sRGB;"
        id="filter5"
-       x="-0.12455929"
+       x="-0.12495816"
        y="-0.21468065"
-       width="1.2491186"
+       width="1.2499163"
        height="1.4293613">
       <feGaussianBlur
          stdDeviation="2.3"

@@ -90,8 +90,9 @@ void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y
 			std::string s;
 			sprintf(buf, "%i", value->intval);
 			s = buf;
-			canvas->draw_box(x1, y1, 0.36, 0.36, COLOR_WIRE_MOTION);
-	                canvas->draw_text(s, x1+0.05, y1+0.05, 0.26, 0.26);
+			canvas->draw_box(x1-0.18, y1-0.18, x1+0.18, y1+0.18, COLOR_WIRE_MOTION);
+			canvas->draw_box(x1-0.12, y1-0.12, x1+0.12, y1+0.12, COLOR_BACKGROUND_MAIN);
+	                canvas->draw_text(s, x1+0.05-0.18, y1+0.05-0.18, 0.26, 0.26);
 		} else {
 	                canvas->draw_circle2(x1, y1, 0.18, COLOR_WIRE_MOTION, value_color(value));
 		}

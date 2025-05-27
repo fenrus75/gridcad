@@ -12,6 +12,7 @@
 #include "model_output.h"
 #include "model_truth.h"
 #include "model_nest.h"
+#include "model_4to1.h"
 
 #include <SDL2/SDL_image.h>
 
@@ -20,8 +21,8 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
     unsigned int li;
     icons.resize(2);
     
-    icons[0].resize(10);
-    icons[1].resize(10);
+    icons[0].resize(15);
+    icons[1].resize(15);
         
     renderer = _renderer;
     rect = _rect;
@@ -38,10 +39,11 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
     icons[1][5] = new icon(renderer, ICON_OUTPUT);
     icons[1][6] = new icon(renderer, ICON_TRUTH);
     icons[0][6] = new icon(renderer, ICON_NEST);
+    icons[0][7] = new icon(renderer, ICON_4TO1);
     
     for (li = 0; li < library.size(); li++) {
-        icons[li % 2][li / 2 + 7] = new icon(renderer, ICON_LIBRARY);
-        icons[li % 2][li / 2 + 7]->assign_library_element(library[li]);
+        icons[li % 2][li / 2 + 8] = new icon(renderer, ICON_LIBRARY);
+        icons[li % 2][li / 2 + 8]->assign_library_element(library[li]);
     }
     
 }
@@ -141,7 +143,8 @@ static const char *image_names[] =
  "assets/output_on.png",
  "assets/xorgate.png",
  "assets/model_truth/truthtable_icon.png",
- "assets/nest/nest_icon.png"
+ "assets/nest/nest_icon.png",
+ "assets/4to1.png",
 };
 
 icon::icon(SDL_Renderer *renderer, int _type)
@@ -232,6 +235,8 @@ class element * icon::create_element(void)
               return new model_truth(-10, -10);
           case ICON_NEST:
               return new model_nest(-10, -10);
+          case ICON_4TO1:
+              return new model_4to1(-10,-10);
           default:
              return NULL;
      }
