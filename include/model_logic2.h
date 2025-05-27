@@ -13,6 +13,8 @@ public:
     void drawAt(class canvas *canvas, float X, float Y, int type) override;
     
     void calculate(int ttl) override;
+    void rotate_ports(void);
+
 protected:
     std::string filename = "";
     std::string selected_filename = "";

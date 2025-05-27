@@ -241,6 +241,7 @@ void element::to_json(json &j)
     j["name"] = name;
     j["uuid"] = uuid;
     j["ports"] = json::array();
+    j["angle"] = angle;
     for (i = 0; i < ports.size(); i++) {
         json p;
         ports[i]->to_json(p);
@@ -255,6 +256,7 @@ void element::from_json(json &j)
     sizeY = j["sizeY"];
     X = j.value("X", 0);
     Y = j.value("Y", 0);
+    angle = j.value("angle", 0);
     uuid = j.value("uuid", generate_semi_uuid());
     name = j["name"];
     

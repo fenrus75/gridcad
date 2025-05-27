@@ -185,6 +185,34 @@ void basecanvas::draw_image(SDL_Texture *image, float X, float Y, float W, float
 	SDL_RenderCopy(renderer, image, NULL, &rect);
 }
 
+void basecanvas::draw_image_rotated(SDL_Texture *image, float X, float Y, float W, float H, int alpha, int angle) 
+{
+	SDL_Rect rect;
+	SDL_Point size;
+	
+	if (!image) {
+//		printf("Attempting to draw a null texture\n");
+		return;
+	}
+
+	
+	SDL_QueryTexture(image, NULL, NULL, &size.x, &size.y);
+
+	if (angle == 90 || angle == 270) { X -= 0.5; Y += 0.5; };
+	rect.x = X_to_scr(X);
+	rect.y = Y_to_scr(Y);
+	rect.w = W * scaleX;
+	rect.h = H * scaleY;
+	if (angle == 90 || angle == 270) {
+		rect.w = H * scaleX;
+		rect.h = W * scaleY;
+	}
+
+	SDL_SetTextureAlphaMod(image, alpha);
+	
+	SDL_RenderCopyEx(renderer, image, NULL, &rect, angle, NULL, SDL_FLIP_NONE);
+}
+
 void basecanvas::draw_image(std::string filename, float X, float Y, float W, float H, int alpha, bool keep_aspect) 
 {
 	SDL_Texture *image;
@@ -199,6 +227,22 @@ void basecanvas::draw_image(std::string filename, float X, float Y, float W, flo
 		texture_cache[filename] = image;
 	}
 	draw_image(image, X,Y,W,H,alpha,keep_aspect);
+}
+
+void basecanvas::draw_image_rotated(std::string filename, float X, float Y, float W, float H, int alpha, int angle) 
+{
+	SDL_Texture *image;
+	
+	if (texture_cache.find(filename) != texture_cache.end()) {
+		image = texture_cache[filename];
+	} else {
+		image = load_image(filename);
+		if (!image) {
+			printf("Failure to load %s\n", filename.c_str());
+		}
+		texture_cache[filename] = image;
+	}
+	draw_image_rotated(image, X,Y,W,H,alpha, angle);
 }
 
 

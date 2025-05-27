@@ -75,6 +75,8 @@ public:
     SDL_Texture *load_image(std::string filename);
     void draw_image(SDL_Texture *image, float X, float Y, float W, float H, int alpha=255, bool keepaspect = false);
     void draw_image(std::string filename, float X, float Y, float W, float H, int alpha=255, bool keepaspect = false);
+    void draw_image_rotated(SDL_Texture *image, float X, float Y, float W, float H, int alpha=255, int angle = 0);
+    void draw_image_rotated(std::string filename, float X, float Y, float W, float H, int alpha=255, int angle = 0);
     SDL_Texture *text_to_texture(const char *text);
     SDL_Texture *text_to_texture(std::string text);
     void draw_text(std::string text, float X, float Y, float W, float H);
@@ -262,6 +264,7 @@ protected:
     std::string name = "";
     int sizeX = 1;
     int sizeY = 1;
+    int angle = 0;
     bool over_drag_threshold = false;  /* has a drag-and-drop been far enough to avoid spurious drags */
     bool want_delete = false; /* not saved to disk */
     
