@@ -57,10 +57,10 @@ document::~document(void)
 
 	output << j.dump(4);
 	output.close();
+	delete _canvas;
 
 	TTF_Quit();
 	SDL_Quit();
-	delete _canvas;
 }
 
 void document::run(void)

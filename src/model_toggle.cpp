@@ -10,6 +10,8 @@ model_toggle::model_toggle(float _X, float _Y)  : element(1, 1, "Input")
     sizeY = 3;    
     X = floorf(_X);
     Y = floorf(_Y);
+    value = {};
+    value.valid = true;
     
     add_port(sizeX, 1, "Input", PORT_OUT);    
 }
