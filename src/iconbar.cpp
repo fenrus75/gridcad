@@ -15,6 +15,7 @@
 #include "model_4to1.h"
 #include "model_1to4.h"
 #include "model_8to4.h"
+#include "model_4to8.h"
 
 #include <SDL2/SDL_image.h>
 
@@ -44,6 +45,7 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
     icons[0][7] = new icon(renderer, ICON_4TO1);
     icons[1][7] = new icon(renderer, ICON_1TO4);
     icons[0][8] = new icon(renderer, ICON_8TO4);
+    icons[1][8] = new icon(renderer, ICON_4TO8);
     
     for (li = 0; li < library.size(); li++) {
         icons[li % 2][li / 2 + 9] = new icon(renderer, ICON_LIBRARY);
@@ -151,6 +153,7 @@ static const char *image_names[] =
  "assets/4to1.png",
  "assets/1to4.png",
  "assets/8to4.png",
+ "assets/4to8.png",
 };
 
 icon::icon(SDL_Renderer *renderer, int _type)
@@ -247,6 +250,8 @@ class element * icon::create_element(void)
               return new model_1to4(-10,-10);
 	  case ICON_8TO4:
 	      return new model_8to4(-10, -10);
+	  case ICON_4TO8:
+	      return new model_4to8(-10, -10);
           default:
              return NULL;
      }

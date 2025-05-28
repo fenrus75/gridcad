@@ -13,7 +13,7 @@ model_8to4::model_8to4(float _X, float _Y)  : element(_X, _Y, "")
     
     add_port(sizeX, 1, "0-3", PORT_OUT, 4);
     add_port(sizeX, 4, "4-7", PORT_OUT, 4);
-    add_port(-1, 3, "Bus", PORT_IN, 8);
+    add_port(-1, 3, "0-7", PORT_IN, 8);
 }
 
 model_8to4::~model_8to4(void)
@@ -41,21 +41,22 @@ void model_8to4::calculate(int ttl)
 {
     struct value out = {};
     
+    int val;
+    
     if (ttl <= 1) {
         printf("8to4 ttl exceeded\n");
         return;
     }
     out.valid = true;
     out.type = VALUE_TYPE_INT;
+    
+    val = ports[2]->value.intval;
+    printf("8t4: val is %i \n", val);
 
-    value = ports[2]->value;
-
-    out = value;
-    out.intval = out.intval >> 4;
-    ports[0]->update_value(&out, ttl-1);
-    out = value;
-    out.intval &= 7;
+    out.intval = val >> 4;
     ports[1]->update_value(&out, ttl-1);
+    out.intval = val & 7;;
+    ports[0]->update_value(&out, ttl-1);
 
 }
 

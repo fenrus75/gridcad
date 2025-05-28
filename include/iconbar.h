@@ -20,6 +20,7 @@
 #define ICON_4TO1 13
 #define ICON_1TO4 14
 #define ICON_8TO4 15
+#define ICON_4TO8 16
 
 class icon {
 public:
