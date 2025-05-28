@@ -282,10 +282,13 @@ bool canvas::handle_event(SDL_Event &event)
 				}
 				break;
 			case SDLK_SPACE:
-				for (auto elem : current_scene->elements) {
-					if (!elem->is_selected())
-						continue;
-					elem->rotate_ports();
+				if (!someone_in_editmode) {
+					take_undo_snapshot(current_scene);
+					for (auto elem : current_scene->elements) {
+						if (!elem->is_selected())
+							continue;
+						elem->rotate_ports();
+					}
 				}
 				break;
 			case SDLK_g:
