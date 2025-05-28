@@ -86,13 +86,15 @@ void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y
             if ((*step) >= stepsize) {
                 (*step) = 0;
 		if (value->type == VALUE_TYPE_INT){ 
+			const float size = 0.24;
+			const float size2 = 0.20;
 			char buf[128];
 			std::string s;
 			sprintf(buf, "%li", value->intval);
 			s = buf;
-			canvas->draw_box(x1-0.18, y1-0.18, x1+0.18, y1+0.18, COLOR_WIRE_MOTION);
-			canvas->draw_box(x1-0.12, y1-0.12, x1+0.12, y1+0.12, COLOR_BACKGROUND_MAIN);
-	                canvas->draw_text(s, x1+0.05-0.18, y1+0.05-0.18, 0.26, 0.26);
+			canvas->draw_box(x1-size, y1-size, x1+size, y1+size, COLOR_WIRE_MOTION);
+			canvas->draw_box(x1-size2, y1-size2, x1+size2, y1+size2, COLOR_BACKGROUND_MAIN);
+	                canvas->draw_text(s, x1+0.05-size, y1+0.05-size, 2 * size - 0.1, 2 * size - 0.1);
 		} else {
 	                canvas->draw_circle2(x1, y1, 0.18, COLOR_WIRE_MOTION, value_color(value));
 		}
