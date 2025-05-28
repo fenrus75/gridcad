@@ -65,8 +65,10 @@ void model_nest::drawAt(class canvas *canvas, float X, float Y, int type)
      		if (port->Y == -1) dy = 1;
      		if (port->Y == sizeY) dy = -1;
      		
-		if (dist(mouseX, mouseY, X + port->X, Y + port->Y) < 10)
+		if (dist(mouseX, mouseY, X + port->X, Y + port->Y) < 10) {
+			canvas->draw_image("assets/gray.png", X + port->X + dx, Y + port->Y +dy, 1, 1);
 	     		canvas->draw_text(port->name, X + port->X + dx, Y + port->Y +dy, 1, 1);
+		}
      	}
 	
 }

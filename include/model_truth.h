@@ -38,5 +38,5 @@ private:
     unsigned int inputs = 2;
     unsigned int outputs = 1;
     long int previous_click = -1;
-    
+    float mouseX = -100, mouseY = -100;     /* no save */
 };

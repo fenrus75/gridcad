@@ -145,6 +145,8 @@ void scene::from_json(json &j)
 		element->from_json(p);
 		elements.push_back(element);
 	}
+	for (auto element : elements)
+		element->calculate(100);
 }
 
 void scene::process_delete_requests(void)
