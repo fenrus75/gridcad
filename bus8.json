@@ -239,8 +239,8 @@
                     "direction": 1,
                     "linked_uuid": "",
                     "name": "Bus",
-                    "screenX": 20.0,
-                    "screenY": 11.0,
+                    "screenX": 20.479999542236328,
+                    "screenY": 11.520000457763672,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -253,15 +253,19 @@
                     "wires": [
                         {
                             "X1": 20,
-                            "X2": 23,
+                            "X2": 25,
                             "Y1": 11,
-                            "Y2": 13,
+                            "Y2": 14,
                             "color": 6,
-                            "name": "Wire1748460786",
+                            "name": "Wire1748461479",
                             "points": [
                                 {
-                                    "X": 23,
-                                    "Y": 13
+                                    "X": 25,
+                                    "Y": 14
+                                },
+                                {
+                                    "X": 24,
+                                    "Y": 14
                                 },
                                 {
                                     "X": 21,
@@ -596,12 +600,12 @@
                     },
                     "wires": [
                         {
-                            "X1": 25,
-                            "X2": 23,
-                            "Y1": 14,
-                            "Y2": 13,
+                            "X1": 20,
+                            "X2": 25,
+                            "Y1": 11,
+                            "Y2": 14,
                             "color": 6,
-                            "name": "Wire1748459827",
+                            "name": "Wire1748461479",
                             "points": [
                                 {
                                     "X": 25,
@@ -612,8 +616,12 @@
                                     "Y": 14
                                 },
                                 {
-                                    "X": 23,
-                                    "Y": 13
+                                    "X": 21,
+                                    "Y": 11
+                                },
+                                {
+                                    "X": 20,
+                                    "Y": 11
                                 }
                             ],
                             "value": {
@@ -707,23 +715,15 @@
                     "wires": [
                         {
                             "X1": 28,
-                            "X2": 36,
+                            "X2": 34,
                             "Y1": 16,
-                            "Y2": 25,
+                            "Y2": 22,
                             "color": 6,
-                            "name": "Wire1748460171",
+                            "name": "Wire1748461481",
                             "points": [
                                 {
-                                    "X": 36,
-                                    "Y": 25
-                                },
-                                {
-                                    "X": 35,
-                                    "Y": 24
-                                },
-                                {
-                                    "X": 35,
-                                    "Y": 23
+                                    "X": 34,
+                                    "Y": 22
                                 },
                                 {
                                     "X": 28,
@@ -1375,9 +1375,9 @@
                     "screenY": 29.0,
                     "value": {
                         "arrayval": 0,
-                        "boolval": false,
+                        "boolval": true,
                         "floatval": 0.0,
-                        "intval": 0,
+                        "intval": 1,
                         "is_error": false,
                         "type": 0,
                         "valid": true
@@ -1410,9 +1410,9 @@
                             ],
                             "value": {
                                 "arrayval": 0,
-                                "boolval": false,
+                                "boolval": true,
                                 "floatval": 0.0,
-                                "intval": 0,
+                                "intval": 1,
                                 "is_error": false,
                                 "type": 0,
                                 "valid": true
@@ -1597,7 +1597,7 @@
                         "arrayval": 0,
                         "boolval": false,
                         "floatval": 0.0,
-                        "intval": 0,
+                        "intval": 1,
                         "is_error": false,
                         "type": 1,
                         "valid": true
@@ -1632,7 +1632,7 @@
                                 "arrayval": 0,
                                 "boolval": false,
                                 "floatval": 0.0,
-                                "intval": 0,
+                                "intval": 1,
                                 "is_error": false,
                                 "type": 1,
                                 "valid": true
@@ -1949,7 +1949,7 @@
                         "arrayval": 0,
                         "boolval": false,
                         "floatval": 0.0,
-                        "intval": 0,
+                        "intval": 1,
                         "is_error": false,
                         "type": 1,
                         "valid": true
@@ -1984,7 +1984,7 @@
                                 "arrayval": 0,
                                 "boolval": false,
                                 "floatval": 0.0,
-                                "intval": 0,
+                                "intval": 1,
                                 "is_error": false,
                                 "type": 1,
                                 "valid": true
@@ -2063,7 +2063,7 @@
                         "arrayval": 0,
                         "boolval": false,
                         "floatval": 0.0,
-                        "intval": 64,
+                        "intval": 65,
                         "is_error": false,
                         "type": 1,
                         "valid": true
@@ -2071,19 +2071,15 @@
                     "wires": [
                         {
                             "X1": 28,
-                            "X2": 36,
+                            "X2": 35,
                             "Y1": 36,
-                            "Y2": 26,
+                            "Y2": 28,
                             "color": 6,
-                            "name": "Wire1748460172",
+                            "name": "Wire1748461483",
                             "points": [
                                 {
-                                    "X": 36,
-                                    "Y": 26
-                                },
-                                {
                                     "X": 35,
-                                    "Y": 27
+                                    "Y": 28
                                 },
                                 {
                                     "X": 35,
@@ -2098,7 +2094,7 @@
                                 "arrayval": 0,
                                 "boolval": false,
                                 "floatval": 0.0,
-                                "intval": 64,
+                                "intval": 65,
                                 "is_error": false,
                                 "type": 1,
                                 "valid": true
@@ -2281,9 +2277,9 @@
                     "screenY": 25.0,
                     "value": {
                         "arrayval": 0,
-                        "boolval": false,
+                        "boolval": true,
                         "floatval": 0.0,
-                        "intval": 0,
+                        "intval": 1,
                         "is_error": false,
                         "type": 0,
                         "valid": true
@@ -2316,9 +2312,9 @@
                             ],
                             "value": {
                                 "arrayval": 0,
-                                "boolval": false,
+                                "boolval": true,
                                 "floatval": 0.0,
-                                "intval": 0,
+                                "intval": 1,
                                 "is_error": false,
                                 "type": 0,
                                 "valid": true
@@ -2333,9 +2329,9 @@
             "uuid": "683761bf-ade4efe3-37fd-8eba-b178-849c6ba1fbd4",
             "value": {
                 "arrayval": 0,
-                "boolval": false,
+                "boolval": true,
                 "floatval": 0.0,
-                "intval": 0,
+                "intval": 1,
                 "is_error": false,
                 "type": 0,
                 "valid": true
@@ -2741,9 +2737,9 @@
                     "screenY": 23.0,
                     "value": {
                         "arrayval": 0,
-                        "boolval": true,
+                        "boolval": false,
                         "floatval": 0.0,
-                        "intval": 1,
+                        "intval": 0,
                         "is_error": false,
                         "type": 0,
                         "valid": true
@@ -2768,9 +2764,9 @@
                             ],
                             "value": {
                                 "arrayval": 0,
-                                "boolval": true,
+                                "boolval": false,
                                 "floatval": 0.0,
-                                "intval": 1,
+                                "intval": 0,
                                 "is_error": false,
                                 "type": 0,
                                 "valid": true
@@ -2897,10 +2893,10 @@
                     },
                     "wires": [
                         {
-                            "X1": 28,
-                            "X2": 36,
-                            "Y1": 16,
-                            "Y2": 25,
+                            "X1": 36,
+                            "X2": 34,
+                            "Y1": 25,
+                            "Y2": 22,
                             "color": 6,
                             "name": "Wire1748460171",
                             "points": [
@@ -2909,16 +2905,12 @@
                                     "Y": 25
                                 },
                                 {
-                                    "X": 35,
-                                    "Y": 24
-                                },
-                                {
-                                    "X": 35,
+                                    "X": 34,
                                     "Y": 23
                                 },
                                 {
-                                    "X": 28,
-                                    "Y": 16
+                                    "X": 34,
+                                    "Y": 22
                                 }
                             ],
                             "value": {
@@ -2947,17 +2939,17 @@
                         "arrayval": 0,
                         "boolval": false,
                         "floatval": 0.0,
-                        "intval": 64,
+                        "intval": 65,
                         "is_error": false,
                         "type": 1,
                         "valid": true
                     },
                     "wires": [
                         {
-                            "X1": 28,
-                            "X2": 36,
-                            "Y1": 36,
-                            "Y2": 26,
+                            "X1": 36,
+                            "X2": 35,
+                            "Y1": 26,
+                            "Y2": 28,
                             "color": 6,
                             "name": "Wire1748460172",
                             "points": [
@@ -2971,18 +2963,14 @@
                                 },
                                 {
                                     "X": 35,
-                                    "Y": 29
-                                },
-                                {
-                                    "X": 28,
-                                    "Y": 36
+                                    "Y": 28
                                 }
                             ],
                             "value": {
                                 "arrayval": 0,
                                 "boolval": false,
                                 "floatval": 0.0,
-                                "intval": 64,
+                                "intval": 65,
                                 "is_error": false,
                                 "type": 1,
                                 "valid": true
@@ -3015,7 +3003,7 @@
                                     "arrayval": 0,
                                     "boolval": false,
                                     "floatval": 0.0,
-                                    "intval": 64,
+                                    "intval": 65,
                                     "is_error": false,
                                     "type": 1,
                                     "valid": true
@@ -3042,7 +3030,7 @@
                                             "arrayval": 0,
                                             "boolval": false,
                                             "floatval": 0.0,
-                                            "intval": 64,
+                                            "intval": 65,
                                             "is_error": false,
                                             "type": 1,
                                             "valid": true
@@ -3059,7 +3047,7 @@
                             "arrayval": 0,
                             "boolval": false,
                             "floatval": 0.0,
-                            "intval": 64,
+                            "intval": 65,
                             "is_error": false,
                             "type": 1,
                             "valid": true
@@ -3084,9 +3072,9 @@
                                 "screenY": 6.0,
                                 "value": {
                                     "arrayval": 0,
-                                    "boolval": true,
+                                    "boolval": false,
                                     "floatval": 0.0,
-                                    "intval": 1,
+                                    "intval": 0,
                                     "is_error": false,
                                     "type": 0,
                                     "valid": true
@@ -3111,9 +3099,9 @@
                                         ],
                                         "value": {
                                             "arrayval": 0,
-                                            "boolval": true,
+                                            "boolval": false,
                                             "floatval": 0.0,
-                                            "intval": 1,
+                                            "intval": 0,
                                             "is_error": false,
                                             "type": 0,
                                             "valid": true
@@ -3128,9 +3116,9 @@
                         "uuid": "68376258-4b18d8b8-92b6-ef14-e091-6a4872d1e17e",
                         "value": {
                             "arrayval": 0,
-                            "boolval": true,
+                            "boolval": false,
                             "floatval": 0.0,
-                            "intval": 1,
+                            "intval": 0,
                             "is_error": false,
                             "type": 0,
                             "valid": true
@@ -3352,7 +3340,7 @@
                                     "arrayval": 0,
                                     "boolval": false,
                                     "floatval": 0.0,
-                                    "intval": 0,
+                                    "intval": 1,
                                     "is_error": false,
                                     "type": 1,
                                     "valid": true
@@ -3383,7 +3371,7 @@
                                             "arrayval": 0,
                                             "boolval": false,
                                             "floatval": 0.0,
-                                            "intval": 0,
+                                            "intval": 1,
                                             "is_error": false,
                                             "type": 1,
                                             "valid": true
@@ -3454,7 +3442,7 @@
                                     "arrayval": 0,
                                     "boolval": false,
                                     "floatval": 0.0,
-                                    "intval": 64,
+                                    "intval": 65,
                                     "is_error": false,
                                     "type": 1,
                                     "valid": true
@@ -3481,7 +3469,7 @@
                                             "arrayval": 0,
                                             "boolval": false,
                                             "floatval": 0.0,
-                                            "intval": 64,
+                                            "intval": 65,
                                             "is_error": false,
                                             "type": 1,
                                             "valid": true
@@ -3516,9 +3504,9 @@
                                 "screenY": 10.0,
                                 "value": {
                                     "arrayval": 0,
-                                    "boolval": true,
+                                    "boolval": false,
                                     "floatval": 0.0,
-                                    "intval": 1,
+                                    "intval": 0,
                                     "is_error": false,
                                     "type": 0,
                                     "valid": true
@@ -3543,9 +3531,9 @@
                                         ],
                                         "value": {
                                             "arrayval": 0,
-                                            "boolval": true,
+                                            "boolval": false,
                                             "floatval": 0.0,
-                                            "intval": 1,
+                                            "intval": 0,
                                             "is_error": false,
                                             "type": 0,
                                             "valid": true
@@ -3722,7 +3710,7 @@
                                     "arrayval": 0,
                                     "boolval": false,
                                     "floatval": 0.0,
-                                    "intval": 0,
+                                    "intval": 1,
                                     "is_error": false,
                                     "type": 1,
                                     "valid": true
@@ -3753,7 +3741,7 @@
                                             "arrayval": 0,
                                             "boolval": false,
                                             "floatval": 0.0,
-                                            "intval": 0,
+                                            "intval": 1,
                                             "is_error": false,
                                             "type": 1,
                                             "valid": true
@@ -3784,9 +3772,9 @@
                                             "screenY": 7.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": true,
+                                                "boolval": false,
                                                 "floatval": 0.0,
-                                                "intval": 1,
+                                                "intval": 0,
                                                 "is_error": false,
                                                 "type": 0,
                                                 "valid": true
@@ -3811,9 +3799,9 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": true,
+                                                        "boolval": false,
                                                         "floatval": 0.0,
-                                                        "intval": 1,
+                                                        "intval": 0,
                                                         "is_error": false,
                                                         "type": 0,
                                                         "valid": true
@@ -3828,9 +3816,9 @@
                                     "uuid": "6836272d-31fd5f0d-75ee-ec21-0ec1-d33c07da1b2c",
                                     "value": {
                                         "arrayval": 0,
-                                        "boolval": true,
+                                        "boolval": false,
                                         "floatval": 0.0,
-                                        "intval": 1,
+                                        "intval": 0,
                                         "is_error": false,
                                         "type": 0,
                                         "valid": true
@@ -3857,9 +3845,9 @@
                                             "screenY": 13.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": true,
+                                                "boolval": false,
                                                 "floatval": 0.0,
-                                                "intval": 1,
+                                                "intval": 0,
                                                 "is_error": false,
                                                 "type": 0,
                                                 "valid": true
@@ -3884,9 +3872,9 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": true,
+                                                        "boolval": false,
                                                         "floatval": 0.0,
-                                                        "intval": 1,
+                                                        "intval": 0,
                                                         "is_error": false,
                                                         "type": 0,
                                                         "valid": true
@@ -4057,7 +4045,7 @@
                                             "screenY": 16.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_error": false,
@@ -4084,7 +4072,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_error": false,
@@ -4178,7 +4166,7 @@
                                                         "screenY": 16.0,
                                                         "value": {
                                                             "arrayval": 0,
-                                                            "boolval": false,
+                                                            "boolval": true,
                                                             "floatval": 0.0,
                                                             "intval": 0,
                                                             "is_error": false,
@@ -4195,7 +4183,7 @@
                                                                 "name": "Wire1748307923",
                                                                 "value": {
                                                                     "arrayval": 0,
-                                                                    "boolval": false,
+                                                                    "boolval": true,
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_error": false,
@@ -4212,7 +4200,7 @@
                                                 "uuid": "68350f2b-94df0fce-fadc-9a94-7a14-e2a35325168b",
                                                 "value": {
                                                     "arrayval": 0,
-                                                    "boolval": false,
+                                                    "boolval": true,
                                                     "floatval": 0.0,
                                                     "intval": 0,
                                                     "is_error": false,
@@ -4239,9 +4227,9 @@
                                                         "screenY": 3.0,
                                                         "value": {
                                                             "arrayval": 0,
-                                                            "boolval": true,
+                                                            "boolval": false,
                                                             "floatval": 0.0,
-                                                            "intval": 1,
+                                                            "intval": 0,
                                                             "is_error": false,
                                                             "type": 0,
                                                             "valid": true
@@ -4256,9 +4244,9 @@
                                                                 "name": "Wire1748309915",
                                                                 "value": {
                                                                     "arrayval": 0,
-                                                                    "boolval": true,
+                                                                    "boolval": false,
                                                                     "floatval": 0.0,
-                                                                    "intval": 1,
+                                                                    "intval": 0,
                                                                     "is_error": false,
                                                                     "type": 0,
                                                                     "valid": true
@@ -4273,9 +4261,9 @@
                                                 "uuid": "68350f2d-64a05c86-e5f3-1725-f9d4-0dc89645a862",
                                                 "value": {
                                                     "arrayval": 0,
-                                                    "boolval": true,
+                                                    "boolval": false,
                                                     "floatval": 0.0,
-                                                    "intval": 1,
+                                                    "intval": 0,
                                                     "is_error": false,
                                                     "type": 0,
                                                     "valid": true
@@ -4443,7 +4431,7 @@
                                                         "screenY": 10.0,
                                                         "value": {
                                                             "arrayval": 0,
-                                                            "boolval": false,
+                                                            "boolval": true,
                                                             "floatval": 0.0,
                                                             "intval": 0,
                                                             "is_error": false,
@@ -4460,7 +4448,7 @@
                                                                 "name": "Wire1748307924",
                                                                 "value": {
                                                                     "arrayval": 0,
-                                                                    "boolval": false,
+                                                                    "boolval": true,
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_error": false,
@@ -4482,7 +4470,7 @@
                                                         "screenY": 9.0,
                                                         "value": {
                                                             "arrayval": 0,
-                                                            "boolval": true,
+                                                            "boolval": false,
                                                             "floatval": 0.0,
                                                             "intval": 0,
                                                             "is_error": false,
@@ -4499,7 +4487,7 @@
                                                                 "name": "Wire1748307841",
                                                                 "value": {
                                                                     "arrayval": 0,
-                                                                    "boolval": true,
+                                                                    "boolval": false,
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_error": false,
@@ -4534,9 +4522,9 @@
                                                         "screenY": 7.0,
                                                         "value": {
                                                             "arrayval": 0,
-                                                            "boolval": true,
+                                                            "boolval": false,
                                                             "floatval": 0.0,
-                                                            "intval": 1,
+                                                            "intval": 0,
                                                             "is_error": false,
                                                             "type": 0,
                                                             "valid": true
@@ -4551,9 +4539,9 @@
                                                                 "name": "Wire1748309914",
                                                                 "value": {
                                                                     "arrayval": 0,
-                                                                    "boolval": true,
+                                                                    "boolval": false,
                                                                     "floatval": 0.0,
-                                                                    "intval": 1,
+                                                                    "intval": 0,
                                                                     "is_error": false,
                                                                     "type": 0,
                                                                     "valid": true
@@ -4573,7 +4561,7 @@
                                                         "screenY": 9.0,
                                                         "value": {
                                                             "arrayval": 0,
-                                                            "boolval": true,
+                                                            "boolval": false,
                                                             "floatval": 0.0,
                                                             "intval": 0,
                                                             "is_error": false,
@@ -4590,7 +4578,7 @@
                                                                 "name": "Wire1748307838",
                                                                 "value": {
                                                                     "arrayval": 0,
-                                                                    "boolval": true,
+                                                                    "boolval": false,
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_error": false,
@@ -4703,7 +4691,7 @@
                                                         "screenY": 16.0,
                                                         "value": {
                                                             "arrayval": 0,
-                                                            "boolval": false,
+                                                            "boolval": true,
                                                             "floatval": 0.0,
                                                             "intval": 0,
                                                             "is_error": false,
@@ -4720,7 +4708,7 @@
                                                                 "name": "Wire1748307925",
                                                                 "value": {
                                                                     "arrayval": 0,
-                                                                    "boolval": false,
+                                                                    "boolval": true,
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_error": false,
@@ -4742,7 +4730,7 @@
                                                         "screenY": 15.0,
                                                         "value": {
                                                             "arrayval": 0,
-                                                            "boolval": false,
+                                                            "boolval": true,
                                                             "floatval": 0.0,
                                                             "intval": 0,
                                                             "is_error": false,
@@ -4759,7 +4747,7 @@
                                                                 "name": "Wire1748307921",
                                                                 "value": {
                                                                     "arrayval": 0,
-                                                                    "boolval": false,
+                                                                    "boolval": true,
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_error": false,
@@ -4794,7 +4782,7 @@
                                                         "screenY": 11.0,
                                                         "value": {
                                                             "arrayval": 0,
-                                                            "boolval": true,
+                                                            "boolval": false,
                                                             "floatval": 0.0,
                                                             "intval": 0,
                                                             "is_error": false,
@@ -4811,7 +4799,7 @@
                                                                 "name": "Wire1748307842",
                                                                 "value": {
                                                                     "arrayval": 0,
-                                                                    "boolval": true,
+                                                                    "boolval": false,
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_error": false,
@@ -4833,9 +4821,9 @@
                                                         "screenY": 13.0,
                                                         "value": {
                                                             "arrayval": 0,
-                                                            "boolval": true,
+                                                            "boolval": false,
                                                             "floatval": 0.0,
-                                                            "intval": 1,
+                                                            "intval": 0,
                                                             "is_error": false,
                                                             "type": 0,
                                                             "valid": true
@@ -4850,9 +4838,9 @@
                                                                 "name": "Wire1748309913",
                                                                 "value": {
                                                                     "arrayval": 0,
-                                                                    "boolval": true,
+                                                                    "boolval": false,
                                                                     "floatval": 0.0,
-                                                                    "intval": 1,
+                                                                    "intval": 0,
                                                                     "is_error": false,
                                                                     "type": 0,
                                                                     "valid": true
@@ -4872,7 +4860,7 @@
                                                         "screenY": 12.0,
                                                         "value": {
                                                             "arrayval": 0,
-                                                            "boolval": true,
+                                                            "boolval": false,
                                                             "floatval": 0.0,
                                                             "intval": 0,
                                                             "is_error": false,
@@ -4889,7 +4877,7 @@
                                                                 "name": "Wire1748307920",
                                                                 "value": {
                                                                     "arrayval": 0,
-                                                                    "boolval": true,
+                                                                    "boolval": false,
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_error": false,
@@ -4924,7 +4912,7 @@
                                                         "screenY": 9.0,
                                                         "value": {
                                                             "arrayval": 0,
-                                                            "boolval": true,
+                                                            "boolval": false,
                                                             "floatval": 0.0,
                                                             "intval": 0,
                                                             "is_error": false,
@@ -4941,7 +4929,7 @@
                                                                 "name": "Wire1748307838",
                                                                 "value": {
                                                                     "arrayval": 0,
-                                                                    "boolval": true,
+                                                                    "boolval": false,
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_error": false,
@@ -4959,7 +4947,7 @@
                                                                 "name": "Wire1748307841",
                                                                 "value": {
                                                                     "arrayval": 0,
-                                                                    "boolval": true,
+                                                                    "boolval": false,
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_error": false,
@@ -4977,7 +4965,7 @@
                                                                 "name": "Wire1748307842",
                                                                 "value": {
                                                                     "arrayval": 0,
-                                                                    "boolval": true,
+                                                                    "boolval": false,
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_error": false,
@@ -5100,7 +5088,7 @@
                                                         "screenY": 13.0,
                                                         "value": {
                                                             "arrayval": 0,
-                                                            "boolval": true,
+                                                            "boolval": false,
                                                             "floatval": 0.0,
                                                             "intval": 0,
                                                             "is_error": false,
@@ -5117,7 +5105,7 @@
                                                                 "name": "Wire1748307920",
                                                                 "value": {
                                                                     "arrayval": 0,
-                                                                    "boolval": true,
+                                                                    "boolval": false,
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_error": false,
@@ -5139,7 +5127,7 @@
                                                         "screenY": 15.0,
                                                         "value": {
                                                             "arrayval": 0,
-                                                            "boolval": false,
+                                                            "boolval": true,
                                                             "floatval": 0.0,
                                                             "intval": 0,
                                                             "is_error": false,
@@ -5156,7 +5144,7 @@
                                                                 "name": "Wire1748307921",
                                                                 "value": {
                                                                     "arrayval": 0,
-                                                                    "boolval": false,
+                                                                    "boolval": true,
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_error": false,
@@ -5230,7 +5218,7 @@
                                                         "screenY": 16.0,
                                                         "value": {
                                                             "arrayval": 0,
-                                                            "boolval": false,
+                                                            "boolval": true,
                                                             "floatval": 0.0,
                                                             "intval": 0,
                                                             "is_error": false,
@@ -5247,7 +5235,7 @@
                                                                 "name": "Wire1748307923",
                                                                 "value": {
                                                                     "arrayval": 0,
-                                                                    "boolval": false,
+                                                                    "boolval": true,
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_error": false,
@@ -5265,7 +5253,7 @@
                                                                 "name": "Wire1748307925",
                                                                 "value": {
                                                                     "arrayval": 0,
-                                                                    "boolval": false,
+                                                                    "boolval": true,
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_error": false,
@@ -5283,7 +5271,7 @@
                                                                 "name": "Wire1748307924",
                                                                 "value": {
                                                                     "arrayval": 0,
-                                                                    "boolval": false,
+                                                                    "boolval": true,
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_error": false,
@@ -5318,9 +5306,9 @@
                                                         "screenY": 7.0,
                                                         "value": {
                                                             "arrayval": 0,
-                                                            "boolval": true,
+                                                            "boolval": false,
                                                             "floatval": 0.0,
-                                                            "intval": 1,
+                                                            "intval": 0,
                                                             "is_error": false,
                                                             "type": 0,
                                                             "valid": true
@@ -5335,9 +5323,9 @@
                                                                 "name": "Wire1748309913",
                                                                 "value": {
                                                                     "arrayval": 0,
-                                                                    "boolval": true,
+                                                                    "boolval": false,
                                                                     "floatval": 0.0,
-                                                                    "intval": 1,
+                                                                    "intval": 0,
                                                                     "is_error": false,
                                                                     "type": 0,
                                                                     "valid": true
@@ -5353,9 +5341,9 @@
                                                                 "name": "Wire1748309915",
                                                                 "value": {
                                                                     "arrayval": 0,
-                                                                    "boolval": true,
+                                                                    "boolval": false,
                                                                     "floatval": 0.0,
-                                                                    "intval": 1,
+                                                                    "intval": 0,
                                                                     "is_error": false,
                                                                     "type": 0,
                                                                     "valid": true
@@ -5371,9 +5359,9 @@
                                                                 "name": "Wire1748309914",
                                                                 "value": {
                                                                     "arrayval": 0,
-                                                                    "boolval": true,
+                                                                    "boolval": false,
                                                                     "floatval": 0.0,
-                                                                    "intval": 1,
+                                                                    "intval": 0,
                                                                     "is_error": false,
                                                                     "type": 0,
                                                                     "valid": true
@@ -10881,7 +10869,7 @@
                                             "screenY": 61.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_error": false,
@@ -10908,7 +10896,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_error": false,
@@ -10936,7 +10924,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_error": false,
@@ -10971,7 +10959,7 @@
                                             "screenY": 16.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_error": false,
@@ -10998,7 +10986,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_error": false,
@@ -11026,7 +11014,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_error": false,
@@ -11859,7 +11847,7 @@
                                             "screenY": 61.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_error": false,
@@ -11886,7 +11874,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_error": false,
@@ -12057,7 +12045,7 @@
                                                 "arrayval": 0,
                                                 "boolval": false,
                                                 "floatval": 0.0,
-                                                "intval": 0,
+                                                "intval": 1,
                                                 "is_error": false,
                                                 "type": 1,
                                                 "valid": true
@@ -12084,7 +12072,7 @@
                                                         "arrayval": 0,
                                                         "boolval": false,
                                                         "floatval": 0.0,
-                                                        "intval": 0,
+                                                        "intval": 1,
                                                         "is_error": false,
                                                         "type": 1,
                                                         "valid": true
@@ -12526,7 +12514,7 @@
                                                 "arrayval": 0,
                                                 "boolval": false,
                                                 "floatval": 0.0,
-                                                "intval": 0,
+                                                "intval": 1,
                                                 "is_error": false,
                                                 "type": 1,
                                                 "valid": true
@@ -12553,7 +12541,7 @@
                                                         "arrayval": 0,
                                                         "boolval": false,
                                                         "floatval": 0.0,
-                                                        "intval": 0,
+                                                        "intval": 1,
                                                         "is_error": false,
                                                         "type": 1,
                                                         "valid": true
@@ -12570,7 +12558,7 @@
                                         "arrayval": 0,
                                         "boolval": false,
                                         "floatval": 0.0,
-                                        "intval": 0,
+                                        "intval": 1,
                                         "is_error": false,
                                         "type": 1,
                                         "valid": true
@@ -22018,7 +22006,7 @@
                         "uuid": "683765e3-2d7a5e7d-1c05-17bb-4ac9-f242402ff4ad"
                     }
                 ],
-                "name": "SubScreen",
+                "name": "Add8",
                 "parental_name": "",
                 "sizeX": 200.0,
                 "sizeY": 200.0
@@ -23344,9 +23332,9 @@
                     "screenY": 14.0,
                     "value": {
                         "arrayval": 0,
-                        "boolval": true,
+                        "boolval": false,
                         "floatval": 0.0,
-                        "intval": 1,
+                        "intval": 0,
                         "is_error": false,
                         "type": 0,
                         "valid": true
@@ -23371,9 +23359,9 @@
                             ],
                             "value": {
                                 "arrayval": 0,
-                                "boolval": true,
+                                "boolval": false,
                                 "floatval": 0.0,
-                                "intval": 1,
+                                "intval": 0,
                                 "is_error": false,
                                 "type": 0,
                                 "valid": true
@@ -23388,201 +23376,13 @@
             "uuid": "683762ea-b1ca6aef-602b-15e5-73e6-3f3d03acbd4b",
             "value": {
                 "arrayval": 0,
-                "boolval": true,
+                "boolval": false,
                 "floatval": 0.0,
-                "intval": 1,
+                "intval": 0,
                 "is_error": false,
                 "type": 0,
                 "valid": true
             }
-        },
-        {
-            "X": 22.0,
-            "Y": 5.0,
-            "angle": 0,
-            "class_id": "model_output:",
-            "name": "Output",
-            "parental_name": "/",
-            "ports": [
-                {
-                    "X": 1,
-                    "Y": 3,
-                    "bus_width": 0,
-                    "direction": 0,
-                    "linked_uuid": "",
-                    "name": "Output",
-                    "screenX": 23.0,
-                    "screenY": 8.0,
-                    "value": {
-                        "arrayval": 0,
-                        "boolval": false,
-                        "floatval": 0.0,
-                        "intval": 3,
-                        "is_error": false,
-                        "type": 1,
-                        "valid": true
-                    },
-                    "wires": [
-                        {
-                            "X1": 23,
-                            "X2": 23,
-                            "Y1": 8,
-                            "Y2": 13,
-                            "color": 6,
-                            "name": "Wire1748460785",
-                            "points": [
-                                {
-                                    "X": 23,
-                                    "Y": 8
-                                },
-                                {
-                                    "X": 23,
-                                    "Y": 13
-                                }
-                            ],
-                            "value": {
-                                "arrayval": 0,
-                                "boolval": false,
-                                "floatval": 0.0,
-                                "intval": 3,
-                                "is_error": false,
-                                "type": 1,
-                                "valid": true
-                            },
-                            "width": 4
-                        }
-                    ]
-                }
-            ],
-            "sizeX": 3,
-            "sizeY": 3,
-            "uuid": "68376444-22b0bd00-4a51-2c5e-7803-c2c3577bd2b8"
-        },
-        {
-            "X": 23.0,
-            "Y": 13.0,
-            "angle": 0,
-            "class_id": "connector:",
-            "name": "",
-            "parental_name": "/",
-            "ports": [
-                {
-                    "X": 0,
-                    "Y": 0,
-                    "bus_width": 0,
-                    "direction": 2,
-                    "linked_uuid": "",
-                    "name": "Connector",
-                    "screenX": 23.0,
-                    "screenY": 13.0,
-                    "value": {
-                        "arrayval": 0,
-                        "boolval": false,
-                        "floatval": 0.0,
-                        "intval": 3,
-                        "is_error": false,
-                        "type": 1,
-                        "valid": true
-                    },
-                    "wires": [
-                        {
-                            "X1": 25,
-                            "X2": 23,
-                            "Y1": 14,
-                            "Y2": 13,
-                            "color": 6,
-                            "name": "Wire1748459827",
-                            "points": [
-                                {
-                                    "X": 25,
-                                    "Y": 14
-                                },
-                                {
-                                    "X": 24,
-                                    "Y": 14
-                                },
-                                {
-                                    "X": 23,
-                                    "Y": 13
-                                }
-                            ],
-                            "value": {
-                                "arrayval": 0,
-                                "boolval": false,
-                                "floatval": 0.0,
-                                "intval": 3,
-                                "is_error": false,
-                                "type": 1,
-                                "valid": true
-                            },
-                            "width": 4
-                        },
-                        {
-                            "X1": 20,
-                            "X2": 23,
-                            "Y1": 11,
-                            "Y2": 13,
-                            "color": 6,
-                            "name": "Wire1748460786",
-                            "points": [
-                                {
-                                    "X": 23,
-                                    "Y": 13
-                                },
-                                {
-                                    "X": 21,
-                                    "Y": 11
-                                },
-                                {
-                                    "X": 20,
-                                    "Y": 11
-                                }
-                            ],
-                            "value": {
-                                "arrayval": 0,
-                                "boolval": false,
-                                "floatval": 0.0,
-                                "intval": 3,
-                                "is_error": false,
-                                "type": 1,
-                                "valid": true
-                            },
-                            "width": 4
-                        },
-                        {
-                            "X1": 23,
-                            "X2": 23,
-                            "Y1": 8,
-                            "Y2": 13,
-                            "color": 6,
-                            "name": "Wire1748460785",
-                            "points": [
-                                {
-                                    "X": 23,
-                                    "Y": 8
-                                },
-                                {
-                                    "X": 23,
-                                    "Y": 13
-                                }
-                            ],
-                            "value": {
-                                "arrayval": 0,
-                                "boolval": false,
-                                "floatval": 0.0,
-                                "intval": 3,
-                                "is_error": false,
-                                "type": 1,
-                                "valid": true
-                            },
-                            "width": 4
-                        }
-                    ]
-                }
-            ],
-            "sizeX": 1,
-            "sizeY": 1,
-            "uuid": "6837644f-bc5ca56b-b0bb-1771-b40f-218b6acad6fc"
         },
         {
             "X": 44.0,
@@ -23599,8 +23399,8 @@
                     "direction": 0,
                     "linked_uuid": "",
                     "name": "Output",
-                    "screenX": 45.45000076293945,
-                    "screenY": 22.383333206176758,
+                    "screenX": 45.0,
+                    "screenY": 22.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -23763,6 +23563,378 @@
             "sizeX": 1,
             "sizeY": 1,
             "uuid": "6837667e-39fb8d11-ca02-3b12-2ca5-7de5c001fc0f"
+        },
+        {
+            "X": 28.0,
+            "Y": 21.0,
+            "angle": 0,
+            "class_id": "model_output:",
+            "name": "Aval",
+            "parental_name": "/",
+            "ports": [
+                {
+                    "X": 3,
+                    "Y": 1,
+                    "bus_width": 0,
+                    "direction": 0,
+                    "linked_uuid": "",
+                    "name": "Aval",
+                    "screenX": 31.0,
+                    "screenY": 22.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 3,
+                        "is_error": false,
+                        "type": 1,
+                        "valid": true
+                    },
+                    "wires": [
+                        {
+                            "X1": 31,
+                            "X2": 34,
+                            "Y1": 22,
+                            "Y2": 22,
+                            "color": 6,
+                            "name": "Wire1748461480",
+                            "points": [
+                                {
+                                    "X": 31,
+                                    "Y": 22
+                                },
+                                {
+                                    "X": 34,
+                                    "Y": 22
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 3,
+                                "is_error": false,
+                                "type": 1,
+                                "valid": true
+                            },
+                            "width": 8
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 3,
+            "sizeY": 3,
+            "uuid": "683766c1-f2992815-1296-d15e-c57c-bb7cda7693d1"
+        },
+        {
+            "X": 28.0,
+            "Y": 27.0,
+            "angle": 0,
+            "class_id": "model_output:",
+            "name": "Bval",
+            "parental_name": "/",
+            "ports": [
+                {
+                    "X": 3,
+                    "Y": 1,
+                    "bus_width": 0,
+                    "direction": 0,
+                    "linked_uuid": "",
+                    "name": "Bval",
+                    "screenX": 31.0,
+                    "screenY": 28.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 65,
+                        "is_error": false,
+                        "type": 1,
+                        "valid": true
+                    },
+                    "wires": [
+                        {
+                            "X1": 31,
+                            "X2": 35,
+                            "Y1": 28,
+                            "Y2": 28,
+                            "color": 6,
+                            "name": "Wire1748461482",
+                            "points": [
+                                {
+                                    "X": 31,
+                                    "Y": 28
+                                },
+                                {
+                                    "X": 35,
+                                    "Y": 28
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 65,
+                                "is_error": false,
+                                "type": 1,
+                                "valid": true
+                            },
+                            "width": 8
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 3,
+            "sizeY": 3,
+            "uuid": "683766c2-fe1901b8-12f8-b307-f198-75ea169eb8be"
+        },
+        {
+            "X": 34.0,
+            "Y": 22.0,
+            "angle": 0,
+            "class_id": "connector:",
+            "name": "",
+            "parental_name": "/",
+            "ports": [
+                {
+                    "X": 0,
+                    "Y": 0,
+                    "bus_width": 0,
+                    "direction": 2,
+                    "linked_uuid": "",
+                    "name": "Connector",
+                    "screenX": 34.0,
+                    "screenY": 22.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 3,
+                        "is_error": false,
+                        "type": 1,
+                        "valid": true
+                    },
+                    "wires": [
+                        {
+                            "X1": 36,
+                            "X2": 34,
+                            "Y1": 25,
+                            "Y2": 22,
+                            "color": 6,
+                            "name": "Wire1748460171",
+                            "points": [
+                                {
+                                    "X": 36,
+                                    "Y": 25
+                                },
+                                {
+                                    "X": 34,
+                                    "Y": 23
+                                },
+                                {
+                                    "X": 34,
+                                    "Y": 22
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 3,
+                                "is_error": false,
+                                "type": 1,
+                                "valid": true
+                            },
+                            "width": 8
+                        },
+                        {
+                            "X1": 28,
+                            "X2": 34,
+                            "Y1": 16,
+                            "Y2": 22,
+                            "color": 6,
+                            "name": "Wire1748461481",
+                            "points": [
+                                {
+                                    "X": 34,
+                                    "Y": 22
+                                },
+                                {
+                                    "X": 28,
+                                    "Y": 16
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 3,
+                                "is_error": false,
+                                "type": 1,
+                                "valid": true
+                            },
+                            "width": 8
+                        },
+                        {
+                            "X1": 31,
+                            "X2": 34,
+                            "Y1": 22,
+                            "Y2": 22,
+                            "color": 6,
+                            "name": "Wire1748461480",
+                            "points": [
+                                {
+                                    "X": 31,
+                                    "Y": 22
+                                },
+                                {
+                                    "X": 34,
+                                    "Y": 22
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 3,
+                                "is_error": false,
+                                "type": 1,
+                                "valid": true
+                            },
+                            "width": 8
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 1,
+            "sizeY": 1,
+            "uuid": "683766c7-7684958a-b31c-0642-d718-8583fe4ecbca"
+        },
+        {
+            "X": 35.0,
+            "Y": 28.0,
+            "angle": 0,
+            "class_id": "connector:",
+            "name": "",
+            "parental_name": "/",
+            "ports": [
+                {
+                    "X": 0,
+                    "Y": 0,
+                    "bus_width": 0,
+                    "direction": 2,
+                    "linked_uuid": "",
+                    "name": "Connector",
+                    "screenX": 35.0,
+                    "screenY": 28.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 65,
+                        "is_error": false,
+                        "type": 1,
+                        "valid": true
+                    },
+                    "wires": [
+                        {
+                            "X1": 36,
+                            "X2": 35,
+                            "Y1": 26,
+                            "Y2": 28,
+                            "color": 6,
+                            "name": "Wire1748460172",
+                            "points": [
+                                {
+                                    "X": 36,
+                                    "Y": 26
+                                },
+                                {
+                                    "X": 35,
+                                    "Y": 27
+                                },
+                                {
+                                    "X": 35,
+                                    "Y": 28
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 65,
+                                "is_error": false,
+                                "type": 1,
+                                "valid": true
+                            },
+                            "width": 8
+                        },
+                        {
+                            "X1": 28,
+                            "X2": 35,
+                            "Y1": 36,
+                            "Y2": 28,
+                            "color": 6,
+                            "name": "Wire1748461483",
+                            "points": [
+                                {
+                                    "X": 35,
+                                    "Y": 28
+                                },
+                                {
+                                    "X": 35,
+                                    "Y": 29
+                                },
+                                {
+                                    "X": 28,
+                                    "Y": 36
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 65,
+                                "is_error": false,
+                                "type": 1,
+                                "valid": true
+                            },
+                            "width": 8
+                        },
+                        {
+                            "X1": 31,
+                            "X2": 35,
+                            "Y1": 28,
+                            "Y2": 28,
+                            "color": 6,
+                            "name": "Wire1748461482",
+                            "points": [
+                                {
+                                    "X": 31,
+                                    "Y": 28
+                                },
+                                {
+                                    "X": 35,
+                                    "Y": 28
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 65,
+                                "is_error": false,
+                                "type": 1,
+                                "valid": true
+                            },
+                            "width": 8
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 1,
+            "sizeY": 1,
+            "uuid": "683766ce-6f0db55d-1236-b0d4-c8b8-adf02e29f245"
         }
     ],
     "name": "",
