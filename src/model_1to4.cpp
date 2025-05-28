@@ -31,8 +31,10 @@ void model_1to4::drawAt(class canvas *canvas, float X, float Y, int type)
     } else {	
         canvas->draw_image("assets/1to4.png", X, Y, sizeX , sizeY, alpha);
     }
+    hover_ports(canvas);
     for (auto port: ports) {
         port->drawAt(canvas, X, Y, type);
+	port->draw_wires(canvas);
     }
 }
 

@@ -38,5 +38,4 @@ private:
     uint64_t previous_generation_count = 0;
     std::string icon = "";
     std::string icon_selected = "";
-    float mouseX = -100, mouseY = -100; /* nosave */
 };

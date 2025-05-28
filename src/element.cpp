@@ -309,3 +309,37 @@ void element::reset_uuid(void)
 {
     uuid = generate_semi_uuid();
 }
+
+
+static float dist(float X1, float Y1, float X2, float Y2)
+{
+	return sqrtf( (X2-X1)*(X2-X1) + (Y2-Y1)*(Y2-Y1));
+}
+
+
+void element::hover_ports(canvas *canvas)
+{
+	for (auto port:ports) {
+     		int dx = 0, dy = 0;
+     		if (port->X == -1) dx = 1;
+     		if (port->X == sizeX) dx = - 1;
+     		if (port->Y == -1) dy = 1;
+     		if (port->Y == sizeY) dy = -1;
+     		
+		if (dist(mouseX, mouseY, X + port->X, Y + port->Y) < 10) {
+			canvas->draw_image("assets/gray.png", X + port->X + dx, Y + port->Y +dy, 1, 1);
+	     		canvas->draw_text(port->name, X + port->X + dx, Y + port->Y +dy, 1, 1);
+		}
+     	}
+}
+
+void element::handle_event(class canvas *thiscanvas, SDL_Event &event)
+{
+    switch (event.type) {
+	case SDL_MOUSEMOTION:
+		mouseX = thiscanvas->scr_to_X(event.motion.x); 
+	        mouseY = thiscanvas->scr_to_Y(event.motion.y);
+
+		break;
+    }
+}

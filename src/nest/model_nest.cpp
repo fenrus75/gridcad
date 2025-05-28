@@ -58,22 +58,11 @@ void model_nest::drawAt(class canvas *canvas, float X, float Y, int type)
      	     canvas->draw_text(name, X, Y + sizeY, sizeX, 1);
      	 }
 
-    for (auto port: ports) {
-        port->drawAt(canvas, X, Y, type);
-    }
-     	 
-     	for (auto port:ports) {
-     		int dx = 0, dy = 0;
-     		if (port->X == -1) dx = 1;
-     		if (port->X == sizeX) dx = - 1;
-     		if (port->Y == -1) dy = 1;
-     		if (port->Y == sizeY) dy = -1;
-     		
-		if (dist(mouseX, mouseY, X + port->X, Y + port->Y) < 10) {
-			canvas->draw_image("assets/gray.png", X + port->X + dx, Y + port->Y +dy, 1, 1);
-	     		canvas->draw_text(port->name, X + port->X + dx, Y + port->Y +dy, 1, 1);
-		}
-     	}
+	for (auto port: ports) {
+        	port->drawAt(canvas, X, Y, type);
+	}
+
+	hover_ports(canvas);     	 
 	
 }
 

@@ -250,7 +250,7 @@ public:
     
     virtual bool in_edit_mode(void) { return false; };
     
-    virtual void handle_event(class canvas *canvas, SDL_Event &event) {};
+    virtual void handle_event(class canvas *canvas, SDL_Event &event);
     
     std::string get_uuid(void) { return uuid;};
     void reset_uuid(void);
@@ -259,6 +259,8 @@ public:
     virtual void rotate_ports(void) {};
     void update_name(std::string _name) { name = _name;};
     void update_parental_name(std::string _name) { parental_name = _name;};
+    void hover_ports(canvas *canvas);
+
 
     
 protected:
@@ -278,6 +280,7 @@ protected:
     float X_in_drag = 0, Y_in_drag = 0;
     bool selected = false; /* not saved to disk */
     bool single = false; /* only selected item in the scene - not saved to disk */
+    float mouseX = -100, mouseY = -100; /* nosave */
     
     std::vector<class port *> ports;
     
