@@ -39,7 +39,6 @@ void port::add_wire(class wire * wire)
 	wire->add_port(this);
 	
 	if (bus_width) {
-		printf("setting wire width to %i \n", bus_width);
 		wire->set_width(bus_width);
 	}
 	

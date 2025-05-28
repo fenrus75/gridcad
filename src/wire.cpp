@@ -309,6 +309,7 @@ class wire *wire::split(void)
 
     printf("Splitting wire\n");
     wr->update_value(&value, 100);    
+    wr->set_width(get_width());
     if (ports.size() > 0) {
         ports[0]->replace_wire(this, wr);
         ports.erase(ports.begin() + 0);

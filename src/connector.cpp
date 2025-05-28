@@ -19,13 +19,19 @@ connector::~connector(void)
 
 void connector::draw(class canvas *canvas, int type)
 {
+    std::string icon = "";
     for (auto port: ports) 
         port->draw_wires(canvas);
         
     if (ports[0]->value.boolval)
-        canvas->draw_image("assets/connector_green.png", X,Y,1,1);
+        icon = "assets/connector_green.png";
     else
-        canvas->draw_image("assets/connector_red.png", X,Y,1,1);
+        icon = "assets/connector_red.png";
+        
+    if (ports[0]->get_width() > 1)
+        icon = "assets/connector_bus.png";
+        
+    canvas->draw_image(icon, X,Y,1,1);
 }
 
 void connector::fill_grid(class wiregrid *grid)
