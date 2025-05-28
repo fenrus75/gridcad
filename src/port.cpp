@@ -111,17 +111,22 @@ void port::draw(class canvas *canvas, int color)
 
 void port::drawConnector(class canvas * canvas, float X, float Y, int cX, int cY, int type)
 {
+	std::string icon = "";
 	if (direction == PORT_IN) {
 		if (wires.size() == 0)
-			canvas->draw_image("assets/port_in_open.png", cX + X, cY + Y, 1, 1, Alpha(type));		
+			icon = "assets/port_in_open.png";
 		else
-			canvas->draw_image("assets/port_in_connected.png", cX + X, cY + Y, 1, 1, Alpha(type));		
+			icon = "assets/port_in_connected.png";
 	} else {
 		if (value.boolval)
-			canvas->draw_image("assets/port_out_green.png", cX + X, cY + Y, 1, 1, Alpha(type));		
+			icon = "assets/port_out_green.png";
 		else
-			canvas->draw_image("assets/port_out_red.png", cX + X, cY + Y, 1, 1, Alpha(type));		
+			icon = "assets/port_out_red.png";
+
+		if (value.type == VALUE_TYPE_INT || bus_width > 1)
+			icon = "assets/port_out_bus.png";
 	}
+	canvas->draw_image(icon, cX + X, cY + Y, 1, 1, Alpha(type));		
         canvas->draw_text(name, cX + X, cY + Y + 0.35, 1, 0.3);
 }
 

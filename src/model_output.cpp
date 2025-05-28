@@ -34,7 +34,7 @@ void model_output::drawAt(class canvas *canvas, float X, float Y, int type)
     }
     float dX = 0.0;
     if (ports[0]->Y == sizeY)
-	dX = 1.2;
+	dX = 1.8;
     if (selected && single && edit_mode) {
           struct timeval tv;
           gettimeofday(&tv, NULL);
