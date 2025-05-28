@@ -99,10 +99,10 @@
                     },
                     "wires": [
                         {
-                            "X1": 65,
-                            "X2": 79,
-                            "Y1": 32,
-                            "Y2": 28,
+                            "X1": 79,
+                            "X2": 65,
+                            "Y1": 28,
+                            "Y2": 32,
                             "color": 6,
                             "name": "Wire1748441812",
                             "points": [
@@ -165,10 +165,10 @@
                     },
                     "wires": [
                         {
-                            "X1": 65,
-                            "X2": 79,
-                            "Y1": 33,
-                            "Y2": 32,
+                            "X1": 79,
+                            "X2": 65,
+                            "Y1": 32,
+                            "Y2": 33,
                             "color": 6,
                             "name": "Wire1748441813",
                             "points": [
@@ -231,10 +231,10 @@
                     },
                     "wires": [
                         {
-                            "X1": 65,
-                            "X2": 79,
-                            "Y1": 34,
-                            "Y2": 36,
+                            "X1": 79,
+                            "X2": 65,
+                            "Y1": 36,
+                            "Y2": 34,
                             "color": 6,
                             "name": "Wire1748441814",
                             "points": [
@@ -297,10 +297,10 @@
                     },
                     "wires": [
                         {
-                            "X1": 65,
-                            "X2": 79,
-                            "Y1": 35,
-                            "Y2": 40,
+                            "X1": 79,
+                            "X2": 65,
+                            "Y1": 40,
+                            "Y2": 35,
                             "color": 6,
                             "name": "Wire1748441815",
                             "points": [
@@ -1112,8 +1112,8 @@
                     "direction": 1,
                     "linked_uuid": "68371737-7038e8b2-ad71-5090-fd4a-df8070075849",
                     "name": "A+B",
-                    "screenX": 55.560001373291016,
-                    "screenY": 34.560001373291016,
+                    "screenX": 55.0,
+                    "screenY": 34.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -10925,8 +10925,8 @@
                     "direction": 1,
                     "linked_uuid": "",
                     "name": "Bit0",
-                    "screenX": 65.4000015258789,
-                    "screenY": 32.2400016784668,
+                    "screenX": 65.0,
+                    "screenY": 32.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -10938,10 +10938,10 @@
                     },
                     "wires": [
                         {
-                            "X1": 65,
-                            "X2": 79,
-                            "Y1": 32,
-                            "Y2": 28,
+                            "X1": 79,
+                            "X2": 65,
+                            "Y1": 28,
+                            "Y2": 32,
                             "color": 6,
                             "name": "Wire1748441812",
                             "points": [
@@ -10978,8 +10978,8 @@
                     "direction": 1,
                     "linked_uuid": "",
                     "name": "Bit1",
-                    "screenX": 65.55999755859375,
-                    "screenY": 33.47999954223633,
+                    "screenX": 65.0,
+                    "screenY": 33.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -10991,10 +10991,10 @@
                     },
                     "wires": [
                         {
-                            "X1": 65,
-                            "X2": 79,
-                            "Y1": 33,
-                            "Y2": 32,
+                            "X1": 79,
+                            "X2": 65,
+                            "Y1": 32,
+                            "Y2": 33,
                             "color": 6,
                             "name": "Wire1748441813",
                             "points": [
@@ -11031,8 +11031,8 @@
                     "direction": 1,
                     "linked_uuid": "",
                     "name": "Bit2",
-                    "screenX": 65.76000213623047,
-                    "screenY": 34.63999938964844,
+                    "screenX": 65.0,
+                    "screenY": 34.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -11044,10 +11044,10 @@
                     },
                     "wires": [
                         {
-                            "X1": 65,
-                            "X2": 79,
-                            "Y1": 34,
-                            "Y2": 36,
+                            "X1": 79,
+                            "X2": 65,
+                            "Y1": 36,
+                            "Y2": 34,
                             "color": 6,
                             "name": "Wire1748441814",
                             "points": [
@@ -11084,8 +11084,8 @@
                     "direction": 1,
                     "linked_uuid": "",
                     "name": "Bit3",
-                    "screenX": 65.63999938964844,
-                    "screenY": 35.959999084472656,
+                    "screenX": 65.0,
+                    "screenY": 35.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -11097,10 +11097,10 @@
                     },
                     "wires": [
                         {
-                            "X1": 65,
-                            "X2": 79,
-                            "Y1": 35,
-                            "Y2": 40,
+                            "X1": 79,
+                            "X2": 65,
+                            "Y1": 40,
+                            "Y2": 35,
                             "color": 6,
                             "name": "Wire1748441815",
                             "points": [
@@ -11183,119 +11183,6 @@
             "sizeX": 2,
             "sizeY": 6,
             "uuid": "6837182e-646d966e-fab6-1620-e49e-8c2153520a7f"
-        },
-        {
-            "X": 0.0,
-            "Y": 0.0,
-            "angle": 0,
-            "class_id": "model_4to1:",
-            "name": "",
-            "parental_name": "/",
-            "ports": [
-                {
-                    "X": 2,
-                    "Y": 1,
-                    "bus_width": 0,
-                    "direction": 1,
-                    "linked_uuid": "",
-                    "name": "Bit0",
-                    "screenX": 2.0,
-                    "screenY": 1.0,
-                    "value": {
-                        "arrayval": 0,
-                        "boolval": false,
-                        "floatval": 0.0,
-                        "intval": 0,
-                        "is_error": false,
-                        "type": 0,
-                        "valid": true
-                    },
-                    "wires": []
-                },
-                {
-                    "X": 2,
-                    "Y": 2,
-                    "bus_width": 0,
-                    "direction": 1,
-                    "linked_uuid": "",
-                    "name": "Bit1",
-                    "screenX": 2.0,
-                    "screenY": 2.0,
-                    "value": {
-                        "arrayval": 0,
-                        "boolval": false,
-                        "floatval": 0.0,
-                        "intval": 0,
-                        "is_error": false,
-                        "type": 0,
-                        "valid": true
-                    },
-                    "wires": []
-                },
-                {
-                    "X": 2,
-                    "Y": 3,
-                    "bus_width": 0,
-                    "direction": 1,
-                    "linked_uuid": "",
-                    "name": "Bit2",
-                    "screenX": 2.0,
-                    "screenY": 3.0,
-                    "value": {
-                        "arrayval": 0,
-                        "boolval": false,
-                        "floatval": 0.0,
-                        "intval": 0,
-                        "is_error": false,
-                        "type": 0,
-                        "valid": true
-                    },
-                    "wires": []
-                },
-                {
-                    "X": 2,
-                    "Y": 4,
-                    "bus_width": 0,
-                    "direction": 1,
-                    "linked_uuid": "",
-                    "name": "Bit3",
-                    "screenX": 2.0,
-                    "screenY": 4.0,
-                    "value": {
-                        "arrayval": 0,
-                        "boolval": false,
-                        "floatval": 0.0,
-                        "intval": 0,
-                        "is_error": false,
-                        "type": 0,
-                        "valid": true
-                    },
-                    "wires": []
-                },
-                {
-                    "X": -1,
-                    "Y": 3,
-                    "bus_width": 4,
-                    "direction": 0,
-                    "linked_uuid": "",
-                    "name": "Bus",
-                    "screenX": -1.0,
-                    "screenY": 3.0,
-                    "value": {
-                        "arrayval": 0,
-                        "boolval": false,
-                        "floatval": 0.0,
-                        "intval": 0,
-                        "is_error": false,
-                        "type": 0,
-                        "valid": false
-                    },
-                    "wires": []
-                }
-            ],
-            "sizeX": 2,
-            "sizeY": 6,
-            "uuid": "6837182f-56c8cc3e-7172-03cd-8b23-c461d030f4d8"
         }
     ],
     "name": "",

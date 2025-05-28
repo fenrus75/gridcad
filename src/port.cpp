@@ -79,7 +79,6 @@ void port::update_value(struct value *newvalue, int ttl)
 void port::drawAt(class canvas * canvas, float _X, float _Y, int type)
 {
 //        if (type != DRAW_GHOST && type != DRAW_DND)
-	printf("Got here\n");
 	draw_wires(canvas);
 	if (direction == PORT_IN) {
 		drawConnector(canvas, _X, _Y, X, Y, COLOR_ELEMENT_CONNECTOR + type);
