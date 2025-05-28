@@ -346,7 +346,6 @@ void wire::from_json(json &j)
     if (j.contains("points")) {
         points =  new std::vector<struct waypoint>;
         *points = j["points"];
-        printf("Points size is %i \n", points->size());
     }
 }
 

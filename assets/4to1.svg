@@ -7,9 +7,9 @@
    viewBox="0 0 200 600"
    version="1.1"
    id="svg1"
-   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
    sodipodi:docname="4to1.svg"
-   inkscape:export-filename="4to1.png"
+   inkscape:export-filename="4to1_selected.png"
    inkscape:export-xdpi="64"
    inkscape:export-ydpi="64"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -28,9 +28,9 @@
      inkscape:document-units="mm"
      inkscape:zoom="0.30016078"
      inkscape:cx="891.18905"
-     inkscape:cy="819.56077"
-     inkscape:window-width="1536"
-     inkscape:window-height="779"
+     inkscape:cy="817.895"
+     inkscape:window-width="2194"
+     inkscape:window-height="1162"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -44,9 +44,9 @@
        inkscape:menu-tooltip="Soft bevel, slightly depressed middle"
        style="color-interpolation-filters:sRGB;"
        id="filter5"
-       x="-0.12495816"
+       x="-0.12455929"
        y="-0.21468065"
-       width="1.2499163"
+       width="1.2491186"
        height="1.4293613">
       <feGaussianBlur
          stdDeviation="2.3"
@@ -167,8 +167,9 @@
      id="layer1">
     <path
        id="rect1"
-       style="fill:#8d5fd3;stroke:#000000;stroke-width:1.22535;filter:url(#filter8)"
-       d="M 2.6060646,3.112677 V 596.88732 H 5.4656303 L 197.38069,450.98676 V 149.28513 L 5.1074104,3.112677 Z" />
+       style="fill:#8d5fd3;stroke:#000000;stroke-width:1.22535"
+       d="M 2.6060646,3.112677 V 596.88732 H 5.4656303 L 197.38069,450.98676 V 149.28513 L 5.1074104,3.112677 Z"
+       transform="matrix(-1,0,0,1,199.98673,0)" />
     <text
        xml:space="preserve"
        style="font-size:119.944px;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#8d5fd3;stroke:#ffffff;stroke-width:1;stroke-opacity:1;filter:url(#filter5)"
