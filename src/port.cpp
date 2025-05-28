@@ -31,6 +31,10 @@ void port::add_wire(class wire * wire)
 		if (wire == _wire)
 			return;
 	}
+	
+	if (wire->get_width() == 0) 
+		wire->set_width( get_width());
+		
 	wires.push_back(wire);
 	
 	if (direction == PORT_OUT) {
