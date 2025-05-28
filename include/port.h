@@ -36,7 +36,8 @@ public:
     bool has_wires(void) { return wires.size() > 0; };
     void remove_wires(void);
     void remove_orphans(void);
-    int get_bus_width(void) { return bus_width; };
+    int get_width(void);
+    void set_width(int _width) { bus_width = _width;};
     void update_name(std::string newname);
     void link_uuid(std::string _uuid);
     std::string get_linked_uuid(void) { return linked_uuid; };
@@ -44,7 +45,7 @@ public:
     class element *get_linked_element(void) { return linked_element; };
     void route_wires();
 private:
-    int bus_width = 1;
+    int bus_width = 0;
     void drawConnector(class canvas *canvas, float X, float Y, int cX, int cY, int type);    
     std::vector<class wire*> wires;
     std::string linked_uuid = "";

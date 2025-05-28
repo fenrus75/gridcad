@@ -220,7 +220,7 @@ public:
     const std::string  get_name(void) { return name; };
     const std::string  get_full_name(void) { return parental_name + "/" + name; };
     
-    void add_port(int X, int Y, const char *name, int direction = 0, bool initval = false);
+    void add_port(int X, int Y, const char *name, int direction = 0, int _width = 0);
     virtual void fill_grid(class wiregrid* grid);
     
     class port * is_port(float X, float Y); /* X and Y are global positions */

@@ -22,10 +22,15 @@ void model_output::drawAt(class canvas *canvas, float X, float Y, int type)
 {
     if (selected) {
         canvas->draw_image("assets/output_base.png", X, Y, sizeX, sizeY, Alpha(type));
-    } else if (ports[0]->value.boolval) {
-        canvas->draw_image("assets/output_on.png", X, Y, sizeX, sizeY, Alpha(type));
-    } else {	
-        canvas->draw_image("assets/output_off.png", X, Y, sizeX, sizeY, Alpha(type));
+    } else {
+        if (ports[0]->get_width() <= 1 && ports[0]->value.boolval) {
+            canvas->draw_image("assets/output_on.png", X, Y, sizeX, sizeY, Alpha(type));
+        } else if (ports[0]->get_width() <= 1) {	
+            canvas->draw_image("assets/output_off.png", X, Y, sizeX, sizeY, Alpha(type));
+        } else {
+            canvas->draw_image("assets/output_bus.png", X, Y, sizeX, sizeY, Alpha(type));
+        }
+        
     }
     float dX = 0.0;
     if (ports[0]->Y == sizeY)

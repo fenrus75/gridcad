@@ -132,14 +132,14 @@ bool element::intersect(float _X, float _Y)
     return false;
 }
 
-void element::add_port(int X, int Y, const char *_name, int direction, bool initval)
+void element::add_port(int X, int Y, const char *_name, int direction, int _width)
 {
     class port *_port;
     _port = new port(_name, direction);
     _port->X = X;
     _port->Y = Y;
     _port->parent = this;
-    _port->value.boolval = initval;
+    _port->set_width(_width);
     ports.push_back(_port);
 }
 

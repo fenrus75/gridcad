@@ -40,6 +40,8 @@ public:
     
     bool is_empty(void) { return ports.size() == 0; };
     void redo_wires(void) { delete points; points = NULL; };
+    int get_width(void) { return width; };
+    void set_width(int _width) { if (_width) width = _width;};
     
 protected:
     bool selected = false;
@@ -48,6 +50,7 @@ protected:
     int X1 = 0, Y1 = 0, X2 = 0, Y2 = 0;
     int color = 0;
     int refcount = 0;
+    int width = 0;
     std::vector<struct waypoint> *points = NULL;
 };
 

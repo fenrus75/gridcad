@@ -20,13 +20,21 @@ model_toggle::~model_toggle(void)
 
 void model_toggle::drawAt(class canvas *canvas, float X, float Y, int type)
 {
-    if (selected) {
-        canvas->draw_image("assets/toggle_base.png", X, Y, sizeX, sizeY, Alpha(type));
-    } else if (value.boolval) {
-        canvas->draw_image("assets/toggle_on.png", X, Y, sizeX, sizeY, Alpha(type));
+    std::string icon = "";
+    if (value.boolval) {
+      icon = "assets/toggle_on.png";
     } else {	
-        canvas->draw_image("assets/toggle_off.png", X, Y, sizeX, sizeY, Alpha(type));
+      icon = "assets/toggle_off.png";
     }
+    
+    if (ports[0]->get_width() > 1)
+      icon = "assets/toggle_bus.png";
+
+    if (selected) {
+        icon = "assets/toggle_base.png";
+    }    
+    
+    canvas->draw_image(icon, X, Y, sizeX, sizeY, Alpha(type));
     
     float dY = 0;
     float dX = 0;

@@ -38,6 +38,11 @@ void port::add_wire(class wire * wire)
 	}
 	wire->add_port(this);
 	
+	if (bus_width) {
+		printf("setting wire width to %i \n", bus_width);
+		wire->set_width(bus_width);
+	}
+	
 	if (direction == PORT_IN) {
 		update_value(&(wire->value), DEFAULT_TTL);
 	}
@@ -256,4 +261,15 @@ void port::route_wires(void)
 		wire->reseat();
 		wire->redo_wires();
 	}
+}
+
+int port::get_width(void)
+{
+	int width = 0;
+	if (bus_width)
+		return bus_width;
+	for (auto wire : wires) {
+		width = std::max(width, wire->get_width());
+	}
+	return width;
 }

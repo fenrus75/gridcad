@@ -328,6 +328,7 @@ void wire::to_json(json &j)
     j["X2"] = X2;
     j["Y2"] = Y2;
     j["color"] = color;
+    j["width"] = width;
 }    
 void wire::from_json(json &j)
 {
@@ -338,6 +339,7 @@ void wire::from_json(json &j)
     X2 = j["X2"];
     Y2 = j["Y2"];
     color = j["color"];
+    width = j.value("width", 0);
 }
 
 
