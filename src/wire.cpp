@@ -111,6 +111,7 @@ void wire::draw(class canvas *canvas, int color)
     bool first = true;
     int stepsize;
     int step;
+    
     if (!points)
         route(canvas->get_scene());
         
@@ -196,7 +197,6 @@ void wire::add_port(class port *port)
             return;
     }
     ports.push_back(port);
-    printf("Adding port %s \n", port->name.c_str());
     if (port->direction != PORT_IN) {
         update_value(&port->value, DEFAULT_TTL);
     }

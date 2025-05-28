@@ -57,6 +57,10 @@ void model_nest::drawAt(class canvas *canvas, float X, float Y, int type)
          } else {
      	     canvas->draw_text(name, X, Y + sizeY, sizeX, 1);
      	 }
+
+    for (auto port: ports) {
+        port->drawAt(canvas, X, Y, type);
+    }
      	 
      	for (auto port:ports) {
      		int dx = 0, dy = 0;
