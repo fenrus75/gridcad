@@ -301,6 +301,7 @@ extern class wire *json_wire_factory(json &jwire);
 extern void clear_wire_factory(void);
 
 extern void register_new_canvas(class basecanvas *canvas);
+extern void unregister_canvas(class basecanvas *canvas);
 extern void labelevent(SDL_Event &event, std::string *text);
 
 extern std::string generate_semi_uuid(void);

@@ -114,3 +114,13 @@ void register_new_canvas(class basecanvas *canvas)
 {
 	canvases.push_back(canvas);
 }
+
+void unregister_canvas(class basecanvas *canvas)
+{
+	for (unsigned int i = 0; i < canvases.size(); i++) {
+		if (canvases[i] == canvas) {
+			canvases.erase(canvases.begin() + i);
+			return;
+		}
+	}
+}

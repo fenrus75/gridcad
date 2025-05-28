@@ -55,6 +55,7 @@ canvas::canvas(class scene *_scene)
 
 canvas::~canvas(void)
 {
+	unregister_canvas(this);
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	delete current_scene;
