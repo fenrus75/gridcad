@@ -330,6 +330,8 @@ void wire::to_json(json &j)
     j["Y2"] = Y2;
     j["color"] = color;
     j["width"] = width;
+    if (points)
+        j["points"] = *points;
 }    
 void wire::from_json(json &j)
 {
@@ -341,6 +343,11 @@ void wire::from_json(json &j)
     Y2 = j["Y2"];
     color = j["color"];
     width = j.value("width", 0);
+    if (j.contains("points")) {
+        points =  new std::vector<struct waypoint>;
+        *points = j["points"];
+        printf("Points size is %i \n", points->size());
+    }
 }
 
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-
+#include <nlohmann/json.hpp>
 /* approximationm == slightly above actual sqrt(2) to favor non-diagnals */
 #define SQRT2 1.45
 
@@ -21,6 +21,7 @@ struct point {
 struct waypoint {
     int X, Y;
 };
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE_WITH_DEFAULT(waypoint, X, Y);
 
 class wiregrid {
 public:
