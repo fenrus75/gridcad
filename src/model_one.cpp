@@ -14,7 +14,7 @@ model_one::model_one(float _X, float _Y)  : model_zero(_X, _Y)
 
     ports.clear();
 
-    add_port(1, 0, "ONE", PORT_OUT, true);    
+    add_port(1, 0, "ONE", PORT_OUT, 1);    
 
     for (auto port : ports) {
         port->update_value(&value, DEFAULT_TTL);

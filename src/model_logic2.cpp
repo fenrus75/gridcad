@@ -12,9 +12,9 @@ model_logic2::model_logic2(float _X, float _Y, std::string _filename)  : element
     sizeY=3;
     
     filename = _filename;
-    add_port(-1, 0, "In1", PORT_IN);
-    add_port(-1, 2, "In2", PORT_IN);
-    add_port(sizeX, 1, "Out", PORT_OUT);
+    add_port(-1, 0, "In1", PORT_IN, 1);
+    add_port(-1, 2, "In2", PORT_IN, 1);
+    add_port(sizeX, 1, "Out", PORT_OUT, 1);
 }
 
 model_logic2::~model_logic2(void)

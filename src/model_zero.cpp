@@ -17,7 +17,7 @@ model_zero::model_zero(float _X, float _Y)  : element(1, 1, "")
 
     ports.clear();
 
-    add_port(1, 0, "ZERO", PORT_OUT);    
+    add_port(1, 0, "ZERO", PORT_OUT, 1);    
 
 
     for (auto port : ports) {

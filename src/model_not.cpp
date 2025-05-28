@@ -9,8 +9,8 @@ model_not::model_not(float _X, float _Y)  : element(_X, _Y, "")
     sizeX=3;
     sizeY=3;
     
-    add_port(-1, 1, "In", PORT_IN);
-    add_port(sizeX, 1, "Out", PORT_OUT);
+    add_port(-1, 1, "In", PORT_IN, 1);
+    add_port(sizeX, 1, "Out", PORT_OUT, 1);
 }
 
 model_not::~model_not(void)
