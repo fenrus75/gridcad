@@ -2,6 +2,7 @@
 
 #include "gridcad.h"
 #include "value.h"
+#include "port.h"
 
 class model_output : public element
 {
@@ -20,6 +21,7 @@ public:
     bool in_edit_mode(void) override { return edit_mode && single && selected;};
     
     void rotate_ports(void) override;
+    int get_width(void) { return ports[0]->get_width();};
 private:
     struct value value = {};
     bool edit_mode = false;

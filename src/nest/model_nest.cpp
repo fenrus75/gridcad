@@ -81,8 +81,10 @@ void model_nest::calculate(int ttl)
 		if (port->direction == PORT_IN) {
 			class model_toggle *tog;
 			tog = (class model_toggle *)port->get_linked_element();
-			if (tog)
+			if (tog) {
 				tog->update_value(&(port->value), ttl-1);
+				port->set_width(tog->get_width());
+			}
 		}
 	}
 	for (auto port: ports) {
@@ -93,6 +95,7 @@ void model_nest::calculate(int ttl)
 			if (tog) {
 				val = tog->get_value();
 				port->update_value(&val, ttl-1);
+				port->set_width(tog->get_width());
 			}
 		}
 	}
