@@ -368,7 +368,7 @@ class wire *json_wire_factory(json &jwire)
         std::string s = jwire["name"];
         _wire = json_wires[s];
         json_wires.erase(s);
-        printf("Wire factory match found for %s  factory size %lu\n", s.c_str(), json_wires.size());
+//        printf("Wire factory match found for %s  factory size %lu\n", s.c_str(), json_wires.size());
         return _wire;
     }
     class wire *new_wire = new wire(jwire["X1"], jwire["Y1"], jwire["X2"], jwire["Y2"]);
@@ -377,7 +377,7 @@ class wire *json_wire_factory(json &jwire)
     
     new_wire->from_json(jwire);
     
-    printf("New wire created: %s  total factory size %lu\n", new_wire->name.c_str(), json_wires.size());
+//    printf("New wire created: %s  total factory size %lu\n", new_wire->name.c_str(), json_wires.size());
     
     if (wire_factory_force_new_name)
         new_wire->set_new_name();

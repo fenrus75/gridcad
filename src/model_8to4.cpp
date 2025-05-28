@@ -51,8 +51,6 @@ void model_8to4::calculate(int ttl)
     out.type = VALUE_TYPE_INT;
     
     val = ports[2]->value.intval;
-    printf("8t4: val is %i \n", val);
-
     out.intval = val >> 4;
     ports[1]->update_value(&out, ttl-1);
     out.intval = val & 15;

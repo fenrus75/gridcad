@@ -15,7 +15,7 @@ model_4to1::model_4to1(float _X, float _Y)  : element(_X, _Y, "")
     add_port(sizeX, 2, "Bit1", PORT_OUT);
     add_port(sizeX, 3, "Bit2", PORT_OUT);
     add_port(sizeX, 4, "Bit3", PORT_OUT);
-    add_port(-1, 3, "Bus", PORT_IN, 4);
+    add_port(-1, 3, "0-3", PORT_IN, 4);
 }
 
 model_4to1::~model_4to1(void)
@@ -53,7 +53,6 @@ void model_4to1::calculate(int ttl)
         if (ports[i]->direction == PORT_IN)
             value = ports[i]->value;
     }
-    printf("Value is %li \n", value.intval);
     for (unsigned int i = 0; i < ports.size(); i++) {
         
         out.valid = true;
@@ -61,10 +60,8 @@ void model_4to1::calculate(int ttl)
         out.boolval = false;
         if ((value.intval & (1<<i)) && ports[i]->direction == PORT_OUT) {
             out.boolval = true;
-	    printf(".... true for %i \n", i);
 	}
         if (ports[i]->direction == PORT_OUT) {
-            printf("Port %i out %i at ttl %i\n", i, out.boolval, ttl);
             ports[i]->update_value(&out, ttl - 1);
         }
     }

@@ -215,8 +215,6 @@ void model_nest::regen_ports(void)
 	east.clear();
 	west.clear();
 	
-	printf("regen_ports\n");
-	
 	/* refresh the scene from the canvas -- undo can have replaced it */
 	if (canvas)
 		_scene = canvas->get_scene();

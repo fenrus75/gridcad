@@ -15,7 +15,7 @@ model_1to4::model_1to4(float _X, float _Y)  : element(_X, _Y, "")
     add_port(-1, 2, "Bit1", PORT_IN, 1);
     add_port(-1, 3, "Bit2", PORT_IN, 1);
     add_port(-1, 4, "Bit3", PORT_IN, 1);
-    add_port(sizeX, 3, "Bus", PORT_OUT, 4);
+    add_port(sizeX, 3, "0-3", PORT_OUT, 4);
 }
 
 model_1to4::~model_1to4(void)
