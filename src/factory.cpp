@@ -1,3 +1,15 @@
+/*
+ * gridcad -- a tool to do digital circuit design with a GUI
+ *
+ * (C) Copyright 2025  -- Arjan van de Ven
+ *
+ * Licensed under the terms of the
+ * GNU General Public LIcense version 3.0
+ *
+ * Authors:
+ *    Arjan van de Ven <arjanvandeven@gmail.com>
+ */
+
 #include "gridcad.h"
 
 #include "model_toggle.h"
