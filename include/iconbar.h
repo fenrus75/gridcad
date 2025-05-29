@@ -52,6 +52,9 @@ public:
     void draw(void);
     void handle_event(SDL_Event &event);    
     class icon *current_icon(int ScreenX, int ScreenY);
+    void set_element(int X, int Y, int icontype, struct library_block *block = NULL);
+
+private:    
     SDL_Rect rect;
     std::vector<std::vector<class icon *>> icons;
     SDL_Renderer *renderer;

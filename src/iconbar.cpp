@@ -42,23 +42,26 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
     
     init_icon = new class oneiconbar(_renderer, _rect);
     
-    init_icon->icons[0][0] = new icon(renderer, ICON_ZERO);
-    init_icon->icons[1][0] = new icon(renderer, ICON_ONE);
-    init_icon->icons[0][1] = new icon(renderer, ICON_NOT);
-    init_icon->icons[0][2] = new icon(renderer, ICON_NAND);
-    init_icon->icons[1][2] = new icon(renderer, ICON_AND);
-    init_icon->icons[0][3] = new icon(renderer, ICON_NOR);
-    init_icon->icons[1][3] = new icon(renderer, ICON_OR);
-    init_icon->icons[0][4] = new icon(renderer, ICON_XOR);
-    init_icon->icons[0][5] = new icon(renderer, ICON_TOGGLE);
-    init_icon->icons[1][5] = new icon(renderer, ICON_OUTPUT);
-    init_icon->icons[1][6] = new icon(renderer, ICON_TRUTH);
-    init_icon->icons[0][6] = new icon(renderer, ICON_NEST);
-    init_icon->icons[0][7] = new icon(renderer, ICON_4TO1);
-    init_icon->icons[1][7] = new icon(renderer, ICON_1TO4);
-    init_icon->icons[0][8] = new icon(renderer, ICON_8TO4);
-    init_icon->icons[1][8] = new icon(renderer, ICON_4TO8);
-    init_icon->icons[0][9] = new icon(renderer, ICON_DATASCOPE);
+    init_icon->set_element(0, 0, ICON_ZERO);
+    init_icon->set_element(1, 0, ICON_ONE);
+    
+    
+    init_icon->set_element(1,0, ICON_ONE);
+    init_icon->set_element(0,1, ICON_NOT);
+    init_icon->set_element(0,2, ICON_NAND);
+    init_icon->set_element(1,2, ICON_AND);
+    init_icon->set_element(0,3, ICON_NOR);
+    init_icon->set_element(1,3, ICON_OR);
+    init_icon->set_element(0,4, ICON_XOR);
+    init_icon->set_element(0,5, ICON_TOGGLE);
+    init_icon->set_element(1,5, ICON_OUTPUT);
+    init_icon->set_element(1,6, ICON_TRUTH);
+    init_icon->set_element(0,6, ICON_NEST);
+    init_icon->set_element(0,7, ICON_4TO1);
+    init_icon->set_element(1,7, ICON_1TO4);
+    init_icon->set_element(0,8, ICON_8TO4);
+    init_icon->set_element(1,8, ICON_4TO8);
+    init_icon->set_element(0,9, ICON_DATASCOPE);
 
     icons.push_back(init_icon);
     current_icons = init_icon;
@@ -66,12 +69,18 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
     libtab = new class oneiconbar(_renderer, _rect);
     
     for (li = 0; li < library.size(); li++) {
-        libtab->icons[li % 2][li / 2] = new icon(renderer, ICON_LIBRARY);
-        libtab->icons[li % 2][li / 2]->assign_library_element(library[li]);
+        libtab->set_element(li % 2, li / 2, ICON_LIBRARY, &library[li]);
     }
     
     icons.push_back(libtab);
     
+}
+
+void oneiconbar::set_element(int X, int Y, int icontype, struct library_block *block)
+{
+     icons[X][Y] = new icon(renderer, icontype);
+     if (icontype == ICON_LIBRARY)
+          icons[X][Y]->assign_library_element(*block);
 }
 
 iconbar::~iconbar(void)
