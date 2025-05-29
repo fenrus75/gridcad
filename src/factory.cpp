@@ -28,6 +28,7 @@
 #include "model_1to4.h"
 #include "model_8to4.h"
 #include "model_4to8.h"
+#include "model_datascope.h"
 #include "connector.h"
 
 #define ELEMENT(x)  if (classid == #x":") return new x(0, 0);
@@ -53,6 +54,7 @@ class element *element_from_class_id(std::string classid)
     ELEMENT(model_1to4);
     ELEMENT(model_8to4);
     ELEMENT(model_4to8);
+    ELEMENT(model_datascope);
     
     
     printf("Unknown class_id: %s\n", classid.c_str());

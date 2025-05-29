@@ -21,6 +21,7 @@
 #define ICON_1TO4 14
 #define ICON_8TO4 15
 #define ICON_4TO8 16
+#define ICON_DATASCOPE 17
 
 class icon {
 public:
