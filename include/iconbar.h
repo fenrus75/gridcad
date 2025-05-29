@@ -67,12 +67,15 @@ public:
     
     void draw(void);
     void handle_event(SDL_Event &event);    
+    void next(void);
+    void previous(void);
     class icon *current_icon(int ScreenX, int ScreenY);
 private:
-    SDL_Rect rect;
+    SDL_Rect rect = {};
+    unsigned int active_index = 0;
     std::vector<class oneiconbar *> icons;
-    class oneiconbar *current_icons;
-    SDL_Renderer *renderer;
+    class oneiconbar *current_icons = NULL;
+    SDL_Renderer *renderer = NULL;
 };
 
 

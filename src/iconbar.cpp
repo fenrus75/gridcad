@@ -36,16 +36,11 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
 {
     unsigned int li;
     
-    class oneiconbar *init_icon;
+    class oneiconbar *init_icon, *libtab;
     renderer = _renderer;
     rect = _rect;
     
     init_icon = new class oneiconbar(_renderer, _rect);
-    init_icon->icons.resize(2);
-    
-    init_icon->icons[0].resize(15);
-    init_icon->icons[1].resize(15);
-        
     
     init_icon->icons[0][0] = new icon(renderer, ICON_ZERO);
     init_icon->icons[1][0] = new icon(renderer, ICON_ONE);
@@ -64,14 +59,19 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
     init_icon->icons[0][8] = new icon(renderer, ICON_8TO4);
     init_icon->icons[1][8] = new icon(renderer, ICON_4TO8);
     init_icon->icons[0][9] = new icon(renderer, ICON_DATASCOPE);
-    
-    for (li = 0; li < library.size(); li++) {
-        init_icon->icons[li % 2][li / 2 + 10] = new icon(renderer, ICON_LIBRARY);
-        init_icon->icons[li % 2][li / 2 + 10]->assign_library_element(library[li]);
-    }
-    
+
     icons.push_back(init_icon);
     current_icons = init_icon;
+    
+    libtab = new class oneiconbar(_renderer, _rect);
+    
+    for (li = 0; li < library.size(); li++) {
+        libtab->icons[li % 2][li / 2] = new icon(renderer, ICON_LIBRARY);
+        libtab->icons[li % 2][li / 2]->assign_library_element(library[li]);
+    }
+    
+    icons.push_back(libtab);
+    
 }
 
 iconbar::~iconbar(void)
@@ -249,6 +249,10 @@ oneiconbar::oneiconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
 {
    renderer = _renderer;
    rect = _rect;
+    icons.resize(2);
+    
+    icons[0].resize(15);
+    icons[1].resize(15);
 }
 
 oneiconbar::~oneiconbar(void)
@@ -326,5 +330,20 @@ class icon * oneiconbar::current_icon(int ScreenX, int ScreenY)
         
     return icons[gridX][gridY];
     
+}
+
+
+void iconbar::next(void)
+{
+    if (active_index + 1 < icons.size())
+        active_index++;
+    current_icons = icons[active_index];
+}
+
+void iconbar::previous(void)
+{
+    if (active_index >= 1)
+        active_index--;
+    current_icons = icons[active_index];
 }
 
