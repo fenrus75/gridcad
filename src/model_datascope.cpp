@@ -65,10 +65,21 @@ void model_datascope::from_json(json &j)
 void model_datascope::rotate_ports(void)
 {
         
-    if (ports[0]->X == -1)
-      ports[0]->X = sizeX; 
-    else 
+    if (ports[0]->X == -1) {
+      ports[0]->X = 1;
+      ports[0]->Y = -1;
+    } else if (ports[0]->Y == -1) {
+      ports[0]->X = sizeX;
+      ports[0]->Y = 1;
+    } else if (ports[0]->X == sizeX) {
+      ports[0]->X = 1;
+      ports[0]->Y = sizeY;
+    } else {
       ports[0]->X = -1;
+      ports[0]->Y = 1;;
+    }
+    ports[0]->screenX = X + ports[0]->X;
+    ports[0]->screenY = Y + ports[0]->Y;
     
     ports[0]->route_wires();
     reseat();
