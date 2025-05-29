@@ -35,54 +35,57 @@
 iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
 {
     unsigned int li;
-    icons.resize(2);
     
-    icons[0].resize(15);
-    icons[1].resize(15);
-        
+    class oneiconbar *init_icon;
     renderer = _renderer;
     rect = _rect;
     
-    icons[0][0] = new icon(renderer, ICON_ZERO);
-    icons[1][0] = new icon(renderer, ICON_ONE);
-    icons[0][1] = new icon(renderer, ICON_NOT);
-    icons[0][2] = new icon(renderer, ICON_NAND);
-    icons[1][2] = new icon(renderer, ICON_AND);
-    icons[0][3] = new icon(renderer, ICON_NOR);
-    icons[1][3] = new icon(renderer, ICON_OR);
-    icons[0][4] = new icon(renderer, ICON_XOR);
-    icons[0][5] = new icon(renderer, ICON_TOGGLE);
-    icons[1][5] = new icon(renderer, ICON_OUTPUT);
-    icons[1][6] = new icon(renderer, ICON_TRUTH);
-    icons[0][6] = new icon(renderer, ICON_NEST);
-    icons[0][7] = new icon(renderer, ICON_4TO1);
-    icons[1][7] = new icon(renderer, ICON_1TO4);
-    icons[0][8] = new icon(renderer, ICON_8TO4);
-    icons[1][8] = new icon(renderer, ICON_4TO8);
-    icons[0][9] = new icon(renderer, ICON_DATASCOPE);
+    init_icon = new class oneiconbar(_renderer, _rect);
+    init_icon->icons.resize(2);
+    
+    init_icon->icons[0].resize(15);
+    init_icon->icons[1].resize(15);
+        
+    
+    init_icon->icons[0][0] = new icon(renderer, ICON_ZERO);
+    init_icon->icons[1][0] = new icon(renderer, ICON_ONE);
+    init_icon->icons[0][1] = new icon(renderer, ICON_NOT);
+    init_icon->icons[0][2] = new icon(renderer, ICON_NAND);
+    init_icon->icons[1][2] = new icon(renderer, ICON_AND);
+    init_icon->icons[0][3] = new icon(renderer, ICON_NOR);
+    init_icon->icons[1][3] = new icon(renderer, ICON_OR);
+    init_icon->icons[0][4] = new icon(renderer, ICON_XOR);
+    init_icon->icons[0][5] = new icon(renderer, ICON_TOGGLE);
+    init_icon->icons[1][5] = new icon(renderer, ICON_OUTPUT);
+    init_icon->icons[1][6] = new icon(renderer, ICON_TRUTH);
+    init_icon->icons[0][6] = new icon(renderer, ICON_NEST);
+    init_icon->icons[0][7] = new icon(renderer, ICON_4TO1);
+    init_icon->icons[1][7] = new icon(renderer, ICON_1TO4);
+    init_icon->icons[0][8] = new icon(renderer, ICON_8TO4);
+    init_icon->icons[1][8] = new icon(renderer, ICON_4TO8);
+    init_icon->icons[0][9] = new icon(renderer, ICON_DATASCOPE);
     
     for (li = 0; li < library.size(); li++) {
-        icons[li % 2][li / 2 + 10] = new icon(renderer, ICON_LIBRARY);
-        icons[li % 2][li / 2 + 10]->assign_library_element(library[li]);
+        init_icon->icons[li % 2][li / 2 + 10] = new icon(renderer, ICON_LIBRARY);
+        init_icon->icons[li % 2][li / 2 + 10]->assign_library_element(library[li]);
     }
     
+    icons.push_back(init_icon);
+    current_icons = init_icon;
 }
 
 iconbar::~iconbar(void)
 {
-     unsigned int y,x;
-     printf("iconbar destructor\n");
-     for (y = 0; y < icons.size(); y++) {
-          for (x = 0; x < icons[y].size(); x++) {
-             delete icons[y][x];
-             icons[y][x] = NULL;
-          }
+     for (auto one : icons) {
+        delete one;
      }
 }
 
 void iconbar::resize(SDL_Rect _rect)
 {
     rect = _rect;
+    for (auto one : icons)
+     one->resize(_rect);
 }
 
 #define SCALEX 40
@@ -90,59 +93,15 @@ void iconbar::resize(SDL_Rect _rect)
 
 void iconbar::draw(void)
 {
-    int x,y;
     SDL_RenderSetClipRect(renderer, &rect);    
-    int color = 0;
-    SDL_Rect box;
-    
-    for (y = 0; y < 15; y++) {
-        for (x = 0; x < 2; x++) {
-                box.x = rect.x + (0.5 + 2.5 * x) * SCALEX;
-                box.y = rect.y + (0.5 + 2.5 * y) * SCALEY;
-                box.h = 2 * SCALEY;
-                box.w = 2 * SCALEY;
-        	SDL_SetRenderDrawColor(renderer, R(color), G(color), B(color),
-			       Alpha(color));
-        	SDL_RenderFillRect(renderer, &box);
-                if (icons[x][y])
-                   icons[x][y]->draw(renderer, rect.x + (0.6 + 2.5 * x) * SCALEX, rect.y + (0.6 + 2.5 * y) * SCALEY, 1.8 * SCALEX, 1.8 * SCALEY);
-                
-                
-        }    
-    }
+
+    if (current_icons)
+     current_icons->draw();
 }
 
 class icon * iconbar::current_icon(int ScreenX, int ScreenY)
 {
-    float dX, dY;
-    int gridX, gridY;
-    
-    ScreenX -= rect.x;
-    ScreenY -= rect.y;
-    
-    /* subtract the border */
-    ScreenX -= 0.5 * SCALEX;
-    ScreenY -= 0.5 * SCALEY;
-    
-    if (ScreenX < 0 || ScreenY <0) /* left of the icons */
-      return NULL;
-      
-    dX = ScreenX / (2.5 * SCALEX);
-    dY = ScreenY / (2.5 * SCALEY);
-    
-    gridX = floor(dX);
-    gridY = floor(dY);
-    
-    if (gridX >= (int)icons.size())
-        return NULL;
-    if (gridY >= (int)icons[gridX].size())
-        return NULL;
-        
-    if (icons[gridX][gridY])
-       icons[gridX][gridY]->set_active();
-        
-    return icons[gridX][gridY];
-    
+    return current_icons->current_icon(ScreenX, ScreenY);
 }
 
 void iconbar::handle_event(SDL_Event &event)
@@ -285,3 +244,87 @@ class element *icon::library_element(void)
      element->set_icon(lib.icon, lib.icon_selected);
      return element;
 }
+
+oneiconbar::oneiconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
+{
+   renderer = _renderer;
+   rect = _rect;
+}
+
+oneiconbar::~oneiconbar(void)
+{
+      unsigned int y,x;
+      printf("oneiconbar destructor\n");
+      for (y = 0; y < icons.size(); y++) {
+           for (x = 0; x < icons[y].size(); x++) {
+              delete icons[y][x];
+              icons[y][x] = NULL;
+           }
+      }
+}
+
+void oneiconbar::resize(SDL_Rect _rect)
+{
+    rect = _rect;
+}
+
+#define SCALEX 40
+#define SCALEY 40
+
+void oneiconbar::draw(void)
+{
+    int x,y;
+    SDL_RenderSetClipRect(renderer, &rect);    
+    int color = 0;
+    SDL_Rect box;
+    
+    for (y = 0; y < 15; y++) {
+        for (x = 0; x < 2; x++) {
+                box.x = rect.x + (0.5 + 2.5 * x) * SCALEX;
+                box.y = rect.y + (0.5 + 2.5 * y) * SCALEY;
+                box.h = 2 * SCALEY;
+                box.w = 2 * SCALEY;
+        	SDL_SetRenderDrawColor(renderer, R(color), G(color), B(color),
+			       Alpha(color));
+        	SDL_RenderFillRect(renderer, &box);
+                if (icons[x][y])
+                   icons[x][y]->draw(renderer, rect.x + (0.6 + 2.5 * x) * SCALEX, rect.y + (0.6 + 2.5 * y) * SCALEY, 1.8 * SCALEX, 1.8 * SCALEY);
+                
+                
+        }    
+    }
+}
+
+class icon * oneiconbar::current_icon(int ScreenX, int ScreenY)
+{
+    float dX, dY;
+    int gridX, gridY;
+    
+    ScreenX -= rect.x;
+    ScreenY -= rect.y;
+    
+    /* subtract the border */
+    ScreenX -= 0.5 * SCALEX;
+    ScreenY -= 0.5 * SCALEY;
+    
+    if (ScreenX < 0 || ScreenY <0) /* left of the icons */
+      return NULL;
+      
+    dX = ScreenX / (2.5 * SCALEX);
+    dY = ScreenY / (2.5 * SCALEY);
+    
+    gridX = floor(dX);
+    gridY = floor(dY);
+    
+    if (gridX >= (int)icons.size())
+        return NULL;
+    if (gridY >= (int)icons[gridX].size())
+        return NULL;
+        
+    if (icons[gridX][gridY])
+       icons[gridX][gridY]->set_active();
+        
+    return icons[gridX][gridY];
+    
+}
+

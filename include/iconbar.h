@@ -42,6 +42,22 @@ private:
     class element *library_element(void);
 };
 
+class oneiconbar {
+public:
+    oneiconbar(SDL_Renderer *_renderer, SDL_Rect _rect);
+    virtual ~oneiconbar(void);
+    
+    void resize(SDL_Rect _rect);
+    
+    void draw(void);
+    void handle_event(SDL_Event &event);    
+    class icon *current_icon(int ScreenX, int ScreenY);
+    SDL_Rect rect;
+    std::vector<std::vector<class icon *>> icons;
+    SDL_Renderer *renderer;
+
+};
+
 class iconbar {
 public:
     iconbar(SDL_Renderer *_renderer, SDL_Rect _rect);
@@ -54,7 +70,8 @@ public:
     class icon *current_icon(int ScreenX, int ScreenY);
 private:
     SDL_Rect rect;
-    std::vector<std::vector<class icon *>> icons;
+    std::vector<class oneiconbar *> icons;
+    class oneiconbar *current_icons;
     SDL_Renderer *renderer;
 };
 
