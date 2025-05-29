@@ -108,6 +108,21 @@ void basecanvas::draw_line(float X1, float Y1, float X2, float Y2, int color)
 			 B(color), Alpha(color));
 	}
 }
+
+void basecanvas::draw_thick_line(float X1, float Y1, float X2, float Y2, int color)
+{
+	/* TODO: clip boxes that are fully outside of the visible window */
+
+	thickLineRGBA(renderer, X_to_scr(X1), Y_to_scr(Y1), X_to_scr(X2),
+		      Y_to_scr(Y2), 0.3 * scaleX, R(color), G(color), B(color),
+		      Alpha(color));
+	if (Alpha(color) > 250) {
+		filledCircleRGBA(renderer, X_to_scr(X1), Y_to_scr(Y1), 0.15 * scaleX, R(color), G(color),
+			 B(color), Alpha(color));
+		filledCircleRGBA(renderer, X_to_scr(X2), Y_to_scr(Y2), 0.15 * scaleX, R(color), G(color),
+			 B(color), Alpha(color));
+	}
+}
 void basecanvas::draw_shadow_Line(float X1, float Y1, float X2, float Y2, int color)
 {
 	/* TODO: clip boxes that are fully outside of the visible window */

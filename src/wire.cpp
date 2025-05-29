@@ -84,7 +84,15 @@ float dist(float x1, float y1, float x2, float y2)
 void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y2, int color, int *step, struct value *value, int stepsize = 60)
 {
         double dx, dy,d;
-        canvas->draw_line(x1, y1, x2, y2, color);
+        bool thick = false;
+        
+        if (value->type == VALUE_TYPE_INT)
+            thick = true;
+
+        if (thick)         
+            canvas->draw_thick_line(x1, y1, x2, y2, color);
+        else
+            canvas->draw_line(x1, y1, x2, y2, color);
         
         dx = x2-x1;
         dy = y2-y1;
@@ -108,7 +116,10 @@ void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y
 			canvas->draw_box(x1-size2, y1-size2, x1+size2, y1+size2, COLOR_BACKGROUND_MAIN);
 	                canvas->draw_text(s, x1+0.05-size, y1+0.05-size, 2 * size - 0.1, 2 * size - 0.1);
 		} else {
-	                canvas->draw_circle2(x1, y1, 0.18, COLOR_WIRE_MOTION, value_color(value));
+		        float r = 0.18;
+		        if (thick)
+		            r = 0.22;
+	                canvas->draw_circle2(x1, y1, r, COLOR_WIRE_MOTION, value_color(value));
 		}
             }
             x1 += dx;

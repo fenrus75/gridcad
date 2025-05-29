@@ -81,6 +81,7 @@ public:
     void draw_circle(float X, float Y, float R, int color, int color2=COLOR_BACKGROUND_MAIN);
     void draw_circle2(float X, float Y, float R, int color, int color2=COLOR_BACKGROUND_MAIN);
     void draw_line(float X1, float Y1, float X2, float Y2, int color);
+    void draw_thick_line(float X1, float Y1, float X2, float Y2, int color);
     void draw_shadow_Line(float X1, float Y1, float X2, float Y2, int color);
 
     SDL_Texture *load_image(const char *filename);
