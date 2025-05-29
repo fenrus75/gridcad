@@ -42,26 +42,25 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
     
     init_icon = new class oneiconbar(_renderer, _rect);
     
-    init_icon->set_element(0, 0, ICON_ZERO);
-    init_icon->set_element(1, 0, ICON_ONE);
-    
-    
-    init_icon->set_element(1,0, ICON_ONE);
-    init_icon->set_element(0,1, ICON_NOT);
-    init_icon->set_element(0,2, ICON_NAND);
-    init_icon->set_element(1,2, ICON_AND);
-    init_icon->set_element(0,3, ICON_NOR);
-    init_icon->set_element(1,3, ICON_OR);
-    init_icon->set_element(0,4, ICON_XOR);
-    init_icon->set_element(0,5, ICON_TOGGLE);
-    init_icon->set_element(1,5, ICON_OUTPUT);
-    init_icon->set_element(1,6, ICON_TRUTH);
-    init_icon->set_element(0,6, ICON_NEST);
-    init_icon->set_element(0,7, ICON_4TO1);
-    init_icon->set_element(1,7, ICON_1TO4);
-    init_icon->set_element(0,8, ICON_8TO4);
-    init_icon->set_element(1,8, ICON_4TO8);
-    init_icon->set_element(0,9, ICON_DATASCOPE);
+    init_icon->set_element(ICON_ZERO);
+    init_icon->set_element(ICON_ONE);
+    init_icon->set_element(ICON_NOT);
+    init_icon->insert_blank();
+    init_icon->set_element(ICON_NAND);
+    init_icon->set_element(ICON_AND);
+    init_icon->set_element(ICON_NOR);
+    init_icon->set_element(ICON_OR);
+    init_icon->set_element(ICON_XOR);
+    init_icon->insert_blank();
+    init_icon->set_element(ICON_TOGGLE);
+    init_icon->set_element(ICON_OUTPUT);
+    init_icon->set_element(ICON_NEST);
+    init_icon->set_element(ICON_TRUTH);
+    init_icon->set_element(ICON_4TO1);
+    init_icon->set_element(ICON_1TO4);
+    init_icon->set_element(ICON_8TO4);
+    init_icon->set_element(ICON_4TO8);
+    init_icon->set_element(ICON_DATASCOPE);
 
     icons.push_back(init_icon);
     current_icons = init_icon;
@@ -69,19 +68,34 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
     libtab = new class oneiconbar(_renderer, _rect);
     
     for (li = 0; li < library.size(); li++) {
-        libtab->set_element(li % 2, li / 2, ICON_LIBRARY, &library[li]);
+        libtab->set_element(ICON_LIBRARY, &library[li]);
     }
     
     icons.push_back(libtab);
     
 }
 
-void oneiconbar::set_element(int X, int Y, int icontype, struct library_block *block)
+void oneiconbar::set_element(unsigned int X, unsigned int Y, int icontype, struct library_block *block)
 {
      icons[X][Y] = new icon(renderer, icontype);
+     cIndex = Y * 2 + X + 1;
+     
+     if (Y >= icons[X].size())
+        assert(0);
      if (icontype == ICON_LIBRARY)
           icons[X][Y]->assign_library_element(*block);
 }
+
+void oneiconbar::set_element(int icontype, struct library_block *block)
+{
+    set_element(cIndex % 2, cIndex/2, icontype, block);
+}
+
+void oneiconbar::insert_blank(void)
+{
+     cIndex++;
+}
+
 
 iconbar::~iconbar(void)
 {
