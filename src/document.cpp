@@ -36,8 +36,11 @@ document::document(std::string _name)
 	name = _name;
 
 	SDL_Init(SDL_INIT_VIDEO);
+	SDL_Init(SDL_INIT_TIMER);
 	TTF_Init();
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2");
+	
+	SDL_timer_event = SDL_RegisterEvents(1);
 
 	_scene = new scene("main");
 
@@ -85,7 +88,8 @@ void document::run(void)
 		canvas->draw();
 
 	while (!leave) {
-		ret = SDL_WaitEventTimeout(&event, 1);
+//		ret = SDL_WaitEventTimeout(&event, 1);
+		ret = SDL_PollEvent(&event);
 
 		if (event.type == SDL_QUIT)
 			leave = true;
@@ -94,7 +98,7 @@ void document::run(void)
 			for (unsigned int i = 0; i < canvases.size(); i++)  {
 				auto canvas = canvases[i];
 				bool thisret = false;
-				if (event.window.windowID == canvas->get_window_ID()) {
+				if (event.window.windowID == canvas->get_window_ID() || event.type == SDL_timer_event) {
 					thisret = canvas->handle_event(event);
 					if (thisret) {
 						if (i == 0)
@@ -136,3 +140,5 @@ void unregister_canvas(class basecanvas *canvas)
 		}
 	}
 }
+
+unsigned int SDL_timer_event = 0;

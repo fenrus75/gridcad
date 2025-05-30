@@ -324,4 +324,5 @@ extern void populate_library(std::string directory);
 extern void queue_calculate(class element *element);
 extern void remove_from_calculate_queue(class element *element);
 extern void run_queued_calculations(void);
+extern unsigned int SDL_timer_event;
 #endif

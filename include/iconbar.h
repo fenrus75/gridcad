@@ -24,6 +24,7 @@
 #define ICON_DATASCOPE 17
 #define ICON_DFLIPFLOP 18
 #define ICON_DELAYLINE 19
+#define ICON_CLOCK 20
 
 class icon {
 public:

@@ -222,6 +222,8 @@ bool canvas::handle_event(SDL_Event &event)
 {
 	bool leave = false;
 	bool someone_in_editmode = false;
+	
+	
 	for (auto elem : current_scene->elements)
 		if (elem->in_edit_mode())
 		   someone_in_editmode = true;
