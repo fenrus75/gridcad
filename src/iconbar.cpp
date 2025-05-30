@@ -71,6 +71,7 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
     init_icon->set_element(ICON_1TO4);
     init_icon->set_element(ICON_8TO4);
     init_icon->set_element(ICON_4TO8);
+    icons.push_back(init_icon);
 
     
     libtab = new class oneiconbar(_renderer, _rect);
