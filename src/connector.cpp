@@ -60,7 +60,7 @@ void connector::fill_grid(class wiregrid *grid)
 
 bool connector::want_deleted(void)
 {
-    if (!ports[0]->has_wires())
+    if (ports.size() == 0 || !ports[0]->has_wires())
         return true;
     return false;
 }

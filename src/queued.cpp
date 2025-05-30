@@ -44,7 +44,7 @@ void remove_from_calculate_queue(class element *element)
             }
         }
         for (unsigned int i = 0; i < queue1.size(); i++) {
-            if (queue0[i] == element) {
+            if (queue1[i] == element) {
                 restart = true;
                 queue1.erase(queue1.begin() + i);
                 break;

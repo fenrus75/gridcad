@@ -8,7 +8,7 @@
    version="1.1"
    id="svg5"
    sodipodi:docname="dflipflop.svg"
-   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
    inkscape:export-filename="dflipflop.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96"
@@ -29,9 +29,9 @@
      showgrid="false"
      inkscape:zoom="0.39819792"
      inkscape:cx="506.02977"
-     inkscape:cy="755.90551"
-     inkscape:window-width="1536"
-     inkscape:window-height="779"
+     inkscape:cy="757.16116"
+     inkscape:window-width="2194"
+     inkscape:window-height="1162"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -1305,7 +1305,7 @@
      inkscape:groupmode="layer"
      id="layer1">
     <rect
-       style="fill:#800000;stroke:#000000;stroke-width:1;filter:url(#filter811)"
+       style="fill:#800000;stroke:#000000;stroke-width:1"
        id="rect234"
        width="290"
        height="390"
@@ -1315,7 +1315,7 @@
        ry="15" />
     <text
        xml:space="preserve"
-       style="font-weight:bold;font-size:123.472px;font-family:Cousine;-inkscape-font-specification:'Cousine Bold';fill:#ffffff;stroke:#000000;stroke-width:1;filter:url(#filter783)"
+       style="font-weight:bold;font-size:123.472px;font-family:Cousine;-inkscape-font-specification:'Cousine Bold';fill:#ffffff;stroke:#000000;stroke-width:1"
        x="2.1672509"
        y="181.82994"
        id="text450"><tspan
@@ -1326,7 +1326,7 @@
          y="181.82994">D</tspan></text>
     <text
        xml:space="preserve"
-       style="font-weight:bold;font-size:115.878px;font-family:Cousine;-inkscape-font-specification:'Cousine Bold';fill:#ffffff;stroke:#000000;stroke-width:0.938501;filter:url(#filter755)"
+       style="font-weight:bold;font-size:115.878px;font-family:Cousine;-inkscape-font-specification:'Cousine Bold';fill:#ffffff;stroke:#000000;stroke-width:0.938501"
        x="206.69171"
        y="179.3364"
        id="text556"
@@ -1338,7 +1338,7 @@
          y="179.3364">Q</tspan></text>
     <text
        xml:space="preserve"
-       style="font-weight:bold;font-size:113.351px;font-family:Cousine;-inkscape-font-specification:'Cousine Bold';fill:#ffffff;stroke:#000000;stroke-width:0.918029;filter:url(#filter727)"
+       style="font-weight:bold;font-size:113.351px;font-family:Cousine;-inkscape-font-specification:'Cousine Bold';fill:#ffffff;stroke:#000000;stroke-width:0.918029"
        x="202.11005"
        y="326.97891"
        id="text556-6"
@@ -1350,11 +1350,11 @@
          y="326.97891">Q</tspan></text>
     <path
        id="path612"
-       style="fill:#ffffff;stroke:#000000;stroke-width:0.585865;filter:url(#filter699)"
+       style="fill:#ffffff;stroke:#000000;stroke-width:0.585865"
        inkscape:transform-center-x="-12.318037"
        d="m 5.3144044,300.47435 v 14.89 l 44.1414926,22.13 -44.1414926,22.14 v 14.88 l 73.9081496,-37.02 z" />
     <rect
-       style="fill:#ffffff;stroke:#000000;stroke-width:1;filter:url(#filter671)"
+       style="fill:#ffffff;stroke:#000000;stroke-width:1"
        id="rect1039"
        width="64.690613"
        height="14.197467"

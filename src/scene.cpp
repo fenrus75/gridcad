@@ -27,6 +27,7 @@ scene::scene(std::string _name, std::string _parent)
 scene::~scene(void)
 {
 	for (auto elem: elements) {
+		remove_from_calculate_queue(elem); 
 		delete elem;
 	}
 }

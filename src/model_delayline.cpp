@@ -49,7 +49,7 @@ void model_delayline::calculate(int ttl)
     value = ports[0]->value;
     printf("calculate %s from %i \n", name.c_str(), value.boolval);
     queue_calculate(this);
-    
+
     if (ttl > DEFAULT_TTL - 10)
         ports[1]->update_value(&value, ttl - 1);
 }

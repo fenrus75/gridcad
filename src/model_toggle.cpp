@@ -107,6 +107,7 @@ bool model_toggle::mouse_select(float _X, float _Y)
     value.intval = value.boolval;
     
     update_value(&value, DEFAULT_TTL);
+    run_queued_calculations();
     return true;
 }
 
