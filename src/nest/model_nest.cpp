@@ -38,6 +38,8 @@ model_nest::~model_nest(void)
 {
 	if (canvas)
 		delete canvas;
+	if (_scene)
+		delete _scene;
 }
 
 

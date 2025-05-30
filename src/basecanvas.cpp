@@ -22,17 +22,19 @@ basecanvas::basecanvas(void)
 basecanvas::~basecanvas(void)
 {
 	printf("basecanvas destructor\n");
-//	if (font)
-//		TTF_CloseFont(font);
-//	font = NULL;
+	if (font)
+		TTF_CloseFont(font);
+	font = NULL;
 	for (auto const& [key, val] : text_cache)
 	{
 		SDL_DestroyTexture(val);
+		text_cache[key] = NULL;
 	}
 	text_cache.clear();
 	for (auto const& [key, val] : texture_cache)
 	{
 		SDL_DestroyTexture(val);
+		texture_cache[key] = NULL;
 	}
 	texture_cache.clear();
 }

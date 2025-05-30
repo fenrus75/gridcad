@@ -22,12 +22,16 @@
 #include "document.h"
 
 int main(int argc, char **argv)
-{
+{	
+	std::string name = "scene";
 	class document *document;
+	
+	if (argc > 1)
+		name = argv[1];
 	
 	populate_library("library/");
 
-	document = new class document("scene");
+	document = new class document(name);
 
 	document->run();
 

@@ -34,11 +34,11 @@ public:
     void set_inactive(void) { active = false; };
     void assign_library_element(struct library_block block);
 private:
-    bool active;
-    int type;
+    bool active  = false;
+    int type = 0;
     struct library_block lib;
-    SDL_Renderer *_renderer;
-    SDL_Texture *texture;
+    SDL_Renderer *_renderer = NULL;
+    SDL_Texture *texture = NULL;
     class element *library_element(void);
 };
 
