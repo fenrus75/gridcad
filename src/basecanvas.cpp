@@ -214,6 +214,30 @@ void basecanvas::draw_image(SDL_Texture *image, float X, float Y, float W, float
 	SDL_RenderCopy(renderer, image, NULL, &rect);
 }
 
+void basecanvas::draw_image_fragment(SDL_Texture *image, float X, float Y, float W, float H, int fromX, int fromY, int w, int h) 
+{
+	SDL_Rect rect, src;
+	
+	if (!image) {
+		return;
+	}
+
+	
+	rect.x = X_to_scr(X);
+	rect.y = Y_to_scr(Y);
+	rect.w = W * scaleX;
+	rect.h = H * scaleY;
+	
+	src.x = fromX;
+	src.y = fromY;
+	src.w = w;
+	src.h = h;
+		
+	SDL_SetTextureAlphaMod(image, 255);
+	
+	SDL_RenderCopy(renderer, image, &src, &rect);
+}
+
 void basecanvas::draw_image_rotated(SDL_Texture *image, float X, float Y, float W, float H, int alpha, int angle) 
 {
 	SDL_Rect rect;

@@ -21,5 +21,9 @@ public:
     
 private:
     struct value value = {};
+    SDL_Texture *waveform = NULL;
 };
 
+
+
+extern struct value global_clock;

@@ -27,7 +27,6 @@ using json = nlohmann::json;
 
 static std::vector<class basecanvas *> canvases;
 
-
 document::document(std::string _name)
 {
 	class canvas *_canvas;
@@ -47,7 +46,7 @@ document::document(std::string _name)
 	_canvas = new canvas(_scene);
 
 	register_new_canvas(_canvas);
-
+	
 	if (access((name + ".json").c_str(), R_OK) == 0) {
 		json j;
 		std::ifstream input((name + ".json").c_str());
