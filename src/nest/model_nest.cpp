@@ -97,7 +97,7 @@ void model_nest::calculate(int ttl)
 	for (auto port: ports) {
 		if (port->direction == PORT_OUT) {
 			class model_output *tog;
-			struct value val;
+			struct value val = {};
 			tog = (class model_output *)port->get_linked_element();
 			if (tog) {
 				val = tog->get_value();

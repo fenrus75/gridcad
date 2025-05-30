@@ -13,7 +13,7 @@ public:
 	void run(void);
 
 private:
-	std::string name;
+	std::string name = "";
 	
 };
 

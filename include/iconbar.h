@@ -36,7 +36,7 @@ public:
 private:
     bool active  = false;
     int type = 0;
-    struct library_block lib;
+    struct library_block lib = {}; 
     SDL_Renderer *_renderer = NULL;
     SDL_Texture *texture = NULL;
     class element *library_element(void);
@@ -58,9 +58,9 @@ public:
 
 private:    
     unsigned int cIndex = 0; 
-    SDL_Rect rect;
+    SDL_Rect rect = {};
     std::vector<std::vector<class icon *>> icons;
-    SDL_Renderer *renderer;
+    SDL_Renderer *renderer = NULL;
 
 };
 

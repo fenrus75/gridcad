@@ -163,7 +163,7 @@ public:
     
     virtual std::string class_id(void) { return "scene:";};
 
-    float sizeX, sizeY;
+    float sizeX = 200, sizeY = 200;
     
     void add_element(class element *element);
     void remove_element(class element *element);

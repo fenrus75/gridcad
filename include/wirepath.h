@@ -40,12 +40,12 @@ public:
 private:
     std::vector<std::vector<struct point>> grid;
 
-    bool found_solution;    
-    double best_path;
+    bool found_solution = false;    
+    double best_path = 500000;
     int width, height;
 
-    int originX, originY;
-    int targetX, targetY;
+    int originX = 0, originY = 0;
+    int targetX = 0, targetY = 0;
     
     double cost_estimate(int x, int y);
     

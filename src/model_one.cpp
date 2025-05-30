@@ -16,7 +16,7 @@
 
 model_one::model_one(float _X, float _Y)  : model_zero(_X, _Y)
 {
-    struct value value;
+    struct value value = {};
     
     memset(&value, 0, sizeof(struct value));
     value.boolval = true;
