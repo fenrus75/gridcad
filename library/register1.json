@@ -1,0 +1,1447 @@
+{
+    "elements": [
+        {
+            "X": 49.0,
+            "Y": 13.0,
+            "angle": 0,
+            "class_id": "model_dflipflop:",
+            "name": "Flipflop",
+            "parental_name": "/",
+            "ports": [
+                {
+                    "X": -1,
+                    "Y": 1,
+                    "bus_width": 0,
+                    "direction": 0,
+                    "linked_uuid": "",
+                    "name": "D",
+                    "screenX": 48.0,
+                    "screenY": 14.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": true,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "wires": [
+                        {
+                            "X1": 48,
+                            "X2": 43,
+                            "Y1": 14,
+                            "Y2": 11,
+                            "color": 6,
+                            "name": "Wire1748625907",
+                            "points": [
+                                {
+                                    "X": 48,
+                                    "Y": 14
+                                },
+                                {
+                                    "X": 47,
+                                    "Y": 14
+                                },
+                                {
+                                    "X": 44,
+                                    "Y": 11
+                                },
+                                {
+                                    "X": 43,
+                                    "Y": 11
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": true,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": -1,
+                    "Y": 3,
+                    "bus_width": 0,
+                    "direction": 0,
+                    "linked_uuid": "",
+                    "name": "clk",
+                    "screenX": 48.0,
+                    "screenY": 16.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "wires": [
+                        {
+                            "X1": 48,
+                            "X2": 5,
+                            "Y1": 16,
+                            "Y2": 16,
+                            "color": 6,
+                            "name": "Wire1748625905",
+                            "points": [
+                                {
+                                    "X": 48,
+                                    "Y": 16
+                                },
+                                {
+                                    "X": 5,
+                                    "Y": 16
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 0
+                        }
+                    ]
+                },
+                {
+                    "X": 3,
+                    "Y": 1,
+                    "bus_width": 0,
+                    "direction": 1,
+                    "linked_uuid": "",
+                    "name": "Q",
+                    "screenX": 52.0,
+                    "screenY": 14.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": true,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "wires": [
+                        {
+                            "X1": 52,
+                            "X2": 54,
+                            "Y1": 14,
+                            "Y2": 14,
+                            "color": 6,
+                            "name": "Wire1748625928",
+                            "points": [
+                                {
+                                    "X": 54,
+                                    "Y": 14
+                                },
+                                {
+                                    "X": 52,
+                                    "Y": 14
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": true,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 0
+                        }
+                    ]
+                },
+                {
+                    "X": 3,
+                    "Y": 2,
+                    "bus_width": 0,
+                    "direction": 1,
+                    "linked_uuid": "",
+                    "name": "ǭ",
+                    "screenX": 52.0,
+                    "screenY": 15.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "wires": []
+                }
+            ],
+            "previous_clock": {
+                "arrayval": 0,
+                "boolval": false,
+                "floatval": 0.0,
+                "intval": 0,
+                "is_error": false,
+                "type": 0,
+                "valid": true
+            },
+            "sizeX": 3,
+            "sizeY": 4,
+            "uuid": "6839e9ec-8346e6dd-9b34-0fdd-6b2e-2a6bd14ef978",
+            "value": {
+                "arrayval": 0,
+                "boolval": true,
+                "floatval": 0.0,
+                "intval": 0,
+                "is_error": false,
+                "type": 0,
+                "valid": true
+            }
+        },
+        {
+            "X": 58.0,
+            "Y": 13.0,
+            "angle": 0,
+            "class_id": "model_output:",
+            "name": "Q",
+            "parental_name": "/",
+            "ports": [
+                {
+                    "X": -1,
+                    "Y": 1,
+                    "bus_width": 0,
+                    "direction": 0,
+                    "linked_uuid": "",
+                    "name": "Q",
+                    "screenX": 57.0,
+                    "screenY": 14.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": true,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "wires": [
+                        {
+                            "X1": 57,
+                            "X2": 54,
+                            "Y1": 14,
+                            "Y2": 14,
+                            "color": 6,
+                            "name": "Wire1748625925",
+                            "points": [
+                                {
+                                    "X": 57,
+                                    "Y": 14
+                                },
+                                {
+                                    "X": 54,
+                                    "Y": 14
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": true,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 0
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 3,
+            "sizeY": 3,
+            "uuid": "6839e9ef-b93e3d62-452e-380a-263d-cd159908a52a",
+            "value": {
+                "arrayval": 0,
+                "boolval": false,
+                "floatval": 0.0,
+                "intval": 0,
+                "is_error": false,
+                "type": 0,
+                "valid": false
+            }
+        },
+        {
+            "X": 2.0,
+            "Y": 15.0,
+            "angle": 0,
+            "class_id": "model_toggle:",
+            "name": "clk",
+            "parental_name": "/",
+            "ports": [
+                {
+                    "X": 3,
+                    "Y": 1,
+                    "bus_width": 0,
+                    "direction": 1,
+                    "linked_uuid": "",
+                    "name": "clk",
+                    "screenX": 5.0,
+                    "screenY": 16.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "wires": [
+                        {
+                            "X1": 48,
+                            "X2": 5,
+                            "Y1": 16,
+                            "Y2": 16,
+                            "color": 6,
+                            "name": "Wire1748625905",
+                            "points": [
+                                {
+                                    "X": 48,
+                                    "Y": 16
+                                },
+                                {
+                                    "X": 5,
+                                    "Y": 16
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 0
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 3,
+            "sizeY": 3,
+            "uuid": "6839e9f9-e007b192-98bd-1151-aa48-8fec60efdb48",
+            "value": {
+                "arrayval": 0,
+                "boolval": false,
+                "floatval": 0.0,
+                "intval": 0,
+                "is_error": false,
+                "type": 0,
+                "valid": true
+            }
+        },
+        {
+            "X": 39.0,
+            "Y": 10.0,
+            "angle": 0,
+            "class_id": "model_or:",
+            "name": "",
+            "parental_name": "/",
+            "ports": [
+                {
+                    "X": -1,
+                    "Y": 0,
+                    "bus_width": 1,
+                    "direction": 0,
+                    "linked_uuid": "",
+                    "name": "In1",
+                    "screenX": 38.0,
+                    "screenY": 10.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": true,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "wires": [
+                        {
+                            "X1": 38,
+                            "X2": 35,
+                            "Y1": 10,
+                            "Y2": 7,
+                            "color": 6,
+                            "name": "Wire1748625983",
+                            "points": [
+                                {
+                                    "X": 38,
+                                    "Y": 10
+                                },
+                                {
+                                    "X": 35,
+                                    "Y": 7
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": true,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": -1,
+                    "Y": 2,
+                    "bus_width": 1,
+                    "direction": 0,
+                    "linked_uuid": "",
+                    "name": "In2",
+                    "screenX": 38.0,
+                    "screenY": 12.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "wires": [
+                        {
+                            "X1": 38,
+                            "X2": 35,
+                            "Y1": 12,
+                            "Y2": 12,
+                            "color": 6,
+                            "name": "Wire1748625921",
+                            "points": [
+                                {
+                                    "X": 38,
+                                    "Y": 12
+                                },
+                                {
+                                    "X": 35,
+                                    "Y": 12
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": 4,
+                    "Y": 1,
+                    "bus_width": 1,
+                    "direction": 1,
+                    "linked_uuid": "",
+                    "name": "Out",
+                    "screenX": 43.0,
+                    "screenY": 11.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": true,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "wires": [
+                        {
+                            "X1": 48,
+                            "X2": 43,
+                            "Y1": 14,
+                            "Y2": 11,
+                            "color": 6,
+                            "name": "Wire1748625907",
+                            "points": [
+                                {
+                                    "X": 48,
+                                    "Y": 14
+                                },
+                                {
+                                    "X": 47,
+                                    "Y": 14
+                                },
+                                {
+                                    "X": 44,
+                                    "Y": 11
+                                },
+                                {
+                                    "X": 43,
+                                    "Y": 11
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": true,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 4,
+            "sizeY": 3,
+            "uuid": "6839ea5d-9498ae2f-0356-ce88-da4b-9b734864ef64"
+        },
+        {
+            "X": 31.0,
+            "Y": 6.0,
+            "angle": 0,
+            "class_id": "model_and:",
+            "name": "",
+            "parental_name": "/",
+            "ports": [
+                {
+                    "X": -1,
+                    "Y": 0,
+                    "bus_width": 1,
+                    "direction": 0,
+                    "linked_uuid": "",
+                    "name": "In1",
+                    "screenX": 30.0,
+                    "screenY": 6.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": true,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "wires": [
+                        {
+                            "X1": 30,
+                            "X2": 54,
+                            "Y1": 6,
+                            "Y2": 14,
+                            "color": 6,
+                            "name": "Wire1748625932",
+                            "points": [
+                                {
+                                    "X": 30,
+                                    "Y": 6
+                                },
+                                {
+                                    "X": 32,
+                                    "Y": 4
+                                },
+                                {
+                                    "X": 45,
+                                    "Y": 4
+                                },
+                                {
+                                    "X": 54,
+                                    "Y": 13
+                                },
+                                {
+                                    "X": 54,
+                                    "Y": 14
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": true,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": -1,
+                    "Y": 2,
+                    "bus_width": 1,
+                    "direction": 0,
+                    "linked_uuid": "",
+                    "name": "In2",
+                    "screenX": 30.0,
+                    "screenY": 8.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": true,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "wires": [
+                        {
+                            "X1": 30,
+                            "X2": 28,
+                            "Y1": 8,
+                            "Y2": 8,
+                            "color": 6,
+                            "name": "Wire1748625910",
+                            "points": [
+                                {
+                                    "X": 30,
+                                    "Y": 8
+                                },
+                                {
+                                    "X": 28,
+                                    "Y": 8
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": true,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": 4,
+                    "Y": 1,
+                    "bus_width": 1,
+                    "direction": 1,
+                    "linked_uuid": "",
+                    "name": "Out",
+                    "screenX": 35.0,
+                    "screenY": 7.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": true,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "wires": [
+                        {
+                            "X1": 38,
+                            "X2": 35,
+                            "Y1": 10,
+                            "Y2": 7,
+                            "color": 6,
+                            "name": "Wire1748625983",
+                            "points": [
+                                {
+                                    "X": 38,
+                                    "Y": 10
+                                },
+                                {
+                                    "X": 35,
+                                    "Y": 7
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": true,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 4,
+            "sizeY": 3,
+            "uuid": "6839ea69-db9a32f4-63b4-520a-0bfc-80ee549f4e17"
+        },
+        {
+            "X": 25.0,
+            "Y": 7.0,
+            "angle": 0,
+            "class_id": "model_not:",
+            "name": "",
+            "parental_name": "/",
+            "ports": [
+                {
+                    "X": -1,
+                    "Y": 1,
+                    "bus_width": 1,
+                    "direction": 0,
+                    "linked_uuid": "",
+                    "name": "In",
+                    "screenX": 24.395553588867188,
+                    "screenY": 8.637777328491211,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "wires": [
+                        {
+                            "X1": 24,
+                            "X2": 20,
+                            "Y1": 8,
+                            "Y2": 8,
+                            "color": 6,
+                            "name": "Wire1748627479",
+                            "points": [
+                                {
+                                    "X": 24,
+                                    "Y": 8
+                                },
+                                {
+                                    "X": 20,
+                                    "Y": 8
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": 3,
+                    "Y": 1,
+                    "bus_width": 1,
+                    "direction": 1,
+                    "linked_uuid": "",
+                    "name": "Out",
+                    "screenX": 28.0,
+                    "screenY": 8.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": true,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "wires": [
+                        {
+                            "X1": 30,
+                            "X2": 28,
+                            "Y1": 8,
+                            "Y2": 8,
+                            "color": 6,
+                            "name": "Wire1748625910",
+                            "points": [
+                                {
+                                    "X": 30,
+                                    "Y": 8
+                                },
+                                {
+                                    "X": 28,
+                                    "Y": 8
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": true,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 3,
+            "sizeY": 3,
+            "uuid": "6839ea73-774c5063-d085-b320-6d20-4fe560cb346c"
+        },
+        {
+            "X": 19.0,
+            "Y": 0.0,
+            "angle": 0,
+            "class_id": "model_toggle:",
+            "name": "Load",
+            "parental_name": "/",
+            "ports": [
+                {
+                    "X": 1,
+                    "Y": 3,
+                    "bus_width": 0,
+                    "direction": 1,
+                    "linked_uuid": "",
+                    "name": "Load",
+                    "screenX": 20.0,
+                    "screenY": 3.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "wires": [
+                        {
+                            "X1": 20,
+                            "X2": 20,
+                            "Y1": 3,
+                            "Y2": 8,
+                            "color": 6,
+                            "name": "Wire1748627478",
+                            "points": [
+                                {
+                                    "X": 20,
+                                    "Y": 8
+                                },
+                                {
+                                    "X": 20,
+                                    "Y": 3
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 3,
+            "sizeY": 3,
+            "uuid": "6839ea79-6fb693c6-ca21-3616-4447-9b9cd56309c8",
+            "value": {
+                "arrayval": 0,
+                "boolval": false,
+                "floatval": 0.0,
+                "intval": 0,
+                "is_error": false,
+                "type": 0,
+                "valid": true
+            }
+        },
+        {
+            "X": 6.0,
+            "Y": 12.0,
+            "angle": 0,
+            "class_id": "model_toggle:",
+            "name": "Data",
+            "parental_name": "/",
+            "ports": [
+                {
+                    "X": 3,
+                    "Y": 1,
+                    "bus_width": 0,
+                    "direction": 1,
+                    "linked_uuid": "",
+                    "name": "Data",
+                    "screenX": 9.0,
+                    "screenY": 13.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "wires": [
+                        {
+                            "X1": 9,
+                            "X2": 30,
+                            "Y1": 13,
+                            "Y2": 13,
+                            "color": 6,
+                            "name": "Wire1748627481",
+                            "points": [
+                                {
+                                    "X": 30,
+                                    "Y": 13
+                                },
+                                {
+                                    "X": 9,
+                                    "Y": 13
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 3,
+            "sizeY": 3,
+            "uuid": "6839ea97-b38fc233-4b6f-51b7-72f8-28e876d37a47",
+            "value": {
+                "arrayval": 0,
+                "boolval": false,
+                "floatval": 0.0,
+                "intval": 0,
+                "is_error": false,
+                "type": 0,
+                "valid": true
+            }
+        },
+        {
+            "X": 31.0,
+            "Y": 11.0,
+            "angle": 0,
+            "class_id": "model_and:",
+            "name": "",
+            "parental_name": "/",
+            "ports": [
+                {
+                    "X": -1,
+                    "Y": 0,
+                    "bus_width": 1,
+                    "direction": 0,
+                    "linked_uuid": "",
+                    "name": "In1",
+                    "screenX": 30.506664276123047,
+                    "screenY": 11.267407417297363,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "wires": [
+                        {
+                            "X1": 30,
+                            "X2": 20,
+                            "Y1": 11,
+                            "Y2": 11,
+                            "color": 6,
+                            "name": "Wire1748627477",
+                            "points": [
+                                {
+                                    "X": 30,
+                                    "Y": 11
+                                },
+                                {
+                                    "X": 20,
+                                    "Y": 11
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": -1,
+                    "Y": 2,
+                    "bus_width": 1,
+                    "direction": 0,
+                    "linked_uuid": "",
+                    "name": "In2",
+                    "screenX": 30.0,
+                    "screenY": 13.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "wires": [
+                        {
+                            "X1": 9,
+                            "X2": 30,
+                            "Y1": 13,
+                            "Y2": 13,
+                            "color": 6,
+                            "name": "Wire1748627481",
+                            "points": [
+                                {
+                                    "X": 30,
+                                    "Y": 13
+                                },
+                                {
+                                    "X": 9,
+                                    "Y": 13
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": 4,
+                    "Y": 1,
+                    "bus_width": 1,
+                    "direction": 1,
+                    "linked_uuid": "",
+                    "name": "Out",
+                    "screenX": 35.0,
+                    "screenY": 12.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "wires": [
+                        {
+                            "X1": 38,
+                            "X2": 35,
+                            "Y1": 12,
+                            "Y2": 12,
+                            "color": 6,
+                            "name": "Wire1748625921",
+                            "points": [
+                                {
+                                    "X": 38,
+                                    "Y": 12
+                                },
+                                {
+                                    "X": 35,
+                                    "Y": 12
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 4,
+            "sizeY": 3,
+            "uuid": "6839eae1-eb2588a3-1d33-8ef3-078a-ee58c6eb40d3"
+        },
+        {
+            "X": 54.0,
+            "Y": 14.0,
+            "angle": 0,
+            "class_id": "connector:",
+            "name": "",
+            "parental_name": "/",
+            "ports": [
+                {
+                    "X": 0,
+                    "Y": 0,
+                    "bus_width": 0,
+                    "direction": 2,
+                    "linked_uuid": "",
+                    "name": "Connector",
+                    "screenX": 54.0,
+                    "screenY": 14.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": true,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "wires": [
+                        {
+                            "X1": 57,
+                            "X2": 54,
+                            "Y1": 14,
+                            "Y2": 14,
+                            "color": 6,
+                            "name": "Wire1748625925",
+                            "points": [
+                                {
+                                    "X": 57,
+                                    "Y": 14
+                                },
+                                {
+                                    "X": 54,
+                                    "Y": 14
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": true,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 0
+                        },
+                        {
+                            "X1": 52,
+                            "X2": 54,
+                            "Y1": 14,
+                            "Y2": 14,
+                            "color": 6,
+                            "name": "Wire1748625928",
+                            "points": [
+                                {
+                                    "X": 54,
+                                    "Y": 14
+                                },
+                                {
+                                    "X": 52,
+                                    "Y": 14
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": true,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 0
+                        },
+                        {
+                            "X1": 30,
+                            "X2": 54,
+                            "Y1": 6,
+                            "Y2": 14,
+                            "color": 6,
+                            "name": "Wire1748625932",
+                            "points": [
+                                {
+                                    "X": 30,
+                                    "Y": 6
+                                },
+                                {
+                                    "X": 32,
+                                    "Y": 4
+                                },
+                                {
+                                    "X": 45,
+                                    "Y": 4
+                                },
+                                {
+                                    "X": 54,
+                                    "Y": 13
+                                },
+                                {
+                                    "X": 54,
+                                    "Y": 14
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": true,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 1,
+            "sizeY": 1,
+            "uuid": "6839ebf3-a4807abe-f1c3-d639-1b12-da937fdd6225"
+        },
+        {
+            "X": 20.0,
+            "Y": 11.0,
+            "angle": 0,
+            "class_id": "connector:",
+            "name": "",
+            "parental_name": "/",
+            "ports": [
+                {
+                    "X": 0,
+                    "Y": 0,
+                    "bus_width": 0,
+                    "direction": 2,
+                    "linked_uuid": "",
+                    "name": "Connector",
+                    "screenX": 20.43259048461914,
+                    "screenY": 11.526666641235352,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "wires": [
+                        {
+                            "X1": 30,
+                            "X2": 20,
+                            "Y1": 11,
+                            "Y2": 11,
+                            "color": 6,
+                            "name": "Wire1748627477",
+                            "points": [
+                                {
+                                    "X": 30,
+                                    "Y": 11
+                                },
+                                {
+                                    "X": 20,
+                                    "Y": 11
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        },
+                        {
+                            "X1": 20,
+                            "X2": 20,
+                            "Y1": 11,
+                            "Y2": 8,
+                            "color": 6,
+                            "name": "Wire1748627480",
+                            "points": [
+                                {
+                                    "X": 20,
+                                    "Y": 8
+                                },
+                                {
+                                    "X": 20,
+                                    "Y": 11
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 1,
+            "sizeY": 1,
+            "uuid": "6839f063-ffc4e9de-98d1-f46a-1f75-b08f765fdd11"
+        },
+        {
+            "X": 20.0,
+            "Y": 8.0,
+            "angle": 0,
+            "class_id": "connector:",
+            "name": "",
+            "parental_name": "/",
+            "ports": [
+                {
+                    "X": 0,
+                    "Y": 0,
+                    "bus_width": 0,
+                    "direction": 2,
+                    "linked_uuid": "",
+                    "name": "Connector",
+                    "screenX": 20.0,
+                    "screenY": 8.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "wires": [
+                        {
+                            "X1": 20,
+                            "X2": 20,
+                            "Y1": 3,
+                            "Y2": 8,
+                            "color": 6,
+                            "name": "Wire1748627478",
+                            "points": [
+                                {
+                                    "X": 20,
+                                    "Y": 8
+                                },
+                                {
+                                    "X": 20,
+                                    "Y": 3
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        },
+                        {
+                            "X1": 20,
+                            "X2": 20,
+                            "Y1": 11,
+                            "Y2": 8,
+                            "color": 6,
+                            "name": "Wire1748627480",
+                            "points": [
+                                {
+                                    "X": 20,
+                                    "Y": 8
+                                },
+                                {
+                                    "X": 20,
+                                    "Y": 11
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        },
+                        {
+                            "X1": 24,
+                            "X2": 20,
+                            "Y1": 8,
+                            "Y2": 8,
+                            "color": 6,
+                            "name": "Wire1748627479",
+                            "points": [
+                                {
+                                    "X": 24,
+                                    "Y": 8
+                                },
+                                {
+                                    "X": 20,
+                                    "Y": 8
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 1,
+            "sizeY": 1,
+            "uuid": "6839f06a-d9ab07f5-5b63-f87a-bb62-6e9eecca20f7"
+        }
+    ],
+    "name": "",
+    "parental_name": "",
+    "sizeX": 200.0,
+    "sizeY": 200.0
+}
