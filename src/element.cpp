@@ -121,18 +121,27 @@ void element::update_drag(class canvas *canvas, class scene *scene, float _X, fl
     }
 }
 
-void element::stop_drag(class canvas *canvas)
+bool element::stop_drag(class canvas *canvas)
 {
+    bool no_move = false;
+    /* we did not move at all */
+    
+    printf("%5.2f %5.2f      %5.2f  %5.2f\n", X,Y,Xghost, Yghost); 
+    if (X == Xghost && Y == Yghost) {
+        no_move = true;
+    }
     X = Xghost;
     Y = Yghost;
     
     reseat();
     over_drag_threshold = false;
     
-    for (auto port : ports)
-        port->stop_drag(canvas);
+    if (!no_move)
+        for (auto port : ports)
+            port->stop_drag(canvas);
 
     calculate(DEFAULT_TTL);
+    return !no_move;
 }
 
 

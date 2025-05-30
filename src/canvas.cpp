@@ -409,8 +409,8 @@ bool canvas::handle_event(SDL_Event &event)
 								dragging->select_single();
 						}
 					}
-					dragging->stop_drag(this);
-					current_scene->rewire_section(dragging);
+					if (dragging->stop_drag(this))
+						current_scene->rewire_section(dragging);
 
 				}
 				if (dragging_port && !current_scene->is_port(x, y)) {

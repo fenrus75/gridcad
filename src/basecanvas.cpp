@@ -247,6 +247,7 @@ void basecanvas::draw_image(std::string filename, float X, float Y, float W, flo
 	if (texture_cache.find(filename) != texture_cache.end()) {
 		image = texture_cache[filename];
 	} else {
+		printf("image cache miss %s\n", filename.c_str());
 		image = load_image(filename);
 		if (!image) {
 			printf("Failure to load %s\n", filename.c_str());
@@ -278,6 +279,8 @@ SDL_Texture *basecanvas::text_to_texture(const char *text)
 	const SDL_Color white = {255, 255, 255, 255};
 	SDL_Texture *tx;
 	SDL_Surface *surface;
+	
+	printf("Text miss: %s\n", text);
 		
 	if (!font)
 		font = TTF_OpenFont("fonts/Roboto-Medium-webfont.ttf", 28);
