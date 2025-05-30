@@ -187,6 +187,7 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 		middle_Y = event.motion.y;
 	}
 	current_scene->remove_orphans();
+	run_queued_calculations();
 	return false;
 }
 
@@ -615,6 +616,7 @@ bool canvas::handle_event(SDL_Event &event)
 		
 	for (auto elem : current_scene->elements)
 		elem->handle_event(this, event);
+	run_queued_calculations();
 	return leave;
 }
 

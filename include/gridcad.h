@@ -246,6 +246,7 @@ public:
     void update_value(class port *port, struct value *value, int ttl);
     virtual void notify(int ttl);
     virtual void calculate(int ttl);
+    virtual void queued_calculate(int ttl) {};
     virtual bool mouse_select(float X, float Y); /* scene absolute */
     bool has_moved(void) { return over_drag_threshold;};
     class wire *is_wire(float X, float Y);
@@ -273,7 +274,7 @@ public:
     void update_name(std::string _name) { name = _name;};
     void update_parental_name(std::string _name) { parental_name = _name;};
     void hover_ports(canvas *canvas);
-
+    virtual bool has_clk(void) { return false;}
 
     
 protected:
@@ -319,4 +320,8 @@ extern void labelevent(SDL_Event &event, std::string *text);
 
 extern std::string generate_semi_uuid(void);
 extern void populate_library(std::string directory);
+
+extern void queue_calculate(class element *element);
+extern void remove_from_calculate_queue(class element *element);
+extern void run_queued_calculations(void);
 #endif

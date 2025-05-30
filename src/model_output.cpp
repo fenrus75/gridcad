@@ -77,10 +77,12 @@ void model_output::drawAt(class canvas *canvas, float X, float Y, int type)
 void model_output::to_json(json &j)
 {
      element::to_json(j);
+     j["value"] = value;
 }
 void model_output::from_json(json &j)
 {
      element::from_json(j);
+     value = j.value("value", value);
 }
 
 void model_output::handle_event(class canvas *canvas, SDL_Event &event)

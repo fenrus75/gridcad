@@ -103,6 +103,7 @@ void scene::remove_element(class element *element)
 	for (i = 0; i < elements.size(); i++) {
 		if (elements[i] == element) {
 			elements.erase(elements.begin() + i); /* must exit the for loop now */
+			remove_from_calculate_queue(element);
 			delete element;
 			return;
 		}

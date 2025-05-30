@@ -29,6 +29,8 @@
 #include "model_8to4.h"
 #include "model_4to8.h"
 #include "model_datascope.h"
+#include "model_dflipflop.h"
+#include "model_delayline.h"
 
 #include <SDL2/SDL_image.h>
 
@@ -56,14 +58,18 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
     init_icon->set_element(ICON_OUTPUT);
     init_icon->set_element(ICON_NEST);
     init_icon->set_element(ICON_TRUTH);
+    init_icon->set_element(ICON_DFLIPFLOP);
+    init_icon->set_element(ICON_DELAYLINE);
+    init_icon->set_element(ICON_DATASCOPE);
+
+    icons.push_back(init_icon);
+    current_icons = init_icon;    
+    init_icon = new class oneiconbar(_renderer, _rect);    
     init_icon->set_element(ICON_4TO1);
     init_icon->set_element(ICON_1TO4);
     init_icon->set_element(ICON_8TO4);
     init_icon->set_element(ICON_4TO8);
-    init_icon->set_element(ICON_DATASCOPE);
 
-    icons.push_back(init_icon);
-    current_icons = init_icon;
     
     libtab = new class oneiconbar(_renderer, _rect);
     
@@ -151,6 +157,8 @@ static const char *image_names[] =
  "assets/8to4.png",
  "assets/4to8.png",
  "assets/datascope.png",
+ "assets/dflipflop.png",
+ "assets/delayline.png",
 };
 
 icon::icon(SDL_Renderer *renderer, int _type)
@@ -251,6 +259,10 @@ class element * icon::create_element(void)
 	      return new model_4to8(-10, -10);
 	  case ICON_DATASCOPE:
 	      return new model_datascope(-10, -10);
+	  case ICON_DFLIPFLOP:
+	      return new model_dflipflop(-10, -10);
+	  case ICON_DELAYLINE:
+	      return new model_delayline(-10, -10);
           default:
              return NULL;
      }
