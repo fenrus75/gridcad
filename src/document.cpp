@@ -12,6 +12,7 @@
 
 #include "gridcad.h"
 #include "document.h"
+#include "model_clock.h"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
@@ -97,6 +98,12 @@ void document::run(void)
 			for (unsigned int i = 0; i < canvases.size(); i++)  {
 				auto canvas = canvases[i];
 				bool thisret = false;
+				if (event.type == SDL_timer_event) {
+				    global_clock.valid = true;
+				    global_clock.is_clock = true;
+				    global_clock.boolval = !global_clock.boolval;
+				}
+
 				if (event.window.windowID == canvas->get_window_ID() || event.type == SDL_timer_event) {
 					thisret = canvas->handle_event(event);
 					if (thisret) {

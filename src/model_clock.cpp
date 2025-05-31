@@ -29,9 +29,6 @@ Uint32 SDL_timer_func(Uint32 interval, void *param)
     ev.user.data1 = NULL;
     ev.user.data2 = NULL;
 
-    global_clock.valid = true;
-    global_clock.is_clock = true;
-    global_clock.boolval = !global_clock.boolval;
     if (!SDL_PushEvent(&ev)) {
      printf("Push failure %s\n", SDL_GetError());
     }
