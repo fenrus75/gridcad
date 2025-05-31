@@ -15,6 +15,13 @@
 
 #include "gridcad.h"
 #include "port.h"
+#include "contextmenu.h"
+
+static void callback_delete(class element *element)
+{
+    printf("MENU CALLBACK \n");
+    element->delete_element();
+}
 
 element::element(int _sizeX, int _sizeY, std::string _name, std::string _parent)
 {
@@ -24,6 +31,8 @@ element::element(int _sizeX, int _sizeY, std::string _name, std::string _parent)
     name = _name;
     parental_name = _parent;
     uuid = generate_semi_uuid();
+    menu = new contextmenu(this);
+    menu->add_item("Delete", callback_delete);
 }
 
 element::~element()

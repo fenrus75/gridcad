@@ -50,7 +50,7 @@ class port;
 class iconbar;
 class basecanvas;
 struct value;
-
+class contextmenu;
 
 
 class base
@@ -142,6 +142,7 @@ protected:
     class wire *dragging_wire = NULL, *hover_wire = NULL;
     class iconbar *icon_bar = NULL;
     class icon *active_icon = NULL;
+    class contextmenu *active_menu = NULL;
     bool left_mouse_down = false;
     float mouseX = 0.0, mouseY = 0.0;
     uint64_t mouse_timestamp = 0; /* SDL_GetTicks64 time of when the mouse last moved */
@@ -282,9 +283,12 @@ public:
     void update_parental_name(std::string _name) { parental_name = _name;};
     void hover_ports(canvas *canvas);
     virtual bool has_clk(void) { return false;}
+    
+    class contextmenu *get_menu(void) { return menu;};
 
     
 protected:
+    class contextmenu *menu = NULL; /* nosave */
     std::string uuid = "";
     std::string name = "";
     std::string parental_name = "";    

@@ -24,6 +24,7 @@
 #include "wire.h"
 #include "port.h"
 #include "iconbar.h"
+#include "contextmenu.h"
 
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
@@ -180,6 +181,21 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 
 	}
 	if ( event.button.button == SDL_BUTTON_RIGHT) {
+		class element *here = NULL;
+		float x, y;
+		dragging = NULL;
+
+		x = scr_to_X(event.motion.x);
+		y = scr_to_Y(event.motion.y);
+		for (auto elem:	current_scene->elements) {
+			if (elem->intersect(x, y)) {
+				here = elem;
+			}
+		}
+		if (here)
+			active_menu = here->get_menu();
+		else
+			active_menu = NULL;
 		printf("Right button\n");
 	}
 	if (event.button.button == SDL_BUTTON_MIDDLE) {
@@ -294,6 +310,7 @@ bool canvas::handle_event(SDL_Event &event)
 				break;
 			case SDLK_ESCAPE:
 				floating.clear();
+				active_menu = NULL;
 				if (active_icon)
 					active_icon->set_inactive();
 				active_icon = NULL;
@@ -390,6 +407,15 @@ bool canvas::handle_event(SDL_Event &event)
 				shift_down = false;
 			break;
 		case SDL_MOUSEBUTTONDOWN:
+			if (active_menu) {
+				float x, y;
+				x = scr_to_X(event.motion.x);
+				y = scr_to_Y(event.motion.y);
+				active_menu->mouse_click(x,y);
+				active_menu = NULL;
+				current_scene->process_delete_requests();
+				break;
+			}
 			if (event.motion.x < main_area_rect.w) 
 				canvas::handle_event_drawingarea(event);
 			else
@@ -401,7 +427,6 @@ bool canvas::handle_event(SDL_Event &event)
 				float x, y;
 				x = scr_to_X(event.motion.x);
 				y = scr_to_Y(event.motion.y);
-
 				if (in_area_select) {
 					in_area_select = false;
 					/* cause all the things inside to be selected */
@@ -492,6 +517,12 @@ bool canvas::handle_event(SDL_Event &event)
 			mouse_timestamp = SDL_GetTicks64();
 			x = scr_to_X(event.motion.x);
 			y = scr_to_Y(event.motion.y);
+			
+			if (active_menu && !active_menu->mouse_in_bounds(x,y))
+				active_menu = NULL;
+				
+			if (active_menu)
+				active_menu->mouse_motion(x,y);
 
 			if (in_area_select) {
 				float X1,Y1,X2,Y2;
@@ -741,6 +772,9 @@ void canvas::draw(void)
 			draw_tooltip(mouseX, mouseY, tooltip);
 		}
 	}
+	
+	if (active_menu)
+		active_menu->draw_at(this);
 
 	if (window_shown)
 		SDL_RenderPresent(renderer);
