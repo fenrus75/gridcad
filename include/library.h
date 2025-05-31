@@ -6,6 +6,7 @@
 struct library_block {
     std::string name;
     std::string logic; /* json format */
+    std::string tooltip; 
     
     std::string icon; /* file path */
     std::string icon_selected; /* file path */

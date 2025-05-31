@@ -150,6 +150,7 @@ void icon::assign_library_element(struct library_block block)
 { 
   lib = block;
   texture = IMG_LoadTexture(_renderer, lib.icon.c_str() );
+  tooltip = block.tooltip;
 };
 
 

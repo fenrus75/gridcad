@@ -37,7 +37,6 @@ void populate_library(std::string directory)
             block.name = dir_entry.path().filename();
 	    block.name = block.name.substr(0, block.name.size()-5);
             std::ifstream input(path);
-            
             std::string line = "";
             
             while (std::getline(input, line)) {
@@ -45,6 +44,15 @@ void populate_library(std::string directory)
             }
             block.icon = path + ".png";
             block.icon_selected = path + ".selected.png";
+
+            std::ifstream input_tooltip(path + ".tooltip");
+            
+            line = "";
+            
+            while (std::getline(input_tooltip, line)) {
+                block.tooltip += line;
+            }
+
             library.push_back(block);
         }
     }
