@@ -293,3 +293,36 @@ int port::get_width(void)
 	}
 	return width;
 }
+
+void port::unsplice(void)
+{
+	if (wires.size() != 2)
+		return;
+	class wire *w1, *w2, *w3;
+	w1 = wires[0];
+	w2 = wires[1];
+	class port *p1, *p2;
+	
+	w3 = new class wire(0,0,0,0);
+		
+	p1 = w1->get_other_port(this);
+	p2 = w2->get_other_port(this);
+	
+	if (p1) {
+		w3->add_port(p1);
+		p1->add_wire(w3);
+	} else {
+		printf("NO P1\n");
+	}
+	if (p2) {
+		w3->add_port(p2);
+		p2->add_wire(w3);
+	} else {
+		printf("NO P1\n");
+	}
+	w1->remove();
+	w2->remove();
+	w3->reseat();
+	
+}
+

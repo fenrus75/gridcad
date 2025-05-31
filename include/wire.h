@@ -42,6 +42,7 @@ public:
     void redo_wires(void) { delete points; points = NULL; };
     int get_width(void) { return width; };
     void set_width(int _width) { if (_width) width = _width;};
+    class port * get_other_port(class port *port);
     
 protected:
     bool selected = false;

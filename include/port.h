@@ -44,6 +44,7 @@ public:
     void set_linked_element(class element* elem) { linked_element = elem; };
     class element *get_linked_element(void) { return linked_element; };
     void route_wires();
+    void unsplice(void);
 private:
     int bus_width = 0;
     void drawConnector(class canvas *canvas, float X, float Y, int cX, int cY, int type);    

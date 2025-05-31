@@ -13,5 +13,6 @@ public:
     bool want_deleted(void) override;
     void draw_phase2(class canvas *canvas, int type) override {};
 
+    void unsplice(void);
 private:
 };

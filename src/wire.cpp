@@ -507,3 +507,12 @@ void wire::remove_if_orphan(void)
 		remove();
         }
 }
+
+class port *wire::get_other_port(class port *port)
+{
+    for (auto p : ports) {
+        if (p != port)
+            return p;
+    }
+    return NULL;
+}

@@ -13,6 +13,14 @@
 #include "gridcad.h"
 #include "connector.h"
 #include "port.h"
+#include "contextmenu.h"
+
+void splice_wire_callback(class element *element)
+{
+    class connector *connector = (class connector *)element;
+    
+    connector->unsplice();
+}
 
 connector::connector(float _X, float _Y)  : element(3, 3, "")
 {
@@ -23,6 +31,7 @@ connector::connector(float _X, float _Y)  : element(3, 3, "")
 
     add_port(0, 0, "Connector", PORT_INOUT);    
     reseat();;
+    menu->add_item("Unsplice wire", splice_wire_callback);
 }
 
 connector::~connector(void)
@@ -63,4 +72,9 @@ bool connector::want_deleted(void)
     if (ports.size() == 0 || !ports[0]->has_wires())
         return true;
     return false;
+}
+
+void connector::unsplice(void)
+{
+    ports[0]->unsplice();
 }
