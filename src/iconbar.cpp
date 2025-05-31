@@ -12,26 +12,7 @@
 
 #include "gridcad.h"
 #include "iconbar.h"
-#include "model_toggle.h"
-#include "model_not.h"
-#include "model_or.h"
-#include "model_xor.h"
-#include "model_nor.h"
-#include "model_and.h"
-#include "model_nand.h"
-#include "model_one.h"
-#include "model_zero.h"
-#include "model_output.h"
-#include "model_truth.h"
 #include "model_nest.h"
-#include "model_4to1.h"
-#include "model_1to4.h"
-#include "model_8to4.h"
-#include "model_4to8.h"
-#include "model_datascope.h"
-#include "model_dflipflop.h"
-#include "model_delayline.h"
-#include "model_clock.h"
 
 #include <SDL2/SDL_image.h>
 
@@ -45,63 +26,63 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
     
     init_icon = new class oneiconbar(_renderer, _rect);
 
-    init_icon->set_element(ICON_ZERO, "assets/zero.png");
-    init_icon->set_element(ICON_ONE, "assets/one.png");
-    init_icon->set_element(ICON_NOT, "assets/inverter.png");
+    init_icon->set_element("model_zero:", "assets/zero.png");
+    init_icon->set_element("model_one:", "assets/one.png");
+    init_icon->set_element("model_not:", "assets/inverter.png");
     init_icon->insert_blank();
-    init_icon->set_element(ICON_NAND, "assets/nandgate.png");
-    init_icon->set_element(ICON_AND, "assets/andgate.png");
-    init_icon->set_element(ICON_NOR, "assets/norgate.png");
-    init_icon->set_element(ICON_OR, "assets/orgate.png");
-    init_icon->set_element(ICON_XOR, "assets/xorgate.png");
+    init_icon->set_element("model_nand:", "assets/nandgate.png");
+    init_icon->set_element("nodel_and:", "assets/andgate.png");
+    init_icon->set_element("model_nor:", "assets/norgate.png");
+    init_icon->set_element("model_or:", "assets/orgate.png");
+    init_icon->set_element("model_xor:", "assets/xorgate.png");
     init_icon->insert_blank();
-    init_icon->set_element(ICON_TOGGLE, "assets/toggle_off.png");
-    init_icon->set_element(ICON_OUTPUT, "assets/output_on.png");
-    init_icon->set_element(ICON_NEST, "assets/nest/nest_icon.png");
-    init_icon->set_element(ICON_TRUTH, "assets/model_truth/truthtable_icon.png");
-    init_icon->set_element(ICON_DFLIPFLOP, "assets/dflipflop.png");
-    init_icon->set_element(ICON_DELAYLINE, "assets/delayline.png");
-    init_icon->set_element(ICON_CLOCK, "assets/clock_on.png");
-    init_icon->set_element(ICON_DATASCOPE, "assets/datascope.png");
+    init_icon->set_element("model_toggle:", "assets/toggle_off.png");
+    init_icon->set_element("model_output:", "assets/output_on.png");
+    init_icon->set_element("model_nest:", "assets/nest/nest_icon.png");
+    init_icon->set_element("model_truth:", "assets/model_truth/truthtable_icon.png");
+    init_icon->set_element("model_dflipflop:", "assets/dflipflop.png");
+    init_icon->set_element("model_delayline:", "assets/delayline.png");
+    init_icon->set_element("model_clock:", "assets/clock_on.png");
+    init_icon->set_element("model_datascope:", "assets/datascope.png");
 
     icons.push_back(init_icon);
     current_icons = init_icon;    
     init_icon = new class oneiconbar(_renderer, _rect);    
-    init_icon->set_element(ICON_4TO1, "assets/4to1.png");
-    init_icon->set_element(ICON_1TO4, "assets/1to4.png");
-    init_icon->set_element(ICON_8TO4, "assets/8to4.png");
-    init_icon->set_element(ICON_4TO8, "assets/4to8.png");
+    init_icon->set_element("model_4to1:", "assets/4to1.png");
+    init_icon->set_element("model_1to4:", "assets/1to4.png");
+    init_icon->set_element("model_8to4:", "assets/8to4.png");
+    init_icon->set_element("model_4to8:", "assets/4to8.png");
     icons.push_back(init_icon);
 
     
     libtab = new class oneiconbar(_renderer, _rect);
     
     for (li = 0; li < library.size(); li++) {
-        libtab->set_element(ICON_LIBRARY, &library[li]);
+        libtab->set_element("library", &library[li]);
     }
     
     icons.push_back(libtab);
     
 }
 
-void oneiconbar::set_element(unsigned int X, unsigned int Y, int icontype, std::string filename, struct library_block *block)
+void oneiconbar::set_element(unsigned int X, unsigned int Y, std::string class_id, std::string filename, struct library_block *block)
 {
-     icons[X][Y] = new icon(renderer, icontype, filename);
+     icons[X][Y] = new icon(renderer, class_id, filename);
      cIndex = Y * 2 + X + 1;
      
      if (Y >= icons[X].size())
         assert(0);
-     if (icontype == ICON_LIBRARY)
+     if (class_id == "library")
           icons[X][Y]->assign_library_element(*block);
 }
 
-void oneiconbar::set_element(int icontype, struct library_block *block)
+void oneiconbar::set_element(std::string class_id, struct library_block *block)
 {
-    set_element(cIndex % 2, cIndex/2, icontype, "", block);
+    set_element(cIndex % 2, cIndex/2, class_id, "", block);
 }
-void oneiconbar::set_element(int icontype, std::string filename, struct library_block *block)
+void oneiconbar::set_element(std::string class_id, std::string filename, struct library_block *block)
 {
-    set_element(cIndex % 2, cIndex/2, icontype, filename, block);
+    set_element(cIndex % 2, cIndex/2, class_id, filename, block);
 }
 
 void oneiconbar::insert_blank(void)
@@ -146,10 +127,10 @@ void iconbar::handle_event(SDL_Event &event)
 }
 
 
-icon::icon(SDL_Renderer *renderer, int _type, std::string filename)
+icon::icon(SDL_Renderer *renderer, std::string _class_id, std::string filename)
 {
     _renderer = renderer;
-    type = _type;
+    class_id = _class_id;
     active = false;
     if (filename != "")
        texture = IMG_LoadTexture(renderer, filename.c_str());
@@ -207,52 +188,9 @@ void icon::draw(SDL_Renderer *renderer, float X, float Y, float width, float hei
 
 class element * icon::create_element(void)
 {
-     switch (type) {
-          case ICON_LIBRARY:
-              return library_element();
-          case ICON_NAND:
-              return new model_nand(-10, -10);
-          case ICON_ONE:
-              return new model_one(-10, -10);
-          case ICON_ZERO:
-              return new model_zero(-10, -10);
-          case ICON_AND:
-              return new model_and(-10, -10);
-          case ICON_NOT:
-              return new model_not(-10, -10);
-          case ICON_TOGGLE:
-              return new model_toggle(-10, -10);
-          case ICON_NOR:
-              return new model_nor(-10, -10);
-          case ICON_OR:
-              return new model_or(-10, -10);
-          case ICON_XOR:
-              return new model_xor(-10, -10);
-          case ICON_OUTPUT:
-              return new model_output(-10, -10);
-          case ICON_TRUTH:
-              return new model_truth(-10, -10);
-          case ICON_NEST:
-              return new model_nest(-10, -10);
-          case ICON_4TO1:
-              return new model_4to1(-10,-10);
-          case ICON_1TO4:
-              return new model_1to4(-10,-10);
-	  case ICON_8TO4:
-	      return new model_8to4(-10, -10);
-	  case ICON_4TO8:
-	      return new model_4to8(-10, -10);
-	  case ICON_DATASCOPE:
-	      return new model_datascope(-10, -10);
-	  case ICON_DFLIPFLOP:
-	      return new model_dflipflop(-10, -10);
-	  case ICON_DELAYLINE:
-	      return new model_delayline(-10, -10);
-	  case ICON_CLOCK:
-	      return new model_clock(-10, -10);
-          default:
-             return NULL;
-     }
+    if (class_id == "library")
+        return library_element();
+    return element_from_class_id(class_id);
 }
 
 

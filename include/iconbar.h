@@ -28,7 +28,7 @@
 
 class icon {
 public:
-    icon(SDL_Renderer *renderer, int type, std::string filename);
+    icon(SDL_Renderer *renderer, std::string class_id, std::string filename);
     virtual ~icon(void);
     
     virtual class element *create_element(void);
@@ -38,7 +38,7 @@ public:
     void assign_library_element(struct library_block block);
 private:
     bool active  = false;
-    int type = 0;
+    std::string class_id = "";
     struct library_block lib = {}; 
     SDL_Renderer *_renderer = NULL;
     SDL_Texture *texture = NULL;
@@ -55,9 +55,9 @@ public:
     void draw(void);
     void handle_event(SDL_Event &event);    
     class icon *current_icon(int ScreenX, int ScreenY);
-    void set_element(unsigned int X, unsigned int Y, int icontype, std::string filename = "", struct library_block *block = NULL);
-    void set_element(int icontype, struct library_block *block = NULL);
-    void set_element(int icontype, std::string filenae, struct library_block *block = NULL);
+    void set_element(unsigned int X, unsigned int Y, std::string class_id, std::string filename = "", struct library_block *block = NULL);
+    void set_element(std::string class_id, struct library_block *block = NULL);
+    void set_element(std::string class_id, std::string filename, struct library_block *block = NULL);
     void insert_blank(void);
 
 private:    
