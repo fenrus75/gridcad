@@ -95,14 +95,14 @@ void document::run(void)
 			leave = true;
 
 		if (ret) {
+			if (event.type == SDL_timer_event) {
+				global_clock.valid = true;
+				global_clock.is_clock = true;
+				global_clock.boolval = !global_clock.boolval;
+			}
 			for (unsigned int i = 0; i < canvases.size(); i++)  {
 				auto canvas = canvases[i];
 				bool thisret = false;
-				if (event.type == SDL_timer_event) {
-				    global_clock.valid = true;
-				    global_clock.is_clock = true;
-				    global_clock.boolval = !global_clock.boolval;
-				}
 
 				if (event.window.windowID == canvas->get_window_ID() || event.type == SDL_timer_event) {
 					thisret = canvas->handle_event(event);
