@@ -822,3 +822,8 @@ void canvas::update_window_title(void)
 	s = "GridCad " + current_scene->get_full_name();
 	SDL_SetWindowTitle(window, s.c_str());
 }
+
+float canvas::distance_from_mouse(float X, float Y)
+{
+	return sqrtf( (X-mouseX)*(X-mouseX) + (Y-mouseY)*(Y-mouseY));
+}

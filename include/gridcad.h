@@ -129,6 +129,7 @@ public:
     void from_json_to_floating(json &j);
     
     void update_window_title(void);
+    float distance_from_mouse(float X, float Y);
          
 protected:
     bool draw_grid = false;

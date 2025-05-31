@@ -95,6 +95,7 @@ void document::run(void)
 			leave = true;
 
 		if (ret) {
+			/* toggle the clock if there is a timer event -- this is the best race-free place to do this*/
 			if (event.type == SDL_timer_event) {
 				global_clock.valid = true;
 				global_clock.is_clock = true;

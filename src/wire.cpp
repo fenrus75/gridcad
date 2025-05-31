@@ -127,12 +127,18 @@ void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y
         
         
         while (dist(x1,y1,x2,y2) > 1/10.0) {
+            float cursormag;
+            
+            cursormag = 2 - canvas->distance_from_mouse(x1,y1);
+            if (cursormag < 1)
+                cursormag = 1;
+            
             (*step)++;
             if ((*step) >= stepsize) {
                 (*step) = 0;
 		if (value->type == VALUE_TYPE_INT){ 
-			const float size = 0.24;
-			const float size2 = 0.20;
+			const float size = 0.24 * cursormag;
+			const float size2 = 0.20 * cursormag;
 			char buf[128];
 			std::string s;
 			sprintf(buf, "%li", value->intval);
