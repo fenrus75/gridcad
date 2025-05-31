@@ -121,6 +121,9 @@ void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y
                         gettimeofday(&tv, NULL);
                         float f;
                         f = tv.tv_usec / 1000000.0;
+                        f = f * 2;
+                        if (f > 1)
+                            f -= 1;
                         f = f * (450-25);
 			canvas->draw_box(x1-size, y1-size, x1+size, y1+size, COLOR_WIRE_MOTION);
                         canvas->draw_image_fragment("assets/clock_wave.png", x1-size, y1-size, 2*size, 2*size, 25 + f, 0, 450 -25, 189 );	
