@@ -144,6 +144,7 @@ protected:
     class icon *active_icon = NULL;
     bool left_mouse_down = false;
     float mouseX = 0.0, mouseY = 0.0;
+    uint64_t mouse_timestamp = 0; /* SDL_GetTicks64 time of when the mouse last moved */
     float click_start_X = 0.0, click_start_Y = 0.0;
     int middle_X = 0, middle_Y = 0;
     bool shift_down = false; /* not saved in json */
@@ -151,9 +152,12 @@ protected:
     bool in_area_select = false;
     float area_select_X1 = 0.0, area_select_Y1 = 0.0;
     SDL_Texture *area_select_texture = NULL;
-
+    bool tooltip_eligable = false;
+    
+    
     bool handle_event_iconarea(SDL_Event &event);
     bool handle_event_drawingarea(SDL_Event &event);
+    void draw_tooltip(float X, float Y, std::string tooltip);
     
 };
 

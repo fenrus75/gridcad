@@ -223,6 +223,12 @@ bool canvas::handle_event(SDL_Event &event)
 	bool leave = false;
 	bool someone_in_editmode = false;
 	
+	if (SDL_GetTicks64() - mouse_timestamp > 1000 && X_to_scr(mouseX) > main_area_rect.w) 
+		tooltip_eligable = true;
+	else
+		tooltip_eligable = false;
+
+	
 	
 	for (auto elem : current_scene->elements)
 		if (elem->in_edit_mode())
@@ -483,6 +489,7 @@ bool canvas::handle_event(SDL_Event &event)
 			float x,y;
 			mouseX = scr_to_X(event.motion.x);
 			mouseY = scr_to_Y(event.motion.y);
+			mouse_timestamp = SDL_GetTicks64();
 			x = scr_to_X(event.motion.x);
 			y = scr_to_Y(event.motion.y);
 
@@ -726,9 +733,46 @@ void canvas::draw(void)
 
 		draw_image(area_select_texture, X1, Y1, X2-X1, Y2-Y1, 64);
 	}
+	
+	if (tooltip_eligable) {
+		std::string tooltip = icon_bar->current_tooltip(X_to_scr(mouseX), X_to_scr(mouseY));
+		
+		if (tooltip != "") {
+			draw_tooltip(mouseX, mouseY, tooltip);
+		}
+	}
 
 	if (window_shown)
 		SDL_RenderPresent(renderer);
+}
+
+void canvas::draw_tooltip(float X, float Y, std::string tooltip)
+{
+	SDL_Texture *text, *shade;
+	float scale = 1.5;
+	
+	text = text_to_texture(tooltip)	;
+	shade = load_image("assets/gray.png");
+	if (!text)
+		return;
+		
+	SDL_Rect rect;
+	SDL_Point size;
+	int x, y;
+	
+	SDL_QueryTexture(text, NULL, NULL, &size.x, &size.y);
+
+	x = X_to_scr(X) - size.x/scale;
+	y = Y_to_scr(Y) - size.y/scale;
+
+	rect.x = x;
+	rect.y = y;
+	rect.w = size.x/scale;
+	rect.h = size.y/scale;
+
+	SDL_RenderSetClipRect(renderer, NULL);	
+	SDL_RenderCopy(renderer, shade, NULL, &rect);
+	SDL_RenderCopy(renderer, text, NULL, &rect);
 }
 
 

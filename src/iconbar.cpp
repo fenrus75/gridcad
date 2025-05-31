@@ -121,6 +121,11 @@ class icon * iconbar::current_icon(int ScreenX, int ScreenY)
     return current_icons->current_icon(ScreenX, ScreenY);
 }
 
+std::string iconbar::current_tooltip(int ScreenX, int ScreenY)
+{
+    return current_icons->current_tooltip(ScreenX, ScreenY);
+}
+
 void iconbar::handle_event(SDL_Event &event)
 {
      return;
@@ -291,6 +296,38 @@ class icon * oneiconbar::current_icon(int ScreenX, int ScreenY)
         
     return icons[gridX][gridY];
     
+}
+
+std::string oneiconbar::current_tooltip(int ScreenX, int ScreenY)
+{
+    float dX, dY;
+    int gridX, gridY;
+    
+    
+    ScreenX -= rect.x;
+    ScreenY -= rect.y;
+    
+    /* subtract the border */
+    ScreenX -= 0.5 * SCALEX;
+    ScreenY -= 0.5 * SCALEY;
+    
+    if (ScreenX < 0 || ScreenY <0) /* left of the icons */
+      return "";
+      
+    dX = ScreenX / (2.5 * SCALEX);
+    dY = ScreenY / (2.5 * SCALEY);
+    
+    gridX = floor(dX);
+    gridY = floor(dY);
+    
+    if (gridX >= (int)icons.size())
+        return "";
+    if (gridY >= (int)icons[gridX].size())
+        return "";
+
+     if (icons[gridX][gridY])
+        return icons[gridX][gridY]->get_tooltip();
+    return "";
 }
 
 

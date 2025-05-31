@@ -36,6 +36,7 @@ public:
     void set_active(void) { active = true; };
     void set_inactive(void) { active = false; };
     void assign_library_element(struct library_block block);
+    std::string get_tooltip(void) { return tooltip; };
 private:
     bool active  = false;
     std::string class_id = "";
@@ -56,6 +57,7 @@ public:
     void draw(void);
     void handle_event(SDL_Event &event);    
     class icon *current_icon(int ScreenX, int ScreenY);
+    std::string current_tooltip(int ScreenX, int ScreenY);
     void set_element(unsigned int X, unsigned int Y, std::string class_id, std::string filename, std::string tooltip, struct library_block *block = NULL);
     void set_element(std::string class_id, struct library_block *block = NULL);
     void set_element(std::string class_id, std::string filename, std::string tooltip, struct library_block *block = NULL);
@@ -81,6 +83,7 @@ public:
     void next(void);
     void previous(void);
     class icon *current_icon(int ScreenX, int ScreenY);
+    std::string current_tooltip(int ScreenX, int ScreenY);
 private:
     SDL_Rect rect = {};
     unsigned int active_index = 0;
