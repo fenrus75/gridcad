@@ -44,33 +44,33 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
     rect = _rect;
     
     init_icon = new class oneiconbar(_renderer, _rect);
-    
-    init_icon->set_element(ICON_ZERO);
-    init_icon->set_element(ICON_ONE);
-    init_icon->set_element(ICON_NOT);
+
+    init_icon->set_element(ICON_ZERO, "assets/zero.png");
+    init_icon->set_element(ICON_ONE, "assets/one.png");
+    init_icon->set_element(ICON_NOT, "assets/inverter.png");
     init_icon->insert_blank();
-    init_icon->set_element(ICON_NAND);
-    init_icon->set_element(ICON_AND);
-    init_icon->set_element(ICON_NOR);
-    init_icon->set_element(ICON_OR);
-    init_icon->set_element(ICON_XOR);
+    init_icon->set_element(ICON_NAND, "assets/nandgate.png");
+    init_icon->set_element(ICON_AND, "assets/andgate.png");
+    init_icon->set_element(ICON_NOR, "assets/norgate.png");
+    init_icon->set_element(ICON_OR, "assets/orgate.png");
+    init_icon->set_element(ICON_XOR, "assets/xorgate.png");
     init_icon->insert_blank();
-    init_icon->set_element(ICON_TOGGLE);
-    init_icon->set_element(ICON_OUTPUT);
-    init_icon->set_element(ICON_NEST);
-    init_icon->set_element(ICON_TRUTH);
-    init_icon->set_element(ICON_DFLIPFLOP);
-    init_icon->set_element(ICON_DELAYLINE);
-    init_icon->set_element(ICON_CLOCK);
-    init_icon->set_element(ICON_DATASCOPE);
+    init_icon->set_element(ICON_TOGGLE, "assets/toggle_off.png");
+    init_icon->set_element(ICON_OUTPUT, "assets/output_on.png");
+    init_icon->set_element(ICON_NEST, "assets/nest/nest_icon.png");
+    init_icon->set_element(ICON_TRUTH, "assets/model_truth/truthtable_icon.png");
+    init_icon->set_element(ICON_DFLIPFLOP, "assets/dflipflop.png");
+    init_icon->set_element(ICON_DELAYLINE, "assets/delayline.png");
+    init_icon->set_element(ICON_CLOCK, "assets/clock_on.png");
+    init_icon->set_element(ICON_DATASCOPE, "assets/datascope.png");
 
     icons.push_back(init_icon);
     current_icons = init_icon;    
     init_icon = new class oneiconbar(_renderer, _rect);    
-    init_icon->set_element(ICON_4TO1);
-    init_icon->set_element(ICON_1TO4);
-    init_icon->set_element(ICON_8TO4);
-    init_icon->set_element(ICON_4TO8);
+    init_icon->set_element(ICON_4TO1, "assets/4to1.png");
+    init_icon->set_element(ICON_1TO4, "assets/1to4.png");
+    init_icon->set_element(ICON_8TO4, "assets/8to4.png");
+    init_icon->set_element(ICON_4TO8, "assets/4to8.png");
     icons.push_back(init_icon);
 
     
@@ -84,9 +84,9 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
     
 }
 
-void oneiconbar::set_element(unsigned int X, unsigned int Y, int icontype, struct library_block *block)
+void oneiconbar::set_element(unsigned int X, unsigned int Y, int icontype, std::string filename, struct library_block *block)
 {
-     icons[X][Y] = new icon(renderer, icontype);
+     icons[X][Y] = new icon(renderer, icontype, filename);
      cIndex = Y * 2 + X + 1;
      
      if (Y >= icons[X].size())
@@ -97,7 +97,11 @@ void oneiconbar::set_element(unsigned int X, unsigned int Y, int icontype, struc
 
 void oneiconbar::set_element(int icontype, struct library_block *block)
 {
-    set_element(cIndex % 2, cIndex/2, icontype, block);
+    set_element(cIndex % 2, cIndex/2, icontype, "", block);
+}
+void oneiconbar::set_element(int icontype, std::string filename, struct library_block *block)
+{
+    set_element(cIndex % 2, cIndex/2, icontype, filename, block);
 }
 
 void oneiconbar::insert_blank(void)
@@ -141,37 +145,14 @@ void iconbar::handle_event(SDL_Event &event)
      return;
 }
 
-static const char *image_names[] = 
-{"library images",
- "assets/zero.png",
- "assets/one.png",
- "assets/nandgate.png",
- "assets/andgate.png",
- "assets/inverter.png",
- "assets/toggle_off.png",
- "assets/norgate.png",
- "assets/orgate.png",
- "assets/output_on.png",
- "assets/xorgate.png",
- "assets/model_truth/truthtable_icon.png",
- "assets/nest/nest_icon.png",
- "assets/4to1.png",
- "assets/1to4.png",
- "assets/8to4.png",
- "assets/4to8.png",
- "assets/datascope.png",
- "assets/dflipflop.png",
- "assets/delayline.png",
- "assets/clock_on.png",
-};
 
-icon::icon(SDL_Renderer *renderer, int _type)
+icon::icon(SDL_Renderer *renderer, int _type, std::string filename)
 {
     _renderer = renderer;
     type = _type;
     active = false;
-    if (type != ICON_LIBRARY)
-       texture = IMG_LoadTexture(renderer, image_names[type]);
+    if (filename != "")
+       texture = IMG_LoadTexture(renderer, filename.c_str());
 }
 
 icon::~icon(void)
