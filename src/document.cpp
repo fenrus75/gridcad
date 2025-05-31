@@ -100,6 +100,7 @@ void document::run(void)
 				global_clock.valid = true;
 				global_clock.is_clock = true;
 				global_clock.boolval = !global_clock.boolval;
+				global_clock.arrayval++;
 			}
 			for (unsigned int i = 0; i < canvases.size(); i++)  {
 				auto canvas = canvases[i];

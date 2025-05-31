@@ -52,6 +52,7 @@ int main(int argc, char **argv)
 	document->run();
 
 	delete document;
+	document = NULL;
 
 	return 0;
 }
