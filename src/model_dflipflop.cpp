@@ -13,6 +13,7 @@
 #include "gridcad.h"
 #include "model_dflipflop.h"
 #include "port.h"
+#include "contextmenu.h"
 
 #include <sys/time.h>
 
@@ -27,6 +28,7 @@ model_dflipflop::model_dflipflop(float _X, float _Y)  : element(1, 1, "Flipflop"
     add_port(-1, 3, "clk", PORT_IN);    
     add_port(sizeX, 1, "Q", PORT_OUT);    
     add_port(sizeX, 2, "ǭ", PORT_OUT);    
+    menu->add_item("Edit name", callback_editname);
 }
 
 model_dflipflop::~model_dflipflop(void)

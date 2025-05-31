@@ -19,8 +19,18 @@
 
 static void callback_delete(class element *element)
 {
-    printf("MENU CALLBACK \n");
     element->delete_element();
+}
+
+static void callback_select(class element *element)
+{
+    element->select();
+}
+
+void callback_editname(class element *element)
+{
+	element->select();
+	element->enter_edit_mode();
 }
 
 element::element(int _sizeX, int _sizeY, std::string _name, std::string _parent)
@@ -33,6 +43,8 @@ element::element(int _sizeX, int _sizeY, std::string _name, std::string _parent)
     uuid = generate_semi_uuid();
     menu = new contextmenu(this);
     menu->add_item("Delete", callback_delete);
+    menu->add_item("Select", callback_select);
+    
 }
 
 element::~element()

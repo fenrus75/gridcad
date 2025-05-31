@@ -20,6 +20,7 @@ public:
     void update_value(struct value *value, int ttl);
     
     bool in_edit_mode(void) override { return edit_mode && single && selected;};
+    void enter_edit_mode(void) override { edit_mode = true; selected = true; single = true;};    
     void rotate_ports(void) override;
     int get_width(void) { return ports[0]->get_width();};
 private:

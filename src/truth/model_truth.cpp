@@ -14,6 +14,7 @@
 #include "model_truth.h"
 #include "port.h"
 #include "truthcanvas.h"
+#include "contextmenu.h"
 
 #include <sys/time.h>
 #include <algorithm>
@@ -61,6 +62,7 @@ model_truth::model_truth(float _X, float _Y):element(1, 1, "Truth Table")
 		sprintf(buf, "Out%i", i);
 		names[inputs + i] = buf;
 	}
+	menu->add_item("Edit name", callback_editname);
 }
 
 model_truth::~model_truth(void)

@@ -283,6 +283,7 @@ public:
     void update_parental_name(std::string _name) { parental_name = _name;};
     void hover_ports(canvas *canvas);
     virtual bool has_clk(void) { return false;}
+    virtual void enter_edit_mode(void) {};
     
     class contextmenu *get_menu(void) { return menu;};
 
@@ -336,4 +337,5 @@ extern void queue_calculate(class element *element);
 extern void remove_from_calculate_queue(class element *element);
 extern void run_queued_calculations(void);
 extern unsigned int SDL_timer_event;
+extern void callback_editname(class element *element);
 #endif

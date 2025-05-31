@@ -13,6 +13,7 @@
 #include "gridcad.h"
 #include "model_output.h"
 #include "port.h"
+#include "contextmenu.h"
 
 #include <sys/time.h>
 
@@ -24,6 +25,7 @@ model_output::model_output(float _X, float _Y)  : element(1, 1, "Output")
     Y = floorf(_Y);
     
     add_port(-1, 1, "Output", PORT_IN);    
+    menu->add_item("Edit name", callback_editname);
 }
 
 model_output::~model_output(void)

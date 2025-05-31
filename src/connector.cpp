@@ -22,10 +22,6 @@ static void splice_wire_callback(class element *element)
     connector->unsplice();
 }
 
-static void select_callback(class element *element)
-{
-    element->select();
-}
 
 connector::connector(float _X, float _Y)  : element(3, 3, "")
 {
@@ -37,7 +33,6 @@ connector::connector(float _X, float _Y)  : element(3, 3, "")
     add_port(0, 0, "Connector", PORT_INOUT);    
     reseat();;
     menu->add_item("Unsplice wire", splice_wire_callback);
-    menu->add_item("Select", select_callback);
 }
 
 connector::~connector(void)

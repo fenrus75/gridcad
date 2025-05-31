@@ -13,6 +13,7 @@
 #include "gridcad.h"
 #include "model_toggle.h"
 #include "port.h"
+#include "contextmenu.h"
 
 #include <sys/time.h>
 
@@ -26,6 +27,7 @@ model_toggle::model_toggle(float _X, float _Y)  : element(1, 1, "Input")
     value.valid = true;
     
     add_port(sizeX, 1, "Input", PORT_OUT);    
+    menu->add_item("Edit name", callback_editname);
 }
 
 model_toggle::~model_toggle(void)

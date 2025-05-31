@@ -19,6 +19,7 @@
 #include <algorithm>
 #include <sys/time.h>
 #include <nlohmann/json.hpp>
+#include "contextmenu.h"
 
 static float dist(float X1, float Y1, float X2, float Y2)
 {
@@ -32,6 +33,7 @@ model_nest::model_nest(float _X, float _Y) : element(_X,_Y, "SubScreen")
 	X = floorf(_X);
 	Y = floorf(_Y);    
 	_scene = new class scene(name);
+	menu->add_item("Edit name", callback_editname);
 }
 
 model_nest::~model_nest(void)

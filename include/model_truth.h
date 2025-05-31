@@ -31,6 +31,7 @@ public:
     void names_to_ports(void);
     void handle_event(class canvas *canvas, SDL_Event &event) override;
     bool in_edit_mode(void) override { return edit_mode && single && selected;};    
+    void enter_edit_mode(void) override { edit_mode = true; selected = true; single = true;};
 private:
     class truthcanvas *canvas = NULL;
 

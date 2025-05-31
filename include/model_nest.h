@@ -23,6 +23,8 @@ public:
     bool in_edit_mode(void) override { return edit_mode && single && selected;};    
     void regen_ports(void);
     
+    void enter_edit_mode(void) override { edit_mode = true; selected = true; single = true;};
+    
     void load_scene_from_json(std::string);
     void set_icon(std::string _icon, std::string _selected) { icon = _icon; icon_selected = _selected;};
 private:
