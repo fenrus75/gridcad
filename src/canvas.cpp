@@ -492,11 +492,11 @@ bool canvas::handle_event(SDL_Event &event)
 					X1 = mouseX; 
 					X2 = area_select_X1;
 				} else {
-					X1= area_select_X1;
+					X1=  area_select_X1;
 					X2 = mouseX;
 				}
 
-				if (area_select_Y1 > mouseX){ 
+				if (area_select_Y1 > mouseY){ 
 					Y1 = mouseY; 
 					Y2 = area_select_Y1;
 				} else {
@@ -716,7 +716,7 @@ void canvas::draw(void)
 			X2 = mouseX;
 		}
 
-		if (area_select_Y1 > mouseX){ 
+		if (area_select_Y1 > mouseY){ 
 			Y1 = mouseY; 
 			Y2 = area_select_Y1;
 		} else {
