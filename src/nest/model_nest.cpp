@@ -38,7 +38,7 @@ model_nest::~model_nest(void)
 {
 	if (canvas)
 		delete canvas;
-	if (_scene)
+	else /* canvas destructor already deleted _scene, but there might not be a canvas yet */
 		delete _scene;
 }
 
