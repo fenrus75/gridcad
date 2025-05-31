@@ -26,32 +26,32 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
     
     init_icon = new class oneiconbar(_renderer, _rect);
 
-    init_icon->set_element("model_zero:", "assets/zero.png");
-    init_icon->set_element("model_one:", "assets/one.png");
-    init_icon->set_element("model_not:", "assets/inverter.png");
+    init_icon->set_element("model_zero:", "assets/zero.png", "constant zero value");
+    init_icon->set_element("model_one:", "assets/one.png", "constant one value");
+    init_icon->set_element("model_not:", "assets/inverter.png", "bit inverter");
     init_icon->insert_blank();
-    init_icon->set_element("model_nand:", "assets/nandgate.png");
-    init_icon->set_element("nodel_and:", "assets/andgate.png");
-    init_icon->set_element("model_nor:", "assets/norgate.png");
-    init_icon->set_element("model_or:", "assets/orgate.png");
-    init_icon->set_element("model_xor:", "assets/xorgate.png");
+    init_icon->set_element("model_nand:", "assets/nandgate.png", "bitwise NAND gate");
+    init_icon->set_element("nodel_and:", "assets/andgate.png", "bitwise AND gate");
+    init_icon->set_element("model_nor:", "assets/norgate.png", "bitwise NOR gate");
+    init_icon->set_element("model_or:", "assets/orgate.png", "bitwise OR gate");
+    init_icon->set_element("model_xor:", "assets/xorgate.png", "bitwise XOR gate");
     init_icon->insert_blank();
-    init_icon->set_element("model_toggle:", "assets/toggle_off.png");
-    init_icon->set_element("model_output:", "assets/output_on.png");
-    init_icon->set_element("model_nest:", "assets/nest/nest_icon.png");
-    init_icon->set_element("model_truth:", "assets/model_truth/truthtable_icon.png");
-    init_icon->set_element("model_dflipflop:", "assets/dflipflop.png");
-    init_icon->set_element("model_delayline:", "assets/delayline.png");
-    init_icon->set_element("model_clock:", "assets/clock_on.png");
-    init_icon->set_element("model_datascope:", "assets/datascope.png");
+    init_icon->set_element("model_toggle:", "assets/toggle_off.png", "Input element");
+    init_icon->set_element("model_output:", "assets/output_on.png", "Output element");
+    init_icon->set_element("model_nest:", "assets/nest/nest_icon.png", "Nested scene");
+    init_icon->set_element("model_truth:", "assets/model_truth/truthtable_icon.png", "Truth table");
+    init_icon->set_element("model_dflipflop:", "assets/dflipflop.png", "D flip flop");
+    init_icon->set_element("model_delayline:", "assets/delayline.png", "Delay line");
+    init_icon->set_element("model_clock:", "assets/clock_on.png", "Clock");
+    init_icon->set_element("model_datascope:", "assets/datascope.png", "Data scope");
 
     icons.push_back(init_icon);
     current_icons = init_icon;    
     init_icon = new class oneiconbar(_renderer, _rect);    
-    init_icon->set_element("model_4to1:", "assets/4to1.png");
-    init_icon->set_element("model_1to4:", "assets/1to4.png");
-    init_icon->set_element("model_8to4:", "assets/8to4.png");
-    init_icon->set_element("model_4to8:", "assets/4to8.png");
+    init_icon->set_element("model_4to1:", "assets/4to1.png", "Bus to 4 bits split");
+    init_icon->set_element("model_1to4:", "assets/1to4.png", "4 bits to Bus concentrator");
+    init_icon->set_element("model_8to4:", "assets/8to4.png", "bus8 to 2 bus4 split");
+    init_icon->set_element("model_4to8:", "assets/4to8.png", "2 bus4 to bus8 concentrator");
     icons.push_back(init_icon);
 
     
@@ -65,9 +65,9 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
     
 }
 
-void oneiconbar::set_element(unsigned int X, unsigned int Y, std::string class_id, std::string filename, struct library_block *block)
+void oneiconbar::set_element(unsigned int X, unsigned int Y, std::string class_id, std::string filename, std::string tooltip, struct library_block *block)
 {
-     icons[X][Y] = new icon(renderer, class_id, filename);
+     icons[X][Y] = new icon(renderer, class_id, filename, tooltip);
      cIndex = Y * 2 + X + 1;
      
      if (Y >= icons[X].size())
@@ -78,11 +78,11 @@ void oneiconbar::set_element(unsigned int X, unsigned int Y, std::string class_i
 
 void oneiconbar::set_element(std::string class_id, struct library_block *block)
 {
-    set_element(cIndex % 2, cIndex/2, class_id, "", block);
+    set_element(cIndex % 2, cIndex/2, class_id, "", "",block);
 }
-void oneiconbar::set_element(std::string class_id, std::string filename, struct library_block *block)
+void oneiconbar::set_element(std::string class_id, std::string filename, std::string tooltip, struct library_block *block)
 {
-    set_element(cIndex % 2, cIndex/2, class_id, filename, block);
+    set_element(cIndex % 2, cIndex/2, class_id, filename, tooltip, block);
 }
 
 void oneiconbar::insert_blank(void)
@@ -127,10 +127,11 @@ void iconbar::handle_event(SDL_Event &event)
 }
 
 
-icon::icon(SDL_Renderer *renderer, std::string _class_id, std::string filename)
+icon::icon(SDL_Renderer *renderer, std::string _class_id, std::string filename, std::string _tooltip)
 {
     _renderer = renderer;
     class_id = _class_id;
+    tooltip = _tooltip;
     active = false;
     if (filename != "")
        texture = IMG_LoadTexture(renderer, filename.c_str());
