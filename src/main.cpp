@@ -18,13 +18,29 @@
 #include <string>
 #include <unistd.h>
 
+#include <execinfo.h>
+#include <unistd.h>
+#include <signal.h>
+
 #include "gridcad.h"
 #include "document.h"
+
+void segv_handler(int sig) {
+	void *entries[32];
+	size_t count;
+	
+	count = backtrace(entries, 32);
+	fprintf(stderr, "Segmentation fault:\n");
+	backtrace_symbols_fd(entries, count, STDERR_FILENO);
+	exit(1);
+}
 
 int main(int argc, char **argv)
 {	
 	std::string name = "scene";
 	class document *document;
+	
+	signal(SIGSEGV, segv_handler);
 	
 	if (argc > 1)
 		name = argv[1];
