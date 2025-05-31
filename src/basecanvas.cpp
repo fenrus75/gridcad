@@ -214,7 +214,7 @@ void basecanvas::draw_image(SDL_Texture *image, float X, float Y, float W, float
 	SDL_RenderCopy(renderer, image, NULL, &rect);
 }
 
-void basecanvas::draw_image_fragment(SDL_Texture *image, float X, float Y, float W, float H, int fromX, int fromY, int w, int h) 
+void basecanvas::draw_image_fragment(SDL_Texture *image, float X, float Y, float W, float H, int fromX, int fromY, int w, int h, int angle) 
 {
 	SDL_Rect rect, src;
 	
@@ -235,7 +235,8 @@ void basecanvas::draw_image_fragment(SDL_Texture *image, float X, float Y, float
 		
 	SDL_SetTextureAlphaMod(image, 255);
 	
-	SDL_RenderCopy(renderer, image, &src, &rect);
+//	SDL_RenderCopy(renderer, image, &src, &rect);
+	SDL_RenderCopyEx(renderer, image, &src, &rect, angle, NULL, SDL_FLIP_NONE);
 }
 
 void basecanvas::draw_image_rotated(SDL_Texture *image, float X, float Y, float W, float H, int alpha, int angle) 
@@ -299,7 +300,7 @@ void basecanvas::draw_image_rotated(std::string filename, float X, float Y, floa
 	draw_image_rotated(image, X,Y,W,H,alpha, angle);
 }
 
-void basecanvas::draw_image_fragment(std::string filename, float X, float Y, float W, float H, int fromX, int fromY, int w, int h)  
+void basecanvas::draw_image_fragment(std::string filename, float X, float Y, float W, float H, int fromX, int fromY, int w, int h, int angle)  
 {
 	SDL_Texture *image;
 	
@@ -313,7 +314,7 @@ void basecanvas::draw_image_fragment(std::string filename, float X, float Y, flo
 		}
 		texture_cache[filename] = image;
 	}
-	draw_image_fragment(image, X,Y,W,H,fromX,fromY,w,h);
+	draw_image_fragment(image, X,Y,W,H,fromX,fromY,w,h, angle);
 }
 
 

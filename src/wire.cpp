@@ -80,11 +80,36 @@ float dist(float x1, float y1, float x2, float y2)
         return d;
 }
 
+int calc_angle(int x1, int y1, int x2, int y2)
+{
+    int dx, dy;
+    
+    dx = x2 - x1;
+    if (dx > 1) dx = 1;
+    if (dx < -1) dx = -1;
+    dy = y2 - y1;
+    if (dy > 1) dy = 1;
+    if (dy < -1) dy = -1;
+    
+    
+    if (dx ==  1 && dy ==  0) return 180;
+    if (dx ==  1 && dy ==  1) return 45;
+    if (dx ==  0 && dy == -1) return 270;
+    if (dx ==  1 && dy == -1) return 135;
+    if (dx == -1 && dy ==  0) return 0;
+    if (dx == -1 && dy == -1) return 225;
+    if (dx ==  0 && dy ==  1) return 90;
+    if (dx == -1 && dy ==  1) return 315;
+    
+    
+    return 0;
+}
 
 void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y2, int color, int *step, struct value *value, int stepsize = 60)
 {
         double dx, dy,d;
         bool thick = false;
+        int ang = calc_angle(roundf(x1),roundf(y1),roundf(x2),roundf(y2));
         
         if (value->type == VALUE_TYPE_INT)
             thick = true;
@@ -126,7 +151,7 @@ void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y
                             f -= 1;
                         f = f * (450-25);
 			canvas->draw_box(x1-size, y1-size, x1+size, y1+size, COLOR_WIRE_MOTION);
-                        canvas->draw_image_fragment("assets/clock_wave.png", x1-size, y1-size, 2*size, 2*size, 25 + f, 0, 450 -25, 189 );	
+                        canvas->draw_image_fragment("assets/clock_wave.png", x1-size, y1-size, 2*size, 2*size, 25 + f, 0, 450 -25, 189, ang);	
 		} else {
 		        float r = 0.18;
 		        if (thick)
