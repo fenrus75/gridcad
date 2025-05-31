@@ -29,6 +29,8 @@ Uint32 SDL_timer_func(Uint32 interval, void *param)
     ev.user.data1 = NULL;
     ev.user.data2 = NULL;
 
+    global_clock.valid = true;
+    global_clock.is_clock = true;
     global_clock.boolval = !global_clock.boolval;
     if (!SDL_PushEvent(&ev)) {
      printf("Push failure %s\n", SDL_GetError());
@@ -69,8 +71,6 @@ model_clock::~model_clock(void)
 void model_clock::drawAt(class canvas *canvas, float X, float Y, int type)
 {
 
-    if (!waveform)
-        waveform = canvas->load_image("assets/clock_wave.png");
     if (selected) {
         canvas->draw_image("assets/clock_selected.png", X, Y, sizeX, sizeY, Alpha(type));
     } else {
@@ -80,7 +80,7 @@ void model_clock::drawAt(class canvas *canvas, float X, float Y, int type)
         f = tv.tv_usec / 1000000.0;
         f = f * (450-25);
         canvas->draw_image("assets/clock_off.png", X, Y, sizeX, sizeY, Alpha(type));
-        canvas->draw_image_fragment(waveform, X+0.6, Y+0.6, sizeX-1.2, sizeY-1.2, 25 + f, 0, 450 -25, 189 );
+        canvas->draw_image_fragment("assets/clock_wave.png", X+0.6, Y+0.6, sizeX-1.2, sizeY-1.2, 25 + f, 0, 450 -25, 189 );
     }
 
     for (auto port : ports) {
@@ -94,12 +94,10 @@ void model_clock::drawAt(class canvas *canvas, float X, float Y, int type)
 void model_clock::to_json(json &j)
 {
      element::to_json(j);
-     j["value"] = value;
 }
 void model_clock::from_json(json &j)
 {
      element::from_json(j);
-     value = j.value("value", value);
 }
 
 void model_clock::handle_event(class canvas *canvas, SDL_Event &event)

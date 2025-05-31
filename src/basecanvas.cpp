@@ -299,6 +299,23 @@ void basecanvas::draw_image_rotated(std::string filename, float X, float Y, floa
 	draw_image_rotated(image, X,Y,W,H,alpha, angle);
 }
 
+void basecanvas::draw_image_fragment(std::string filename, float X, float Y, float W, float H, int fromX, int fromY, int w, int h)  
+{
+	SDL_Texture *image;
+	
+	if (texture_cache.find(filename) != texture_cache.end()) {
+		image = texture_cache[filename];
+	} else {
+		printf("image cache miss %s\n", filename.c_str());
+		image = load_image(filename);
+		if (!image) {
+			printf("Failure to load %s\n", filename.c_str());
+		}
+		texture_cache[filename] = image;
+	}
+	draw_image_fragment(image, X,Y,W,H,fromX,fromY,w,h);
+}
+
 
 SDL_Texture *basecanvas::text_to_texture(const char *text)
 {

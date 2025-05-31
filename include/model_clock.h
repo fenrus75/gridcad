@@ -20,8 +20,6 @@ public:
     void rotate_ports(void);
     
 private:
-    struct value value = {};
-    SDL_Texture *waveform = NULL;
 };
 
 

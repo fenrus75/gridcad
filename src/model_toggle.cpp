@@ -104,6 +104,7 @@ bool model_toggle::mouse_select(float _X, float _Y)
          return false;
     value.boolval = !value.boolval;
     value.valid = true;
+    value.is_clock = false;
     value.intval = value.boolval;
     
     update_value(&value, DEFAULT_TTL);

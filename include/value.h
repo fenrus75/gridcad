@@ -17,5 +17,6 @@ struct value {
     uint64_t arrayval;
     bool is_error;
     bool valid;
+    bool is_clock;
 };
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE_WITH_DEFAULT(value, type, boolval, intval, floatval, arrayval, is_error, valid);
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE_WITH_DEFAULT(value, type, boolval, intval, floatval, arrayval, is_error, valid, is_clock);

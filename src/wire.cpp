@@ -115,6 +115,15 @@ void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y
 			canvas->draw_box(x1-size, y1-size, x1+size, y1+size, COLOR_WIRE_MOTION);
 			canvas->draw_box(x1-size2, y1-size2, x1+size2, y1+size2, COLOR_BACKGROUND_MAIN);
 	                canvas->draw_text(s, x1+0.05-size, y1+0.05-size, 2 * size - 0.1, 2 * size - 0.1);
+		} else if (value->is_clock) {
+    			const float size = 0.24;
+                        struct timeval tv;
+                        gettimeofday(&tv, NULL);
+                        float f;
+                        f = tv.tv_usec / 1000000.0;
+                        f = f * (450-25);
+			canvas->draw_box(x1-size, y1-size, x1+size, y1+size, COLOR_WIRE_MOTION);
+                        canvas->draw_image_fragment("assets/clock_wave.png", x1-size, y1-size, 2*size, 2*size, 25 + f, 0, 450 -25, 189 );	
 		} else {
 		        float r = 0.18;
 		        if (thick)
@@ -360,6 +369,7 @@ void wire::to_json(json &j)
 }    
 void wire::from_json(json &j)
 {
+    value.is_clock = false;
     value = j["value"];
     name = j["name"];
     X1 = j["X1"];
