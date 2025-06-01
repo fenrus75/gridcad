@@ -23,9 +23,12 @@ wiretest: $(OBJS) include/gridcad.h Makefile test/wiretest.o
 	
 .cpp.o:
 	g++ $(CXXFLAGS) -fvisibility=hidden -Iinclude/ -O3 -Wall -march=native -flto -g $(SAN) -std=c++20   `pkg-config --cflags sdl2`-c $< -o $@
+	
+pngs.o: pngs.cpp
+	g++ $(CXXFLAGS) -O1 pngs.cpp -c -o pngs.o
 
-pngs.cpp: $(wildcard assets/*.png assets/*/*png)
-	python3 png2header.py assets/*png assets/*/*png > pngs.cpp
+pngs.cpp: $(wildcard assets/*.png assets/*/*png library/*png)
+	python3 png2header.py assets/*png assets/*/*png library/*png> pngs.cpp
 	
 clean:	
 	rm -f gridcad */*.o wiretest *~ */*~ */*/*.o */*/*~ pngs.cpp pngs.o
