@@ -29,7 +29,7 @@ using json = nlohmann::json;
 static std::vector<class basecanvas *> canvases;
 
 extern void fill_png_maps(void);
-
+extern void set_timer(void);
 document::document(std::string _name)
 {
 	class canvas *_canvas;
@@ -44,6 +44,8 @@ document::document(std::string _name)
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2");
 	
 	SDL_timer_event = SDL_RegisterEvents(1);
+	
+	set_timer();
 
 	_scene = new scene("main");
 

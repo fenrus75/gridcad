@@ -37,7 +37,7 @@ Uint32 SDL_timer_func(Uint32 interval, void *param)
 
 static SDL_TimerID timer;
 
-static void set_timer(void)
+void set_timer(void)
 {
     if (timer_set)
         return;

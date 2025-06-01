@@ -56,6 +56,8 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
     init_icon->set_element("model_1to4:", "assets/1to4.png", "4 bits to Bus concentrator");
     init_icon->set_element("model_8to4:", "assets/8to4.png", "bus8 to 2 bus4 split");
     init_icon->set_element("model_4to8:", "assets/4to8.png", "2 bus4 to bus8 concentrator");
+    init_icon->set_element("model_16to8:", "assets/16to8.png", "bus16 to 2 bus8 split");
+    init_icon->set_element("model_8to16:", "assets/8to16.png", "2 bus8 to bus16 concentrator");
     icons.push_back(init_icon);
 
     

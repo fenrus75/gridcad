@@ -28,6 +28,8 @@
 #include "model_1to4.h"
 #include "model_8to4.h"
 #include "model_4to8.h"
+#include "model_16to8.h"
+#include "model_8to16.h"
 #include "model_datascope.h"
 #include "model_dflipflop.h"
 #include "model_delayline.h"
@@ -57,6 +59,8 @@ class element *element_from_class_id(std::string classid)
     ELEMENT(model_1to4);
     ELEMENT(model_8to4);
     ELEMENT(model_4to8);
+    ELEMENT(model_16to8);
+    ELEMENT(model_8to16);
     ELEMENT(model_datascope);
     ELEMENT(model_dflipflop);
     ELEMENT(model_delayline);
