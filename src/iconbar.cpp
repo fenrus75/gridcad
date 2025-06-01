@@ -139,7 +139,7 @@ icon::icon(SDL_Renderer *renderer, std::string _class_id, std::string filename, 
     tooltip = _tooltip;
     active = false;
     if (filename != "")
-       texture = IMG_LoadTexture(renderer, filename.c_str());
+       texture = IMG_LoadTextureFromMem(renderer, filename.c_str());
 }
 
 icon::~icon(void)
@@ -149,7 +149,7 @@ icon::~icon(void)
 void icon::assign_library_element(struct library_block block) 
 { 
   lib = block;
-  texture = IMG_LoadTexture(_renderer, lib.icon.c_str() );
+  texture = IMG_LoadTextureFromMem(_renderer, lib.icon.c_str() );
   tooltip = block.tooltip;
 };
 

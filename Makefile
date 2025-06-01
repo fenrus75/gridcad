@@ -15,7 +15,7 @@ OBJS := src/main.o src/document.o src/canvas.o src/scene.o src/color.o src/eleme
 PNG := pngs.o
 
 gridcad: $(OBJS) $(PNG) include/gridcad.h Makefile Makefile.deps
-	g++ $(CFLAGS) -O3 -Wall -march=native $(OBJS) $(LTO) $(SAN) -o gridcad -lSDL2_image -lSDL2_gfx -lSDL2_ttf -lSDL2 `pkg-config --libs sdl2`
+	g++ $(CFLAGS) -O3 -Wall -march=native $(OBJS) $(PNG) $(LTO) $(SAN) -o gridcad -lSDL2_image -lSDL2_gfx -lSDL2_ttf -lSDL2 `pkg-config --libs sdl2`
 	
 	
 wiretest: $(OBJS) include/gridcad.h Makefile test/wiretest.o
@@ -27,7 +27,7 @@ wiretest: $(OBJS) include/gridcad.h Makefile test/wiretest.o
 pngs.o: pngs.cpp
 	g++ $(CXXFLAGS) -O1 pngs.cpp -c -o pngs.o
 
-pngs.cpp: $(wildcard assets/*.png assets/*/*png library/*png)
+pngs.cpp: $(wildcard assets/*.png assets/*/*png library/*png) png2header.py
 	python3 png2header.py assets/*png assets/*/*png library/*png> pngs.cpp
 	
 clean:	

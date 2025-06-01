@@ -28,10 +28,14 @@ using json = nlohmann::json;
 
 static std::vector<class basecanvas *> canvases;
 
+extern void fill_png_maps(void);
+
 document::document(std::string _name)
 {
 	class canvas *_canvas;
 	class scene *_scene;
+	
+	fill_png_maps();
 
 	name = _name;
 

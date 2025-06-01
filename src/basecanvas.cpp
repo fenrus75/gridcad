@@ -14,6 +14,10 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 #include <SDL2/SDL_ttf.h>
+#include <map>
+
+extern std::map<std::string, unsigned char *> datamap;
+extern std::map<std::string, unsigned int> sizemap;
 
 basecanvas::basecanvas(void)
 {
@@ -167,9 +171,26 @@ void basecanvas::draw_circle2(float X, float Y, float _R, int color, int color2)
 
 }
 
+SDL_Texture *IMG_LoadTextureFromMem(SDL_Renderer *renderer, const char *filename)
+{
+	std::string s;
+	
+	s = filename;
+	if (datamap.find(s) == datamap.end()) {
+		printf("PNGMAP miss for '%s'\n", filename);
+		return IMG_LoadTexture(renderer, filename);
+	}
+	
+	SDL_RWops* ops;
+	
+	ops = SDL_RWFromMem(datamap[filename], sizemap[filename]);
+	
+	return IMG_LoadTexture_RW(renderer, ops, 1);
+}
+
 SDL_Texture * basecanvas::load_image(const char *filename)
 {
-	return IMG_LoadTexture(renderer, filename);
+	return IMG_LoadTextureFromMem(renderer, filename);
 }
 
 SDL_Texture * basecanvas::load_image(std::string filename)
