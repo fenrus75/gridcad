@@ -35,8 +35,7 @@ document::document(std::string _name)
 
 	name = _name;
 
-	SDL_Init(SDL_INIT_VIDEO);
-	SDL_Init(SDL_INIT_TIMER);
+	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
 	TTF_Init();
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2");
 	
@@ -89,6 +88,7 @@ void document::run(void)
 
 	while (!leave) {
 //		ret = SDL_WaitEventTimeout(&event, 1);
+		run_queued_calculations();
 		ret = SDL_PollEvent(&event);
 
 		if (event.type == SDL_QUIT)

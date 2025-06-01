@@ -14,14 +14,14 @@ MODELS :=  src/model_logic2.o src/model_nand.o src/model_and.o src/model_not.o s
 OBJS := src/main.o src/document.o src/canvas.o src/scene.o src/color.o src/element.o src/wire.o src/connector.o src/port.o src/model_zero.o src/model_one.o src/iconbar.o lib/wirepath.o src/factory.o src/basecanvas.o $(MODELS) src/event.o src/uuid.o src/library.o src/queued.o src/contextmenu.o
 
 gridcad: $(OBJS) include/gridcad.h Makefile Makefile.deps
-	g++ $(CFLAGS) -O3 -Wall -march=native $(OBJS) $(LTO) $(SAN) -o gridcad -lSDL2_image -lSDL2_gfx -lSDL2_ttf -lSDL2 
+	g++ $(CFLAGS) -O3 -Wall -march=native $(OBJS) $(LTO) $(SAN) -o gridcad -lSDL2_image -lSDL2_gfx -lSDL2_ttf -lSDL2 `pkg-config --libs sdl2`
 	
 	
 wiretest: $(OBJS) include/gridcad.h Makefile test/wiretest.o
 	g++ $(CFLAGS) -O3 -Wall -march=native lib/wirepath.o test/wiretest.o $(LTO) -g -o wiretest -lSDL2_image -lSDL2_gfx -lSDL2_ttf -lSDL2 
 	
 .cpp.o:
-	g++ $(CXXFLAGS) -fvisibility=hidden -Iinclude/ -O3 -Wall -march=native -flto -g $(SAN) -std=c++20 -c $< -o $@
+	g++ $(CXXFLAGS) -fvisibility=hidden -Iinclude/ -O3 -Wall -march=native -flto -g $(SAN) -std=c++20   `pkg-config --cflags sdl2`-c $< -o $@
 
 	
 clean:	
