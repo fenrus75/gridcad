@@ -8,3 +8,5 @@ scene.json
 Makefile.deps.bak
 Makefile.deps
 todo
+pngs.cpp
+pngs.o
