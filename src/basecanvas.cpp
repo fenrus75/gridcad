@@ -16,7 +16,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <map>
 
-extern std::map<std::string, unsigned char *> datamap;
+extern std::map<std::string, const unsigned char *> datamap;
 extern std::map<std::string, unsigned int> sizemap;
 
 basecanvas::basecanvas(void)
@@ -183,7 +183,7 @@ SDL_Texture *IMG_LoadTextureFromMem(SDL_Renderer *renderer, const char *filename
 	
 	SDL_RWops* ops;
 	
-	ops = SDL_RWFromMem(datamap[filename], sizemap[filename]);
+	ops = SDL_RWFromConstMem(datamap[filename], sizemap[filename]);
 	
 	return IMG_LoadTexture_RW(renderer, ops, 1);
 }

@@ -16,7 +16,7 @@ def file_to_bytes(filename):
     
     varname = munge_filename(filename)
     
-    print("unsigned char ",varname,"[] = {")
+    print("const unsigned char ",varname,"[] = {")
     
     ind = 0
     while ind < len(data):
@@ -39,7 +39,7 @@ def print_prelogue():
 
 def print_prologue():
     print("")
-    print("std::map<std::string, unsigned char *> datamap;")
+    print("std::map<std::string, const unsigned char *> datamap;")
     print("std::map<std::string, unsigned int> sizemap;")
     print("")
     print("void fill_png_maps(void)");

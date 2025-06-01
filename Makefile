@@ -27,7 +27,7 @@ wiretest: $(OBJS) include/gridcad.h Makefile test/wiretest.o
 pngs.o: pngs.cpp
 	g++ $(CXXFLAGS) -O1 pngs.cpp -c -o pngs.o
 
-pngs.cpp: $(wildcard assets/*.png assets/*/*png library/*png) png2header.py
+pngs.cpp: $(wildcard assets/*.png)  $(wildcard assets/*/*png) $(wildcard library/*png) png2header.py 
 	python3 png2header.py assets/*png assets/*/*png library/*png> pngs.cpp
 	
 clean:	
