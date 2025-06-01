@@ -33,6 +33,11 @@ void callback_editname(class element *element)
 	element->enter_edit_mode();
 }
 
+void callback_rotate(class element *element)
+{
+	element->rotate_ports();
+}
+
 element::element(int _sizeX, int _sizeY, std::string _name, std::string _parent)
 {
     sizeX = _sizeX;
@@ -44,6 +49,7 @@ element::element(int _sizeX, int _sizeY, std::string _name, std::string _parent)
     menu = new contextmenu(this);
     menu->add_item("Delete", callback_delete);
     menu->add_item("Select", callback_select);
+    menu->add_item("Rotate", callback_rotate);
     
 }
 
