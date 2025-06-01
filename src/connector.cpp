@@ -32,7 +32,7 @@ connector::connector(float _X, float _Y)  : element(3, 3, "")
 
     add_port(0, 0, "Connector", PORT_INOUT);    
     reseat();;
-    menu->add_item("Unsplice wire", splice_wire_callback);
+    menu->add_item("Join wire", splice_wire_callback);
 }
 
 connector::~connector(void)
