@@ -76,8 +76,8 @@
             "Y": 14.0,
             "angle": 0,
             "class_id": "model_nest:",
-            "icon": "library/fulladder.json.png",
-            "icon_selected": "library/fulladder.json.selected.png",
+            "icon": "library/add/fulladder.json.png",
+            "icon_selected": "library/add/fulladder.json.selected.png",
             "name": "fulladder",
             "parental_name": "/",
             "ports": [
@@ -1637,8 +1637,8 @@
             "Y": 25.0,
             "angle": 0,
             "class_id": "model_nest:",
-            "icon": "library/fulladder.json.png",
-            "icon_selected": "library/fulladder.json.selected.png",
+            "icon": "library/add/fulladder.json.png",
+            "icon_selected": "library/add/fulladder.json.selected.png",
             "name": "fulladder",
             "parental_name": "/",
             "ports": [
@@ -3198,8 +3198,8 @@
             "Y": 37.0,
             "angle": 0,
             "class_id": "model_nest:",
-            "icon": "library/fulladder.json.png",
-            "icon_selected": "library/fulladder.json.selected.png",
+            "icon": "library/add/fulladder.json.png",
+            "icon_selected": "library/add/fulladder.json.selected.png",
             "name": "fulladder",
             "parental_name": "/",
             "ports": [
@@ -4759,8 +4759,8 @@
             "Y": 48.0,
             "angle": 0,
             "class_id": "model_nest:",
-            "icon": "library/fulladder.json.png",
-            "icon_selected": "library/fulladder.json.selected.png",
+            "icon": "library/add/fulladder.json.png",
+            "icon_selected": "library/add/fulladder.json.selected.png",
             "name": "fulladder",
             "parental_name": "/",
             "ports": [

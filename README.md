@@ -12,6 +12,7 @@ screenshots
 -----------
 ![Full Adder](screenshots/fulladder.png)
 ![Register from a flipflop](screenshots/register1.png)
+![Implementation of the Add8 element](screenshots/add8.png)
 ![Testbech for the Add8 element](screenshots/add8hub.png)
 
 

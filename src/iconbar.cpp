@@ -17,7 +17,6 @@
 #include <map>
 #include <SDL2/SDL_image.h>
 
-std::map<std::string, class oneiconbar*> libtabs;
 
 
 iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)

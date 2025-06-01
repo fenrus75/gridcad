@@ -90,6 +90,8 @@ private:
     std::vector<class oneiconbar *> icons;
     class oneiconbar *current_icons = NULL;
     SDL_Renderer *renderer = NULL;
+    std::map<std::string, class oneiconbar*> libtabs;
+
 };
 
 
