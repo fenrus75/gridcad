@@ -36,7 +36,7 @@ float Xsize(class basecanvas *canvas, std::string str, float scale)
 	if (!text)
 		return 0;
 		
-	SDL_Point size;
+	SDL_Point size = {};
 	
 	SDL_QueryTexture(text, NULL, NULL, &size.x, &size.y);
 	
@@ -51,11 +51,12 @@ float Ysize(class basecanvas *canvas, std::string str, float scale)
 	if (!text)
 		return 0;
 		
-	SDL_Point size;
+	SDL_Point size = {};
 	
 	SDL_QueryTexture(text, NULL, NULL, &size.x, &size.y);
 	
-	return canvas->scr_to_X(size.y/scale);
+	printf("size.y is %i \n", size.y);
+	return canvas->scr_to_Y(size.y/scale);
 }
 
 void draw_menu_item(class basecanvas *canvas, float X, float Y, float W, float H, std::string string, float scale, bool selected)
@@ -75,21 +76,27 @@ void draw_menu_item(class basecanvas *canvas, float X, float Y, float W, float H
 	SDL_QueryTexture(text, NULL, NULL, &size.x, &size.y);
 
 	canvas->draw_image(shade, X, Y, W, H);
-	canvas->draw_image(text, X, Y, canvas->scr_to_X(size.x/scale), canvas->scr_to_Y(size.y/scale));
+	canvas->draw_text(string, X, Y, W, 1);
 }
 
 
 void contextmenu::draw_at(class basecanvas *canvas, float X, float Y)
 {
-    float scale = 1.5;
+    const float scale = 1.5;
 
     maxX = 0;
     maxY = 0;
 
+#if 0
     for (auto item : items) {
         maxX = std::max(maxX, Xsize(canvas, item->menu_text, scale));
         maxY = std::max(maxY, Ysize(canvas, item->menu_text, scale));
+	    printf("MaxY is %5.2f\n", maxY);
+	    printf("MaxX is %5.2f\n", maxX);
     }
+    #endif
+    maxY = 1;
+    maxX = 3.5;
     
     X1 = X;
     Y1 = Y;
