@@ -29,7 +29,7 @@ void populate_library(std::string directory)
 {
     const std::filesystem::path libpath{directory};
     
-    for (auto const &dir_entry : std::filesystem::directory_iterator{libpath}) {
+    for (auto const &dir_entry : std::filesystem::recursive_directory_iterator{libpath}) {
         std::string path = dir_entry.path();
         
         if (path.ends_with(".json")) {
