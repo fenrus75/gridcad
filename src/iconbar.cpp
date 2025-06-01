@@ -14,7 +14,11 @@
 #include "iconbar.h"
 #include "model_nest.h"
 
+#include <map>
 #include <SDL2/SDL_image.h>
+
+std::map<std::string, class oneiconbar*> libtabs;
+
 
 iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
 {
@@ -55,13 +59,17 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
     icons.push_back(init_icon);
 
     
-    libtab = new class oneiconbar(_renderer, _rect);
     
     for (li = 0; li < library.size(); li++) {
+        if (libtabs.find(library[li].collection) == libtabs.end()) {
+            libtab = new class oneiconbar(_renderer, _rect);
+            libtabs[library[li].collection] = libtab;
+            icons.push_back(libtab);
+        }
+        libtab = libtabs[library[li].collection];
         libtab->set_element("library", &library[li]);
     }
     
-    icons.push_back(libtab);
     
 }
 

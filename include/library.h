@@ -5,6 +5,7 @@
 
 struct library_block {
     std::string name;
+    std::string collection;
     std::string logic; /* json format */
     std::string tooltip; 
     
