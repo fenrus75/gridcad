@@ -8,6 +8,12 @@ to code on.
 
 
 
+screenshots
+-----------
+![Full Adder](screenshots/fulladder.png)
+![Register from a flipflop](screenshots/register1.png)
+![Testbech for the Add8 element](screenshots/add8hub.png)
+
 
 credits / references
 --------------------
