@@ -45,6 +45,7 @@ public:
     class port * get_other_port(class port *port);
     
 protected:
+    bool dead = false;
     bool selected = false;
     bool being_routed = false; /* not saved in json */
     std::vector<class port *> ports;

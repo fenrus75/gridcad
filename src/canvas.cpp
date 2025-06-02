@@ -184,6 +184,8 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 		float x, y;
 		dragging = NULL;
 
+		floating.clear();
+
 		x = scr_to_X(event.motion.x);
 		y = scr_to_Y(event.motion.y);
 		for (auto elem:	current_scene->elements) {
@@ -697,6 +699,7 @@ bool canvas::handle_event(SDL_Event &event)
 	for (auto elem : current_scene->elements)
 		elem->handle_event(this, event);
 	run_queued_calculations();
+	current_scene->remove_orphans();
 	return leave;
 }
 

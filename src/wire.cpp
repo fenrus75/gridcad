@@ -181,6 +181,8 @@ void wire::draw(class canvas *canvas, int color)
     bool first = true;
     int stepsize;
     int step;
+
+    assert(!dead);
     
     if (!points)
         route(canvas->get_scene());
@@ -337,16 +339,18 @@ bool wire::intersect(float targetX, float targetY)
         x2 = point.X + 0.5;
         y2 = point.Y + 0.5;
 
+#if 0
 	/* bounding box first */
-	if (targetX < x1 - 1 && targetX < x2 - 1)
+	if (targetX < x1 - 2 && targetX < x2 - 2)
 		continue;
-	if (targetX > x2  + 1 && targetX > x1 + 1)
+	if (targetX > x2  + 2 && targetX > x1 + 2)
 		continue;
-	if (targetY < y1 - 1 && targetY < y2 -1)
+	if (targetY < y1 - 2 && targetY < y2 - 2)
 		continue;
-	if (targetY > y2  + 1 && targetY > y1 + 1)
+	if (targetY > y2  + 2 && targetY > y1 + 2)
 		continue;
-        
+#endif
+    
         dx = x2-x1;
         dy = y2-y1;
         d = dist(x1,y1,x2,y2);
@@ -372,6 +376,7 @@ bool wire::intersect(float targetX, float targetY)
 
 void wire::remove(void)
 {
+    printf("wire::remove for %s \n", name.c_str());
     for (auto port : ports) {
         port->remove_wire(this);
     }

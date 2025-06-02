@@ -402,8 +402,10 @@ void element::connect_clk(class port *clk)
 			wire = new class wire(0,0,0,0);
 			wire->add_port(clk);
 			wire->add_port(port);
+
 			port->add_wire(wire);
 			clk->add_wire(wire);
+
 			wire->reseat();
 		}
 	}
