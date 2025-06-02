@@ -1,5 +1,4 @@
-/*
- * gridcad -- a tool to do digital circuit design with a GUI
+/* gridcad -- a tool to do digital circuit design with a GUI
  *
  * (C) Copyright 2025  -- Arjan van de Ven
  *
@@ -235,10 +234,17 @@ bool canvas::handle_event_iconarea(SDL_Event &event)
 	}
 
 	if (active_icon) {
-		if (floating.size() == 0)
-			floating.push_back(active_icon->create_element());
+		if (floating.size() == 0) {
+			class element *elem;
+			elem = active_icon->create_element();
+			if (elem) {
+				elem->place(mouseX, mouseY);
+				elem->start_drag(mouseX, mouseY);	
+				floating.push_back(elem);
+			}
+		}
 	} else {
-		floating.clear();;
+		floating.clear();
 	}
 
 	return false;

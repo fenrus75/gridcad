@@ -34,7 +34,7 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
     init_icon->set_element("model_not:", "assets/inverter.png", "bit inverter");
     init_icon->insert_blank();
     init_icon->set_element("model_nand:", "assets/nandgate.png", "bitwise NAND gate");
-    init_icon->set_element("nodel_and:", "assets/andgate.png", "bitwise AND gate");
+    init_icon->set_element("model_and:", "assets/andgate.png", "bitwise AND gate");
     init_icon->set_element("model_nor:", "assets/norgate.png", "bitwise NOR gate");
     init_icon->set_element("model_or:", "assets/orgate.png", "bitwise OR gate");
     init_icon->set_element("model_xor:", "assets/xorgate.png", "bitwise XOR gate");
