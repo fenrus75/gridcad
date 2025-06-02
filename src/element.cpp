@@ -16,6 +16,7 @@
 #include "gridcad.h"
 #include "port.h"
 #include "contextmenu.h"
+#include "wire.h"
 
 static void callback_delete(class element *element)
 {
@@ -390,4 +391,20 @@ void element::handle_event(class canvas *thiscanvas, SDL_Event &event)
 
 		break;
     }
+}
+
+
+void element::connect_clk(class port *clk)
+{
+	for (auto port : ports) {
+		if (port->name == "clk" && port->direction == PORT_IN && !port->has_wires()) {
+			class wire *wire;
+			wire = new class wire(0,0,0,0);
+			wire->add_port(clk);
+			wire->add_port(port);
+			port->add_wire(wire);
+			clk->add_wire(wire);
+			wire->reseat();
+		}
+	}
 }

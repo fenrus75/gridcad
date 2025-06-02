@@ -18,6 +18,7 @@ public:
     struct value get_value(void);
     void handle_event(class canvas *canvas, SDL_Event &event);
     void rotate_ports(void);
+    class port *get_clk_port(void) override { return ports[0];};
     
 private:
 };

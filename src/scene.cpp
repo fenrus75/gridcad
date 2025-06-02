@@ -35,6 +35,21 @@ void callback_fit_to_screen(class scene *scene)
 	SDL_PushEvent(&ev);
 }
 
+void callback_autoclock(class scene *scene)
+{
+	class port *clk = NULL;
+	for (auto elem : scene->elements) {
+		clk = elem->get_clk_port();
+		if (clk) 
+			break;
+	}
+	if (!clk)
+		return;
+	for (auto elem : scene->elements) {
+		elem->connect_clk(clk);
+	}
+}
+
 scene::scene(std::string _name, std::string _parent)
 {
 	sizeX = 200;
@@ -44,6 +59,7 @@ scene::scene(std::string _name, std::string _parent)
 	menu = new class contextmenu(this);
 	menu->add_item("Select All", callback_select_all);
 	menu->add_item("Fit to Screen", callback_fit_to_screen);
+	menu->add_item("Connect clocks", callback_autoclock);
 }
 
 scene::~scene(void)
