@@ -183,7 +183,7 @@ void wire::draw(class canvas *canvas, int color)
     
     if (!points)
         route(canvas->get_scene());
-        
+
     if (!points)
         return;
         
@@ -247,7 +247,7 @@ void wire::route(class scene *scene)
     delete(grid);
 
     for (auto port : ports) {
-        if (floorf(port->screenX) == X1 && floorf(port->screenY) == Y1 && port->direction != PORT_IN) {
+        if (floorf(port->screenX) == X1 && floorf(port->screenY) == Y1 && port->direction == PORT_OUT) {
             std::reverse(points->begin(), points->end());
         }
     }
