@@ -110,6 +110,7 @@ void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y
         double dx, dy,d;
         bool thick = false;
         int ang = calc_angle(roundf(x1),roundf(y1),roundf(x2),roundf(y2));
+	int totalstep = 0;
         
         if (value->type == VALUE_TYPE_INT)
             thick = true;
@@ -134,6 +135,7 @@ void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y
                 cursormag = 1;
             
             (*step)++;
+	    totalstep++;
             if ((*step) >= stepsize) {
                 (*step) = 0;
 		if (value->type == VALUE_TYPE_INT){ 
@@ -148,13 +150,12 @@ void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y
 	                canvas->draw_text(s, x1+0.05-size, y1+0.05-size, 2 * size - 0.1, 2 * size - 0.1);
 		} else if (value->is_clock) {
     			const float size = 0.24;
-                        struct timeval tv;
-                        gettimeofday(&tv, NULL);
                         float f;
-                        f = tv.tv_usec / 1000000.0;
-                        f = f * 2;
-                        if (f > 1)
+			f = totalstep / (0.01 + stepsize);
+                        while (f > 1)
                             f -= 1;
+
+			f = 1 -f;
                         f = f * (450-25);
 			canvas->draw_box(x1-size, y1-size, x1+size, y1+size, COLOR_WIRE_MOTION);
                         canvas->draw_image_fragment("assets/clock_wave.png", x1-size, y1-size, 2*size, 2*size, 25 + f, 0, 450 -25, 189, ang);	
