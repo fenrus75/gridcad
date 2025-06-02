@@ -155,4 +155,7 @@ void unregister_canvas(class basecanvas *canvas)
 	}
 }
 
+/* +0 == timer
+   +1 == fit-to-screen
+ */
 unsigned int SDL_timer_event = 0;
