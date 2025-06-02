@@ -9,6 +9,11 @@ contextmenu::contextmenu(class element *_element)
     element = _element;
 }
 
+contextmenu::contextmenu(class scene *_scene)
+{
+    scene = _scene;
+}
+
 contextmenu::~contextmenu(void)
 {
 }
@@ -22,8 +27,17 @@ void contextmenu::add_item(std::string text, callback_fn callback)
     item->menu_text = text;
     item->callback = callback;
     
+    items.push_back(item);
+}
+
+void contextmenu::add_item(std::string text, scene_callback_fn scene_callback)
+{
+    struct context_item *item;
     
+    item = new struct context_item;
     
+    item->menu_text = text;
+    item->scene_callback = scene_callback;
     
     items.push_back(item);
 }
@@ -114,7 +128,8 @@ void contextmenu::draw_at(class basecanvas *canvas, float X, float Y)
 }
 void contextmenu::draw_at(class basecanvas *canvas)
 {
-	draw_at(canvas, element->get_X(), element->get_Y() + element->get_height()/2);
+	draw_at(canvas, currentX, currentY);
+
 }
 
 bool contextmenu::mouse_in_bounds(float X, float Y)
@@ -129,7 +144,7 @@ bool contextmenu::mouse_in_bounds(float X, float Y)
 void contextmenu::mouse_motion(float X, float Y)
 {
 	selection = -1;
-	
+
 	if (X < X1 || X > X2)
 		return;
 	if (Y < Y1 || Y > Y2)
@@ -139,9 +154,22 @@ void contextmenu::mouse_motion(float X, float Y)
 	selection = floorf(Y/maxY);
 }
 
+void contextmenu::mouse_set(float X, float Y)
+{
+	selection = -1;
+
+	currentX = X;
+	currentY = Y;
+	
+}
+
 void contextmenu::mouse_click(float X, float Y)
 {
 	selection = -1;
+
+	currentX = X;
+	currentY = Y;
+	
 	
 	if (X < X1 || X > X2)
 		return;
@@ -150,6 +178,8 @@ void contextmenu::mouse_click(float X, float Y)
 		
 	Y -= Y1;
 	selection = floorf(Y/maxY);
-	if (selection < (int)items.size())
+	if (selection < (int)items.size() && element)
 		items[selection]->callback(element);
+	if (selection < (int)items.size() && scene)
+		items[selection]->scene_callback(scene);
 }

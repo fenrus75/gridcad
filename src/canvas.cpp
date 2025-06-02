@@ -192,10 +192,12 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 				here = elem;
 			}
 		}
-		if (here)
+		if (here) {
 			active_menu = here->get_menu();
-		else
+			active_menu->mouse_set(x, y);
+		} else {
 			active_menu = NULL;
+		}
 		printf("Right button\n");
 	}
 	if (event.button.button == SDL_BUTTON_MIDDLE) {
