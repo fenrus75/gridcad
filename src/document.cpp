@@ -43,7 +43,7 @@ document::document(std::string _name)
 	TTF_Init();
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2");
 	
-	SDL_timer_event = SDL_RegisterEvents(1);
+	SDL_timer_event = SDL_RegisterEvents(2);
 	
 	set_timer();
 
@@ -112,7 +112,7 @@ void document::run(void)
 				auto canvas = canvases[i];
 				bool thisret = false;
 
-				if (event.window.windowID == canvas->get_window_ID() || event.type == SDL_timer_event) {
+				if (event.window.windowID == canvas->get_window_ID() || event.type >= SDL_timer_event ) {
 					thisret = canvas->handle_event(event);
 					if (thisret) {
 						if (i == 0)

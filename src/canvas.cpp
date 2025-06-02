@@ -255,6 +255,29 @@ bool canvas::handle_event(SDL_Event &event)
 	else
 		tooltip_eligable = false;
 
+
+	if (event.type == SDL_timer_event + 1) {  /* zoom to fit */
+		float bX1 = current_scene->sizeX, bY1 = current_scene->sizeY, bX2 = 0, bY2 = 0;
+		for (auto elem : current_scene->elements) {
+			if (elem->get_X() < bX1)
+				bX1 = elem->get_X();
+			if (elem->get_Y() < bY1)
+				bY1 = elem->get_Y();
+			if (elem->get_X() + elem->get_width() > bX2)
+				bX2 = elem->get_X() + elem->get_width();
+			if (elem->get_Y() + elem->get_height() > bY2)
+				bY2 = elem->get_Y() + elem->get_height();
+		}
+
+		if (bX2 != 0) {
+			offsetX = bX1 - 3;
+			offsetY = bY1 - 3;
+			scaleX = main_area_rect.w / (bX2-bX1 + 6.0) ;
+			scaleY = main_area_rect.h / (bY2-bY1 + 6.0) ;
+			scaleX = std::min(scaleX, scaleY);
+			scaleY = scaleX;
+		}
+	}
 	
 	
 	for (auto elem : current_scene->elements)

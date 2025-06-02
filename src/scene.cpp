@@ -23,6 +23,18 @@ void callback_select_all(class scene *scene)
 	}
 }
 
+void callback_fit_to_screen(class scene *scene)
+{
+	SDL_Event ev = {};
+
+
+	ev.type = SDL_timer_event + 1;
+	ev.user.code = 0;
+	ev.user.data1 = scene;
+
+	SDL_PushEvent(&ev);
+}
+
 scene::scene(std::string _name, std::string _parent)
 {
 	sizeX = 200;
@@ -31,6 +43,7 @@ scene::scene(std::string _name, std::string _parent)
 	parental_name = _parent;
 	menu = new class contextmenu(this);
 	menu->add_item("Select All", callback_select_all);
+	menu->add_item("Fit to Screen", callback_fit_to_screen);
 }
 
 scene::~scene(void)
