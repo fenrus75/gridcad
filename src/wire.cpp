@@ -151,13 +151,14 @@ void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y
 		} else if (value->is_clock) {
     			const float size = 0.24;
                         float f;
-			f = totalstep / (0.01 + stepsize);
+			f = 2 * totalstep / (0.01 + stepsize);
                         while (f > 1)
                             f -= 1;
 
 			f = 1 -f;
                         f = f * (450-25);
 			canvas->draw_box(x1-size, y1-size, x1+size, y1+size, COLOR_WIRE_MOTION);
+//                        canvas->draw_image_fragment("assets/clock_wave.png", x1-size, y1-size, 4*size, 2*size, 25 + f, 0, 2 * (450 -25), 189, ang);	
                         canvas->draw_image_fragment("assets/clock_wave.png", x1-size, y1-size, 2*size, 2*size, 25 + f, 0, 450 -25, 189, ang);	
 		} else {
 		        float r = 0.18;
