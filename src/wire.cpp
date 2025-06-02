@@ -335,6 +335,16 @@ bool wire::intersect(float targetX, float targetY)
         y1 = prevY;
         x2 = point.X + 0.5;
         y2 = point.Y + 0.5;
+
+	/* bounding box first */
+	if (targetX < x1 - 1 && targetX < x2 - 1)
+		continue;
+	if (targetX > x2  + 1 && targetX > x1 + 1)
+		continue;
+	if (targetY < y1 - 1 && targetY < y2 -1)
+		continue;
+	if (targetY > y2  + 1 && targetY > y1 + 1)
+		continue;
         
         dx = x2-x1;
         dy = y2-y1;
