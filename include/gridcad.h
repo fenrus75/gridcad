@@ -204,8 +204,10 @@ public:
     std::string get_full_name(void) { return parental_name + "/" + name;};
     void update_name(std::string _name) { name = _name;};
     uint64_t get_generation_count(void) { return generation_count; };
+    class contextmenu *get_menu(void) { return menu; };
     
 protected:
+    class contextmenu *menu = NULL;
     std::string name = "";
     std::string parental_name = "";    
     uint64_t generation_count = 0;

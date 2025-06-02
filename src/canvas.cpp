@@ -192,12 +192,21 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 				here = elem;
 			}
 		}
+		active_menu = NULL;
 		if (here) {
 			active_menu = here->get_menu();
-			active_menu->mouse_set(x, y);
 		} else {
-			active_menu = NULL;
+			class wire *wr;
+			wr = current_scene->is_wire(x, y);
+			if (!wr) {
+				class port *is_port = current_scene->is_port(x,y);
+				if (!is_port) {
+					active_menu = current_scene->get_menu();
+				}
+			}			
 		}
+		if (active_menu)
+			active_menu->mouse_set(x, y);
 		printf("Right button\n");
 	}
 	if (event.button.button == SDL_BUTTON_MIDDLE) {

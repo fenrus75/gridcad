@@ -14,7 +14,14 @@
 
 #include "gridcad.h"
 #include "wire.h"
+#include "contextmenu.h"
 
+void callback_select_all(class scene *scene)
+{
+	for (auto elem : scene->elements) {
+		elem->select();
+	}
+}
 
 scene::scene(std::string _name, std::string _parent)
 {
@@ -22,6 +29,8 @@ scene::scene(std::string _name, std::string _parent)
 	sizeY = 200;
 	name = name;
 	parental_name = _parent;
+	menu = new class contextmenu(this);
+	menu->add_item("Select All", callback_select_all);
 }
 
 scene::~scene(void)
