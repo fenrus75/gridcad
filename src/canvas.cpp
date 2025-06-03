@@ -185,6 +185,9 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 		dragging = NULL;
 
 		floating.clear();
+		if (active_icon)
+			active_icon->set_inactive();
+		active_icon = NULL;
 
 		x = scr_to_X(event.motion.x);
 		y = scr_to_Y(event.motion.y);
