@@ -340,6 +340,7 @@ extern void unregister_canvas(class basecanvas *canvas);
 extern void labelevent(SDL_Event &event, std::string *text);
 
 extern std::string generate_semi_uuid(void);
+extern std::string generate_wire_name(void);
 extern void populate_library(std::string directory);
 
 extern void queue_calculate(class element *element);
