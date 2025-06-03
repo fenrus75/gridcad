@@ -19,7 +19,7 @@ class contextmenu {
 public:
     contextmenu(class element *element);
     contextmenu(class scene *scene);
-    ~contextmenu(void);
+    virtual ~contextmenu(void);
 
     void add_item(std::string text, callback_fn callback);    
     void add_item(std::string text, scene_callback_fn callback);    
@@ -51,7 +51,7 @@ protected:
 class port_contextmenu : public contextmenu {
 public:
     port_contextmenu(class port *port);
-    ~port_contextmenu(void);
+    virtual ~port_contextmenu(void);
 
     void add_item(std::string text, int color, port_callback_fn callback);    
     
