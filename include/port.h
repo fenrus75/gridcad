@@ -52,7 +52,7 @@ public:
     class contextmenu *get_menu(void) { return menu;};
 	
 private:
-    class port_contextmenu *menu;
+    class port_contextmenu *menu = NULL;
     int bus_width = 0;
     void drawConnector(class canvas *canvas, float X, float Y, int cX, int cY, int type);    
     std::vector<class wire*> wires;

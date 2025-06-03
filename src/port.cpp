@@ -41,13 +41,17 @@ port::port(std::string _name, int _direction, int _bus_width)
 		menu->add_item(wire_color_name(5), 5, callback_set_color);
 		menu->add_item(wire_color_name(6), 6, callback_set_color);
 		menu->add_item(wire_color_name(7), 7, callback_set_color);
+	} else {
+		menu = NULL;
 	}
 }
 
 port::~port()
 {
-	if (menu)
+	if (menu) {
 		delete menu;
+		menu = NULL;
+	}
 	while (wires.size() > 0) {
 		class wire *wire = wires[0];
 		remove_wire(wire);
