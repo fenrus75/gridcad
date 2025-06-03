@@ -31,21 +31,23 @@ port::port(std::string _name, int _direction, int _bus_width)
 	name = _name;
 	bus_width = _bus_width;
 
-	menu = new class port_contextmenu(this);	
-
-	menu->add_item(wire_color_name(0), 0, callback_set_color);
-	menu->add_item(wire_color_name(1), 1, callback_set_color);
-	menu->add_item(wire_color_name(2), 2, callback_set_color);
-	menu->add_item(wire_color_name(3), 3, callback_set_color);
-	menu->add_item(wire_color_name(4), 4, callback_set_color);
-	menu->add_item(wire_color_name(5), 5, callback_set_color);
-	menu->add_item(wire_color_name(6), 6, callback_set_color);
-	menu->add_item(wire_color_name(7), 7, callback_set_color);
+	if (direction == PORT_OUT) {
+		menu = new class port_contextmenu(this);	
+		menu->add_item(wire_color_name(0), 0, callback_set_color);
+		menu->add_item(wire_color_name(1), 1, callback_set_color);
+		menu->add_item(wire_color_name(2), 2, callback_set_color);
+		menu->add_item(wire_color_name(3), 3, callback_set_color);
+		menu->add_item(wire_color_name(4), 4, callback_set_color);
+		menu->add_item(wire_color_name(5), 5, callback_set_color);
+		menu->add_item(wire_color_name(6), 6, callback_set_color);
+		menu->add_item(wire_color_name(7), 7, callback_set_color);
+	}
 }
 
 port::~port()
 {
-	delete menu;
+	if (menu)
+		delete menu;
 	while (wires.size() > 0) {
 		class wire *wire = wires[0];
 		remove_wire(wire);
