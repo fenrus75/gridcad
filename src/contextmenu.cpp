@@ -69,7 +69,6 @@ float Ysize(class basecanvas *canvas, std::string str, float scale)
 	
 	SDL_QueryTexture(text, NULL, NULL, &size.x, &size.y);
 	
-	printf("size.y is %i \n", size.y);
 	return size.y;
 }
 
@@ -105,8 +104,6 @@ void contextmenu::draw_at(class basecanvas *canvas, float X, float Y)
         maxX = std::max(maxX, Xsize(canvas, item->menu_text, scale));
         maxY = std::max(maxY, Ysize(canvas, item->menu_text, scale));
     }
-    printf("MaxY is %5.2f\n", maxY);
-    printf("MaxX is %5.2f\n", maxX);
     
     maxX = maxX / scale;
     maxY = maxY / scale;
