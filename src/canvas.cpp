@@ -665,9 +665,9 @@ bool canvas::handle_event(SDL_Event &event)
 					scaleY--;
 				/* need to keep the point under the cursor the same */
 				while (scr_to_X(cX) > mouseX && count++ < 1000)  
-					offsetX -= 0.2;
+					offsetX -= 0.05;
 				while (scr_to_Y(cY) > mouseY && count++ < 1000)
-					offsetY -= 0.2;
+					offsetY -= 0.05;
 			}
 			
 			break;
