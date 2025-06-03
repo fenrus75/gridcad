@@ -68,6 +68,7 @@ scene::~scene(void)
 		remove_from_calculate_queue(elem); 
 		delete elem;
 	}
+	delete menu;
 }
 
 

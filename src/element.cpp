@@ -60,6 +60,8 @@ element::~element()
     for (auto port : ports) {
         delete port;
     }
+    ports.clear();
+    delete menu;
 }
 
 void element::place(int _X, int _Y)

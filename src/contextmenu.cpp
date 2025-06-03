@@ -16,6 +16,10 @@ contextmenu::contextmenu(class scene *_scene)
 
 contextmenu::~contextmenu(void)
 {
+	for (auto item : items) {
+		delete item;
+	}
+	items.clear();
 }
 
 void contextmenu::add_item(std::string text, callback_fn callback)
@@ -210,6 +214,10 @@ port_contextmenu:: port_contextmenu(class port *_port) : contextmenu((class elem
 
 port_contextmenu::~port_contextmenu(void)
 {
+	for (auto item : items) {
+		delete item;
+	}
+	items.clear();
 }
 
 void port_contextmenu::add_item(std::string text, int color, port_callback_fn port_callback)

@@ -45,6 +45,7 @@ port::port(std::string _name, int _direction, int _bus_width)
 
 port::~port()
 {
+	delete menu;
 	while (wires.size() > 0) {
 		class wire *wire = wires[0];
 		remove_wire(wire);
