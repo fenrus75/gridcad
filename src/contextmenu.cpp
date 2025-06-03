@@ -93,7 +93,7 @@ void draw_menu_item(class basecanvas *canvas, float X, float Y, float W, float H
 	SDL_QueryTexture(text, NULL, NULL, &size.x, &size.y);
 
 	canvas->draw_image(shade, X, Y, W, H);
-	canvas->draw_text(string, X, Y, W, H);
+	canvas->draw_text_left(string, X, Y, W, H);
 }
 
 void draw_menu_item_color(class basecanvas *canvas, float X, float Y, float W, float H, std::string string, float scale, bool selected, int color)
@@ -114,7 +114,7 @@ void draw_menu_item_color(class basecanvas *canvas, float X, float Y, float W, f
 
 	canvas->draw_image(shade, X, Y, W + canvas->scale_to_X(36), H);
 	canvas->draw_box(X,Y, X + canvas->scale_to_X(36), Y + H, wire_to_color(color));
-	canvas->draw_text(string, X + canvas->scale_to_X(36), Y, W, H);
+	canvas->draw_text_left(string, X + canvas->scale_to_X(36), Y, W, H);
 }
 
 
