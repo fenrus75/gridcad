@@ -13,6 +13,26 @@ name::~name(void)
 {
 }
 
+float name::relative_cursor_pos(class canvas *canvas, std::string text)
+{
+	SDL_Point size;
+	float w,h,W = 40;
+	
+	if (text == "")
+	    return 0;
+	
+	SDL_Texture *texture = canvas->text_to_texture(text);
+	SDL_QueryTexture(texture, NULL, NULL, &size.x, &size.y);
+		
+	h = 1;
+	w = 1.0 * size.x / size.y * h;
+	if (w > W) {
+		w = W;
+		h = 1.0 * size.y / size.x * w;
+	}
+	return w;
+}
+
 
 void name::drawAt(class canvas *canvas, float X, float Y, float W)
 {
@@ -28,9 +48,12 @@ void name::drawAt(class canvas *canvas, float X, float Y, float W)
              after = "";
          };
           if (tv.tv_usec > 500000)
-             canvas->draw_text(before + "|" + after, X, Y, W, 1);
-          else
-             canvas->draw_text(before + " " + after, X, Y, W, 1);
+             canvas->draw_image("assets/lightgray.png", X + relative_cursor_pos(canvas, before), Y, 0.2, 1);
+          canvas->draw_text_left(*value, X, Y, W + 5, 1);
+
+          if (tv.tv_usec > 500000)
+             canvas->draw_text_left("|", X + relative_cursor_pos(canvas, before), Y, W + 5, 1);
+
     } else {
       canvas->draw_text(*value + " ", X, Y, W, 1);
     }
@@ -43,10 +66,7 @@ void name::handle_event(SDL_Event &event)
 	case SDL_KEYDOWN:
         	switch (event.key.keysym.sym) {
 		case SDLK_BACKSPACE:
-			if (value->size()>0) {
-			    value->pop_back();
-                            cursorpos--;
-                        }
+		    backspace();
                     break;    
                 case SDLK_0:
                 case SDLK_1:
@@ -137,7 +157,6 @@ void name::insert_char(unsigned char c)
     std::string before, after;
     char buffer[2];
     
-    printf("Len is %lu cursorpos is %u \n", value->size(), cursorpos);
     
     if (cursorpos >= value->size()) {
         *value += c;
@@ -151,4 +170,24 @@ void name::insert_char(unsigned char c)
     after = before + buffer + after;
     *value = after;
     cursorpos++;
+}
+
+void name::backspace(void)
+{
+    std::string before, after;
+    
+    
+    if (value->size() == 0 || cursorpos == 0)
+        return;
+    
+    if (cursorpos >= value->size()) {
+        value->pop_back();
+        cursorpos++;
+        return;
+    }
+    before = value->substr(0, cursorpos - 1);
+    after = value->substr(cursorpos, std::string::npos);
+    after = before + after;
+    *value = after;
+    cursorpos--;
 }

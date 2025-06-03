@@ -22,6 +22,8 @@ public:
 private:
 
     void insert_char(unsigned char c);
+    void backspace(void);
+    float relative_cursor_pos(class canvas *canvas, std::string text);
     
     std::string * value = NULL;
     unsigned int cursorpos = 0;

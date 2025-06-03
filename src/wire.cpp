@@ -24,7 +24,6 @@
 
 wire::wire(int x1, int y1, int x2, int y2, int _color)
 {
-    char buffer[128];
     X1 = x1;
     Y1 = y1;
     X2 = x2;

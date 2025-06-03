@@ -376,6 +376,25 @@ void basecanvas::draw_text(std::string text, float X, float Y, float W, float H)
 	draw_image(texture, X + (W - w)/2, Y + (H - h)/2, w, h); 
 //	SDL_DestroyTexture(texture);
 }
+void basecanvas::draw_text_left(std::string text, float X, float Y, float W, float H)
+{
+	SDL_Texture *texture;
+	double w,h;
+	SDL_Point size;
+	
+	texture = text_to_texture(text);
+	SDL_QueryTexture(texture, NULL, NULL, &size.x, &size.y);
+		
+	h = H;
+	w = 1.0 * size.x / size.y * h;
+	if (w > W) {
+		w = W;
+		h = 1.0 * size.y / size.x * w;
+	}
+		
+	draw_image(texture, X, Y + (H - h), w, h); 
+//	SDL_DestroyTexture(texture);
+}
 
 SDL_Texture *basecanvas::text_to_texture(std::string text)
 {
