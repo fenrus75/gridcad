@@ -14,6 +14,7 @@
 #include "model_dflipflop.h"
 #include "port.h"
 #include "contextmenu.h"
+#include "name.h"
 
 #include <sys/time.h>
 
@@ -29,10 +30,14 @@ model_dflipflop::model_dflipflop(float _X, float _Y)  : element(1, 1, "Flipflop"
     add_port(sizeX, 1, "Q", PORT_OUT);    
     add_port(sizeX, 2, "ǭ", PORT_OUT);    
     menu->add_item("Edit name", callback_editname);
+    
+    name_edit = new class name(&name);
 }
 
 model_dflipflop::~model_dflipflop(void)
 {
+     if (name_edit)
+        delete name_edit;
 }
 
 void model_dflipflop::drawAt(class canvas *canvas, float X, float Y, int type)
@@ -41,18 +46,8 @@ void model_dflipflop::drawAt(class canvas *canvas, float X, float Y, int type)
         canvas->draw_image("assets/dflipflop_selected.png", X, Y, sizeX, sizeY, Alpha(type));
     } else {
         canvas->draw_image("assets/dflipflop.png", X, Y, sizeX, sizeY, Alpha(type));
-        
     }
-    if (selected && single && edit_mode) {
-          struct timeval tv;
-          gettimeofday(&tv, NULL);
-          if (tv.tv_usec > 500000)
-             canvas->draw_text(name + "|", X, Y + sizeY, sizeX, 1);
-          else
-             canvas->draw_text(name + " ", X, Y + sizeY, sizeX, 1);
-    } else {
-      canvas->draw_text(name + " ", X, Y + sizeY, sizeX, 1);
-    }
+    name_edit->drawAt(canvas, X, Y + sizeY, sizeX);
 
     for (auto port : ports) {
         port->drawAt(canvas, X,Y, COLOR_WIRE_SOLID);
@@ -83,13 +78,13 @@ void model_dflipflop::handle_event(class canvas *canvas, SDL_Event &event)
 	case SDL_KEYDOWN:        
         	switch (event.key.keysym.sym) {
                 case SDLK_RETURN:
-                    edit_mode = !edit_mode;
+                    name_edit->toggle_edit_mode();
                     break;
                 }
                 break;
         }
-    if (edit_mode)
-      labelevent(event, &name);
+        
+    name_edit->handle_event(event);
 }
 
 void model_dflipflop::rotate_ports(void)

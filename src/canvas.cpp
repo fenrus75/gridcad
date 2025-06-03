@@ -322,9 +322,11 @@ bool canvas::handle_event(SDL_Event &event)
 				if (event.key.keysym.mod & KMOD_LCTRL) {
 				     icon_bar->previous();
 				} else {
-					offsetX--;
-					if (offsetX < -1)
-						offsetX = -1;
+					if (!someone_in_editmode) {
+						offsetX--;
+						if (offsetX < -1)
+							offsetX = -1;
+					}
 				}
 				break;
 					
@@ -332,9 +334,11 @@ bool canvas::handle_event(SDL_Event &event)
 				if (event.key.keysym.mod & KMOD_LCTRL) {
 				     icon_bar->next();
 				} else {
-					offsetX++;
-					if (offsetX > current_scene->sizeX + 1)
-						offsetX = current_scene->sizeX;
+					if (!someone_in_editmode) {
+						offsetX++;
+						if (offsetX > current_scene->sizeX + 1)
+							offsetX = current_scene->sizeX;
+					}
 				}
 				break;
 			case SDLK_PLUS:

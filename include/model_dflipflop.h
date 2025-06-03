@@ -3,6 +3,7 @@
 #include "gridcad.h"
 #include "value.h"
 #include "port.h"
+#include "name.h"
 
 class model_dflipflop : public element
 {
@@ -17,8 +18,8 @@ public:
     virtual void from_json(json &j) override;
     void handle_event(class canvas *canvas, SDL_Event &event);
 
-    bool in_edit_mode(void) override { return edit_mode && single && selected;};
-    void enter_edit_mode(void) override { edit_mode = true; selected = true; single = true;};
+    bool in_edit_mode(void) override { return name_edit->get_edit_mode() && selected;};
+    void enter_edit_mode(void) override { name_edit->set_edit_mode(true); selected = true; single = true;};
         
     void rotate_ports(void) override;
     int get_width(void) { return ports[0]->get_width();};
@@ -28,6 +29,6 @@ public:
 private:
     struct value value = {};
     struct value previous_clock = {};
-    bool edit_mode = false;
+    class name *name_edit = NULL;
 };
 
