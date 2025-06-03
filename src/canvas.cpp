@@ -777,13 +777,10 @@ void canvas::draw(void)
 
 	if (dragging_wire) {
 		class port *port2;
-		int color = COLOR_WIRE_INVALID;
 
 		port2 = current_scene->is_port(mouseX, mouseY);
-		if (port2)
-			color = COLOR_WIRE_SOLID;
 
-		dragging_wire->draw(this, color);
+		dragging_wire->draw(this, 0);
 	}
 
 	for (auto const elem: current_scene->elements) {
