@@ -376,7 +376,6 @@ bool wire::intersect(float targetX, float targetY)
 
 void wire::remove(void)
 {
-    printf("wire::remove for %s \n", name.c_str());
     for (auto port : ports) {
         port->remove_wire(this);
     }

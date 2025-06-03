@@ -54,7 +54,7 @@ float Xsize(class basecanvas *canvas, std::string str, float scale)
 	
 	SDL_QueryTexture(text, NULL, NULL, &size.x, &size.y);
 	
-	return canvas->scr_to_X(size.x/scale);
+	return size.x;
 }
 
 float Ysize(class basecanvas *canvas, std::string str, float scale)
@@ -70,7 +70,7 @@ float Ysize(class basecanvas *canvas, std::string str, float scale)
 	SDL_QueryTexture(text, NULL, NULL, &size.x, &size.y);
 	
 	printf("size.y is %i \n", size.y);
-	return canvas->scr_to_Y(size.y/scale);
+	return size.y;
 }
 
 void draw_menu_item(class basecanvas *canvas, float X, float Y, float W, float H, std::string string, float scale, bool selected)
@@ -90,7 +90,7 @@ void draw_menu_item(class basecanvas *canvas, float X, float Y, float W, float H
 	SDL_QueryTexture(text, NULL, NULL, &size.x, &size.y);
 
 	canvas->draw_image(shade, X, Y, W, H);
-	canvas->draw_text(string, X, Y, W, 1);
+	canvas->draw_text(string, X, Y, W, H);
 }
 
 
@@ -101,16 +101,17 @@ void contextmenu::draw_at(class basecanvas *canvas, float X, float Y)
     maxX = 0;
     maxY = 0;
 
-#if 0
     for (auto item : items) {
         maxX = std::max(maxX, Xsize(canvas, item->menu_text, scale));
         maxY = std::max(maxY, Ysize(canvas, item->menu_text, scale));
-	    printf("MaxY is %5.2f\n", maxY);
-	    printf("MaxX is %5.2f\n", maxX);
     }
-    #endif
-    maxY = 1;
-    maxX = 3.5;
+    printf("MaxY is %5.2f\n", maxY);
+    printf("MaxX is %5.2f\n", maxX);
+    
+    maxX = maxX / scale;
+    maxY = maxY / scale;
+    maxX = canvas->scale_to_X(maxX);
+    maxY = canvas->scale_to_Y(maxY);
     
     X1 = X;
     Y1 = Y;

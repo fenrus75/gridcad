@@ -173,11 +173,9 @@ class wire *port::is_wire(float X, float Y)
 
 void port::remove_wire(class wire *_wire)
 {
-	printf("Asking to remove wire %s\n", _wire->name.c_str());
 	for (unsigned int i = 0; i< wires.size(); ++i) {
 		class wire *wire = wires[i];
 		if (wire == _wire) {
-			printf("Erasing wire %s \n", _wire->name.c_str());
 			wires.erase(wires.begin() + i);
 			return;
 		}
@@ -247,12 +245,8 @@ void port::from_json(json &j)
 
 void port::remove_wires(void)
 {
-	unsigned int i = 0;
-	printf("port::remove_wires %s \n", name.c_str());
-
 	while (wires.size() > 0) {
 		auto wire = wires[0];
-		printf("port::remove_wires for %s at %i\n", wire->name.c_str(), i);
 		wire->remove();
 	}
 	wires.clear();

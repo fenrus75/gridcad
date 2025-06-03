@@ -75,6 +75,9 @@ public:
     int Y_to_scr(float Y);
     float scr_to_X(int X);
     float scr_to_Y(int Y);
+
+    float scale_to_X(int X) { return X / scaleX;};
+    float scale_to_Y(int Y) { return Y / scaleY;};
     
 
     void draw_box(float X1, float Y1, float X2, float Y2, int color, int alpha = -1);
