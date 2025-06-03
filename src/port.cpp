@@ -24,13 +24,8 @@ void callback_set_color(class port *port, int color)
 	port->push_wire_color(color);
 }
 
-port::port(std::string _name, int _direction, int _bus_width)
+void port::add_menu(void)
 {
-
-	direction = _direction;
-	name = _name;
-	bus_width = _bus_width;
-
 	if (direction == PORT_OUT) {
 		menu = new class port_contextmenu(this);	
 		menu->add_item(wire_color_name(0), 0, callback_set_color);
@@ -41,9 +36,17 @@ port::port(std::string _name, int _direction, int _bus_width)
 		menu->add_item(wire_color_name(5), 5, callback_set_color);
 		menu->add_item(wire_color_name(6), 6, callback_set_color);
 		menu->add_item(wire_color_name(7), 7, callback_set_color);
-	} else {
-		menu = NULL;
-	}
+	};
+}
+
+port::port(std::string _name, int _direction, int _bus_width)
+{
+
+	direction = _direction;
+	name = _name;
+	bus_width = _bus_width;
+
+	add_menu();
 }
 
 port::~port()
@@ -268,7 +271,7 @@ void port::from_json(json &j)
 		wire->add_port(this);
 		wire->reseat();
 	}
-
+	add_menu();
 }
 
 void port::remove_wires(void)

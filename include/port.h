@@ -50,6 +50,7 @@ public:
     void unsplice(void);
     void push_wire_color(int color);
     class contextmenu *get_menu(void) { return menu;};
+    void add_menu(void);
 	
 private:
     class port_contextmenu *menu = NULL;
