@@ -33,6 +33,14 @@ static int colors[MAX_COLOR][4] =
  {  0,   0,   0, 255},		// COLOR_ERROR_BLACK
  {  170,  170,   255, 64},		// COLOR_AREA_SELECT
  {  255,  200,   32, 64},		// COLOR_BACKGROUND_YELLOW
+ {0x8d, 0x8d, 0x8d, 255},		// COLOR_WIRE0
+ {0xf5, 0xc2, 0x2d, 255},		// COLOR_WIRE1
+ {0xe1, 0x8d, 0x92, 255},		// COLOR_WIRE2
+ {0xb4, 0x15, 0x71, 255},		// COLOR_WIRE3
+ {0xaf, 0x42, 0xe2, 255},		// COLOR_WIRE4
+ {0x62, 0x62, 0xea, 255},		// COLOR_WIRE5
+ {0x27, 0xaa, 0xc5, 255},		// COLOR_WIRE6
+ {0x4c, 0xe9, 0x8f, 255},		// COLOR_WIRE7
 };
 
 int R(int color)
@@ -86,21 +94,9 @@ int value_color(struct value *value)
 
 int wire_to_color(int color)
 {
-	switch (color) {
-	case 0: 
-		return COLOR_WIRE_MOTION;
-		break;
-	case 1: return COLOR_WIRE_INVALID;
-		break;
-	case 2: return COLOR_ERROR_WHITE;
-		break;
-	case 3: return COLOR_VALUE_RED;
-		break;
-	case 4: return COLOR_VALUE_GREEN;
-		break;
-	default:
-		return COLOR_BACKGROUND_GRID;
-	}
+	if (color >= 0 && color <= 7)
+		return COLOR_WIRE0 + color;
+	return COLOR_WIRE_MOTION;
 }
 
 std::string wire_color_name(int color) 
@@ -109,13 +105,20 @@ std::string wire_color_name(int color)
 	case 0: 
 		return "Default";
 		break;
-	case 1: return "Pink";
+	case 1: return "Yellow";
 		break;
-	case 2: return "White";
+	case 2: return "Pink";
 		break;
-	case 3: return "Red";
+	case 3: return "Purple";
 		break;
-	case 4: return "Green";
+	case 4: return "Dark Purple";
+		break;
+	case 5: 
+		return "Blue";
+		break;
+	case 6: return "Bright Blue";
+		break;
+	case 7: return "Green";
 		break;
 	default:
 		return "invalid";

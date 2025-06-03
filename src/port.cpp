@@ -38,6 +38,9 @@ port::port(std::string _name, int _direction, int _bus_width)
 	menu->add_item(wire_color_name(2), 2, callback_set_color);
 	menu->add_item(wire_color_name(3), 3, callback_set_color);
 	menu->add_item(wire_color_name(4), 4, callback_set_color);
+	menu->add_item(wire_color_name(5), 5, callback_set_color);
+	menu->add_item(wire_color_name(6), 6, callback_set_color);
+	menu->add_item(wire_color_name(7), 7, callback_set_color);
 }
 
 port::~port()
