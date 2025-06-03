@@ -287,7 +287,6 @@ public:
     void update_name(std::string _name) { name = _name;};
     void update_parental_name(std::string _name) { parental_name = _name;};
     void hover_ports(canvas *canvas);
-    virtual bool has_clk(void) { return false;}
     virtual class port *get_clk_port(void) { return nullptr;};
     void connect_clk(class port *clk);
     virtual void enter_edit_mode(void) {};

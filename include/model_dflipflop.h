@@ -22,7 +22,6 @@ public:
         
     void rotate_ports(void) override;
     int get_width(void) { return ports[0]->get_width();};
-    bool has_clk(void) override {return true;};
     void calculate(int ttl) override;
     void queued_calculate(int ttl) override;
     
