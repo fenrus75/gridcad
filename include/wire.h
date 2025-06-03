@@ -43,6 +43,7 @@ public:
     int get_width(void) { return width; };
     void set_width(int _width) { if (_width) width = _width;};
     class port * get_other_port(class port *port);
+    void push_wire_color(int color);
     
 protected:
     bool dead = false;

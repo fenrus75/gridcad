@@ -212,6 +212,7 @@ void port::to_json(json &j)
 	j["direction"] = direction;
 	j["bus_width"] = bus_width;
 	j["linked_uuid"] = linked_uuid;
+	j["color"] = color;
 	
 	j["wires"] = json::array();
 	for (i = 0; i < wires.size(); i++) {
@@ -233,6 +234,7 @@ void port::from_json(json &j)
 	direction = j["direction"];
 	bus_width = j.value("bus_width", 1);
 	linked_uuid = j.value("linked_uuid", "");
+	color = j.value("color", 0);
 	for (i = 0; i < j["wires"].size(); i++) {
 		class wire *wire;
 		wire = json_wire_factory(j["wires"][i]);
@@ -327,3 +329,11 @@ void port::unsplice(void)
 	
 }
 
+
+void port::push_wire_color(int color)
+{
+	if (!is_connector)  /* only connectors will propagate wire colors */
+		return;
+	for (auto wire : wires)
+		wire->push_wire_color(color);
+}

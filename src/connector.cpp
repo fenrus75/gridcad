@@ -31,6 +31,7 @@ connector::connector(float _X, float _Y)  : element(3, 3, "")
     Y = floorf(_Y);
 
     add_port(0, 0, "Connector", PORT_INOUT);    
+    ports[0]->is_connector = true;
     reseat();;
     menu->add_item("Join wire", splice_wire_callback);
 }

@@ -18,7 +18,8 @@ public:
     struct value value = {};
     void add_wire(class wire *wire);
     void update_value(struct value *newvalue, int ttl);
-    int direction = PORT_IN;;
+    int direction = PORT_IN;
+    bool is_connector = false;
     
     void draw(class canvas *canvas, int color);
     void draw_wires(class canvas *canva);
@@ -45,10 +46,13 @@ public:
     class element *get_linked_element(void) { return linked_element; };
     void route_wires();
     void unsplice(void);
+    void push_wire_color(int color);
+	
 private:
     int bus_width = 0;
+    int color = 0;
     void drawConnector(class canvas *canvas, float X, float Y, int cX, int cY, int type);    
     std::vector<class wire*> wires;
     std::string linked_uuid = "";
     class element *linked_element = NULL;
-};
+    };

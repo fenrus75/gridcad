@@ -532,3 +532,12 @@ class port *wire::get_other_port(class port *port)
     }
     return NULL;
 }
+
+void wire::push_wire_color(int _color)
+{
+	if (color == _color)
+		return;
+	color = _color;
+	for (auto port : ports)
+		port->push_wire_color(color);
+}
