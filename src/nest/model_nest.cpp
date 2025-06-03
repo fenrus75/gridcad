@@ -20,6 +20,7 @@
 #include <sys/time.h>
 #include <nlohmann/json.hpp>
 #include "contextmenu.h"
+#include "name.h"
 
 static float dist(float X1, float Y1, float X2, float Y2)
 {
@@ -34,20 +35,26 @@ model_nest::model_nest(float _X, float _Y) : element(_X,_Y, "SubScreen")
 	Y = floorf(_Y);    
 	_scene = new class scene(name);
 	menu->add_item("Edit name", callback_editname);
+	
+	name_edit = new class name(&name);
 }
 
 model_nest::~model_nest(void)
 {
+	delete name_edit;
 	if (canvas)
 		delete canvas;
 	else /* canvas destructor already deleted _scene, but there might not be a canvas yet */
 		delete _scene;
+		
 }
 
 
 void model_nest::drawAt(class canvas *canvas, float X, float Y, int type)
 {
 	maybe_regen_ports();
+        if (!selected)
+    	  name_edit->set_edit_mode(false);
 	if (!selected) {
 		if (icon == "") {
 			canvas->draw_image("assets/nest/nest_back.png", X, Y, sizeX, sizeY, Alpha(type));
@@ -63,16 +70,7 @@ void model_nest::drawAt(class canvas *canvas, float X, float Y, int type)
 		}
 	}
 
-	if (selected && single && edit_mode) {
-          struct timeval tv;
-          gettimeofday(&tv, NULL);
-          if (tv.tv_usec > 500000)
-             canvas->draw_text(name + "|", X, Y + sizeY, sizeX, 1);
-          else
-             canvas->draw_text(name + " ", X, Y + sizeY, sizeX, 1);
-         } else {
-     	     canvas->draw_text(name, X, Y + sizeY, sizeX, 1);
-     	 }
+	name_edit->drawAt(canvas, X, Y + sizeY, sizeX);
 
 	for (auto port: ports) {
         	port->drawAt(canvas, X, Y, type);
@@ -149,13 +147,13 @@ void model_nest::handle_event(class canvas *thiscanvas, SDL_Event &event)
 	case SDL_KEYDOWN:        
         	switch (event.key.keysym.sym) {
                 case SDLK_RETURN:
-                    edit_mode = !edit_mode;
+                    name_edit->toggle_edit_mode();
                     break;
                 }
                 break;
     }
-    if (edit_mode)
-      labelevent(event, &name);
+    if (name_edit)
+      name_edit->handle_event(event);
 }
 
 void model_nest::to_json(json &j)

@@ -18,7 +18,7 @@ public:
     virtual void from_json(json &j) override;
     void handle_event(class canvas *canvas, SDL_Event &event);
 
-    bool in_edit_mode(void) override { return name_edit->get_edit_mode() && selected;};
+    bool in_edit_mode(void) override { return name_edit->get_edit_mode() && selected && single;};
     void enter_edit_mode(void) override { name_edit->set_edit_mode(true); selected = true; single = true;};
         
     void rotate_ports(void) override;

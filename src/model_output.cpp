@@ -23,6 +23,8 @@ model_output::model_output(float _X, float _Y)  : element(1, 1, "Output")
     sizeY = 3;    
     X = floorf(_X);
     Y = floorf(_Y);
+
+    name_edit = new class name(&name);
     
     add_port(-1, 1, "Output", PORT_IN);    
     menu->add_item("Edit name", callback_editname);
@@ -30,10 +32,13 @@ model_output::model_output(float _X, float _Y)  : element(1, 1, "Output")
 
 model_output::~model_output(void)
 {
+    delete name_edit;
 }
 
 void model_output::drawAt(class canvas *canvas, float X, float Y, int type)
 {
+    if (!selected)
+      name_edit->set_edit_mode(false);
     if (selected) {
         canvas->draw_image("assets/output_base.png", X, Y, sizeX, sizeY, Alpha(type));
     } else {
@@ -49,16 +54,7 @@ void model_output::drawAt(class canvas *canvas, float X, float Y, int type)
     float dX = 0.0;
     if (ports[0]->Y == sizeY)
 	dX = 1.8;
-    if (selected && single && edit_mode) {
-          struct timeval tv;
-          gettimeofday(&tv, NULL);
-          if (tv.tv_usec > 500000)
-             canvas->draw_text(name + "|", X + dX, Y + sizeY, sizeX, 1);
-          else
-             canvas->draw_text(name + " ", X + dX, Y + sizeY, sizeX, 1);
-    } else {
-      canvas->draw_text(name + " ", X + dX, Y + sizeY, sizeX, 1);
-    }
+    name_edit->drawAt(canvas, X + dX, Y + sizeY, sizeX);
 
     if (ports[0]->value.type == VALUE_TYPE_INT) {
 	char buf[128];
@@ -95,13 +91,12 @@ void model_output::handle_event(class canvas *canvas, SDL_Event &event)
 	case SDL_KEYDOWN:        
         	switch (event.key.keysym.sym) {
                 case SDLK_RETURN:
-                    edit_mode = !edit_mode;
+                    name_edit->toggle_edit_mode();
                     break;
                 }
                 break;
         }
-    if (edit_mode)
-      labelevent(event, &name);
+    name_edit->handle_event(event);
     ports[0]->update_name(name);
 }
 

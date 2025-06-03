@@ -1,6 +1,7 @@
 #pragma once
 
 #include "gridcad.h"
+#include "name.h"
 
 class truthcanvas;
 
@@ -30,12 +31,12 @@ public:
     void calculate(int ttl) override;
     void names_to_ports(void);
     void handle_event(class canvas *canvas, SDL_Event &event) override;
-    bool in_edit_mode(void) override { return edit_mode && single && selected;};    
-    void enter_edit_mode(void) override { edit_mode = true; selected = true; single = true;};
+    bool in_edit_mode(void) override { return name_edit->get_edit_mode() && single && selected;};    
+    void enter_edit_mode(void) override { name_edit->set_edit_mode(true); selected = true; single = true;};
 private:
     class truthcanvas *canvas = NULL;
+    class name *name_edit = NULL;
 
-    bool edit_mode = false;    
     unsigned int inputs = 2;
     unsigned int outputs = 1;
     long int previous_click = -1;

@@ -14,6 +14,7 @@
 #include "model_toggle.h"
 #include "port.h"
 #include "contextmenu.h"
+#include "name.h"
 
 #include <sys/time.h>
 
@@ -26,17 +27,25 @@ model_toggle::model_toggle(float _X, float _Y)  : element(1, 1, "Input")
     value = {};
     value.valid = true;
     
+    name_edit = new class name(&name);
+    
     add_port(sizeX, 1, "Input", PORT_OUT);    
     menu->add_item("Edit name", callback_editname);
+    
 }
 
 model_toggle::~model_toggle(void)
 {
+  delete name_edit;
 }
 
 void model_toggle::drawAt(class canvas *canvas, float X, float Y, int type)
 {
     std::string icon = "";
+    
+    if (!selected)
+      name_edit->set_edit_mode(false);
+      
     if (value.boolval) {
       icon = "assets/toggle_on.png";
     } else {	
@@ -56,19 +65,8 @@ void model_toggle::drawAt(class canvas *canvas, float X, float Y, int type)
     float dX = 0;
     if (ports[0]->Y == sizeY)  /* if our port is at the bottom, we move the text by one */
 	dX = 1.2;
-    if (name != "") {
-      if (selected && single && edit_mode) {
-          struct timeval tv;
-          gettimeofday(&tv, NULL);
-          if (tv.tv_usec > 500000)
-             canvas->draw_text(name + "|", X + dX, Y + sizeY +dY, sizeX, 1);
-          else
-             canvas->draw_text(name + " ", X + dX, Y + sizeY + dY, sizeX, 1);
-      }
-      else {
-          canvas->draw_text(name + " ", X + dX, Y + sizeY + dY, sizeX, 1);
-      }
-    }
+    name_edit->drawAt(canvas,X + dX, Y + sizeY + dY, sizeX);
+
     if (ports[0]->value.type == VALUE_TYPE_INT) {
 	char buf[128];
 	std::string s;
@@ -134,13 +132,12 @@ void model_toggle::handle_event(class canvas *canvas, SDL_Event &event)
 	case SDL_KEYDOWN:        
         	switch (event.key.keysym.sym) {
                 case SDLK_RETURN:
-                    edit_mode = !edit_mode;
+                    name_edit->toggle_edit_mode();
                     break;
                 }
                 break;
         }
-    if (edit_mode)
-      labelevent(event, &name);
+    name_edit->handle_event(event);
     ports[0]->update_name(name);
 }
 

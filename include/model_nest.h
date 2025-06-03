@@ -1,7 +1,7 @@
 #pragma once
 
 #include "gridcad.h"
-
+#include "name.h"
 class nestcanvas;
 
 class model_nest : public element
@@ -20,10 +20,10 @@ public:
 
     void calculate(int ttl) override;
     void handle_event(class canvas *canvas, SDL_Event&) override;
-    bool in_edit_mode(void) override { return edit_mode && single && selected;};    
+    bool in_edit_mode(void) override { return name_edit->get_edit_mode() && single && selected;};    
     void regen_ports(void);
     
-    void enter_edit_mode(void) override { edit_mode = true; selected = true; single = true;};
+    void enter_edit_mode(void) override { name_edit->set_edit_mode(true); selected = true; single = true;};
     
     void load_scene_from_json(std::string);
     void set_icon(std::string _icon, std::string _selected) { icon = _icon; icon_selected = _selected;};
@@ -33,11 +33,11 @@ private:
     class scene *_scene = NULL;
     class canvas *canvas = NULL;
     long int previous_click = -1;  /* no save */
-    bool edit_mode = NULL; /* no save */
     std::vector<class port *> north, south, east, west; /* nosave */
     void place_port(class port *port);
     void maybe_regen_ports(void);
     uint64_t previous_generation_count = 0;
     std::string icon = "";
     std::string icon_selected = "";
+    class name *name_edit = NULL;
 };

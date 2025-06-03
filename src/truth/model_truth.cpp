@@ -63,14 +63,18 @@ model_truth::model_truth(float _X, float _Y):element(1, 1, "Truth Table")
 		names[inputs + i] = buf;
 	}
 	menu->add_item("Edit name", callback_editname);
+	name_edit = new class name(&name);
 }
 
 model_truth::~model_truth(void)
 {
+	delete name_edit;
 }
 
 void model_truth::drawAt(class canvas * canvas, float X, float Y, int type)
 {
+        if (!selected)
+           name_edit->set_edit_mode(false);
 	if (selected) {
 		canvas->draw_image("assets/model_truth/truthtable_selected.png", X, Y, sizeX, sizeY, Alpha(type));
 	} else {
@@ -88,16 +92,7 @@ void model_truth::drawAt(class canvas * canvas, float X, float Y, int type)
 	}
 
 	canvas->draw_image("assets/model_truth/truthtable_text.png", X + 0.2, Y + 0.2, sizeX - 0.4, sizeY - 0.4, Alpha(type), true);
-	if (selected && single && edit_mode) {
-        	struct timeval tv;
-        	gettimeofday(&tv, NULL);
-        	if (tv.tv_usec > 500000)
-        		canvas->draw_text(name + "|", X, Y + sizeY, sizeX, 1);
-	        else
-	        	canvas->draw_text(name + " ", X, Y + sizeY, sizeX, 1);
-	} else {
-		canvas->draw_text(name + " ", X, Y + sizeY, sizeX, 1);
-	}
+	name_edit->drawAt(canvas,X, Y + sizeY, sizeX);
 
 	hover_ports(canvas);
 
@@ -376,11 +371,10 @@ void model_truth::handle_event(class canvas *canvas, SDL_Event &event)
 	case SDL_KEYDOWN:        
         	switch (event.key.keysym.sym) {
                 case SDLK_RETURN:
-                    edit_mode = !edit_mode;
+                    name_edit->toggle_edit_mode();
                     break;
                 }
                 break;
         }
-    if (edit_mode)
-      labelevent(event, &name);
+    name_edit->handle_event(event);
 }

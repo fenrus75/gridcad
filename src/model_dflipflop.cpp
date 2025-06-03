@@ -42,6 +42,8 @@ model_dflipflop::~model_dflipflop(void)
 
 void model_dflipflop::drawAt(class canvas *canvas, float X, float Y, int type)
 {
+    if (!selected)
+      name_edit->set_edit_mode(false);
     if (selected) {
         canvas->draw_image("assets/dflipflop_selected.png", X, Y, sizeX, sizeY, Alpha(type));
     } else {
