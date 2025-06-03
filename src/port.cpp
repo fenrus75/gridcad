@@ -17,13 +17,27 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
+void callback_set_color(class port *port, int color)
+{
+	printf("Pushing color %i \n", color);
+	port->color = color;
+	port->push_wire_color(color);
+}
+
 port::port(std::string _name, int _direction, int _bus_width)
 {
 
 	direction = _direction;
 	name = _name;
 	bus_width = _bus_width;
-	
+
+	menu = new class port_contextmenu(this);	
+
+	menu->add_item(wire_color_name(0), 0, callback_set_color);
+	menu->add_item(wire_color_name(1), 1, callback_set_color);
+	menu->add_item(wire_color_name(2), 2, callback_set_color);
+	menu->add_item(wire_color_name(3), 3, callback_set_color);
+	menu->add_item(wire_color_name(4), 4, callback_set_color);
 }
 
 port::~port()
@@ -334,8 +348,8 @@ void port::unsplice(void)
 
 void port::push_wire_color(int color)
 {
-	if (!is_connector)  /* only connectors will propagate wire colors */
-		return;
+//	if (!is_connector)  /* only connectors will propagate wire colors */
+//		return;
 	for (auto wire : wires)
 		wire->push_wire_color(color);
 }

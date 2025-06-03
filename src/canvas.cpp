@@ -200,13 +200,13 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 		if (here) {
 			active_menu = here->get_menu();
 		} else {
-			class wire *wr;
-			wr = current_scene->is_wire(x, y);
-			if (!wr) {
-				class port *is_port = current_scene->is_port(x,y);
-				if (!is_port) {
-					active_menu = current_scene->get_menu();
-				}
+			class wire *wr = current_scene->is_wire(x, y);
+			class port *is_port = current_scene->is_port(x,y);
+			
+			if (is_port) {
+				active_menu = is_port->get_menu();
+			} else if (!wr) {
+				active_menu = current_scene->get_menu();
 			}			
 		}
 		if (active_menu)

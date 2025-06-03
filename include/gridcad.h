@@ -345,4 +345,7 @@ extern void run_queued_calculations(void);
 extern unsigned int SDL_timer_event;
 extern void callback_editname(class element *element);
 extern SDL_Texture *IMG_LoadTextureFromMem(SDL_Renderer *renderer, const char *filename);
+extern int wire_to_color(int color);
+extern std::string wire_color_name(int color);
+
 #endif

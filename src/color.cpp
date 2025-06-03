@@ -83,3 +83,42 @@ int value_color(struct value *value)
               return COLOR_BACKGROUND_MAIN;
       }
 }
+
+int wire_to_color(int color)
+{
+	switch (color) {
+	case 0: 
+		return COLOR_WIRE_MOTION;
+		break;
+	case 1: return COLOR_WIRE_INVALID;
+		break;
+	case 2: return COLOR_ERROR_WHITE;
+		break;
+	case 3: return COLOR_VALUE_RED;
+		break;
+	case 4: return COLOR_VALUE_GREEN;
+		break;
+	default:
+		return COLOR_BACKGROUND_GRID;
+	}
+}
+
+std::string wire_color_name(int color) 
+{
+	switch (color) {
+	case 0: 
+		return "Default";
+		break;
+	case 1: return "Pink";
+		break;
+	case 2: return "White";
+		break;
+	case 3: return "Red";
+		break;
+	case 4: return "Green";
+		break;
+	default:
+		return "invalid";
+	}
+	
+}

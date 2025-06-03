@@ -175,7 +175,7 @@ void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y
     
 }
 
-void wire::draw(class canvas *canvas, int color)
+void wire::draw(class canvas *canvas, int _color)
 {
     int prevX, prevY;
     bool first = true;
@@ -214,7 +214,7 @@ void wire::draw(class canvas *canvas, int color)
             first = false;
             continue;
         }
-        draw_snake_line(canvas, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, color, &step, &value, stepsize);
+        draw_snake_line(canvas, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, wire_to_color(color), &step, &value, stepsize);
         prevX = point.X;
         prevY = point.Y;
     }

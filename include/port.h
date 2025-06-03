@@ -1,6 +1,7 @@
 #pragma once
 #include "gridcad.h"
 #include "value.h"
+#include "contextmenu.h"
 #define PORT_IN 0
 #define PORT_OUT 1
 #define PORT_INOUT 2
@@ -20,6 +21,7 @@ public:
     void update_value(struct value *newvalue, int ttl);
     int direction = PORT_IN;
     bool is_connector = false;
+    int color = 0;
     
     void draw(class canvas *canvas, int color);
     void draw_wires(class canvas *canva);
@@ -47,10 +49,11 @@ public:
     void route_wires();
     void unsplice(void);
     void push_wire_color(int color);
+    class contextmenu *get_menu(void) { return menu;};
 	
 private:
+    class port_contextmenu *menu;
     int bus_width = 0;
-    int color = 0;
     void drawConnector(class canvas *canvas, float X, float Y, int cX, int cY, int type);    
     std::vector<class wire*> wires;
     std::string linked_uuid = "";
