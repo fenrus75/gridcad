@@ -61,6 +61,8 @@ void port::add_wire(class wire * wire)
 	if (direction == PORT_IN) {
 		update_value(&(wire->value), DEFAULT_TTL);
 	}
+	if (direction == PORT_OUT)
+		wire->push_wire_color(color);
 	if (parent)
 		parent->notify(DEFAULT_TTL);
 	wire->notify(DEFAULT_TTL);
