@@ -134,6 +134,8 @@ public:
     
     void update_window_title(void);
     float distance_from_mouse(float X, float Y);
+
+    void clear_floating(void);
          
 protected:
     bool draw_grid = false;

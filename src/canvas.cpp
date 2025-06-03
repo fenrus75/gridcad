@@ -185,7 +185,7 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 		float x, y;
 		dragging = NULL;
 
-		floating.clear();
+		clear_floating();
 		if (active_icon)
 			active_icon->set_inactive();
 		active_icon = NULL;
@@ -233,7 +233,7 @@ bool canvas::handle_event_iconarea(SDL_Event &event)
 		active_icon->set_inactive();
 	if (active_icon != this_icon && this_icon) {
 		active_icon = this_icon;
-		floating.clear();;
+		clear_floating();
 	} else {
 		if (this_icon)
 			active_icon = NULL;
@@ -250,7 +250,7 @@ bool canvas::handle_event_iconarea(SDL_Event &event)
 			}
 		}
 	} else {
-		floating.clear();
+		clear_floating();
 	}
 
 	return false;
@@ -355,7 +355,7 @@ bool canvas::handle_event(SDL_Event &event)
 				}
 				break;
 			case SDLK_ESCAPE:
-				floating.clear();
+				clear_floating();
 				active_menu = NULL;
 				if (active_icon)
 					active_icon->set_inactive();
@@ -951,4 +951,11 @@ void canvas::update_window_title(void)
 float canvas::distance_from_mouse(float X, float Y)
 {
 	return sqrtf( (X-mouseX)*(X-mouseX) + (Y-mouseY)*(Y-mouseY));
+}
+
+void canvas::clear_floating(void)
+{
+	for (auto elem : floating)
+		delete elem;
+	floating.clear();
 }
