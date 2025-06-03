@@ -23,7 +23,7 @@ University of Technology) where the local digital design department
 had created a tool called IDaSS (Integrated Design and Simulation System)
 (https://www.sciencedirect.com/science/article/abs/pii/0165607490902488)
 which allowed simultaneous design/simulation. While the big blocks 
-were placed graphically - the detailed logic was coded in a LISP dialect.
+were placed graphically - the detailed logic was coded in a smalltalk dialect.
 
 Recently I saw a set of youtube videos on the subject of digital design
 that showed a much more fancy looking way of doing the principles of IDaSS.
