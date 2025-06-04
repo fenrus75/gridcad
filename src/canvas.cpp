@@ -146,6 +146,7 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 			wr->route(current_scene);
 			wr2->route(current_scene);
 			freshsplit = true;
+			current_scene->cycle_color();
 		}
 		if (dragging)
 			dragging->start_drag(x, y);
@@ -176,6 +177,7 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 			floating.clear();
 			if (active_icon)
 				floating.push_back(active_icon->create_element());
+			current_scene->cycle_color();
 		}
 
 
@@ -495,6 +497,7 @@ bool canvas::handle_event(SDL_Event &event)
 					}
 					if (dragging->stop_drag(this))
 						current_scene->rewire_section(dragging);
+					current_scene->cycle_color();
 
 				}
 				if (dragging_port && !current_scene->is_port(x, y)) {
@@ -531,6 +534,7 @@ bool canvas::handle_event(SDL_Event &event)
 					        current_scene->add_element(_element);
 					}
 
+					current_scene->cycle_color();
 				}
 				if (dragging_port && current_scene->is_port(x, y)) {
 					class port *port2 = current_scene->is_port(x, y);

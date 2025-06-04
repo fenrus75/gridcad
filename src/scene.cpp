@@ -261,3 +261,9 @@ unsigned int scene::selected_count(void)
 	return count;
 }
 
+
+void scene::cycle_color(void)
+{
+	for (auto elem:elements)
+		elem->cycle_color();
+}

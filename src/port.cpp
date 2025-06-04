@@ -361,8 +361,19 @@ void port::unsplice(void)
 
 void port::push_wire_color(int color)
 {
-//	if (!is_connector)  /* only connectors will propagate wire colors */
-//		return;
 	for (auto wire : wires)
 		wire->push_wire_color(color);
+}
+
+
+void port::cycle_color(void)
+{
+	if (direction != PORT_OUT)
+		return;
+	if (color != 0)
+		push_wire_color(0);
+	else
+		push_wire_color(1);
+		
+	push_wire_color(color);
 }

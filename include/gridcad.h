@@ -212,6 +212,7 @@ public:
     void update_name(std::string _name) { name = _name;};
     uint64_t get_generation_count(void) { return generation_count; };
     class contextmenu *get_menu(void) { return menu; };
+    void cycle_color(void);
     
 protected:
     class contextmenu *menu = NULL;
@@ -296,6 +297,8 @@ public:
     virtual void enter_edit_mode(void) {};
     
     class contextmenu *get_menu(void) { return menu;};
+    
+    void cycle_color(void);
 
     
 protected:

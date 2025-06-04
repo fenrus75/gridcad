@@ -412,3 +412,9 @@ void element::connect_clk(class port *clk)
 		}
 	}
 }
+
+void element::cycle_color(void)
+{
+    for (auto port : ports)
+        port->cycle_color();
+}
