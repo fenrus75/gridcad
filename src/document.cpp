@@ -35,6 +35,8 @@ document::document(std::string _name)
 	class canvas *_canvas;
 	class scene *_scene;
 	
+	std::string filename;
+	
 	fill_png_maps();
 
 	name = _name;
@@ -53,9 +55,13 @@ document::document(std::string _name)
 
 	register_new_canvas(_canvas);
 	
-	if (access((name + ".json").c_str(), R_OK) == 0) {
+	filename = name;
+	if (!filename.ends_with(".json"))
+		filename = filename + ".json";
+	
+	if (access(filename.c_str(), R_OK) == 0) {
 		json j;
-		std::ifstream input((name + ".json").c_str());
+		std::ifstream input(filename.c_str());
 		input >> j;
 		_scene->from_json(j);
 	}
@@ -66,6 +72,7 @@ document::~document(void)
 {
 	class scene *_scene;
 	class canvas *_canvas = (class canvas *)canvases[0];
+	std::string filename;
 
 	_scene = _canvas->get_scene();
 
@@ -73,7 +80,10 @@ document::~document(void)
 
 	_scene->to_json(j);
 
-	std::ofstream output((name + ".json").c_str());
+	filename = name;
+	if (!filename.ends_with(".json"))
+		filename = filename + ".json";
+	std::ofstream output(filename.c_str());
 
 	output << j.dump(4);
 	output.close();
