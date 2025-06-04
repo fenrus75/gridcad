@@ -104,7 +104,8 @@ void port::update_value(struct value *newvalue, int ttl)
 	if (memcmp(&value, newvalue, sizeof(struct value)) == 0)
 		return;
 		
-	value = *newvalue;
+	value = *newvalue;	
+	value_ttl = ttl;
 
 	for (auto wire:wires) {
 		wire->update_value(newvalue, ttl -1);
@@ -113,6 +114,7 @@ void port::update_value(struct value *newvalue, int ttl)
 //	notify(ttl -1);
 	if (parent && direction != PORT_OUT)
 		parent->notify(ttl -1);
+		
 }
 
 

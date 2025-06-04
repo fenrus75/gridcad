@@ -17,6 +17,7 @@ public:
     std::string name = "";
     class element *parent = NULL;
     struct value value = {};
+    int value_ttl = 0;
     void add_wire(class wire *wire);
     void update_value(struct value *newvalue, int ttl);
     int direction = PORT_IN;

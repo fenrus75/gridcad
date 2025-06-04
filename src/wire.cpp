@@ -278,7 +278,7 @@ void wire::reseat(void)
         X2 = ports[1]->screenX;
         Y2 = ports[1]->screenY;
         
-        if (ports[0]->value_ttl > ports[1]->value_ttl) {
+        if (ports[0]->value_ttl > ports[1]->value_ttl && ports[0]->value_ttl && ports[1]->value_ttl) {
             printf("Flip wires\n");
             int tmpX, tmpY;
             tmpX = X1; tmpY = Y1;
