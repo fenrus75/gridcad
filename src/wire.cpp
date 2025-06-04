@@ -244,6 +244,9 @@ void wire::route(class scene *scene)
         if (floorf(port->screenX) == X1 && floorf(port->screenY) == Y1 && port->direction == PORT_OUT) {
             std::reverse(points->begin(), points->end());
         }
+        if (floorf(port->screenX) == X2 && floorf(port->screenY) == Y2 && port->direction == PORT_IN) {
+            std::reverse(points->begin(), points->end());
+        }
     }
     being_routed = false;
 }
@@ -274,6 +277,16 @@ void wire::reseat(void)
     if (ports.size() > 1) {
         X2 = ports[1]->screenX;
         Y2 = ports[1]->screenY;
+        
+        if (ports[0]->value_ttl > ports[1]->value_ttl) {
+            printf("Flip wires\n");
+            int tmpX, tmpY;
+            tmpX = X1; tmpY = Y1;
+            X1 = X2;
+            Y1 = Y2;
+            X2 = tmpX;
+            Y2 = tmpY;
+        }
     }
 }
 
