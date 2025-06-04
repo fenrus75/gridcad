@@ -6,7 +6,7 @@
 class wire : public base
 {
 public:
-    wire(int x1, int y1, int x2, int y2, int _color = COLOR_WIRE_SOLID);
+    wire(int x1, int y1, int x2, int y2, int _color = 0);
     virtual ~wire(void);
 
     virtual std::string class_id(void) { return "wire:";};
