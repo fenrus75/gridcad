@@ -54,6 +54,7 @@ public:
     void add_menu(void);
     
     void cycle_color(void);
+    void reroute_all_wires(void);
 	
 private:
     class port_contextmenu *menu = NULL;

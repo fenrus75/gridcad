@@ -50,6 +50,11 @@ void callback_autoclock(class scene *scene)
 	}
 }
 
+void callback_reroute(class scene *scene)
+{
+	scene->reroute_all_wires();
+}
+
 scene::scene(std::string _name, std::string _parent)
 {
 	sizeX = 200;
@@ -60,6 +65,7 @@ scene::scene(std::string _name, std::string _parent)
 	menu->add_item("Select All", callback_select_all);
 	menu->add_item("Fit to Screen", callback_fit_to_screen);
 	menu->add_item("Connect clocks", callback_autoclock);
+	menu->add_item("Reroute wires", callback_reroute);
 }
 
 scene::~scene(void)
@@ -267,3 +273,10 @@ void scene::cycle_color(void)
 	for (auto elem:elements)
 		elem->cycle_color();
 }
+
+void scene::reroute_all_wires(void)
+{
+	for (auto elem:elements)
+		elem->reroute_all_wires();
+}
+

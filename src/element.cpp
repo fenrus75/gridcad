@@ -418,3 +418,9 @@ void element::cycle_color(void)
     for (auto port : ports)
         port->cycle_color();
 }
+
+void element::reroute_all_wires(void)
+{
+    for (auto port : ports)
+        port->reroute_all_wires();
+}

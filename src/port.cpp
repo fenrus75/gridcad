@@ -391,3 +391,9 @@ void port::cycle_color(void)
 		wire->update_value(&value, DEFAULT_TTL);
 	}
 }
+
+void port::reroute_all_wires(void)
+{
+	for (auto wire : wires)
+		wire->redo_wires();
+}

@@ -213,6 +213,7 @@ public:
     uint64_t get_generation_count(void) { return generation_count; };
     class contextmenu *get_menu(void) { return menu; };
     void cycle_color(void);
+    void reroute_all_wires(void);
     
 protected:
     class contextmenu *menu = NULL;
@@ -299,6 +300,7 @@ public:
     class contextmenu *get_menu(void) { return menu;};
     
     void cycle_color(void);
+    void reroute_all_wires(void);
 
     
 protected:
