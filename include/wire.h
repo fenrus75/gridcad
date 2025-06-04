@@ -44,6 +44,7 @@ public:
     void set_width(int _width) { if (_width) width = _width;};
     class port * get_other_port(class port *port);
     void push_wire_color(int color);
+    int get_color(void) { return color; };
     
 protected:
     bool dead = false;

@@ -354,6 +354,7 @@ void port::unsplice(void)
 	} else {
 		printf("NO P1\n");
 	}
+	w3->push_wire_color(w1->get_color());
 	w1->remove();
 	w2->remove();
 	w3->reseat();

@@ -409,6 +409,7 @@ class wire *wire::split(void)
         ports.erase(ports.begin() + 0);
     }
     wr->reseat();
+    wr->push_wire_color(color);
     reseat();
     
     return wr;
