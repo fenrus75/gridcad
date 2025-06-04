@@ -139,7 +139,10 @@ void wiregrid::add_soft_cost(int x, int y, double extra)
         return;
     if (y < 0 || y >= height)
         return;
-    grid[y][x].extra_score += extra;
+    if (extra >= 0)
+	    grid[y][x].extra_score += extra;
+    else
+	    grid[y][x].extra_score = std::min(extra, grid[y][x].extra_score);
 
     /* negative values are allowed to encourage parallel routing etc -- but need to
        be clipped to some relatively small amount or the algorithm becomes unstable
