@@ -240,18 +240,20 @@ void wire::route(class scene *scene)
 //    printf("----\n");
     delete(grid);
 
+    bool want_reverse = false;
+	
     for (auto port : ports) {
         if (floorf(port->screenX) == X1 && floorf(port->screenY) == Y1 && port->direction == PORT_OUT) {
+	    want_reverse = true;
             printf("reverse out\n");
-            std::reverse(points->begin(), points->end());
         }
-#if  0
-        else if (floorf(port->screenX) == X2 && floorf(port->screenY) == Y2 && port->direction == PORT_IN) {
+        if (floorf(port->screenX) == X2 && floorf(port->screenY) == Y2 && port->direction == PORT_IN) {
             printf("reverse in\n");
-            std::reverse(points->begin(), points->end());
+	    want_reverse = true;
         }
-#endif
     }
+    if (want_reverse)
+            std::reverse(points->begin(), points->end());
     being_routed = false;
 }
 
