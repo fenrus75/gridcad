@@ -370,10 +370,19 @@ void port::cycle_color(void)
 {
 	if (direction != PORT_OUT)
 		return;
+		
 	if (color != 0)
 		push_wire_color(0);
 	else
 		push_wire_color(1);
 		
 	push_wire_color(color);
+	value.boolval = !value.boolval;
+	for (auto wire:wires) {
+		wire->update_value(&value, 50);
+	}
+	value.boolval = !value.boolval;
+	for (auto wire:wires) {
+		wire->update_value(&value, DEFAULT_TTL);
+	}
 }
