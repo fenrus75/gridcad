@@ -140,6 +140,8 @@ void wiregrid::add_soft_cost(int x, int y, double extra)
     if (y < 0 || y >= height)
         return;
     grid[y][x].extra_score += extra;
+    if (grid[y][x].extra_score < -0.1)
+	grid[y][x].extra_score = -0.1;
 }
 
 /*

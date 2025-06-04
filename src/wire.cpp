@@ -475,6 +475,14 @@ static void grid_line(class wiregrid *grid, float x1, float y1, float x2, float 
         while (dist(x1,y1,x2,y2) > 1/10.0) {
             if (grid->get_soft_cost(x1, y1) < 0.001)
                 grid->add_soft_cost(x1, y1, 0.25);
+            if (grid->get_soft_cost(x1 - 1, y1) < 0.001)
+                grid->add_soft_cost(x1 - 1, y1, -0.05);
+            if (grid->get_soft_cost(x1 + 1, y1) < 0.001)
+                grid->add_soft_cost(x1 + 1, y1, -0.05);
+            if (grid->get_soft_cost(x1, y1 - 1) < 0.001)
+                grid->add_soft_cost(x1, y1 - 1, -0.05);
+            if (grid->get_soft_cost(x1, y1 + 1) < 0.001)
+                grid->add_soft_cost(x1, y1 + 1, -0.05);
             x1 += dx;
             y1 += dy;
         }
