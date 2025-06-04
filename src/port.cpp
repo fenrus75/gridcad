@@ -371,6 +371,9 @@ void port::cycle_color(void)
 	if (direction != PORT_OUT)
 		return;
 		
+	if (value.is_clock)
+		return;
+		
 	if (color != 0)
 		push_wire_color(0);
 	else
