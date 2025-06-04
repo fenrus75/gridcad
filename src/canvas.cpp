@@ -497,7 +497,6 @@ bool canvas::handle_event(SDL_Event &event)
 					}
 					if (dragging->stop_drag(this))
 						current_scene->rewire_section(dragging);
-					current_scene->cycle_color();
 
 				}
 				if (dragging_port && !current_scene->is_port(x, y)) {
