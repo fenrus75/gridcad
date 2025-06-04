@@ -242,11 +242,15 @@ void wire::route(class scene *scene)
 
     for (auto port : ports) {
         if (floorf(port->screenX) == X1 && floorf(port->screenY) == Y1 && port->direction == PORT_OUT) {
+            printf("reverse out\n");
             std::reverse(points->begin(), points->end());
         }
-        if (floorf(port->screenX) == X2 && floorf(port->screenY) == Y2 && port->direction == PORT_IN) {
+#if  0
+        else if (floorf(port->screenX) == X2 && floorf(port->screenY) == Y2 && port->direction == PORT_IN) {
+            printf("reverse in\n");
             std::reverse(points->begin(), points->end());
         }
+#endif
     }
     being_routed = false;
 }
@@ -277,7 +281,7 @@ void wire::reseat(void)
     if (ports.size() > 1) {
         X2 = ports[1]->screenX;
         Y2 = ports[1]->screenY;
-        
+
         if (ports[0]->value_ttl > ports[1]->value_ttl && ports[0]->value_ttl && ports[1]->value_ttl) {
             printf("Flip wires\n");
             int tmpX, tmpY;
