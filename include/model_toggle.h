@@ -24,6 +24,7 @@ public:
     void enter_edit_mode(void) override { name_edit->set_edit_mode(true); selected = true; single = true;};    
     void rotate_ports(void) override;
     int get_width(void) { return ports[0]->get_width();};
+    void set_width(int width) { ports[0]->set_width(width);};
 private:
     struct value value = {};
     class name *name_edit = NULL;

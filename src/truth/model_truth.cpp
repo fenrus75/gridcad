@@ -351,7 +351,6 @@ void model_truth::calculate(int ttl)
 void model_truth::names_to_ports(void)
 {
 	unsigned int x;
-	printf("Updating names\n");
 	for (x = 0; x < names.size(); x++)
 		ports[x]->update_name(names[x]);
 }

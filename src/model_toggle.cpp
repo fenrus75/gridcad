@@ -18,6 +18,24 @@
 
 #include <sys/time.h>
 
+
+void callback_wire1(class element *element)
+{
+  class model_toggle *toggle = (class model_toggle *) element;
+  toggle->set_width(1);  
+}
+void callback_bus4(class element *element)
+{
+  class model_toggle *toggle = (class model_toggle *) element;
+  toggle->set_width(4);  
+}
+
+void callback_bus8(class element *element)
+{
+  class model_toggle *toggle = (class model_toggle *) element;
+  toggle->set_width(8);  
+}
+
 model_toggle::model_toggle(float _X, float _Y)  : element(1, 1, "Input")
 {
     sizeX = 3;
@@ -31,6 +49,9 @@ model_toggle::model_toggle(float _X, float _Y)  : element(1, 1, "Input")
     
     add_port(sizeX, 1, "Input", PORT_OUT);    
     menu->add_item("Edit name", callback_editname);
+    menu->add_item("Set as single wire", callback_wire1);
+    menu->add_item("Set as 4 bit bus", callback_bus4);
+    menu->add_item("Set as 8 bit bus", callback_bus8);
     
 }
 
