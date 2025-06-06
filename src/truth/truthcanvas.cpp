@@ -72,15 +72,25 @@ static int hdist(std::vector<char> A, std::vector<char> B)
 	
 	return dist;
 }
+static int hdist_strict(std::vector<char> A, std::vector<char> B)
+{
+	unsigned int x;
+	int dist = 0;
+	
+	for (x = 0; x < A.size(); x++) {
+		if (A[x] !=  B[x])
+			dist++;
+	}
+	
+	return dist;
+}
 
 static int hdist_first(std::vector<char> A, std::vector<char> B)
 {
 	unsigned int x;
 	
 	for (x = 0; x < A.size(); x++) {
-		if (A[x]=='0' &&  B[x]=='1')
-			return x;;
-		if (A[x]=='1' &&  B[x]=='0')
+		if (A[x] != B[x])
 			return x;
 	}
 	return -1;
@@ -102,7 +112,7 @@ void truthcanvas::do_canX(unsigned int Y)
      for (y = 0; y < canX.size(); y++) {
          if (y == Y)
             continue;
-         if (hdist(element->values[y], element->values[Y]) == 1) {
+         if (hdist_strict(element->values[y], element->values[Y]) == 1) {
             int off = hdist_first(element->values[y], element->values[Y]);
             if (off >=0) {
                 canX[Y][off] = true;

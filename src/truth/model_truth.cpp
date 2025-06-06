@@ -281,6 +281,18 @@ static int hdist(std::vector<char> A, std::vector<char> B)
 	
 	return dist;
 }
+static int hdist_strict(std::vector<char> A, std::vector<char> B)
+{
+	unsigned int x;
+	int dist = 0;
+	
+	for (x = 0; x < A.size(); x++) {
+		if (A[x] !=  B[x])
+			dist++;
+	}
+	
+	return dist;
+}
 
 
 void model_truth::turn_to_X(unsigned int X, unsigned int Y)
@@ -290,12 +302,14 @@ void model_truth::turn_to_X(unsigned int X, unsigned int Y)
 	if (values[Y][X] == 'X')
 		return;
 
+	
 	values[Y][X] = 'X';
+
 	/* at this point there is another line that has a hamming distance of 0 -- which we need to delete */
-	for (y = 0; y < values[Y].size(); y++) {
+	for (y = 0; y < values.size(); y++) {
 		if (y == Y)
 			continue;
-		if (hdist(values[y], values[Y]) == 0) {
+		if (hdist_strict(values[y], values[Y]) == 1) {
 			values.erase(values.begin() + y);
 			break;
 		}
