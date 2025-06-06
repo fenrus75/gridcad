@@ -62,8 +62,8 @@ scene::scene(std::string _name, std::string _parent)
 	name = name;
 	parental_name = _parent;
 	menu = new class contextmenu(this);
-	menu->add_item("Select All", callback_select_all);
 	menu->add_item("Fit to Screen", callback_fit_to_screen);
+	menu->add_item("Select All", callback_select_all);
 	menu->add_item("Connect clocks", callback_autoclock);
 	menu->add_item("Reroute wires", callback_reroute);
 }
