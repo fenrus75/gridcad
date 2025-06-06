@@ -93,9 +93,8 @@ void model_toggle::drawAt(class canvas *canvas, float X, float Y, int type)
 
     if (ports[0]->get_width() > 1 || value.type == VALUE_TYPE_INT) {
 	char buf[128];
-	std::string s;
 	sprintf(buf, "%li", ports[0]->value.intval);
-	s = buf;
+	strvalue = buf;
 //	canvas->draw_text(s, X+ 0.6, Y + 0.6, 1.8,1.8);
 	value_edit->drawAt(canvas, X + 0.6, Y + 1, 1.8);
     }
