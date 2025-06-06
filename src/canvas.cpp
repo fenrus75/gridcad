@@ -67,6 +67,7 @@ canvas::canvas(class scene *_scene)
 
 canvas::~canvas(void)
 {
+	printf("Canvas destructor\n");
 	unregister_canvas(this);
 	SDL_DestroyRenderer(renderer);
 	renderer = NULL;

@@ -35,6 +35,10 @@ truthcanvas::truthcanvas(class model_truth *_element)
 
 truthcanvas::~truthcanvas(void)
 {
+	unregister_canvas(this);
+	SDL_DestroyRenderer(renderer);
+	renderer = NULL;
+	SDL_DestroyWindow(window);
 }
 
 void truthcanvas::clear_widgets(void)

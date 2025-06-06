@@ -69,6 +69,7 @@ model_truth::model_truth(float _X, float _Y):element(1, 1, "Truth Table")
 model_truth::~model_truth(void)
 {
 	delete name_edit;
+	delete canvas;
 }
 
 void model_truth::drawAt(class canvas * canvas, float X, float Y, int type)
