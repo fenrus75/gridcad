@@ -136,7 +136,7 @@ bool model_toggle::mouse_select(float _X, float _Y)
       value.is_clock = false;
       value.intval = value.boolval;
     } else {
-      printf("GOT HERE\n");
+      value.type = VALUE_TYPE_INT;
       value_edit->toggle_edit_mode();
     }
     
