@@ -46,6 +46,8 @@ model_toggle::model_toggle(float _X, float _Y)  : element(1, 1, "Input")
     value.valid = true;
     
     name_edit = new class name(&name);
+    value_edit = new class name(&strvalue);
+    value_edit->want_numbers_only();
     
     add_port(sizeX, 1, "Input", PORT_OUT);    
     menu->add_item("Edit name", callback_editname);
@@ -58,6 +60,7 @@ model_toggle::model_toggle(float _X, float _Y)  : element(1, 1, "Input")
 model_toggle::~model_toggle(void)
 {
   delete name_edit;
+  delete value_edit;
 }
 
 void model_toggle::drawAt(class canvas *canvas, float X, float Y, int type)
@@ -88,12 +91,13 @@ void model_toggle::drawAt(class canvas *canvas, float X, float Y, int type)
 	dX = 1.2;
     name_edit->drawAt(canvas,X + dX, Y + sizeY + dY, sizeX);
 
-    if (ports[0]->value.type == VALUE_TYPE_INT) {
+    if (ports[0]->get_width() > 1 || value.type == VALUE_TYPE_INT) {
 	char buf[128];
 	std::string s;
 	sprintf(buf, "%li", ports[0]->value.intval);
 	s = buf;
-	canvas->draw_text(s, X+ 0.6, Y + 0.6, 1.8,1.8);
+//	canvas->draw_text(s, X+ 0.6, Y + 0.6, 1.8,1.8);
+	value_edit->drawAt(canvas, X + 0.6, Y + 1, 1.8);
     }
 
     for (auto port : ports) {
@@ -106,6 +110,7 @@ void model_toggle::drawAt(class canvas *canvas, float X, float Y, int type)
 
 void model_toggle::update_value(struct value *newvalue, int ttl)
 {
+    char buffer[128];
     if (!newvalue->valid)
       return;
     if (ttl <= 1)
@@ -113,6 +118,8 @@ void model_toggle::update_value(struct value *newvalue, int ttl)
     value = *newvalue;
     ports[0]->update_value(&value, ttl - 1);
     notify(ttl - 1);
+    sprintf(buffer, "%lu", value.intval);
+    strvalue = buffer;
 }
 
 bool model_toggle::mouse_select(float _X, float _Y)
@@ -123,10 +130,17 @@ bool model_toggle::mouse_select(float _X, float _Y)
     
     if ( (_X * _X) + (_Y * _Y) > 1.0)  /* click is outside center button */
          return false;
-    value.boolval = !value.boolval;
-    value.valid = true;
-    value.is_clock = false;
-    value.intval = value.boolval;
+         
+    if (ports[0]->get_width() <= 1) {    
+      value.boolval = !value.boolval;
+      value.valid = true;
+      value.is_clock = false;
+      value.intval = value.boolval;
+    } else {
+      printf("GOT HERE\n");
+      value_edit->toggle_edit_mode();
+    }
+    
     
     update_value(&value, DEFAULT_TTL);
     run_queued_calculations();
@@ -147,6 +161,18 @@ void model_toggle::from_json(json &j)
 
 void model_toggle::handle_event(class canvas *canvas, SDL_Event &event)
 {
+    if (value_edit->get_edit_mode()) {
+      char buffer[128];
+      sprintf(buffer, "%lu", value.intval);
+      strvalue = buffer;
+      value_edit->handle_event(event);
+      if (strvalue != "")
+        value.intval = std::stoi(strvalue);
+      else 
+        value.intval = 0;
+      update_value(&value, DEFAULT_TTL);
+//      printf("strvalue is %s \n", strvalue.c_str());
+    }
     if (!selected || !single)
         return;
     switch (event.type) {

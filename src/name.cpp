@@ -130,6 +130,8 @@ void name::handle_event(SDL_Event &event)
                 case SDLK_x:
                 case SDLK_y:
                 case SDLK_z:
+                    if (numbers_only)
+                        break;
                     c= 'a';
                     if (event.key.keysym.mod & (KMOD_LSHIFT))
                         c = 'A';
@@ -146,6 +148,7 @@ void name::handle_event(SDL_Event &event)
                         cursorpos--;
                     break;
                 case SDLK_RETURN:
+                    toggle_edit_mode();
                     break;
                 }
                 break;
@@ -191,3 +194,5 @@ void name::backspace(void)
     *value = after;
     cursorpos--;
 }
+
+

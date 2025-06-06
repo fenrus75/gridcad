@@ -62,20 +62,6 @@ static float calcX(int x, int inputs)
         return (1.9 + x * 5);
 }
 
-static int hdist(std::vector<char> A, std::vector<char> B)
-{
-	unsigned int x;
-	int dist = 0;
-	
-	for (x = 0; x < A.size(); x++) {
-		if (A[x]=='0' &&  B[x]=='1')
-			dist++;
-		if (A[x]=='1' &&  B[x]=='0')
-			dist++;
-	}
-	
-	return dist;
-}
 static int hdist_strict(std::vector<char> A, std::vector<char> B)
 {
 	unsigned int x;
