@@ -10,5 +10,6 @@ public:
     virtual ~model_xor(void);
     virtual std::string class_id(void) { return "model_xor:";};    
     void calculate(int ttl) override;
+    std::string get_verilog_operand(void) override { return "^"; };
 };
 
