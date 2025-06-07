@@ -98,9 +98,9 @@ std::string model_logic2::get_verilog_main(void)
     ports[2]->collect_wires(&wiremap2);
     
     if (wiremap1.size() < 1)
-        wiremap1.push_back("0");
+        wiremap1.push_back("1'0");
     if (wiremap0.size() < 1)
-        wiremap0.push_back("0");
+        wiremap0.push_back("1'0");
     
     for (auto name : wiremap2) {
         s = "assign "  + name + " = " +wiremap0[0] + " " + get_verilog_operand() + " " + wiremap1[0] + ";\n";

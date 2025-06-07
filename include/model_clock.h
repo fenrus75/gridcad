@@ -19,6 +19,7 @@ public:
     void handle_event(class canvas *canvas, SDL_Event &event);
     void rotate_ports(void);
     class port *get_clk_port(void) override { return ports[0];};
+    std::string get_verilog_main(void) override;
     
 private:
 };

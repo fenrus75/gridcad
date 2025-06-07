@@ -130,6 +130,19 @@ struct value model_clock::get_value(void)
     return ports[0]->value;
 }
 
+std::string model_clock::get_verilog_main(void)
+{
+    std::string s = "";
+    std::vector<std::string> wiremap;
+    
+    ports[0]->collect_wires(&wiremap);
+    
+    for (auto wr : wiremap) {
+      s = s + "assign " + wr + " = " + get_verilog_name() + ";\n";
+    }
+    
+    return s;
+}
 
 
 struct value global_clock = {};

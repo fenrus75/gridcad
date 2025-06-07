@@ -23,6 +23,8 @@ public:
     void enter_edit_mode(void) override { name_edit->set_edit_mode(true); selected = true; single = true;};    
     void rotate_ports(void) override;
     int get_width(void) { return ports[0]->get_width();};
+    std::string get_verilog_main(void) override;
+
 private:
     struct value value = {};
     class name *name_edit = NULL;
