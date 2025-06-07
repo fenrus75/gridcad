@@ -13,7 +13,7 @@ public:
     void drawAt(class canvas *canvas, float X, float Y, int type) override;
     
     void calculate(int ttl) override;
-//    void rotate_ports(void) override;
+    std::string get_verilog_main(void) override;
 
 protected:
     struct value value = {};
