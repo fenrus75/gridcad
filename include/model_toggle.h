@@ -25,6 +25,7 @@ public:
     void rotate_ports(void) override;
     int get_width(void) { return ports[0]->get_width();};
     void set_width(int width) { ports[0]->set_width(width); if (width == 1) value.type = VALUE_TYPE_BOOL; else value.type = VALUE_TYPE_INT;};
+    std::string get_verilog_main(void) override;
 private:
     std::string strvalue = "";
     struct value value = {};
