@@ -97,6 +97,22 @@ void port::add_wire(class wire * wire)
 
 void port::update_value(struct value *newvalue, int ttl)
 {
+	unsigned int best_dist = INT_MAX;
+
+	if (direction == PORT_OUT) {
+		for (auto wire:wires)
+			wire->set_distance_from_outport(0);
+	} else {
+		for (auto wire:wires)
+			if (wire->get_distance_from_outport() < best_dist)
+				best_dist = wire->get_distance_from_outport();
+			
+		for (auto wire:wires)
+			wire->set_distance_from_outport(best_dist + 1);
+	}
+		
+
+		
 	if (ttl <= 0)
 		return;
 	if (!newvalue->valid)
@@ -371,8 +387,14 @@ void port::push_wire_color(int color)
 
 void port::cycle_color(void)
 {
+	for (auto wire:wires)
+		wire->clear_distance_from_outport();
+
 	if (direction != PORT_OUT)
 		return;
+		
+	for (auto wire:wires)
+		wire->set_distance_from_outport(0);
 		
 	if (value.is_clock)
 		return;
@@ -390,7 +412,7 @@ void port::cycle_color(void)
 	value.boolval = !value.boolval;
 	for (auto wire:wires) {
 		wire->update_value(&value, DEFAULT_TTL);
-	}
+	}	
 }
 
 void port::reroute_all_wires(void)
@@ -404,6 +426,15 @@ void port::collect_wires(std::map<std::string, std::string> *wiremap)
 	for (auto wire : wires) {
 		if (wiremap->find(wire->name) == wiremap->end()) {
 			(*wiremap)[wire->name] = wire->get_verilog_decl();
+		}
+	}
+}
+
+void port::collect_wires(std::map<std::string, unsigned int> *wiremap)
+{
+	for (auto wire : wires) {
+		if (wiremap->find(wire->name) == wiremap->end()) {
+			(*wiremap)[wire->get_verilog_name()] = wire->get_distance_from_outport();
 		}
 	}
 }

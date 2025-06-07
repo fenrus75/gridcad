@@ -427,6 +427,7 @@ void wire::to_json(json &j)
     j["Y2"] = Y2;
     j["color"] = color;
     j["width"] = width;
+    j["distance_from_outport"] = distance_from_outport;
     if (points)
         j["points"] = *points;
 }    
@@ -441,6 +442,7 @@ void wire::from_json(json &j)
     Y2 = j["Y2"];
     color = j["color"];
     width = j.value("width", 0);
+    distance_from_outport = j.value("distance_from_outport", INT_MAX);
     if (j.contains("points")) {
         points =  new std::vector<struct waypoint>;
         *points = j["points"];
@@ -580,6 +582,7 @@ std::string wire::get_verilog_name(void)
 {
     std::string s = name;
     std::replace(s.begin(), s.end(), '-', '_');
+    s = s + std::to_string(distance_from_outport);
     return s;
     
 }

@@ -80,3 +80,27 @@ void connector::unsplice(void)
 {
     ports[0]->unsplice();
 }
+
+std::string connector::get_verilog_main(void)
+{
+    std::string s = "";
+    std::map<std::string, unsigned int> wiremap;
+    std::string inwire = "";
+    unsigned int best = INT_MAX;
+    
+    ports[0]->collect_wires(&wiremap);
+    
+    for (const auto& pair : wiremap) {
+      if (pair.second < best) {
+        best = pair.second;
+        inwire = pair.first;
+      }
+    }
+
+    for (const auto& pair : wiremap) {
+      if (pair.first != inwire)
+        s = s + "assign " + pair.first + " = " + inwire + ";\n";
+    }
+    
+    return s;
+}

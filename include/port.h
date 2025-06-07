@@ -57,6 +57,7 @@ public:
     void reroute_all_wires(void);
     void collect_wires(std::map<std::string, std::string> *wiremap);
     void collect_wires(std::vector<std::string> *wiremap);
+    void collect_wires(std::map<std::string, unsigned int> *wiremap);
 	
 private:
     class port_contextmenu *menu = NULL;

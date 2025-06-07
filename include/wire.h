@@ -50,10 +50,15 @@ public:
     
     std::string get_verilog_decl(void);
     
+    void clear_distance_from_outport(void) { distance_from_outport = INT_MAX;};
+    unsigned int get_distance_from_outport(void) { return distance_from_outport;};
+    void set_distance_from_outport(unsigned int dist) { if (dist < distance_from_outport) distance_from_outport = dist;};
+    
 protected:
     bool dead = false;
     bool selected = false;
     bool being_routed = false; /* not saved in json */
+    unsigned int distance_from_outport = INT_MAX;
     std::vector<class port *> ports;
     int X1 = 0, Y1 = 0, X2 = 0, Y2 = 0;
     int color = 0;
