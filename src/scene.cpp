@@ -351,6 +351,10 @@ std::string scene::verilog_main(void)
 	
 	s += "endmodule\n\n";
 	
+
+	for (auto elem : elements) {
+		s = s + elem->get_verilog_modules();
+	}	
 	
 	return s;
 }

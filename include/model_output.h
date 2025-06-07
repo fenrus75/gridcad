@@ -24,7 +24,7 @@ public:
     void rotate_ports(void) override;
     int get_width(void) { return ports[0]->get_width();};
     std::string get_verilog_main(void) override;
-
+    std::string get_verilog_width(void) override;
 private:
     struct value value = {};
     class name *name_edit = NULL;
