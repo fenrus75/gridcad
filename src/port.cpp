@@ -407,3 +407,10 @@ void port::collect_wires(std::map<std::string, std::string> *wiremap)
 		}
 	}
 }
+
+void port::collect_wires(std::vector<std::string> *wiremap)
+{
+	for (auto wire : wires) {
+		wiremap->push_back(wire->get_verilog_name());
+	}
+}

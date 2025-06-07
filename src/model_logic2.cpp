@@ -87,3 +87,24 @@ void model_logic2::rotate_ports(void)
     if (angle < 0)
 	angle += 360;
 }
+
+std::string model_logic2::get_verilog_main(void)
+{
+    std::string s = "";
+    std::vector<std::string> wiremap0, wiremap1, wiremap2;
+    
+    ports[0]->collect_wires(&wiremap0);
+    ports[1]->collect_wires(&wiremap1);
+    ports[2]->collect_wires(&wiremap2);
+    
+    if (wiremap1.size() < 1)
+        wiremap1.push_back("0");
+    if (wiremap0.size() < 1)
+        wiremap0.push_back("0");
+    
+    for (auto name : wiremap2) {
+        s = "assign "  + name + " = " +wiremap0[0] + " " + get_verilog_operand() + " " + wiremap1[0] + ";\n";
+    }
+    
+    return s;
+}

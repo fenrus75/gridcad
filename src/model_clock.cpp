@@ -47,7 +47,7 @@ void set_timer(void)
 }
 
 
-model_clock::model_clock(float _X, float _Y)  : element(1, 1, "Output")
+model_clock::model_clock(float _X, float _Y)  : element(1, 1, "clk")
 {
     sizeX = 3;
     sizeY = 3;    

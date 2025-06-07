@@ -315,6 +315,18 @@ std::string scene::verilog_main(void)
 			first = false;
 			s += "input " + elem->get_verilog_name() + elem->get_verilog_width();
 		}
+		if (elem->class_id() == "model_clock:") {
+			if (!first)
+				s += ", ";
+			first = false;
+			s += "input " + elem->get_verilog_name() + elem->get_verilog_width();
+		}
+		if (elem->class_id() == "model_output:") {
+			if (!first)
+				s += ", ";
+			first = false;
+			s += "output " + elem->get_verilog_name() + elem->get_verilog_width();
+		}
 	}	
 	s += ");\n\n";
 	
@@ -329,7 +341,11 @@ std::string scene::verilog_main(void)
 		s = s +  pair.second + "\n";
 	}
 	
+	s = s + "\n";
 	
+	for (auto elem : elements) {
+		s = s + elem->get_verilog_main();
+	}	
 	
 	
 	
