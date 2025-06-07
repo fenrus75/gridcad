@@ -19,6 +19,7 @@ public:
     bool in_edit_mode(void) override { return edit_mode && single && selected;};
     
     int get_width(void) { return ports[0]->get_width();};
+    std::string get_verilog_main(void) override {return "";};
     void rotate_ports(void) override;
 private:
     struct value value = {};

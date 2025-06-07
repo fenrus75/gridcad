@@ -66,4 +66,5 @@ private:
     std::vector<class wire*> wires;
     std::string linked_uuid = "";
     class element *linked_element = NULL;
-    };
+    std::string verilog_name = "";
+};

@@ -218,6 +218,8 @@ public:
     
     std::string get_verilog_main(void);
     std::string get_verilog_modules(void);
+    std::string get_verilog_name(void) { return verilog_name;};
+    void create_verilog_names(void);
     
 protected:
     class contextmenu *menu = NULL;
@@ -225,7 +227,6 @@ protected:
     std::string parental_name = "";    
     std::string verilog_name = "";
     uint64_t generation_count = 0;
-    void create_verilog_names(void);
 };
 
 

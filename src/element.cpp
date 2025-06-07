@@ -436,15 +436,14 @@ void element::create_verilog_name(int seqno, std::vector<std::string> *existing)
         verilog_name = class_id();
         verilog_name.pop_back();
     }
+    std::replace(verilog_name.begin(), verilog_name.end(), '-', '_');
+    std::replace(verilog_name.begin(), verilog_name.end(), '+', '_');
     
     for (auto s : *existing) {
-        printf("COmparing %s and %s\n", s.c_str(), verilog_name.c_str());
         if (s == verilog_name) {
-            printf("Match\n");
             verilog_name = verilog_name + "_" + std::to_string(seqno);
         }
     }
-    printf("Final verilog_name %s\n", verilog_name.c_str());
     existing->push_back(verilog_name);
 }
 

@@ -260,6 +260,7 @@ void port::to_json(json &j)
 	j["bus_width"] = bus_width;
 	j["linked_uuid"] = linked_uuid;
 	j["color"] = color;
+	j["verilog_name"] = verilog_name;
 	
 	j["wires"] = json::array();
 	for (i = 0; i < wires.size(); i++) {
@@ -281,6 +282,7 @@ void port::from_json(json &j)
 	direction = j["direction"];
 	bus_width = j.value("bus_width", 1);
 	linked_uuid = j.value("linked_uuid", "");
+	verilog_name = j.value("verilog_name", name);
 	color = j.value("color", 0);
 	for (i = 0; i < j["wires"].size(); i++) {
 		class wire *wire;

@@ -426,6 +426,31 @@ std::string model_nest::get_verilog_main(void)
 {
     std::string s = "";
     std::vector<std::string> wiremap;
+//    reset_conditioner reset_conditioner(.clk(clk), .in(!rst_n), .out(rst));
+    if (canvas)
+	_scene = canvas->get_scene();
+	
+    _scene->create_verilog_names();
+
+    s = s + _scene->get_verilog_name() + " " + _scene->get_verilog_name() + "(";
+    bool first = true;
+    for (auto port : ports) {
+    
+    	port->collect_wires(&wiremap);
+    	if (wiremap.size() == 0)
+    		continue;
+
+    	if (!first)
+    		s = s + ", ";
+	first = false;
+    	s = s + "." + port->name + "(";
+	s = s + wiremap[0];
+    	s = s + ")";
+    	
+    	wiremap.clear();
+    }
+    s = s + ");\n";
+    
     
     return s;
 }
