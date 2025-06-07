@@ -68,6 +68,17 @@ document::document(std::string _name)
 	clear_wire_factory();
 }
 
+void document::save_verilog(std::string filename)
+{
+	std::ofstream output(filename);
+	class scene *_scene;
+	class canvas *_canvas = (class canvas *)canvases[0];
+	_scene = _canvas->get_scene();
+	
+	output << _scene->verilog_main() << "\n" << _scene->verilog_modules();
+	output.close();
+}
+
 document::~document(void)
 {
 	class scene *_scene;
@@ -83,7 +94,7 @@ document::~document(void)
 	filename = name;
 	if (!filename.ends_with(".json"))
 		filename = filename + ".json";
-	std::ofstream output(filename.c_str());
+	std::ofstream output(filename);
 
 	output << j.dump(4);
 	output.close();

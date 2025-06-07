@@ -34,6 +34,8 @@ public:
     
     std::string name = "";
     
+    std::string get_verilog_name(void);
+    
     void to_json(json &j);
     void from_json(json &j);
     void set_new_name(void);
@@ -45,6 +47,8 @@ public:
     class port * get_other_port(class port *port);
     void push_wire_color(int color);
     int get_color(void) { return color; };
+    
+    std::string get_verilog_decl(void);
     
 protected:
     bool dead = false;

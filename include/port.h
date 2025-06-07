@@ -55,6 +55,7 @@ public:
     
     void cycle_color(void);
     void reroute_all_wires(void);
+    void collect_wires(std::map<std::string, std::string> *wiremap);
 	
 private:
     class port_contextmenu *menu = NULL;

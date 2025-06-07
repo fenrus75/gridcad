@@ -165,6 +165,7 @@ void scene::to_json(json &j)
 	j["elements"] = json::array();
 	j["name"] = name;
 	j["parental_name"] = parental_name;
+	j["verilog_name"] = verilog_name;
 	
 	for (i = 0; i < elements.size(); i++) {
 		json p;
@@ -181,6 +182,7 @@ void scene::selection_to_json(json &j)
 	
 	name = j.value("name", "");
 	parental_name = j.value("parental_name", "");
+	verilog_name = j.value("verilog_name", "");
 	
 	for (i = 0; i < elements.size(); i++) {
 		if (elements[i]->is_selected()) {
@@ -280,3 +282,68 @@ void scene::reroute_all_wires(void)
 		elem->reroute_all_wires();
 }
 
+void scene::create_verilog_names(void)
+{
+	std::vector<std::string> existing;
+	for (unsigned int i = 0; i < elements.size(); i++) {
+		auto elem = elements[i];
+		elem->create_verilog_name(i, &existing);
+	}
+}
+
+std::string scene::verilog_main(void)
+{
+	std::string s = "";
+	
+	if (name == "")
+		name = "main_scene";
+	
+	if (verilog_name == "")
+		verilog_name = parental_name + "_" + name;
+	
+	create_verilog_names();
+	
+	s = "module " + verilog_name + "\n";
+	
+	s += "(";
+	/* in */
+	bool first = true;
+	for (auto elem : elements) {
+		if (elem->class_id() == "model_toggle:") {
+			if (!first)
+				s += ", ";
+			first = false;
+			s += "input " + elem->get_verilog_name() + elem->get_verilog_width();
+		}
+	}	
+	s += ");\n\n";
+	
+	
+	std::map<std::string, std::string> wiremap;
+	
+	for (auto elem : elements) {
+		elem->collect_wires(&wiremap);
+	}
+	
+	for (const auto& pair : wiremap) {
+		s = s +  pair.second + "\n";
+	}
+	
+	
+	
+	
+	
+	s += "endmodule\n\n";
+	
+	
+	return s;
+}
+
+
+std::string scene::verilog_modules(void)
+{
+	std::string s = "";
+	
+	
+	return s;
+}

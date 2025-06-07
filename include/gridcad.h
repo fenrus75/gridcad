@@ -215,11 +215,16 @@ public:
     void cycle_color(void);
     void reroute_all_wires(void);
     
+    std::string verilog_main(void);
+    std::string verilog_modules(void);
+    
 protected:
     class contextmenu *menu = NULL;
     std::string name = "";
     std::string parental_name = "";    
+    std::string verilog_name = "";
     uint64_t generation_count = 0;
+    void create_verilog_names(void);
 };
 
 
@@ -301,13 +306,17 @@ public:
     
     void cycle_color(void);
     void reroute_all_wires(void);
-
+    virtual void create_verilog_name(int seqno, std::vector<std::string> *existing);
+    std::string get_verilog_name(void) { return verilog_name;};
+    virtual std::string get_verilog_width(void) { return "";};
+    void collect_wires(std::map<std::string, std::string> *wiremap);
     
 protected:
     class contextmenu *menu = NULL; /* nosave */
     std::string uuid = "";
     std::string name = "";
     std::string parental_name = "";    
+    std::string verilog_name = "";
     int sizeX = 1;
     int sizeY = 1;
     int angle = 0;

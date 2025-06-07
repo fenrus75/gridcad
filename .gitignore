@@ -10,3 +10,4 @@ Makefile.deps
 todo
 pngs.cpp
 pngs.o
+test.v

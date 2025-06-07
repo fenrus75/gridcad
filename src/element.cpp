@@ -291,6 +291,7 @@ void element::to_json(json &j)
     j["X"] = X;
     j["Y"] = Y;
     j["name"] = name;
+    j["verilog_name"] = verilog_name;
     j["parental_name"] = parental_name;
     j["uuid"] = uuid;
     j["ports"] = json::array();
@@ -313,6 +314,7 @@ void element::from_json(json &j)
     uuid = j.value("uuid", generate_semi_uuid());
     name = j["name"];
     parental_name = j.value("parental_name", "");
+    verilog_name = j.value("verilog_name", "");
     
     while (ports.size() < j["ports"].size())
         add_port(0,0, "");
@@ -423,4 +425,32 @@ void element::reroute_all_wires(void)
 {
     for (auto port : ports)
         port->reroute_all_wires();
+}
+
+void element::create_verilog_name(int seqno, std::vector<std::string> *existing)
+{
+    
+    if (name != "") {
+        verilog_name = name;
+    } else { 
+        verilog_name = class_id();
+        verilog_name.pop_back();
+    }
+    
+    for (auto s : *existing) {
+        printf("COmparing %s and %s\n", s.c_str(), verilog_name.c_str());
+        if (s == verilog_name) {
+            printf("Match\n");
+            verilog_name = verilog_name + "_" + std::to_string(seqno);
+        }
+    }
+    printf("Final verilog_name %s\n", verilog_name.c_str());
+    existing->push_back(verilog_name);
+}
+
+
+void element::collect_wires(std::map<std::string, std::string> *wiremap)
+{
+    for (auto port : ports)
+        port->collect_wires(wiremap);
 }

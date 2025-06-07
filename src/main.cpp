@@ -50,6 +50,8 @@ int main(int argc, char **argv)
 	document = new class document(name);
 
 	document->run();
+	
+	document->save_verilog("test.v");
 
 	delete document;
 	document = NULL;

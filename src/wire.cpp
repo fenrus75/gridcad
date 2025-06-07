@@ -562,3 +562,24 @@ void wire::push_wire_color(int _color)
 	for (auto port : ports)
 		port->push_wire_color(color);
 }
+
+std::string wire::get_verilog_decl(void)
+{
+    std::string s;
+    
+    s = "wire " + get_verilog_name();
+    if (width > 1)
+    s = s + "[" + std::to_string(width -1) + ":0]";
+    
+    s = s + ";";
+    
+    return s;
+}
+
+std::string wire::get_verilog_name(void)
+{
+    std::string s = name;
+    std::replace(s.begin(), s.end(), '-', '_');
+    return s;
+    
+}

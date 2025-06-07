@@ -398,3 +398,12 @@ void port::reroute_all_wires(void)
 	for (auto wire : wires)
 		wire->redo_wires();
 }
+
+void port::collect_wires(std::map<std::string, std::string> *wiremap)
+{
+	for (auto wire : wires) {
+		if (wiremap->find(wire->name) == wiremap->end()) {
+			(*wiremap)[wire->name] = wire->get_verilog_decl();
+		}
+	}
+}

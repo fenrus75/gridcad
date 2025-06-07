@@ -9,6 +9,8 @@ class document
 public:
 	document(std::string name);
 	~document(void);
+	
+	void save_verilog(std::string filename);
 
 	void run(void);
 
