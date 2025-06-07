@@ -73,3 +73,17 @@ bool model_zero::intersect(float _X, float _Y)
         return true;
     return false;
 }
+
+std::string model_zero::get_verilog_main(void)
+{
+    std::string s = "";
+    std::vector<std::string> wiremap;
+    
+    ports[0]->collect_wires(&wiremap);
+    
+    for (auto name : wiremap) {
+        s = "assign "  + name + " = 1'0;\n";
+    }
+    
+    return s;
+}

@@ -50,3 +50,16 @@ void model_one::drawAt(class canvas *canvas, float X, float Y, int type)
     }
 }
 
+std::string model_one::get_verilog_main(void)
+{
+    std::string s = "";
+    std::vector<std::string> wiremap;
+    
+    ports[0]->collect_wires(&wiremap);
+    
+    for (auto name : wiremap) {
+        s = "assign "  + name + " = 1'1;\n";
+    }
+    
+    return s;
+}

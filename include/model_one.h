@@ -12,5 +12,6 @@ public:
     virtual std::string class_id(void) { return "model_one:";};
 
     void drawAt(class canvas *canvas, float X, float Y, int type) override;
+    std::string get_verilog_main(void) override;
 };
 

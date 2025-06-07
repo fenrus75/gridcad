@@ -14,6 +14,7 @@ public:
     void drawAt(class canvas *canvas, float X, float Y, int type) override;
     void fill_grid(class wiregrid* grid) override;
     bool intersect(float _X, float _Y) override;
+    std::string get_verilog_main(void) override;
 protected:
 };
 
