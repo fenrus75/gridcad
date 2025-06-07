@@ -206,6 +206,7 @@ void scene::from_json(json &j)
 		class element *element = element_from_class_id(cid);
 		element->from_json(p);
 		elements.push_back(element);
+		element->update_parental_name(get_full_name());
 	}
 	for (auto element : elements)
 		element->calculate(100);
