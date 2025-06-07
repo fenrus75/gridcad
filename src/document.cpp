@@ -75,7 +75,7 @@ void document::save_verilog(std::string filename)
 	class canvas *_canvas = (class canvas *)canvases[0];
 	_scene = _canvas->get_scene();
 	
-	output << _scene->verilog_main() << "\n" << _scene->verilog_modules();
+	output << _scene->get_verilog_main() << "\n" << _scene->get_verilog_modules();
 	output.close();
 }
 

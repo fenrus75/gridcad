@@ -59,7 +59,7 @@ scene::scene(std::string _name, std::string _parent)
 {
 	sizeX = 200;
 	sizeY = 200;
-	name = name;
+	name = _name;
 	parental_name = _parent;
 	menu = new class contextmenu(this);
 	menu->add_item("Fit to Screen", callback_fit_to_screen);
@@ -85,6 +85,7 @@ void scene::add_element(class element * element)
 	rewire_section(element->get_X(), element->get_Y(), element->get_width(), element->get_height());
         generation_count++;
 	element->update_parental_name(get_full_name());
+	printf("Element parnetal name is %s   name is %s parent is %s \n", element->get_parental_name().c_str(), name.c_str(), parental_name.c_str());
 }
 
 bool scene::can_place_element(float x, float y, int w, int h,
@@ -284,6 +285,11 @@ void scene::reroute_all_wires(void)
 
 void scene::create_verilog_names(void)
 {
+	verilog_name = parental_name + "_" + name;
+	std::replace(verilog_name.begin(), verilog_name.end(), '-', '_');
+	std::replace(verilog_name.begin(), verilog_name.end(), '+', '_');
+	std::replace(verilog_name.begin(), verilog_name.end(), '/', '_');
+	
 	std::vector<std::string> existing;
 	for (unsigned int i = 0; i < elements.size(); i++) {
 		auto elem = elements[i];
@@ -291,7 +297,7 @@ void scene::create_verilog_names(void)
 	}
 }
 
-std::string scene::verilog_main(void)
+std::string scene::get_verilog_main(void)
 {
 	std::string s = "";
 	
@@ -352,18 +358,18 @@ std::string scene::verilog_main(void)
 	s += "endmodule\n\n";
 	
 
-	for (auto elem : elements) {
-		s = s + elem->get_verilog_modules();
-	}	
 	
 	return s;
 }
 
 
-std::string scene::verilog_modules(void)
+std::string scene::get_verilog_modules(void)
 {
 	std::string s = "";
 	
+	for (auto elem : elements) {
+		s = s + elem->get_verilog_modules();
+	}	
 	
 	return s;
 }

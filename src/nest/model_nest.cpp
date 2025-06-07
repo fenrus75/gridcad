@@ -33,7 +33,8 @@ model_nest::model_nest(float _X, float _Y) : element(_X,_Y, "SubScreen")
 	sizeY = 4;
 	X = floorf(_X);
 	Y = floorf(_Y);    
-	_scene = new class scene(name);
+	printf("New scene %s %s\n", name.c_str(), get_full_name().c_str());
+	_scene = new class scene(name, get_full_name());
 	menu->add_item("Edit name", callback_editname);
 	
 	name_edit = new class name(&name);
@@ -419,4 +420,31 @@ void model_nest::maybe_regen_ports(void)
 		regen_ports();
 		previous_generation_count = _scene->get_generation_count();
 	}
+}
+
+std::string model_nest::get_verilog_main(void)
+{
+    std::string s = "";
+    std::vector<std::string> wiremap;
+    
+    return s;
+}
+
+std::string model_nest::get_verilog_modules(void)
+{
+    std::string s = "";
+	if (canvas)
+		_scene = canvas->get_scene();
+    
+    s += _scene->get_verilog_main();
+    
+    return s;
+}
+
+void model_nest::update_parental_name(std::string _name)
+{
+	parental_name = _name;
+	if (canvas)
+		_scene = canvas->get_scene();
+	_scene->set_parental_name(get_full_name());
 }

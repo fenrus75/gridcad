@@ -209,14 +209,15 @@ public:
     
     std::string get_name(void) { return name; };
     std::string get_full_name(void) { return parental_name + "/" + name;};
+    void set_parental_name(std::string name) { parental_name = name;};
     void update_name(std::string _name) { name = _name;};
     uint64_t get_generation_count(void) { return generation_count; };
     class contextmenu *get_menu(void) { return menu; };
     void cycle_color(void);
     void reroute_all_wires(void);
     
-    std::string verilog_main(void);
-    std::string verilog_modules(void);
+    std::string get_verilog_main(void);
+    std::string get_verilog_modules(void);
     
 protected:
     class contextmenu *menu = NULL;
@@ -296,7 +297,8 @@ public:
     
     virtual void rotate_ports(void) {};
     void update_name(std::string _name) { name = _name;};
-    void update_parental_name(std::string _name) { parental_name = _name;};
+    virtual void update_parental_name(std::string _name) { parental_name = _name;};
+    std::string get_parental_name(void) { return parental_name;};
     void hover_ports(canvas *canvas);
     virtual class port *get_clk_port(void) { return nullptr;};
     void connect_clk(class port *clk);

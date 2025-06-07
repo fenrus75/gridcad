@@ -24,9 +24,11 @@ public:
     void regen_ports(void);
     
     void enter_edit_mode(void) override { name_edit->set_edit_mode(true); selected = true; single = true;};
-    
+    void update_parental_name(std::string _name) override;
     void load_scene_from_json(std::string);
     void set_icon(std::string _icon, std::string _selected) { icon = _icon; icon_selected = _selected;};
+    std::string get_verilog_main(void) override;
+    std::string get_verilog_modules(void) override;
 private:
 
     float bX1,bY1,bX2,bY2; /* bounding box of the scene -- no save*/
