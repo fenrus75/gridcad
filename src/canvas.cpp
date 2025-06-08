@@ -271,7 +271,7 @@ bool canvas::handle_event(SDL_Event &event)
 		tooltip_eligable = false;
 
 
-	if (event.type == SDL_timer_event + 1 && event.user.data1 == current_scene) {  /* zoom to fit the screen */
+	if (event.type == EVENT_ZOOM_TO_FIT && event.user.data1 == current_scene) {  /* zoom to fit the screen */
 		float bX1 = current_scene->sizeX, bY1 = current_scene->sizeY, bX2 = 0, bY2 = 0;
 		for (auto elem : current_scene->elements) {
 			if (elem->get_X() < bX1)

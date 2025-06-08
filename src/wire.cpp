@@ -15,6 +15,7 @@
 #include "wirepath.h"
 #include "wire.h"
 #include "port.h"
+#include "model_clock.h"
 
 #include <algorithm>
 
@@ -150,6 +151,9 @@ void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y
 
 			f = 1 -f;
                         f = f * (450-25);
+                        
+                        if (!clock_running)
+                            f = 0;
 			canvas->draw_box(x1-size, y1-size, x1+size, y1+size, COLOR_WIRE_MOTION);
 //                        canvas->draw_image_fragment("assets/clock_wave.png", x1-size, y1-size, 4*size, 2*size, 25 + f, 0, 2 * (450 -25), 189, ang);	
                         canvas->draw_image_fragment("assets/clock_wave.png", x1-size, y1-size, 2*size, 2*size, 25 + f, 0, 450 -25, 189, ang);	
@@ -188,6 +192,9 @@ void wire::draw(class canvas *canvas, int _color)
         stepsize = 20;
         
     step = current_interval() % stepsize;
+    
+    if (value.is_clock && !clock_running)
+        step = (global_clock.arrayval * 4) % stepsize;;
     for (auto point: *points) {
         if (first) {
             prevX = point.X;

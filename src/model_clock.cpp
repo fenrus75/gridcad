@@ -17,6 +17,43 @@
 #include <sys/time.h>
 
 
+void callback_stop_clock(class element *element)
+{
+	SDL_Event ev = {};
+
+
+	ev.type = EVENT_STOP_CLOCK;
+	ev.user.code = 0;
+
+	SDL_PushEvent(&ev);
+}
+
+void callback_start_clock(class element *element)
+{
+	SDL_Event ev = {};
+
+
+	ev.type = EVENT_START_CLOCK;
+	ev.user.code = 0;
+
+	SDL_PushEvent(&ev);
+}
+void callback_single_clock(class element *element)
+{
+	SDL_Event ev = {};
+
+
+	ev.type = EVENT_SINGLE_CLOCK;
+	ev.user.code = 0;
+
+	SDL_PushEvent(&ev);
+	/* we send 2 events, one for rising one for falling clock */
+	ev.type = EVENT_SINGLE_CLOCK;
+	ev.user.code = 0;
+
+	SDL_PushEvent(&ev);
+}
+
 static bool timer_set = false;
 
 Uint32 SDL_timer_func(Uint32 interval, void *param)
@@ -59,6 +96,9 @@ model_clock::model_clock(float _X, float _Y)  : element(1, 1, "clk")
     global_clock.valid = true;
     
     add_port(1, sizeY, "clk", PORT_OUT);    
+    menu->add_item("Stop clock", callback_stop_clock);
+    menu->add_item("Start clock", callback_start_clock);
+    menu->add_item("Single clock", callback_single_clock);
 }
 
 model_clock::~model_clock(void)
@@ -76,6 +116,9 @@ void model_clock::drawAt(class canvas *canvas, float X, float Y, int type)
         float f;
         f = tv.tv_usec / 1000000.0;
         f = f * (450-25);
+        
+        if (!clock_running)
+          f = 0;
         canvas->draw_image("assets/clock_off.png", X, Y, sizeX, sizeY, Alpha(type));
         canvas->draw_image_fragment("assets/clock_wave.png", X+0.6, Y+0.6, sizeX-1.2, sizeY-1.2, 25 + f, 0, 450 -25, 189 );
     }
@@ -142,6 +185,23 @@ std::string model_clock::get_verilog_main(void)
     }
     
     return s;
+}
+
+bool model_clock::mouse_select(float _X, float _Y)
+{
+    /* convert _X and _Y to be relative to the center of the model */
+    _X = _X - X - sizeX/2.0;
+    _Y = _Y - Y - sizeY/2.0;
+    
+    if ( (_X * _X) + (_Y * _Y) > 1.0)  /* click is outside center button */
+         return false;
+         
+    if (clock_running)
+         return false;
+         
+    callback_single_clock(NULL);
+         
+    return true;
 }
 
 

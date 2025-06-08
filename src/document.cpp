@@ -45,7 +45,7 @@ document::document(std::string _name)
 	TTF_Init();
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2");
 	
-	SDL_timer_event = SDL_RegisterEvents(2);
+	SDL_timer_event = SDL_RegisterEvents(16);
 	
 	set_timer();
 
@@ -104,6 +104,8 @@ document::~document(void)
 	SDL_Quit();
 }
 
+bool clock_running = true;
+
 void document::run(void)
 {
 	SDL_Event event;
@@ -123,7 +125,15 @@ void document::run(void)
 
 		if (ret) {
 			/* toggle the clock if there is a timer event -- this is the best race-free place to do this*/
-			if (event.type == SDL_timer_event) {
+			if (event.type == EVENT_STOP_CLOCK) {
+				printf("Receive stop clock\n");
+				clock_running = false;
+			}
+			if (event.type == EVENT_START_CLOCK) {
+				printf("Receive start clock\n");
+				clock_running = true;
+			}
+			if ((event.type == SDL_timer_event && clock_running) || event.type == EVENT_SINGLE_CLOCK) {
 				global_clock.valid = true;
 				global_clock.is_clock = true;
 				global_clock.boolval = !global_clock.boolval;

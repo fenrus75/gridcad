@@ -200,9 +200,9 @@ void contextmenu::mouse_click(float X, float Y)
 		
 	Y -= Y1;
 	selection = floorf(Y/maxY);
-	if (selection < (int)items.size() && element)
+	if (selection < (int)items.size() && element && items[selection]->callback)
 		items[selection]->callback(element);
-	if (selection < (int)items.size() && scene)
+	if (selection < (int)items.size() && scene && items[selection]->scene_callback)
 		items[selection]->scene_callback(scene);
 }
 

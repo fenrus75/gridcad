@@ -28,7 +28,7 @@ void callback_fit_to_screen(class scene *scene)
 	SDL_Event ev = {};
 
 
-	ev.type = SDL_timer_event + 1;
+	ev.type = EVENT_ZOOM_TO_FIT;
 	ev.user.code = 0;
 	ev.user.data1 = scene;
 

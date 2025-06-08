@@ -368,7 +368,14 @@ extern void populate_library(std::string directory);
 extern void queue_calculate(class element *element);
 extern void remove_from_calculate_queue(class element *element);
 extern void run_queued_calculations(void);
+
 extern unsigned int SDL_timer_event;
+
+#define EVENT_ZOOM_TO_FIT  (SDL_timer_event + 1)
+#define EVENT_STOP_CLOCK   (SDL_timer_event + 2)
+#define EVENT_SINGLE_CLOCK (SDL_timer_event + 3)
+#define EVENT_START_CLOCK  (SDL_timer_event + 4)
+
 extern void callback_editname(class element *element);
 extern SDL_Texture *IMG_LoadTextureFromMem(SDL_Renderer *renderer, const char *filename);
 extern int wire_to_color(int color);
