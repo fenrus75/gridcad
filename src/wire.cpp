@@ -571,7 +571,7 @@ std::string wire::get_verilog_decl(void)
     
     s = "wire ";
     if (width > 1)
-    s = s + "[" + std::to_string(width -1) + ":0]";
+    s = s + "[" + std::to_string(width -1) + ":0] ";
     
     s = s  + get_verilog_name();
     s = s + ";";
