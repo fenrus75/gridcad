@@ -284,7 +284,6 @@ void scene::reroute_all_wires(void)
 		elem->reroute_all_wires();
 }
 
-static int seqno = 0;
 void scene::create_verilog_names(void)
 {
 	if (verilog_name == "") {
@@ -292,6 +291,9 @@ void scene::create_verilog_names(void)
 		if (vname != "")
 			verilog_name = parental_name + "_" + vname;
 		verilog_name = append_random_bits(verilog_name + "_");
+		
+		if (parental_name == "" && name == "main")
+			verilog_name = "main";
 	}
 	std::replace(verilog_name.begin(), verilog_name.end(), '-', '_');
 	std::replace(verilog_name.begin(), verilog_name.end(), '+', '_');

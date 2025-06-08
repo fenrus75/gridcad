@@ -443,7 +443,7 @@ std::string model_truth::get_verilog_modules(void)
 	    	s = s +port->get_verilog_name();
     	
 	}
-	s = s + ");\n";
+	s = s + ");\n\n";
 	
 	first = true;
 	for (unsigned int i = inputs; i < names.size(); i++) {
