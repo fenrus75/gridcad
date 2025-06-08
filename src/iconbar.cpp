@@ -13,11 +13,15 @@
 #include "gridcad.h"
 #include "iconbar.h"
 #include "model_nest.h"
+#include "contextmenu.h"
 
 #include <map>
 #include <SDL2/SDL_image.h>
 
 
+void callback_ib(class iconbar *bar, class oneiconbar *choice)
+{
+}
 
 iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
 {
@@ -27,7 +31,7 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
     renderer = _renderer;
     rect = _rect;
     
-    init_icon = new class oneiconbar(_renderer, _rect);
+    init_icon = new class oneiconbar(_renderer, _rect, "Logic");
 
     init_icon->set_element("model_zero:", "assets/zero.png", "constant zero value");
     init_icon->set_element("model_one:", "assets/one.png", "constant one value");
@@ -50,7 +54,7 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
 
     icons.push_back(init_icon);
     current_icons = init_icon;    
-    init_icon = new class oneiconbar(_renderer, _rect);    
+    init_icon = new class oneiconbar(_renderer, _rect, "Bus converters");    
     init_icon->set_element("model_4to1:", "assets/4to1.png", "Bus to 4 bits split");
     init_icon->set_element("model_1to4:", "assets/1to4.png", "4 bits to Bus concentrator");
     init_icon->set_element("model_8to4:", "assets/8to4.png", "bus8 to 2 bus4 split");
@@ -63,7 +67,7 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
     
     for (li = 0; li < library.size(); li++) {
         if (libtabs.find(library[li].collection) == libtabs.end()) {
-            libtab = new class oneiconbar(_renderer, _rect);
+            libtab = new class oneiconbar(_renderer, _rect, "Library "+ library[li].collection );
             libtabs[library[li].collection] = libtab;
             icons.push_back(libtab);
         }
@@ -71,6 +75,10 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
         libtab->set_element("library", &library[li]);
     }
     
+    menu = new icon_contextmenu(this);
+    for (auto ib : icons) {
+       menu->add_item(ib->get_name(), ib, callback_ib);
+    }
     
 }
 
@@ -130,6 +138,15 @@ void iconbar::draw(void)
 class icon * iconbar::current_icon(int ScreenX, int ScreenY)
 {
     return current_icons->current_icon(ScreenX, ScreenY);
+}
+
+class contextmenu * iconbar::get_menu(int ScreenX, int ScreenY)
+{
+     if (ScreenY < OFFSETY) {
+       printf("Returning menu\n");
+      return menu;
+    }
+    return NULL;
 }
 
 std::string iconbar::current_tooltip(int ScreenX, int ScreenY)
@@ -223,7 +240,7 @@ class element *icon::library_element(void)
      return element;
 }
 
-oneiconbar::oneiconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
+oneiconbar::oneiconbar(SDL_Renderer *_renderer, SDL_Rect _rect, std::string _name)
 {
    renderer = _renderer;
    rect = _rect;
@@ -231,6 +248,8 @@ oneiconbar::oneiconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
     
     icons[0].resize(15);
     icons[1].resize(15);
+    
+    name = _name;
 }
 
 oneiconbar::~oneiconbar(void)
@@ -298,6 +317,10 @@ class icon * oneiconbar::current_icon(int ScreenX, int ScreenY)
     gridX = floor(dX);
     gridY = floor(dY);
     
+    if (gridX < 0)
+        return NULL;
+    if (gridY < 0)
+        return NULL;    
     if (gridX >= (int)icons.size())
         return NULL;
     if (gridY >= (int)icons[gridX].size())

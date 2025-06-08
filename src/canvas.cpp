@@ -231,7 +231,13 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 bool canvas::handle_event_iconarea(SDL_Event &event)
 {
 	class icon *this_icon;
+	
 	this_icon = icon_bar->current_icon(event.motion.x, event.motion.y);
+	active_menu = icon_bar->get_menu(event.motion.x, event.motion.y);
+	
+	if (active_menu)
+			active_menu->mouse_set(scr_to_X(event.motion.x), scr_to_X(event.motion.y));
+	
 	if (this_icon)
 		printf("ICON CLICK\n");
 	if (active_icon && this_icon)

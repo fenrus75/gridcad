@@ -6,13 +6,18 @@
 typedef void (*callback_fn)(class element *element);
 typedef void (*scene_callback_fn)(class scene *scene);
 typedef void (*port_callback_fn)(class port *port, int color);
+typedef void (*icon_callback_fn)(class iconbar *bar, class oneiconbar *choice);
+
+class oneiconbar;
 
 struct context_item {
     std::string menu_text;
     int color;
+    class oneiconbar *choice;
     callback_fn callback; 
     scene_callback_fn scene_callback; 
     port_callback_fn port_callback; 
+    icon_callback_fn icon_callback; 
 };
 
 class contextmenu {
@@ -60,5 +65,19 @@ public:
 
 private:
     class port *port = NULL;
-    std::vector<struct context_item *> items;   
+};
+
+class oneiconbar;
+
+class icon_contextmenu : public contextmenu {
+public:
+    icon_contextmenu(class iconbar *bar);
+    virtual ~icon_contextmenu(void);
+
+    void add_item(std::string text, class oneiconbar*, icon_callback_fn callback);    
+    
+    void mouse_click(float X, float Y) override;
+
+private:
+    class iconbar *bar = NULL;
 };

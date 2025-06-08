@@ -281,3 +281,50 @@ void port_contextmenu::mouse_click(float X, float Y)
 	if (selection < (int)items.size() && port)
 		items[selection]->port_callback(port, items[selection]->color);
 }
+
+
+icon_contextmenu::icon_contextmenu(class iconbar *_bar) : contextmenu( (class element*) NULL)
+{
+	bar = _bar;
+	
+}
+
+icon_contextmenu::~icon_contextmenu(void)
+{
+}
+
+
+void icon_contextmenu::add_item(std::string text, class oneiconbar* bar, icon_callback_fn callback)
+{
+    struct context_item *item;
+    
+    item = new struct context_item;
+    
+    item->menu_text = text;
+    item->icon_callback = callback;
+    item->choice = bar;
+    
+    items.push_back(item);
+}
+
+void icon_contextmenu::mouse_click(float X, float Y)
+{
+	selection = -1;
+
+	currentX = X;
+	currentY = Y;
+	
+	
+	if (X < X1 || X > X2)
+		return;
+	if (Y < Y1 || Y > Y2)
+		return;
+		
+	Y -= Y1;
+	selection = floorf(Y/maxY);
+	if (selection < (int)items.size())
+		items[selection]->icon_callback(bar, items[selection]->choice);
+
+}
+
+

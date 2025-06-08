@@ -3,6 +3,7 @@
 #include "gridcad.h"
 
 #include "library.h"
+#include "contextmenu.h"
 
 #define ICON_LIBRARY 0
 #define ICON_ZERO 1
@@ -49,7 +50,7 @@ private:
 
 class oneiconbar {
 public:
-    oneiconbar(SDL_Renderer *_renderer, SDL_Rect _rect);
+    oneiconbar(SDL_Renderer *_renderer, SDL_Rect _rect, std::string name);
     virtual ~oneiconbar(void);
     
     void resize(SDL_Rect _rect);
@@ -62,12 +63,14 @@ public:
     void set_element(std::string class_id, struct library_block *block = NULL);
     void set_element(std::string class_id, std::string filename, std::string tooltip, struct library_block *block = NULL);
     void insert_blank(void);
+    std::string get_name(void) { return name; };
 
 private:    
     unsigned int cIndex = 0; 
     SDL_Rect rect = {};
     std::vector<std::vector<class icon *>> icons;
     SDL_Renderer *renderer = NULL;
+    std::string name;
 
 };
 
@@ -84,6 +87,8 @@ public:
     void previous(void);
     class icon *current_icon(int ScreenX, int ScreenY);
     std::string current_tooltip(int ScreenX, int ScreenY);
+    class contextmenu *get_menu(int ScreenX, int ScreenY);
+    
 private:
     SDL_Rect rect = {};
     unsigned int active_index = 0;
@@ -91,7 +96,7 @@ private:
     class oneiconbar *current_icons = NULL;
     SDL_Renderer *renderer = NULL;
     std::map<std::string, class oneiconbar*> libtabs;
-
+    class icon_contextmenu *menu = NULL;
 };
 
 
