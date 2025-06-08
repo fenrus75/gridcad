@@ -98,6 +98,7 @@ private:
     SDL_Renderer *renderer = NULL;
     std::map<std::string, class oneiconbar*> libtabs;
     class icon_contextmenu *menu = NULL;
+    SDL_Texture *dropdown = NULL;
 };
 
 

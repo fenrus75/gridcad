@@ -130,10 +130,30 @@ void iconbar::resize(SDL_Rect _rect)
 
 void iconbar::draw(void)
 {
+    SDL_Rect drop;
     SDL_RenderSetClipRect(renderer, &rect);    
+    int w, h;
+    float newH;
 
+    if (dropdown == NULL)
+       dropdown = IMG_LoadTextureFromMem(renderer, "assets/icondropdown.png");     
+    
     if (current_icons)
-     current_icons->draw();
+         current_icons->draw();
+         
+    if (!dropdown)
+      return;
+         
+    drop.x = rect.x + 5;
+    drop.w = rect.w - 10;
+    drop.y = 5;
+    SDL_QueryTexture(dropdown, NULL, NULL, &w, &h);
+    
+    newH = 1.0 * h/w * drop.w;
+    drop.h = newH;
+    
+    SDL_SetTextureAlphaMod(dropdown, 255);
+    SDL_RenderCopy(renderer, dropdown, NULL, &drop);
 }
 
 class icon * iconbar::current_icon(int ScreenX, int ScreenY)
@@ -143,8 +163,7 @@ class icon * iconbar::current_icon(int ScreenX, int ScreenY)
 
 class contextmenu * iconbar::get_menu(int ScreenX, int ScreenY)
 {
-     if (ScreenY < OFFSETY) {
-       printf("Returning menu\n");
+     if (ScreenY < OFFSETY * 1.5) {
       return menu;
     }
     return NULL;
