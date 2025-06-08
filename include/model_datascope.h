@@ -21,8 +21,11 @@ public:
     int get_width(void) { return ports[0]->get_width();};
     std::string get_verilog_main(void) override {return "";};
     void rotate_ports(void) override;
+    void set_format(int f) { format = f; };
 private:
     struct value value = {};
     bool edit_mode = false;
+    /* 0 = decimal, 1 = hex 2 = binary */
+    int format = 0;
 };
 

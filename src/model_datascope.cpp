@@ -16,6 +16,23 @@
 
 #include <sys/time.h>
 
+
+void callback_decimal(class element *element)
+{
+     class model_datascope *e = (class model_datascope *)element;
+     e->set_format(0);
+}
+void callback_hexadecimal(class element *element)
+{
+     class model_datascope *e = (class model_datascope *)element;
+     e->set_format(1);
+}
+void callback_binary(class element *element)
+{
+     class model_datascope *e = (class model_datascope *)element;
+     e->set_format(2);
+}
+
 model_datascope::model_datascope(float _X, float _Y)  : element(1, 1, "Output")
 {
     sizeX = 4;
@@ -24,6 +41,9 @@ model_datascope::model_datascope(float _X, float _Y)  : element(1, 1, "Output")
     Y = floorf(_Y);
     
     add_port(-1, 1, "Output", PORT_IN);    
+    menu->add_item("Decimal", callback_decimal);
+    menu->add_item("Hex", callback_hexadecimal);
+    menu->add_item("Binary", callback_binary);
 }
 
 model_datascope::~model_datascope(void)
@@ -40,7 +60,13 @@ void model_datascope::drawAt(class canvas *canvas, float X, float Y, int type)
     if (ports[0]->value.type == VALUE_TYPE_INT) {
 	char buf[128];
 	std::string s;
-	sprintf(buf, "%li", ports[0]->value.intval);
+        sprintf(buf, "%li", ports[0]->value.intval);
+	if (format == 0)
+          sprintf(buf, "%li", ports[0]->value.intval);
+	if (format == 1)
+          sprintf(buf, "x%lx", ports[0]->value.intval);
+	if (format == 2)
+          sprintf(buf, "%lb", ports[0]->value.intval);
 	s = buf;
 	canvas->draw_text(s, X+ 0.6, Y + 0.6, 2.8,1.8);
     }
@@ -56,10 +82,12 @@ void model_datascope::drawAt(class canvas *canvas, float X, float Y, int type)
 void model_datascope::to_json(json &j)
 {
      element::to_json(j);
+     j["format"] = format;
 }
 void model_datascope::from_json(json &j)
 {
      element::from_json(j);
+     format = j.value("format", 0);
 }
 
 void model_datascope::rotate_ports(void)
