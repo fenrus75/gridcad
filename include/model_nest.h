@@ -27,6 +27,7 @@ public:
     void update_parental_name(std::string _name) override;
     void load_scene_from_json(std::string);
     void set_icon(std::string _icon, std::string _selected) { icon = _icon; icon_selected = _selected;};
+    void create_verilog_name(int seqno, std::vector<std::string> *existing) override;
     std::string get_verilog_main(void) override;
     std::string get_verilog_modules(void) override;
 private:

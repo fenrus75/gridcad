@@ -208,9 +208,10 @@ public:
     unsigned int selected_count(void);
     
     std::string get_name(void) { return name; };
-    std::string get_full_name(void) { return parental_name + "/" + name;};
+    std::string get_full_name(void);
     void set_parental_name(std::string name) { parental_name = name;};
     void update_name(std::string _name) { name = _name;};
+    void update_vname(std::string _name) { vname = _name;};
     uint64_t get_generation_count(void) { return generation_count; };
     class contextmenu *get_menu(void) { return menu; };
     void cycle_color(void);
@@ -224,6 +225,7 @@ public:
 protected:
     class contextmenu *menu = NULL;
     std::string name = "";
+    std::string vname = ""; /* nosave */
     std::string parental_name = "";    
     std::string verilog_name = "";
     uint64_t generation_count = 0;
@@ -371,5 +373,6 @@ extern void callback_editname(class element *element);
 extern SDL_Texture *IMG_LoadTextureFromMem(SDL_Renderer *renderer, const char *filename);
 extern int wire_to_color(int color);
 extern std::string wire_color_name(int color);
+extern std::string append_random_bits(std::string input);
 
 #endif

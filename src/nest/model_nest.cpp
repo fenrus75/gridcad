@@ -474,3 +474,12 @@ void model_nest::update_parental_name(std::string _name)
 		_scene = canvas->get_scene();
 	_scene->set_parental_name(get_full_name());
 }
+
+void model_nest::create_verilog_name(int seqno, std::vector<std::string> *existing)
+{
+	element::create_verilog_name(seqno, existing);
+	if (canvas)
+		_scene = canvas->get_scene();
+	_scene->update_vname(verilog_name);
+	
+}

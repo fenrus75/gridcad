@@ -569,10 +569,11 @@ std::string wire::get_verilog_decl(void)
 {
     std::string s;
     
-    s = "wire " + get_verilog_name();
+    s = "wire ";
     if (width > 1)
     s = s + "[" + std::to_string(width -1) + ":0]";
     
+    s = s  + get_verilog_name();
     s = s + ";";
     
     return s;
