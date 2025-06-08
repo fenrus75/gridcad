@@ -392,3 +392,106 @@ void model_truth::handle_event(class canvas *canvas, SDL_Event &event)
         }
     name_edit->handle_event(event);
 }
+
+
+std::string model_truth::get_verilog_main(void)
+{
+    std::string s = "";
+    std::vector<std::string> wiremap;
+    if (verilog_module_name == "")
+	    verilog_module_name = append_random_bits(verilog_name + "_tt_");
+
+    s = s + verilog_module_name + " " + verilog_module_name + "(";
+    bool first = true;
+    for (auto port : ports) {
+    
+    	port->collect_wires(&wiremap);
+    	if (wiremap.size() == 0)
+    		continue;
+
+    	if (!first)
+    		s = s + ", ";
+	first = false;
+    	s = s + "." + port->get_verilog_name() + "(";
+	s = s + wiremap[0];
+    	s = s + ")";
+    	
+    	wiremap.clear();
+    }
+    s = s + ");\n";
+    
+    
+    return s;
+}
+
+/* TODO -- rather than a pure basic SOP, run espresso on this and make it more minimal */
+std::string model_truth::get_verilog_modules(void)
+{
+	std::string s = "";
+	
+	s = s + "module " + verilog_module_name + "\n (";
+	bool first = true;
+	for (auto port : ports) {
+    
+	    	if (!first)
+	    		s = s + ", ";
+		first = false;
+		if (port->direction == PORT_IN)
+			s = s + "input ";
+		if (port->direction == PORT_OUT)
+			s = s + "output ";
+	    	s = s +port->get_verilog_name();
+    	
+	}
+	s = s + ");\n";
+	
+	first = true;
+	for (unsigned int i = inputs; i < names.size(); i++) {
+		s = s +"assign " + names[i] + " = ";
+		
+		for (unsigned int Y = 0; Y < values.size(); Y++) {
+			if (values[Y][i] == '1') {
+				if (!first) 
+					s = s + " | ";
+				first = false;
+				s = s + "(";
+				bool nestedfirst = true;
+				for (unsigned int x = 0; x < inputs; x++) {
+					if (!nestedfirst)
+						s = s + " & ";
+					nestedfirst = false;
+					if (values[Y][x] == '1') {
+						s = s + names[x];
+					}
+					if (values[Y][x] == '0') {
+						s = s + "!" + names[x];
+					}
+				}
+				
+				s = s + ")";
+			}
+		}
+		
+		s = s + ";\n";
+	}
+	
+	s = s + "endmodule\n";
+	
+	
+	return s;
+}
+
+
+std::string model_truth::get_verilog_name(void)
+{
+	if (verilog_name == "") {
+		verilog_name = name; 
+		std::replace(verilog_name.begin(), verilog_name.end(), ' ', '_');
+		std::replace(verilog_name.begin(), verilog_name.end(), '-', '_');
+		std::replace(verilog_name.begin(), verilog_name.end(), '+', '_');
+		verilog_name = append_random_bits(verilog_name + "_");
+	}
+	
+	
+	return verilog_name;
+}

@@ -437,6 +437,7 @@ void element::create_verilog_name(int seqno, std::vector<std::string> *existing)
         verilog_name.pop_back();
     }
     std::replace(verilog_name.begin(), verilog_name.end(), '-', '_');
+    std::replace(verilog_name.begin(), verilog_name.end(), ' ', '_');
     std::replace(verilog_name.begin(), verilog_name.end(), '+', '_');
     
     for (auto s : *existing) {

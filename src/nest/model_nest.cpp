@@ -426,7 +426,6 @@ std::string model_nest::get_verilog_main(void)
 {
     std::string s = "";
     std::vector<std::string> wiremap;
-//    reset_conditioner reset_conditioner(.clk(clk), .in(!rst_n), .out(rst));
     if (canvas)
 	_scene = canvas->get_scene();
 	

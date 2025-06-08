@@ -33,6 +33,9 @@ public:
     void handle_event(class canvas *canvas, SDL_Event &event) override;
     bool in_edit_mode(void) override { return name_edit->get_edit_mode() && single && selected;};    
     void enter_edit_mode(void) override { name_edit->set_edit_mode(true); selected = true; single = true;};
+    std::string get_verilog_main(void) override;
+    std::string get_verilog_modules(void) override;
+    std::string get_verilog_name(void) override;
 private:
     class truthcanvas *canvas = NULL;
     class name *name_edit = NULL;
@@ -41,4 +44,5 @@ private:
     unsigned int outputs = 1;
     long int previous_click = -1;
     float mouseX = -100, mouseY = -100;     /* no save */
+    std::string verilog_module_name = "";
 };

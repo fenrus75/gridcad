@@ -65,7 +65,7 @@ std::string append_random_bits(std::string input)
     for (int i = 0; i < 6; ++i) {
         ss << std::hex << std::setw(2) << std::setfill('0') << dis(gen);
         if (i == 3 || i == 5 || i == 7 || i == 9) {
-          ss << "-";
+          ss << "_";
         }
     }
     
