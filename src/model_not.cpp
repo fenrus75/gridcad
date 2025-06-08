@@ -91,3 +91,21 @@ void model_not::rotate_ports(void)
     if (angle < 0)
 	angle += 360;
 }
+
+std::string model_not::get_verilog_main(void)
+{
+    std::string s = "";
+    std::vector<std::string> wiremap0, wiremap1, wiremap2;
+    
+    ports[0]->collect_wires(&wiremap0);
+    ports[1]->collect_wires(&wiremap1);
+    
+    if (wiremap0.size() < 1)
+        wiremap0.push_back("1'0");
+    
+    for (auto name : wiremap1) {
+        s = "assign "  + name + " = !" + wiremap0[0] + ";\n";
+    }
+    
+    return s;
+}

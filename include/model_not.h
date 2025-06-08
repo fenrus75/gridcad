@@ -14,6 +14,7 @@ public:
     
     void calculate(int ttl) override;
     void rotate_ports(void) override;
+    std::string get_verilog_main(void) override;
 protected:
 };
 

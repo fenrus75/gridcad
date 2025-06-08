@@ -467,7 +467,7 @@ std::string model_truth::get_verilog_modules(void)
 						if (!nestedfirst)
 							s = s + " & ";
 						nestedfirst = false;
-						s = s + "!" + names[x];
+						s = s + "(!" + names[x] + ")";
 					}
 				}
 				
