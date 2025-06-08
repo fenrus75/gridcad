@@ -447,3 +447,12 @@ void port::collect_wires(std::vector<std::string> *wiremap)
 		wiremap->push_back(wire->get_verilog_name());
 	}
 }
+
+
+std::string port::get_verilog_name(void)
+{
+	verilog_name = name;
+	std::replace(verilog_name.begin(), verilog_name.end(), '-', '_');
+	std::replace(verilog_name.begin(), verilog_name.end(), '+', '_');
+	return verilog_name;
+}

@@ -320,19 +320,19 @@ std::string scene::get_verilog_main(void)
 			if (!first)
 				s += ", ";
 			first = false;
-			s += "input " + elem->get_verilog_name() + elem->get_verilog_width();
+			s += "input " + elem->get_verilog_width() + " " +elem->get_verilog_name();
 		}
 		if (elem->class_id() == "model_clock:") {
 			if (!first)
 				s += ", ";
 			first = false;
-			s += "input " + elem->get_verilog_name() + elem->get_verilog_width();
+			s += "input " + elem->get_verilog_width() + " " +elem->get_verilog_name();
 		}
 		if (elem->class_id() == "model_output:") {
 			if (!first)
 				s += ", ";
 			first = false;
-			s += "output " + elem->get_verilog_name() + elem->get_verilog_width();
+			s += "output " + elem->get_verilog_width() + " " +elem->get_verilog_name();
 		}
 	}	
 	s += ");\n\n";

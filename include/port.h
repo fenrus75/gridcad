@@ -58,6 +58,8 @@ public:
     void collect_wires(std::map<std::string, std::string> *wiremap);
     void collect_wires(std::vector<std::string> *wiremap);
     void collect_wires(std::map<std::string, unsigned int> *wiremap);
+    
+    std::string get_verilog_name(void);
 	
 private:
     class port_contextmenu *menu = NULL;

@@ -432,7 +432,7 @@ std::string model_nest::get_verilog_main(void)
 	
     _scene->create_verilog_names();
 
-    s = s + _scene->get_verilog_name() + " " + _scene->get_verilog_name() + "(";
+    s = s + _scene->get_verilog_name() + " " + get_verilog_name() + "(";
     bool first = true;
     for (auto port : ports) {
     
@@ -443,7 +443,7 @@ std::string model_nest::get_verilog_main(void)
     	if (!first)
     		s = s + ", ";
 	first = false;
-    	s = s + "." + port->name + "(";
+    	s = s + "." + port->get_verilog_name() + "(";
 	s = s + wiremap[0];
     	s = s + ")";
     	
@@ -462,6 +462,7 @@ std::string model_nest::get_verilog_modules(void)
 		_scene = canvas->get_scene();
     
     s += _scene->get_verilog_main();
+    s += _scene->get_verilog_modules();
     
     return s;
 }

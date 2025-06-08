@@ -84,10 +84,10 @@ std::string model_1to4::get_verilog_main(void)
     ports[1]->collect_wires(&wiremap_in2);
     if (wiremap_in2.size() < 1)
         wiremap_in2.push_back("1'1");
-    ports[2]->collect_wires(&wiremap_in2);
+    ports[2]->collect_wires(&wiremap_in3);
     if (wiremap_in3.size() < 1)
         wiremap_in3.push_back("1'1");
-    ports[3]->collect_wires(&wiremap_in3);
+    ports[3]->collect_wires(&wiremap_in4);
     if (wiremap_in4.size() < 1)
         wiremap_in4.push_back("1'1");
     
