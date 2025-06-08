@@ -64,6 +64,7 @@ canvas::canvas(class scene *_scene)
 	dragging_wire = NULL;
 	icon_bar = new iconbar(renderer, ui_area_rect);
 	current_scene = _scene;
+	callback_fit_to_screen(current_scene);
 }
 
 canvas::~canvas(void)
@@ -286,7 +287,7 @@ bool canvas::handle_event(SDL_Event &event)
 				bY2 = elem->get_Y() + elem->get_height();
 		}
 
-		if (bX2 != 0) {
+		if (bX2 != 0 && bX2 != bX1) {
 			offsetX = bX1 - 3;
 			offsetY = bY1 - 3;
 			scaleX = main_area_rect.w / (bX2-bX1 + 6.0) ;
