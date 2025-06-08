@@ -139,3 +139,102 @@ void model_dflipflop::queued_calculate(int ttl)
      notQ.boolval = !notQ.boolval;
      ports[3]->update_value(&notQ, ttl - 1); 
 }
+
+
+std::string model_dflipflop::get_verilog_main(void)
+{
+    std::string s = "";
+    std::vector<std::string> wiremap;
+    if (verilog_module_name == "")
+	    verilog_module_name = append_random_bits(verilog_name + "_tt_");
+
+    s = s + verilog_module_name + " " + get_verilog_name() + "(";
+    bool first = true;
+
+        ports[0]->collect_wires(&wiremap);
+        wiremap.push_back("");
+        if (wiremap.size() != 0) {
+
+    	    if (!first)
+  	        s = s + ", ";
+            first = false;
+    
+            s = s + ".D(";
+            s = s + wiremap[0];
+            s = s + ")";
+    	
+            wiremap.clear();
+        }
+
+        ports[1]->collect_wires(&wiremap);
+        wiremap.push_back("");
+        if (wiremap.size() != 0) {
+
+    	    if (!first)
+  	        s = s + ", ";
+            first = false;
+    
+            s = s + ".clk(";
+            s = s + wiremap[0];
+            s = s + ")";
+    	
+            wiremap.clear();
+        }
+
+        ports[2]->collect_wires(&wiremap);
+        wiremap.push_back("");
+        if (wiremap.size() != 0) {
+
+    	    if (!first)
+  	        s = s + ", ";
+            first = false;
+    
+            s = s + ".Q(";
+            s = s + wiremap[0];
+            s = s + ")";
+    	
+            wiremap.clear();
+        }
+
+
+        ports[3]->collect_wires(&wiremap);
+        wiremap.push_back("");
+        if (wiremap.size() != 0) {
+
+    	    if (!first)
+  	        s = s + ", ";
+            first = false;
+    
+            s = s + ".Q_n(";
+            s = s + wiremap[0];
+            s = s + ")";
+    	
+            wiremap.clear();
+        }
+
+    s = s + ");\n";
+    
+    
+    return s;
+}
+
+/* TODO -- rather than a pure basic SOP, run espresso on this and make it more minimal */
+std::string model_dflipflop::get_verilog_modules(void)
+{
+	std::string s = "";
+	
+	s = s + "module " + verilog_module_name + "\n";
+	s = s + "(input D, input clk, output reg Q, output Q_n);\n\n";
+	
+	s = s + "always @(posedge clk) \n";
+	s = s + "begin\n";
+	s = s + "Q <= D;\n";
+        s = s + "end \n";
+        s = s + "assign Q_n = !Q;\n";
+	s = s + "endmodule\n\n";
+	
+	
+	return s;
+}
+
+

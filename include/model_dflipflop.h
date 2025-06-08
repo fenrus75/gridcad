@@ -25,10 +25,13 @@ public:
     int get_width(void) { return ports[0]->get_width();};
     void calculate(int ttl) override;
     void queued_calculate(int ttl) override;
+    std::string get_verilog_main(void) override;
+    std::string get_verilog_modules(void) override;
     
 private:
     struct value value = {};
     struct value previous_clock = {};
     class name *name_edit = NULL;
+    std::string verilog_module_name = "";
 };
 
