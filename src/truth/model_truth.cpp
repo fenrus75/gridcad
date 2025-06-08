@@ -401,7 +401,7 @@ std::string model_truth::get_verilog_main(void)
     if (verilog_module_name == "")
 	    verilog_module_name = append_random_bits(verilog_name + "_tt_");
 
-    s = s + verilog_module_name + " " + verilog_module_name + "(";
+    s = s + verilog_module_name + " " + get_verilog_name() + "(";
     bool first = true;
     for (auto port : ports) {
     
@@ -457,13 +457,16 @@ std::string model_truth::get_verilog_modules(void)
 				s = s + "(";
 				bool nestedfirst = true;
 				for (unsigned int x = 0; x < inputs; x++) {
-					if (!nestedfirst)
-						s = s + " & ";
-					nestedfirst = false;
 					if (values[Y][x] == '1') {
+						if (!nestedfirst)
+							s = s + " & ";
+						nestedfirst = false;
 						s = s + names[x];
 					}
 					if (values[Y][x] == '0') {
+						if (!nestedfirst)
+							s = s + " & ";
+						nestedfirst = false;
 						s = s + "!" + names[x];
 					}
 				}
