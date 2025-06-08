@@ -85,6 +85,7 @@ public:
     void handle_event(SDL_Event &event);    
     void next(void);
     void previous(void);
+    void set(class oneiconbar *b);
     class icon *current_icon(int ScreenX, int ScreenY);
     std::string current_tooltip(int ScreenX, int ScreenY);
     class contextmenu *get_menu(int ScreenX, int ScreenY);

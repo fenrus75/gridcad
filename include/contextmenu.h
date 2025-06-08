@@ -30,7 +30,7 @@ public:
     void add_item(std::string text, scene_callback_fn callback);    
     
     virtual void draw_at(class basecanvas * canvas, float X, float Y);
-    void draw_at(class basecanvas * canvas);
+    virtual void draw_at(class basecanvas * canvas);
     
     void mouse_motion(float X, float Y);
     void mouse_set(float X, float Y);
@@ -75,6 +75,8 @@ public:
     virtual ~icon_contextmenu(void);
 
     void add_item(std::string text, class oneiconbar*, icon_callback_fn callback);    
+    void draw_at(class basecanvas * canvas, float X, float Y) override;
+    void draw_at(class basecanvas * canvas) override;
     
     void mouse_click(float X, float Y) override;
 

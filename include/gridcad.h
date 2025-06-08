@@ -137,6 +137,8 @@ public:
     float distance_from_mouse(float X, float Y);
 
     void clear_floating(void);
+    
+    float screen_width(void);
          
 protected:
     bool draw_grid = false;

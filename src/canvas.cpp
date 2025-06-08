@@ -273,7 +273,7 @@ bool canvas::handle_event(SDL_Event &event)
 	bool leave = false;
 	bool someone_in_editmode = false;
 	
-	if (SDL_GetTicks64() - mouse_timestamp > 1000 && X_to_scr(mouseX) > main_area_rect.w) 
+	if (SDL_GetTicks64() - mouse_timestamp > 1000 && X_to_scr(mouseX) > main_area_rect.w && active_menu == NULL) 
 		tooltip_eligable = true;
 	else
 		tooltip_eligable = false;
@@ -848,8 +848,10 @@ void canvas::draw(void)
 		}
 	}
 	
-	if (active_menu)
+	if (active_menu) {
+		SDL_RenderSetClipRect(renderer, NULL);
 		active_menu->draw_at(this);
+	}
 
 	if (window_shown)
 		SDL_RenderPresent(renderer);
@@ -986,4 +988,12 @@ void canvas::clear_floating(void)
 	for (auto elem : floating)
 		delete elem;
 	floating.clear();
+}
+
+float canvas::screen_width(void)
+{
+	float Wpixels = ui_area_rect.x + ui_area_rect.w;
+	float W = scr_to_X(Wpixels);
+	
+	return W;
 }

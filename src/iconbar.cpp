@@ -21,6 +21,7 @@
 
 void callback_ib(class iconbar *bar, class oneiconbar *choice)
 {
+    bar->set(choice);
 }
 
 iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
@@ -67,7 +68,7 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
     
     for (li = 0; li < library.size(); li++) {
         if (libtabs.find(library[li].collection) == libtabs.end()) {
-            libtab = new class oneiconbar(_renderer, _rect, "Library "+ library[li].collection );
+            libtab = new class oneiconbar(_renderer, _rect, library[li].collection );
             libtabs[library[li].collection] = libtab;
             icons.push_back(libtab);
         }
@@ -354,6 +355,10 @@ std::string oneiconbar::current_tooltip(int ScreenX, int ScreenY)
     
     gridX = floor(dX);
     gridY = floor(dY);
+    if (gridX < 0)
+        return "";
+    if (gridY < 0)
+        return "";    
     
     if (gridX >= (int)icons.size())
         return "";
@@ -380,3 +385,12 @@ void iconbar::previous(void)
     current_icons = icons[active_index];
 }
 
+
+void iconbar::set(class oneiconbar *b)
+{
+     current_icons = b;
+     for (unsigned int i = 0; i < icons.size(); i++) {
+         if (icons[i] == b)
+            active_index = i;
+     }
+}
