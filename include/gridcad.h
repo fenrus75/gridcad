@@ -166,6 +166,7 @@ protected:
     bool handle_event_iconarea(SDL_Event &event);
     bool handle_event_drawingarea(SDL_Event &event);
     void draw_tooltip(float X, float Y, std::string tooltip);
+    bool fittoscreen = false;
     
 };
 

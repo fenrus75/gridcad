@@ -28,6 +28,7 @@
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
 
+extern void callback_fit_to_screen(class scene *scene);
 
 static std::string clipboard;
 
@@ -272,6 +273,7 @@ bool canvas::handle_event(SDL_Event &event)
 
 
 	if (event.type == EVENT_ZOOM_TO_FIT && event.user.data1 == current_scene) {  /* zoom to fit the screen */
+		fittoscreen = true;
 		float bX1 = current_scene->sizeX, bY1 = current_scene->sizeY, bX2 = 0, bY2 = 0;
 		for (auto elem : current_scene->elements) {
 			if (elem->get_X() < bX1)
@@ -315,11 +317,13 @@ bool canvas::handle_event(SDL_Event &event)
 				offsetY--;
 				if (offsetY < -1)
 					offsetY = -1;
+				fittoscreen = false;
 				break;
 			case SDLK_DOWN:
 				offsetY++;
 				if (offsetY > current_scene->sizeY + 1)
 					offsetY = current_scene->sizeY;
+				fittoscreen = false;
 				break;
 			case SDLK_LEFT:
 				if (event.key.keysym.mod & KMOD_LCTRL) {
@@ -330,6 +334,7 @@ bool canvas::handle_event(SDL_Event &event)
 						if (offsetX < -1)
 							offsetX = -1;
 					}
+					fittoscreen = false;
 				}
 				break;
 					
@@ -341,6 +346,7 @@ bool canvas::handle_event(SDL_Event &event)
 						offsetX++;
 						if (offsetX > current_scene->sizeX + 1)
 							offsetX = current_scene->sizeX;
+						fittoscreen = false;
 					}
 				}
 				break;
@@ -350,6 +356,7 @@ bool canvas::handle_event(SDL_Event &event)
 				if (!someone_in_editmode) {
 					scaleX++;
 					scaleY++;
+					fittoscreen = false;
 				}
 				break;
 			case SDLK_MINUS:
@@ -359,6 +366,7 @@ bool canvas::handle_event(SDL_Event &event)
 						scaleX--;
 					if (scaleY > 1)
 						scaleY--;
+					fittoscreen = false;
 				}
 				break;
 			case SDLK_ESCAPE:
@@ -640,6 +648,7 @@ bool canvas::handle_event(SDL_Event &event)
 
 				middle_X = event.motion.x;
 				middle_Y = event.motion.y;
+				fittoscreen = false;
 
 			}
 			break;
@@ -653,6 +662,7 @@ bool canvas::handle_event(SDL_Event &event)
 				cY = Y_to_scr(mouseY);
 				scaleX++;
 				scaleY++;
+				fittoscreen = false;
 				
 				/* need to keep the point under the cursor the same */
 				while (scr_to_X(cX) < mouseX && count++ < 1000)
@@ -671,6 +681,7 @@ bool canvas::handle_event(SDL_Event &event)
 					scaleX--;
 				if (scaleY > 1)
 					scaleY--;
+				fittoscreen = false;
 				/* need to keep the point under the cursor the same */
 				while (scr_to_X(cX) > mouseX && count++ < 1000)  
 					offsetX -= 0.05;
@@ -699,6 +710,8 @@ bool canvas::handle_event(SDL_Event &event)
 				ui_area_rect.w = event.window.data1 - main_area_rect.w;
 				ui_area_rect.h = event.window.data2;
 				icon_bar->resize(ui_area_rect);
+				if (fittoscreen)
+					callback_fit_to_screen(current_scene);
 				break;
 			case SDL_WINDOWEVENT_CLOSE:   /* user clicked the 'x' */
 				SDL_HideWindow(window);

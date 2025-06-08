@@ -31,7 +31,7 @@ void callback_fit_to_screen(class scene *scene)
 	ev.type = EVENT_ZOOM_TO_FIT;
 	ev.user.code = 0;
 	ev.user.data1 = scene;
-
+	
 	SDL_PushEvent(&ev);
 }
 
