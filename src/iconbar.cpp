@@ -116,6 +116,8 @@ void iconbar::resize(SDL_Rect _rect)
 
 #define SCALEX 40
 #define SCALEY 40
+#define OFFSETX 0
+#define OFFSETY 20
 
 void iconbar::draw(void)
 {
@@ -260,15 +262,15 @@ void oneiconbar::draw(void)
     
     for (y = 0; y < 15; y++) {
         for (x = 0; x < 2; x++) {
-                box.x = rect.x + (0.5 + 2.5 * x) * SCALEX;
-                box.y = rect.y + (0.5 + 2.5 * y) * SCALEY;
+                box.x = rect.x + (0.5 + 2.5 * x) * SCALEX + OFFSETX;
+                box.y = rect.y + (0.5 + 2.5 * y) * SCALEY + OFFSETY;
                 box.h = 2 * SCALEY;
-                box.w = 2 * SCALEY;
+                box.w = 2 * SCALEX;
         	SDL_SetRenderDrawColor(renderer, R(color), G(color), B(color),
 			       Alpha(color));
         	SDL_RenderFillRect(renderer, &box);
                 if (icons[x][y])
-                   icons[x][y]->draw(renderer, rect.x + (0.6 + 2.5 * x) * SCALEX, rect.y + (0.6 + 2.5 * y) * SCALEY, 1.8 * SCALEX, 1.8 * SCALEY);
+                   icons[x][y]->draw(renderer, rect.x + (0.6 + 2.5 * x) * SCALEX + OFFSETX, rect.y + (0.6 + 2.5 * y) * SCALEY + OFFSETY, 1.8 * SCALEX, 1.8 * SCALEY);
                 
                 
         }    
@@ -290,8 +292,8 @@ class icon * oneiconbar::current_icon(int ScreenX, int ScreenY)
     if (ScreenX < 0 || ScreenY <0) /* left of the icons */
       return NULL;
       
-    dX = ScreenX / (2.5 * SCALEX);
-    dY = ScreenY / (2.5 * SCALEY);
+    dX = (ScreenX - OFFSETX) / (2.5 * SCALEX);
+    dY = (ScreenY - OFFSETY)/ (2.5 * SCALEY);
     
     gridX = floor(dX);
     gridY = floor(dY);
@@ -324,8 +326,8 @@ std::string oneiconbar::current_tooltip(int ScreenX, int ScreenY)
     if (ScreenX < 0 || ScreenY <0) /* left of the icons */
       return "";
       
-    dX = ScreenX / (2.5 * SCALEX);
-    dY = ScreenY / (2.5 * SCALEY);
+    dX = (ScreenX - OFFSETX) / (2.5 * SCALEX);
+    dY = (ScreenY - OFFSETY) / (2.5 * SCALEY);
     
     gridX = floor(dX);
     gridY = floor(dY);
