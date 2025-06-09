@@ -57,6 +57,21 @@ void connector::draw(class canvas *canvas, int type)
     canvas->draw_image(icon, X,Y,1,1);
 }
 
+void connector::draw_phase2(class canvas *canvas, int type)
+{
+    std::string icon = "";
+        
+    if (ports[0]->value.boolval)
+        icon = "assets/connector_green.png";
+    else
+        icon = "assets/connector_red.png";
+        
+    if (ports[0]->get_width() > 1)
+        icon = "assets/connector_bus.png";
+        
+    canvas->draw_image(icon, X,Y,1,1);
+}
+
 void connector::fill_grid(class wiregrid *grid)
 {
     grid->block_point(X, Y);
