@@ -859,10 +859,24 @@ void canvas::draw(void)
 		SDL_RenderPresent(renderer);
 }
 
+static float scale = -1;
+
+static void fill_scale(void)
+{
+	if (scale > 0)
+		return;
+    	float dpi;
+    	SDL_GetDisplayDPI(0, &dpi, NULL, NULL);
+    	if (dpi < 90)
+    		dpi = 96;
+    	scale = 1.3 * 96.0 / dpi;
+}
+
+
 void canvas::draw_tooltip(float X, float Y, std::string tooltip)
 {
 	SDL_Texture *text, *shade;
-	float scale = 1.5;
+	fill_scale();
 	
 	text = text_to_texture(tooltip)	;
 	shade = load_image("assets/gray.png");

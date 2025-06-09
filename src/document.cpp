@@ -34,6 +34,7 @@ document::document(std::string _name)
 {
 	class canvas *_canvas;
 	class scene *_scene;
+	float d1,d2,d3;
 	
 	std::string filename;
 	
@@ -44,6 +45,9 @@ document::document(std::string _name)
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
 	TTF_Init();
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2");
+	
+	SDL_GetDisplayDPI(0, &d1, &d2, &d3);
+	printf("DPI %5.2f %5.2f %5.2f\n", d1, d2, d3);
 	
 	SDL_timer_event = SDL_RegisterEvents(16);
 	

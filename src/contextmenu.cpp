@@ -117,10 +117,23 @@ void draw_menu_item_color(class basecanvas *canvas, float X, float Y, float W, f
 	canvas->draw_text_left(string, X + canvas->scale_to_X(36), Y, W, H);
 }
 
+static float scale = -1;
+
+static void fill_scale(void)
+{
+	if (scale > 0)
+		return;
+    	float dpi;
+    	SDL_GetDisplayDPI(0, &dpi, NULL, NULL);
+    	if (dpi < 90)
+    		dpi = 96;
+    	scale = 1.3 * 96.0 / dpi;
+}
 
 void contextmenu::draw_at(class basecanvas *canvas, float X, float Y)
 {
-    const float scale = 1.5;
+
+    fill_scale();
 
     maxX = 0;
     maxY = 0;
@@ -234,8 +247,8 @@ void port_contextmenu::add_item(std::string text, int color, port_callback_fn po
 
 void port_contextmenu::draw_at(class basecanvas *canvas, float X, float Y)
 {
-    const float scale = 1.5;
-
+    fill_scale();
+    
     maxX = 0;
     maxY = 0;
 
