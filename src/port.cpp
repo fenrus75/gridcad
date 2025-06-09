@@ -70,6 +70,10 @@ void port::add_wire(class wire * wire)
 		if (wire == _wire)
 			return;
 	}
+
+	/* Only allow one input wire */
+	if (wires.size() > 0 && direction == PORT_IN)
+		return;
 	
 	if (wire->get_width() == 0) 
 		wire->set_width( get_width());
