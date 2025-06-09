@@ -235,8 +235,10 @@ bool canvas::handle_event_iconarea(SDL_Event &event)
 	this_icon = icon_bar->current_icon(event.motion.x, event.motion.y);
 	active_menu = icon_bar->get_menu(event.motion.x, event.motion.y);
 	
+
+	/* set the mouse position -- but we fake it to be the left of the menu area for better menu placement */
 	if (active_menu)
-			active_menu->mouse_set(scr_to_X(event.motion.x), scr_to_Y(event.motion.y));
+			active_menu->mouse_set(scr_to_X(ui_area_rect.x+15), scr_to_Y(event.motion.y));
 	
 	if (this_icon)
 		printf("ICON CLICK\n");
