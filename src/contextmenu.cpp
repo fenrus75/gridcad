@@ -191,8 +191,7 @@ void contextmenu::mouse_click(float X, float Y)
 
 	currentX = X;
 	currentY = Y;
-	
-	
+
 	if (X < X1 || X > X2)
 		return;
 	if (Y < Y1 || Y > Y2)
@@ -342,10 +341,11 @@ void icon_contextmenu::draw_at(class basecanvas *canvas)
 	class canvas *can = (class canvas *) canvas;
 	
 	sW = can->screen_width();
+
 	
-	if (sX + maxX > sW - (can->scr_to_X(20)))
-		sX = sW - can->scr_to_X(20) - maxX;
-	
+	if (sX + maxX > sW)
+		sX = sW - maxX;
+
 	draw_at(canvas, sX, sY);
 
 }
