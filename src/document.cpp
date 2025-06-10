@@ -102,6 +102,8 @@ document::~document(void)
 
 	output << j.dump(4);
 	output.close();
+	
+	save_verilog(filename + ".v");
 	delete _canvas;
 
 	TTF_Quit();

@@ -11,3 +11,4 @@ todo
 pngs.cpp
 pngs.o
 test.v
+*.json.v

@@ -51,8 +51,6 @@ int main(int argc, char **argv)
 
 	document->run();
 	
-	document->save_verilog("test.v");
-
 	delete document;
 	document = NULL;
 
