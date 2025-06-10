@@ -210,6 +210,8 @@ void scene::from_json(json &j)
 	}
 	for (auto element : elements)
 		element->calculate(100);
+
+	cycle_color();
 }
 
 void scene::process_delete_requests(void)

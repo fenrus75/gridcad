@@ -112,9 +112,15 @@ std::string connector::get_verilog_main(void)
       }
     }
 
+    if (inwire == "") {
+	printf("FATAL ERROR : NO INWIRE FOUND\n");
+		/* NO INWIRE found */
+	return s;
+    }
+
     for (const auto& pair : wiremap) {
       if (pair.first != inwire)
-        s = s + "assign " + pair.first + " = " + inwire + ";\n";
+        s = s + "assign " + pair.first + " = " + inwire + "; // connector\n";
     }
     
     return s;

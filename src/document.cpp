@@ -70,6 +70,7 @@ document::document(std::string _name)
 		_scene->from_json(j);
 	}
 	clear_wire_factory();
+	_scene->cycle_color();
 }
 
 void document::save_verilog(std::string filename)

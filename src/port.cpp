@@ -412,10 +412,12 @@ void port::cycle_color(void)
 		
 	push_wire_color(color);
 	value.boolval = !value.boolval;
+	value.intval = ~value.intval;
 	for (auto wire:wires) {
 		wire->update_value(&value, 50);
 	}
 	value.boolval = !value.boolval;
+	value.intval = ~value.intval;
 	for (auto wire:wires) {
 		wire->update_value(&value, DEFAULT_TTL);
 	}	
