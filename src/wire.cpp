@@ -261,6 +261,11 @@ void wire::route(class scene *scene)
 	    want_reverse = true;
         }
     }
+    
+    if (ports.size() > 1) {
+        if (floorf(ports[0]->screenX) == X1 && floorf(ports[0]->screenY) == Y1 && ports[0]->get_distance_from_outport() < ports[1]->get_distance_from_outport()) 
+            want_reverse = true;
+    }
     if (want_reverse)
             std::reverse(points->begin(), points->end());
     being_routed = false;

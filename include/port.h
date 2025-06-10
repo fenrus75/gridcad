@@ -60,6 +60,8 @@ public:
     void collect_wires(std::map<std::string, unsigned int> *wiremap);
     
     std::string get_verilog_name(void);
+    
+    unsigned int get_distance_from_outport(void) { return distance_from_outport;};
 	
 private:
     class port_contextmenu *menu = NULL;
@@ -69,4 +71,5 @@ private:
     std::string linked_uuid = "";
     class element *linked_element = NULL;
     std::string verilog_name = "";
+    unsigned int distance_from_outport = INT_MAX;
 };

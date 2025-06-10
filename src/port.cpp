@@ -104,6 +104,7 @@ void port::update_value(struct value *newvalue, int ttl)
 	unsigned int best_dist = INT_MAX;
 
 	if (direction == PORT_OUT) {
+		distance_from_outport = 0;
 		for (auto wire:wires)
 			wire->set_distance_from_outport(0);
 	} else {
@@ -111,8 +112,10 @@ void port::update_value(struct value *newvalue, int ttl)
 			if (wire->get_distance_from_outport() < best_dist)
 				best_dist = wire->get_distance_from_outport();
 			
-		for (auto wire:wires)
+		for (auto wire:wires) {
+			distance_from_outport = best_dist + 1;
 			wire->set_distance_from_outport(best_dist + 1);
+		}
 	}
 		
 
@@ -267,6 +270,7 @@ void port::to_json(json &j)
 	j["verilog_name"] = verilog_name;
 	
 	j["wires"] = json::array();
+	j["distance_from_outport"] = distance_from_outport;
 	for (i = 0; i < wires.size(); i++) {
 		json p;
 		wires[i]->to_json(p);
@@ -288,6 +292,7 @@ void port::from_json(json &j)
 	linked_uuid = j.value("linked_uuid", "");
 	verilog_name = j.value("verilog_name", name);
 	color = j.value("color", 0);
+	distance_from_outport = j.value("distance_from_outport", INT_MAX);
 	for (i = 0; i < j["wires"].size(); i++) {
 		class wire *wire;
 		wire = json_wire_factory(j["wires"][i]);
