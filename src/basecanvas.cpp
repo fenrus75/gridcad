@@ -351,6 +351,13 @@ SDL_Texture *basecanvas::text_to_texture(const char *text)
 		
 	if (!font)
 		font = TTF_OpenFont("fonts/Roboto-Medium-webfont.ttf", 28);
+
+	if (text[0] == '*') {
+		TTF_SetFontStyle(font, TTF_STYLE_ITALIC);
+		text++;
+	} else {
+		TTF_SetFontStyle(font, TTF_STYLE_NORMAL);
+	}
 	surface = TTF_RenderUTF8_Blended(font, text, white);
 	tx = SDL_CreateTextureFromSurface(renderer, surface);
 	SDL_FreeSurface(surface);

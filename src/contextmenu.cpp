@@ -30,6 +30,7 @@ void contextmenu::add_item(std::string text, callback_fn callback)
     
     item->menu_text = text;
     item->callback = callback;
+    item->active = true;
     
     items.push_back(item);
 }
@@ -42,6 +43,7 @@ void contextmenu::add_item(std::string text, scene_callback_fn scene_callback)
     
     item->menu_text = text;
     item->scene_callback = scene_callback;
+    item->active = true;
     
     items.push_back(item);
 }
@@ -164,7 +166,7 @@ void contextmenu::draw_at(class basecanvas *canvas, float X, float Y)
     	std::string asterix = "";
     	if (!item->active)
     		asterix = "*";
-    	draw_menu_item(canvas, X, Y, maxX, maxY, asterix + item->menu_text, scale, (int)i == selection && item->active);
+    	draw_menu_item(canvas, X, Y, maxX, maxY, asterix + item->menu_text, scale, ((int)i == selection) && item->active);
     	Y += maxY;
     }
     
@@ -252,6 +254,7 @@ void port_contextmenu::add_item(std::string text, int color, port_callback_fn po
     item->menu_text = " " + text  + "  ";
     item->port_callback = port_callback;
     item->color = color;
+    item->active = true;
     
     items.push_back(item);
 }
@@ -326,6 +329,7 @@ void icon_contextmenu::add_item(std::string text, class oneiconbar* bar, icon_ca
     item->menu_text = text;
     item->icon_callback = callback;
     item->choice = bar;
+    item->active = true;
     
     items.push_back(item);
 }
