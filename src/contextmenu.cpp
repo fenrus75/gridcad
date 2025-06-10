@@ -46,6 +46,21 @@ void contextmenu::add_item(std::string text, scene_callback_fn scene_callback)
     items.push_back(item);
 }
 
+void contextmenu::set_active(std::string name)
+{
+	for (auto item : items) {
+		if (item->menu_text == name)
+			item->active = true;
+	}
+}
+void contextmenu::set_inactive(std::string name)
+{
+	for (auto item : items) {
+		if (item->menu_text == name)
+			item->active = false;
+	}
+}
+
 float Xsize(class basecanvas *canvas, std::string str, float scale)
 {
 	SDL_Texture *text;
@@ -78,20 +93,13 @@ float Ysize(class basecanvas *canvas, std::string str, float scale)
 
 void draw_menu_item(class basecanvas *canvas, float X, float Y, float W, float H, std::string string, float scale, bool selected)
 {
-	SDL_Texture *text, *shade;
+	SDL_Texture *shade;
 	
-	text = canvas->text_to_texture(string)	;
 	if (selected)
 		shade = canvas->load_image("assets/lightgray.png");
 	else
 		shade = canvas->load_image("assets/gray.png");
-	if (!text)
-		return;
 		
-	SDL_Point size;
-	
-	SDL_QueryTexture(text, NULL, NULL, &size.x, &size.y);
-
 	canvas->draw_image(shade, X, Y, W, H);
 	canvas->draw_text_left(string, X, Y, W, H);
 }
@@ -153,7 +161,10 @@ void contextmenu::draw_at(class basecanvas *canvas, float X, float Y)
     
     for (unsigned int i = 0; i < items.size(); i++) {
     	auto item = items[i];
-    	draw_menu_item(canvas, X, Y, maxX, maxY, item->menu_text, scale, (int)i == selection);
+    	std::string asterix = "";
+    	if (!item->active)
+    		asterix = "*";
+    	draw_menu_item(canvas, X, Y, maxX, maxY, asterix + item->menu_text, scale, (int)i == selection && item->active);
     	Y += maxY;
     }
     

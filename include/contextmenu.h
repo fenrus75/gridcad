@@ -18,6 +18,7 @@ struct context_item {
     scene_callback_fn scene_callback; 
     port_callback_fn port_callback; 
     icon_callback_fn icon_callback; 
+    bool active;
 };
 
 class contextmenu {
@@ -37,6 +38,9 @@ public:
     virtual void mouse_click(float X, float Y);
     
     bool mouse_in_bounds(float X, float Y);
+    
+    void set_active(std::string);
+    void set_inactive(std::string);
     
 protected:
     class element *element = NULL;

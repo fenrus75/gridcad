@@ -4,6 +4,7 @@
 
 #include "library.h"
 #include "contextmenu.h"
+#include "library.h"
 
 #define ICON_LIBRARY 0
 #define ICON_ZERO 1

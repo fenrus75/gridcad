@@ -16,15 +16,24 @@
 #include "model_toggle.h"
 #include "model_output.h"
 #include "port.h"
+#include "library.h"
+#include "contextmenu.h"
+#include "name.h"
+
+
 #include <algorithm>
 #include <sys/time.h>
 #include <nlohmann/json.hpp>
-#include "contextmenu.h"
-#include "name.h"
 
 static float dist(float X1, float Y1, float X2, float Y2)
 {
 	return sqrtf( (X2-X1)*(X2-X1) + (Y2-Y1)*(Y2-Y1));
+}
+
+void callback_reset(class element *element)
+{
+	class model_nest *nest = (class model_nest *) element;
+	nest->reset_to_library();
 }
 
 model_nest::model_nest(float _X, float _Y) : element(_X,_Y, "SubScreen")
@@ -36,6 +45,7 @@ model_nest::model_nest(float _X, float _Y) : element(_X,_Y, "SubScreen")
 	printf("New scene %s %s\n", name.c_str(), get_full_name().c_str());
 	_scene = new class scene(name, get_full_name());
 	menu->add_item("Edit name", callback_editname);
+	menu->add_item("Reset to library version", callback_reset);
 	
 	name_edit = new class name(&name);
 }
@@ -168,6 +178,8 @@ void model_nest::to_json(json &j)
      j["scene"] = p;   
      j["icon"] = icon;
      j["icon_selected"] = icon_selected;
+     j["from_library_collection"] = from_library_collection;
+     j["from_library_element"] = from_library_element;
 }
 void model_nest::from_json(json &j)
 {
@@ -179,6 +191,13 @@ void model_nest::from_json(json &j)
      	
      icon = j.value("icon", "");
      icon_selected = j.value("icon_selected", "");
+     from_library_collection = j.value("from_library_collection", "");
+     from_library_element = j.value("from_library_element", "");
+     
+     if (from_library_collection == "")
+     	menu->set_inactive("Reset to library version");
+     else
+     	menu->set_active("Reset to library version");
      regen_ports();
 }
 
@@ -481,4 +500,34 @@ void model_nest::create_verilog_name(int seqno, std::vector<std::string> *existi
 		_scene = canvas->get_scene();
 	_scene->update_vname(verilog_name);
 	
+}
+
+void model_nest::reset_to_library(void)
+{
+	struct library_block *lib;
+	class scene *newscene, *oldscene;
+	
+	if (canvas)
+		_scene = canvas->get_scene();
+	
+	if (from_library_collection == "")
+		return;
+	
+	lib = find_in_library(from_library_collection, from_library_element);
+	if (!lib)
+		return;
+		
+	newscene = new scene(_scene->get_name(), get_full_name());
+	if (canvas) {
+		oldscene = canvas->swap_scene(newscene);
+		_scene = newscene;
+	} else {
+		oldscene = _scene;
+		_scene = newscene;
+	}
+	delete oldscene;
+
+
+	load_scene_from_json(lib->logic);
+	set_icon(lib->icon, lib->icon_selected);		
 }
