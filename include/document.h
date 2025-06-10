@@ -11,6 +11,7 @@ public:
 	~document(void);
 	
 	void save_verilog(std::string filename);
+	void save_json(std::string filename);
 
 	void run(void);
 
