@@ -455,14 +455,13 @@ std::string model_nest::get_verilog_main(void)
     for (auto port : ports) {
     
     	port->collect_wires(&wiremap);
-    	if (wiremap.size() == 0)
-    		continue;
 
     	if (!first)
     		s = s + ", ";
 	first = false;
     	s = s + "." + port->get_verilog_name() + "(";
-	s = s + wiremap[0];
+    	if (wiremap.size() > 0)
+		s = s + wiremap[0];
     	s = s + ")";
     	
     	wiremap.clear();
