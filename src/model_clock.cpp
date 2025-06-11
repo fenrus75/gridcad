@@ -47,6 +47,8 @@ void callback_single_clock(class element *element)
 	ev.user.code = 0;
 
 	SDL_PushEvent(&ev);
+        run_queued_calculations();	
+        return;
 	/* we send 2 events, one for rising one for falling clock */
 	ev.type = EVENT_SINGLE_CLOCK;
 	ev.user.code = 0;

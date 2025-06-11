@@ -120,11 +120,16 @@ void model_dflipflop::calculate(int ttl)
      if (newclock.boolval == previous_clock.boolval)
        return;
      if (newclock.boolval) { /* rising edge */
+          bool changed = false;
           previous_clock = newclock;
           /* latch in the D value */
+          
+          if (memcmp(&value, &(ports[0]->value), sizeof(struct value)) != 0)
+              changed = true;
           value = ports[0]->value;  
           
-          queue_calculate(this); /* schedule calculations for the propagation */
+          if (changed)
+              queue_calculate(this); /* schedule calculations for the propagation */
      };
      
      previous_clock = newclock;

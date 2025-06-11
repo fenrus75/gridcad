@@ -173,6 +173,7 @@ void document::run(void)
 		if (leave)
 			printf("Want to quit\n");
 
+		run_queued_calculations();
 		if (!ret && !leave) {
 			for (auto canvas: canvases)
 				canvas->draw();

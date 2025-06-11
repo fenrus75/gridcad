@@ -17,7 +17,8 @@ void queue_calculate(class element *element)
 
 void run_queued_calculations(void)
 {
-//    printf("Running calculation queue with sizes %li %li \n", queue0.size(), queue1.size());
+    if (queue0.size() > 0 || queue1.size() > 0)
+    printf("Running calculation queue with sizes %li %li \n", queue0.size(), queue1.size());
     if (queue == 0) {
         for (auto elem : queue0) 
             elem->queued_calculate(DEFAULT_TTL);
