@@ -16,6 +16,9 @@
 #include "contextmenu.h"
 #include "name.h"
 
+#include <algorithm>
+#include <string>
+
 #include <sys/time.h>
 
 model_memory::model_memory(float _X, float _Y)  : element(1, 1, "Memory")
@@ -143,8 +146,9 @@ void model_memory::queued_calculate(int ttl)
 
 std::string model_memory::get_verilog_main(void)
 {
+    unsigned int addrbits = ceil(log(data_size)/log(2));
     std::string s = "";
-    #if 0
+    
     std::vector<std::string> wiremap;
     if (verilog_module_name == "")
 	    verilog_module_name = append_random_bits(verilog_name + "_tt_");
@@ -160,7 +164,7 @@ std::string model_memory::get_verilog_main(void)
   	        s = s + ", ";
             first = false;
     
-            s = s + ".D(";
+            s = s + ".clk(";
             s = s + wiremap[0];
             s = s + ")";
     	
@@ -175,12 +179,13 @@ std::string model_memory::get_verilog_main(void)
   	        s = s + ", ";
             first = false;
     
-            s = s + ".clk(";
+            s = s + ".WrEn(";
             s = s + wiremap[0];
             s = s + ")";
     	
             wiremap.clear();
         }
+
 
         ports[2]->collect_wires(&wiremap);
         wiremap.push_back("");
@@ -190,8 +195,8 @@ std::string model_memory::get_verilog_main(void)
   	        s = s + ", ";
             first = false;
     
-            s = s + ".Q(";
-            s = s + wiremap[0];
+            s = s + ".Addr(";
+            s = s + wiremap[0] + "[" + std::to_string(addrbits) + ":0]";
             s = s + ")";
     	
             wiremap.clear();
@@ -206,7 +211,21 @@ std::string model_memory::get_verilog_main(void)
   	        s = s + ", ";
             first = false;
     
-            s = s + ".Q_n(";
+            s = s + ".Di(";
+            s = s + wiremap[0];
+            s = s + ")";
+    	
+            wiremap.clear();
+        }
+        ports[4]->collect_wires(&wiremap);
+        wiremap.push_back("");
+        if (wiremap.size() != 0) {
+
+    	    if (!first)
+  	        s = s + ", ";
+            first = false;
+    
+            s = s + ".Do(";
             s = s + wiremap[0];
             s = s + ")";
     	
@@ -215,25 +234,29 @@ std::string model_memory::get_verilog_main(void)
 
     s = s + ");\n";
     
-#endif    
     return s;
 }
 
 /* TODO -- rather than a pure basic SOP, run espresso on this and make it more minimal */
 std::string model_memory::get_verilog_modules(void)
 {
+        unsigned int addrbits = ceil(log(data_size)/log(2));
+        
 	std::string s = "";
-#if 0	
 	s = s + "module " + verilog_module_name + "\n";
-	s = s + "(input [0:7] Di, input clk, output [0:7] Do, input [0:15] Addr, input WrEn);\n\n";
-	
+	s = s + "(input [7:0] Di, input clk, output reg [7:0] Do, input [" + std::to_string(addrbits) +":0] Addr, input WrEn);\n\n";
+
+
+        s = s + "reg [7:0] data [0:" + std::to_string(data_size) + "];";
 	s = s + "always @(posedge clk) \n";
 	s = s + "begin\n";
-	s = s + "Q <= D;\n";
+	s = s + "  if (WrEn) begin\n";
+	s = s + "      data[Addr["+ std::to_string(addrbits) + ":0]] <= Di;\n";
+	s = s + "  end;\n";
+	s = s + "  Do <= data[Addr["+std::to_string(addrbits) + ":0]];\n";
         s = s + "end \n";
-        s = s + "assign Q_n = !Q;\n";
+
 	s = s + "endmodule\n\n";
-#endif	
 	
 	return s;
 }
