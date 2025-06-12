@@ -66,6 +66,9 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
 
     init_icon = new class oneiconbar(_renderer, _rect, "Memory");
     init_icon->set_element("model_memory:", "assets/memory.png", "8 Bit Memory");
+    init_icon->insert_blank();
+    init_icon->set_element("model_clock:", "assets/clock_on.png", "Clock");
+    init_icon->set_element("model_dflipflop:", "assets/dflipflop.png", "D flip flop");
     icons.push_back(init_icon);
     
     

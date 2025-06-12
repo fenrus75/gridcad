@@ -56,9 +56,9 @@ model_memory::model_memory(float _X, float _Y)  : element(1, 1, "Memory")
     data.resize(512);
     
     add_port(-1, 3, "clk", PORT_IN);    
-    add_port(sizeX, 3, "WrEn", PORT_IN, 1);
+    add_port(sizeX, 3, "Wr", PORT_IN, 1);
     add_port(1, sizeY, "Addr", PORT_IN, highest_addr_bit(data.size())+1);
-    add_port(3, sizeY, "DI", PORT_IN, 8);    
+    add_port(sizeX, 2, "DI", PORT_IN, 8);    
     add_port(4, sizeY, "DO", PORT_OUT, 8);    
     menu->add_item("Edit name", callback_editname);
     menu->add_item("Set 256 byte size", callback_256);
