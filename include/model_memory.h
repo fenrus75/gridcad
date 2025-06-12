@@ -27,6 +27,7 @@ public:
     std::string get_verilog_main(void) override;
     std::string get_verilog_modules(void) override;
     unsigned int highest_addr_bit(unsigned int size);
+    void update_memory_size(unsigned int newsize);
     
 private:
     std::vector<std::uint8_t> data;

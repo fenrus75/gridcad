@@ -21,6 +21,31 @@
 
 #include <sys/time.h>
 
+
+void callback_256(class element *element)
+{
+    class model_memory *mem = (class model_memory *) element;
+    mem->update_memory_size(256);
+}
+
+void callback_512(class element *element)
+{
+    class model_memory *mem = (class model_memory *) element;
+    mem->update_memory_size(512);
+}
+
+void callback_1024(class element *element)
+{
+    class model_memory *mem = (class model_memory *) element;
+    mem->update_memory_size(1024);
+}
+
+void callback_2048(class element *element)
+{
+    class model_memory *mem = (class model_memory *) element;
+    mem->update_memory_size(2048);
+}
+
 model_memory::model_memory(float _X, float _Y)  : element(1, 1, "Memory")
 {
     sizeX = 6;
@@ -32,10 +57,14 @@ model_memory::model_memory(float _X, float _Y)  : element(1, 1, "Memory")
     
     add_port(-1, 3, "clk", PORT_IN);    
     add_port(sizeX, 3, "WrEn", PORT_IN, 1);
-    add_port(1, sizeY, "Addr", PORT_IN, highest_addr_bit(data.size()));
+    add_port(1, sizeY, "Addr", PORT_IN, highest_addr_bit(data.size())+1);
     add_port(3, sizeY, "DI", PORT_IN, 8);    
     add_port(4, sizeY, "DO", PORT_OUT, 8);    
     menu->add_item("Edit name", callback_editname);
+    menu->add_item("Set 256 byte size", callback_256);
+    menu->add_item("Set 512 byte size", callback_512);
+    menu->add_item("Set 1024 byte size", callback_1024);
+    menu->add_item("Set 2048 byte size", callback_2048);
     
     name_edit = new class name(&name);
 }
@@ -57,6 +86,7 @@ void model_memory::drawAt(class canvas *canvas, float X, float Y, int type)
     }
     name_edit->drawAt(canvas, X, Y - 1, sizeX);
 
+    hover_ports(canvas);
     for (auto port : ports) {
         port->drawAt(canvas, X,Y, COLOR_WIRE_SOLID);
         port->draw_wires(canvas);
@@ -82,6 +112,8 @@ void model_memory::from_json(json &j)
 
 void model_memory::handle_event(class canvas *canvas, SDL_Event &event)
 {
+    element::handle_event(canvas, event);
+    
     if (!selected || !single)
         return;
     switch (event.type) {
@@ -109,13 +141,10 @@ void model_memory::calculate(int ttl)
           previous_clock = newclock;
           
           previous_address = ports[2]->value.intval;
-          printf("Previous address is %i \n", previous_address);
           
           if (ports[1]->value.boolval) { /* write enable */
-              printf("Write enable %i %lu\n", previous_address, data.size());
               if (previous_address < data.size()) {
                   data[previous_address] = ports[3]->value.intval;
-                  printf("Write enable address %i data %li  - %s\n", previous_address, ports[3]->value.intval, ports[3]->name.c_str());
               }
           }
           
@@ -138,8 +167,6 @@ void model_memory::queued_calculate(int ttl)
      if (previous_address < data.size())
          val.intval = data[previous_address];
          
-     printf("Data is %li \n", val.intval);
-        
      ports[4]->update_value(&val, ttl - 1); 
 }
 
@@ -275,11 +302,16 @@ unsigned int model_memory::highest_addr_bit(unsigned int size)
     j = 2;
     while (1) {
         if (size <= j) {
-            printf("size %u, i %u  j %u\n", size,i,j);
             return i;
         }
         j = j << 1;
         i ++;
     }
     return 0;
+}
+
+void model_memory::update_memory_size(unsigned int newsize)
+{
+    data.resize(newsize);
+    ports[2]->set_width(highest_addr_bit(data.size())+1);
 }
