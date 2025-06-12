@@ -502,7 +502,7 @@ class wire *json_wire_factory(json &jwire)
 static void grid_line(class wiregrid *grid, float x1, float y1, float x2, float y2, bool is_clock)
 {
         double dx, dy,d;
-	float self_cost = 0.25;
+	float self_cost = 2.25;
 	if (is_clock && grid->is_clock)
 		self_cost = -0.05; /* we don't mind clocks routing over clocks */
         
@@ -514,6 +514,8 @@ static void grid_line(class wiregrid *grid, float x1, float y1, float x2, float 
         
         
         while (dist(x1,y1,x2,y2) > 1/10.0) {
+	    if (!is_clock)
+		    grid->declare_part_of_wire(x1, y1);
             if (grid->get_soft_cost(x1, y1) < 0.001)
                 grid->add_soft_cost(x1, y1, self_cost);
             if (grid->get_soft_cost(x1 - 1, y1) < 0.001)

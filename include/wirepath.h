@@ -31,6 +31,7 @@ public:
     void debug_display(int X = 0, int Y=0);    
     
     void block_point(int x, int y);
+    void declare_part_of_wire(int x, int y);
     void unblock_point(int x, int y);
     void add_soft_cost(int x, int y, double extra);
     bool is_blocked(int x, int y);

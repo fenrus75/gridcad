@@ -106,6 +106,14 @@ void wiregrid::block_point(int x, int y)
         return;
     grid[y][x].blocked = true;
 };
+void wiregrid::declare_part_of_wire(int x, int y) 
+{
+    if (x < 0 || x >= width)
+        return;
+    if (y < 0 || y >= height)
+        return;
+    grid[y][x].part_of_wire = true;
+};
 void wiregrid::unblock_point(int x, int y) 
 {
     if (x < 0 || x >= width)
