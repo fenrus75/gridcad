@@ -37,7 +37,7 @@ void segv_handler(int sig) {
 
 int main(int argc, char **argv)
 {	
-	std::string name = "scene";
+	std::string name = "default";
 	class document *document;
 	
 	signal(SIGSEGV, segv_handler);
@@ -46,6 +46,8 @@ int main(int argc, char **argv)
 		name = argv[1];
 	
 	populate_library("library/");
+
+	name = "projects/" + name;
 
 	document = new class document(name);
 

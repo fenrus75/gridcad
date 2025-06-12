@@ -60,8 +60,7 @@ document::document(std::string _name)
 	register_new_canvas(_canvas);
 	
 	filename = name;
-	if (!filename.ends_with(".json"))
-		filename = filename + ".json";
+	filename = filename + "/scene.json";
 	
 	if (access(filename.c_str(), R_OK) == 0) {
 		json j;
@@ -75,6 +74,7 @@ document::document(std::string _name)
 
 void document::save_verilog(std::string filename)
 {
+	printf("Saving as %s\n", filename.c_str());
 	std::ofstream output(filename);
 	class scene *_scene;
 	class canvas *_canvas = (class canvas *)canvases[0];
@@ -105,12 +105,11 @@ document::~document(void)
 	std::string filename;
 
 	filename = name;
-	if (!filename.ends_with(".json"))
-		filename = filename + ".json";
+	filename = filename + "/scene.json";
 		
 
 	save_json(filename);	
-	save_verilog(filename + ".v");
+	save_verilog(name + "/main.v");
 	delete _canvas;
 
 	TTF_Quit();
