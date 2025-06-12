@@ -113,8 +113,7 @@ std::string wire_color_name(int color)
 		break;
 	case 4: return "Dark Purple";
 		break;
-	case 5: 
-		return "Blue";
+	case 5: return "Blue";
 		break;
 	case 6: return "Bright Blue";
 		break;
