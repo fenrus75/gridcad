@@ -82,7 +82,7 @@ std::string model_zero::get_verilog_main(void)
     ports[0]->collect_wires(&wiremap);
     
     for (auto name : wiremap) {
-        s = "assign "  + name + " = 1'0;\n";
+        s = "assign "  + name + " = 1'b0;\n";
     }
     
     return s;
