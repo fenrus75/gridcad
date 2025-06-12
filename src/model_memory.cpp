@@ -35,8 +35,7 @@ model_memory::model_memory(float _X, float _Y)  : element(1, 1, "Memory")
     add_port(4, sizeY, "DO", PORT_OUT, 8);    
     menu->add_item("Edit name", callback_editname);
     
-    data_size = 512;
-    data = (unsigned char *)calloc(512,1);
+    data.resize(512);
     name_edit = new class name(&name);
 }
 
@@ -69,7 +68,7 @@ void model_memory::to_json(json &j)
 {
      element::to_json(j);
      j["previous_clock"] = previous_clock;
-     j["data_size"] = data_size;
+     j["data"] = data;
      j["previous_address"] = previous_address;
 }
 void model_memory::from_json(json &j)
@@ -77,7 +76,7 @@ void model_memory::from_json(json &j)
      element::from_json(j);
      previous_clock = j.value("previous_clock", previous_clock);
      previous_address = j.value("previous_address", 0);
-     data_size = j.value("data_size", 512);
+     data = j.value("data", data);
 }
 
 void model_memory::handle_event(class canvas *canvas, SDL_Event &event)
@@ -112,8 +111,8 @@ void model_memory::calculate(int ttl)
           printf("Previous address is %i \n", previous_address);
           
           if (ports[1]->value.boolval) { /* write enable */
-              printf("Write enable %i %i\n", previous_address, data_size);
-              if (previous_address < data_size) {
+              printf("Write enable %i %lu\n", previous_address, data.size());
+              if (previous_address < data.size()) {
                   data[previous_address] = ports[3]->value.intval;
                   printf("Write enable address %i data %li  - %s\n", previous_address, ports[3]->value.intval, ports[3]->name.c_str());
               }
@@ -135,7 +134,7 @@ void model_memory::queued_calculate(int ttl)
      val.valid = true;
      val.type = VALUE_TYPE_INT;
      val.intval = 0;
-     if (previous_address < data_size)
+     if (previous_address < data.size())
          val.intval = data[previous_address];
          
      printf("Data is %li \n", val.intval);
@@ -146,7 +145,7 @@ void model_memory::queued_calculate(int ttl)
 
 std::string model_memory::get_verilog_main(void)
 {
-    unsigned int addrbits = ceil(log(data_size)/log(2));
+    unsigned int addrbits = ceil(log(data.size())/log(2));
     std::string s = "";
     
     std::vector<std::string> wiremap;
@@ -240,14 +239,19 @@ std::string model_memory::get_verilog_main(void)
 /* TODO -- rather than a pure basic SOP, run espresso on this and make it more minimal */
 std::string model_memory::get_verilog_modules(void)
 {
-        unsigned int addrbits = ceil(log(data_size)/log(2));
+        unsigned int addrbits = ceil(log(data.size())/log(2));
         
 	std::string s = "";
 	s = s + "module " + verilog_module_name + "\n";
 	s = s + "(input [7:0] Di, input clk, output reg [7:0] Do, input [" + std::to_string(addrbits) +":0] Addr, input WrEn);\n\n";
 
+#if 0
+    initial begin
+        $readmemh("memory.txt", memory); // Load from a text file
+    end
+#endif
 
-        s = s + "reg [7:0] data [0:" + std::to_string(data_size) + "];";
+        s = s + "reg [7:0] data [0:" + std::to_string(data.size()) + "];";
 	s = s + "always @(posedge clk) \n";
 	s = s + "begin\n";
 	s = s + "  if (WrEn) begin\n";

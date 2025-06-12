@@ -28,8 +28,7 @@ public:
     std::string get_verilog_modules(void) override;
     
 private:
-    unsigned char *data = NULL;
-    unsigned int data_size = 0;
+    std::vector<std::uint8_t> data;
     struct value previous_clock = {};
     unsigned int previous_address = 0;
     class name *name_edit = NULL;
