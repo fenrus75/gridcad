@@ -4,7 +4,7 @@ gridcad
 wiretest
 src/*.o
 fonts/*.ttf
-scene.json
+projects/default/
 Makefile.deps.bak
 Makefile.deps
 todo
