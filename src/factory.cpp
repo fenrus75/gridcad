@@ -34,6 +34,7 @@
 #include "model_dflipflop.h"
 #include "model_delayline.h"
 #include "model_clock.h"
+#include "model_memory.h"
 #include "connector.h"
 
 #define ELEMENT(x)  if (classid == #x":") return new x(0, 0);
@@ -63,6 +64,7 @@ class element *element_from_class_id(std::string classid)
     ELEMENT(model_8to16);
     ELEMENT(model_datascope);
     ELEMENT(model_dflipflop);
+    ELEMENT(model_memory);
     ELEMENT(model_delayline);
     ELEMENT(model_clock);
     

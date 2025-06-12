@@ -64,6 +64,9 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
     init_icon->set_element("model_8to16:", "assets/8to16.png", "2 bus8 to bus16 concentrator");
     icons.push_back(init_icon);
 
+    init_icon = new class oneiconbar(_renderer, _rect, "Memory");
+    init_icon->set_element("model_memory:", "assets/memory.png", "8 Bit Memory");
+    icons.push_back(init_icon);
     
     
     for (li = 0; li < library.size(); li++) {
