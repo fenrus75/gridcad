@@ -26,6 +26,7 @@ public:
     void queued_calculate(int ttl) override;
     std::string get_verilog_main(void) override;
     std::string get_verilog_modules(void) override;
+    unsigned int highest_addr_bit(unsigned int size);
     
 private:
     std::vector<std::uint8_t> data;

@@ -27,15 +27,16 @@ model_memory::model_memory(float _X, float _Y)  : element(1, 1, "Memory")
     sizeY = 4;    
     X = floorf(_X);
     Y = floorf(_Y);
+
+    data.resize(512);
     
     add_port(-1, 3, "clk", PORT_IN);    
     add_port(sizeX, 3, "WrEn", PORT_IN, 1);
-    add_port(1, sizeY, "Addr", PORT_IN, 16);
+    add_port(1, sizeY, "Addr", PORT_IN, highest_addr_bit(data.size()));
     add_port(3, sizeY, "DI", PORT_IN, 8);    
     add_port(4, sizeY, "DO", PORT_OUT, 8);    
     menu->add_item("Edit name", callback_editname);
     
-    data.resize(512);
     name_edit = new class name(&name);
 }
 
@@ -145,7 +146,7 @@ void model_memory::queued_calculate(int ttl)
 
 std::string model_memory::get_verilog_main(void)
 {
-    unsigned int addrbits = ceil(log(data.size())/log(2));
+    unsigned int addrbits = highest_addr_bit(data.size());
     std::string s = "";
     
     std::vector<std::string> wiremap;
@@ -239,7 +240,7 @@ std::string model_memory::get_verilog_main(void)
 /* TODO -- rather than a pure basic SOP, run espresso on this and make it more minimal */
 std::string model_memory::get_verilog_modules(void)
 {
-        unsigned int addrbits = ceil(log(data.size())/log(2));
+        unsigned int addrbits = highest_addr_bit(data.size());
         
 	std::string s = "";
 	s = s + "module " + verilog_module_name + "\n";
@@ -251,7 +252,7 @@ std::string model_memory::get_verilog_modules(void)
     end
 #endif
 
-        s = s + "reg [7:0] data [0:" + std::to_string(data.size()) + "];";
+        s = s + "reg [7:0] data [0:" + std::to_string(data.size()-1) + "];";
 	s = s + "always @(posedge clk) \n";
 	s = s + "begin\n";
 	s = s + "  if (WrEn) begin\n";
@@ -266,3 +267,19 @@ std::string model_memory::get_verilog_modules(void)
 }
 
 
+
+unsigned int model_memory::highest_addr_bit(unsigned int size)
+{
+    unsigned int i,j;
+    i = 0;
+    j = 2;
+    while (1) {
+        if (size <= j) {
+            printf("size %u, i %u  j %u\n", size,i,j);
+            return i;
+        }
+        j = j << 1;
+        i ++;
+    }
+    return 0;
+}
