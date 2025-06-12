@@ -188,7 +188,7 @@ double wiregrid::cost_estimate(int x, int y)
 static const int DX[9] = {-1, 0, 1, -1, 0, 1, -1, 0, 1};
 static const int DY[9] = {-1, -1, -1, 0, 0, 0, 1, 1, 1};
 static const float COST[9] = {SQRT2, 1, SQRT2, 1, 0, 1, SQRT2, 1, SQRT2 };
-static const float COST2[9] = {1.25 * SQRT2, 1, 1.25 * SQRT2, 1, 0, 1, 1.25 * SQRT2, 1, 1.25 * SQRT2 };
+static const float COST2[9] = {1.4 * SQRT2, 1, 1.4 * SQRT2, 1, 0, 1, 1.4 * SQRT2, 1, 1.4 * SQRT2 };
 
 static int recursecount = 0;
 
