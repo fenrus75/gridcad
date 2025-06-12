@@ -37,6 +37,8 @@ public:
     float get_soft_cost(int x, int y);
     
     std::vector<struct waypoint> *  path_walk(int x1, int y1, int x2, int y2, bool is_clock = false);
+
+    bool is_clock = false;
 private:
     std::vector<std::vector<struct point>> grid;
 

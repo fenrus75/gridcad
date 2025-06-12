@@ -238,6 +238,8 @@ void wire::route(class scene *scene)
         delete points;
         
     class wiregrid * grid = new wiregrid(scene->sizeX, scene->sizeY);
+
+    grid->is_clock = value.is_clock;
     
     scene->fill_grid(grid);
     
@@ -501,8 +503,8 @@ static void grid_line(class wiregrid *grid, float x1, float y1, float x2, float 
 {
         double dx, dy,d;
 	float self_cost = 0.25;
-	if (is_clock)
-		self_cost = 0; /* we don't mind clocks routing over clocks */
+	if (is_clock && grid->is_clock)
+		self_cost = -0.05; /* we don't mind clocks routing over clocks */
         
         dx = x2-x1;
         dy = y2-y1;
