@@ -36,7 +36,7 @@ public:
     bool is_blocked(int x, int y);
     float get_soft_cost(int x, int y);
     
-    std::vector<struct waypoint> *  path_walk(int x1, int y1, int x2, int y2);
+    std::vector<struct waypoint> *  path_walk(int x1, int y1, int x2, int y2, bool is_clock = false);
 private:
     std::vector<std::vector<struct point>> grid;
 
@@ -51,5 +51,5 @@ private:
     
     std::vector<struct waypoint> *  walk_back(void);
     
-    bool one_path_walk(double cost_so_far, int x, int y, int dx, int dy, int recurse);
+    bool one_path_walk(double cost_so_far, int x, int y, int dx, int dy, int recurse, bool is_clock = false);
 };

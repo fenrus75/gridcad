@@ -19,6 +19,7 @@ public:
     void from_json(json &j) override;
     void handle_event(class canvas *canvas, SDL_Event &event);
     void update_value(struct value *value, int ttl);
+    class port *get_clk_port(void) override { if (ports[0]->name == "clk") return ports[0]; return NULL;};  
     
     bool in_edit_mode(void) override { return (name_edit->get_edit_mode() && single && selected) || (value_edit->get_edit_mode());};
     void enter_edit_mode(void) override { name_edit->set_edit_mode(true); selected = true; single = true;};    

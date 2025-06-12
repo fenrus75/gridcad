@@ -241,7 +241,7 @@ void wire::route(class scene *scene)
     
     scene->fill_grid(grid);
     
-    points = grid->path_walk(X1, Y1, X2, Y2);
+    points = grid->path_walk(X1, Y1, X2, Y2, value.is_clock);
 //    printf("Walk is %i %i -> %i %i \n", X1, Y1, X2, Y2);
 //    for (auto p: *points) {
 //        printf("X, Y : %i, %i\n", p.X, p.Y);

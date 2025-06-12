@@ -188,16 +188,23 @@ double wiregrid::cost_estimate(int x, int y)
 static const int DX[9] = {-1, 0, 1, -1, 0, 1, -1, 0, 1};
 static const int DY[9] = {-1, -1, -1, 0, 0, 0, 1, 1, 1};
 static const float COST[9] = {SQRT2, 1, SQRT2, 1, 0, 1, SQRT2, 1, SQRT2 };
+static const float COST2[9] = {1.25 * SQRT2, 1, 1.25 * SQRT2, 1, 0, 1, 1.25 * SQRT2, 1, 1.25 * SQRT2 };
 
 static int recursecount = 0;
 
-bool wiregrid::one_path_walk(double cost_so_far, int x, int y, int dx, int dy, int recurse)
+bool wiregrid::one_path_walk(double cost_so_far, int x, int y, int dx, int dy, int recurse, bool is_clock)
 {
     double costs[9];
     bool walked[9];
     double leastcost = cost_so_far + 4 * width * height;
     double maxcost = 0;
     int i;
+    const float *EFFECTIVE_COST;
+
+    EFFECTIVE_COST = COST;
+    if (is_clock) {
+	EFFECTIVE_COST = COST2; /* we want clocks to be routed with far fewer diagonals */
+    }
     
     recursecount++;
  
@@ -254,7 +261,7 @@ bool wiregrid::one_path_walk(double cost_so_far, int x, int y, int dx, int dy, i
         if (i == 4)
             continue;
         costs[i] = cost_estimate(x + DX[i], y + DY[i]);
-        costs[i] += COST[i];
+        costs[i] += EFFECTIVE_COST[i];
         
         /* don't go straight back */
         if (DX[i] == -dx && DY[i] == -dy)
@@ -282,7 +289,7 @@ bool wiregrid::one_path_walk(double cost_so_far, int x, int y, int dx, int dy, i
         i = grid[y][x].dir_to_goal;
         if (DX[i] != dx || DY[i] != dy)
              adder += 0.01;
-        one_path_walk(cost_so_far + COST[i] + adder, x + DX[i], y + DY[i], DX[i], DY[i], recurse+1);
+        one_path_walk(cost_so_far + EFFECTIVE_COST[i] + adder, x + DX[i], y + DY[i], DX[i], DY[i], recurse+1, is_clock);
         walked[i] = true;
     }
     bool ret = false;
@@ -295,9 +302,12 @@ bool wiregrid::one_path_walk(double cost_so_far, int x, int y, int dx, int dy, i
                  bool this_ret;
                  
                  /* pay a small penalty for direction changes to give same length paths with fewer changes a bonus*/
-                 if (DX[i] != dx || DY[i] != dy)
-                     adder += 0.01;
-                 this_ret = one_path_walk(cost_so_far + COST[i] + adder, x + DX[i], y + DY[i], DX[i], DY[i], recurse+1);
+                 if (DX[i] != dx || DY[i] != dy) {
+                     adder += 0.1;
+		     if (is_clock)
+			adder += 0.4;
+		 }
+                 this_ret = one_path_walk(cost_so_far + EFFECTIVE_COST[i] + adder, x + DX[i], y + DY[i], DX[i], DY[i], recurse+1, is_clock);
                  ret |= this_ret;
                  if (ret)
                      grid[y][x].dir_to_goal = i;
@@ -358,7 +368,7 @@ std::vector<struct waypoint> *  wiregrid::walk_back(void)
     return vec;
 }
 
-std::vector<struct waypoint> * wiregrid::path_walk(int x1, int y1, int x2, int y2)
+std::vector<struct waypoint> * wiregrid::path_walk(int x1, int y1, int x2, int y2, bool is_clock)
 {
     if (x1 < 0)
         x1 = 0;
@@ -388,7 +398,7 @@ std::vector<struct waypoint> * wiregrid::path_walk(int x1, int y1, int x2, int y
      * are blocked */
     unblock_point(x1, y1);   
     unblock_point(x2, y2);   
-    one_path_walk(0.0, x1, y1, 0, 0, 0);
+    one_path_walk(0.0, x1, y1, 0, 0, 0, is_clock);
     printf("recursecount is %i \n", recursecount);
  //   debug_display();
     return walk_back();

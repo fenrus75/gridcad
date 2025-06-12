@@ -400,6 +400,7 @@ void element::handle_event(class canvas *thiscanvas, SDL_Event &event)
 
 void element::connect_clk(class port *clk)
 {
+	printf("COnnecting clock %s \n", name.c_str());
 	for (auto port : ports) {
 		if (port->name == "clk" && port->direction == PORT_IN && !port->has_wires()) {
 			class wire *wire;
