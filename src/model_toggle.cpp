@@ -19,18 +19,18 @@
 #include <sys/time.h>
 
 
-void callback_wire1(class element *element)
+static void callback_wire1(class element *element)
 {
   class model_toggle *toggle = (class model_toggle *) element;
   toggle->set_width(1);  
 }
-void callback_bus4(class element *element)
+static void callback_bus4(class element *element)
 {
   class model_toggle *toggle = (class model_toggle *) element;
   toggle->set_width(4);  
 }
 
-void callback_bus8(class element *element)
+static void callback_bus8(class element *element)
 {
   class model_toggle *toggle = (class model_toggle *) element;
   toggle->set_width(8);  

@@ -22,6 +22,7 @@ public:
     bool in_edit_mode(void) override { return name_edit->get_edit_mode() && single && selected;};
     void enter_edit_mode(void) override { name_edit->set_edit_mode(true); selected = true; single = true;};    
     void rotate_ports(void) override;
+    void set_width(int width) { ports[0]->set_width(width); if (width == 1) value.type = VALUE_TYPE_BOOL; else value.type = VALUE_TYPE_INT;};
     int get_width(void) { return ports[0]->get_width();};
     std::string get_verilog_main(void) override;
     std::string get_verilog_width(void) override;

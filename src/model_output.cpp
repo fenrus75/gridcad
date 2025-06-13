@@ -17,6 +17,35 @@
 
 #include <sys/time.h>
 
+
+static void callback_wire1(class element *element)
+{
+  class model_output *output = (class model_output *) element;
+  output->set_width(1);  
+}
+static void callback_bus4(class element *element)
+{
+  class model_output *output = (class model_output *) element;
+  output->set_width(4);  
+}
+
+static void callback_bus8(class element *element)
+{
+  class model_output *output = (class model_output *) element;
+  output->set_width(8);  
+}
+static void callback_bus16(class element *element)
+{
+  class model_output *output = (class model_output *) element;
+  output->set_width(16);  
+}
+static void callback_bus32(class element *element)
+{
+  class model_output *output = (class model_output *) element;
+  output->set_width(32);  
+}
+
+
 model_output::model_output(float _X, float _Y)  : element(1, 1, "Output")
 {
     sizeX = 3;
@@ -28,6 +57,11 @@ model_output::model_output(float _X, float _Y)  : element(1, 1, "Output")
     
     add_port(-1, 1, "Output", PORT_IN);    
     menu->add_item("Edit name", callback_editname);
+    menu->add_item("Set as single wire", callback_wire1);
+    menu->add_item("Set as 4 bit bus", callback_bus4);
+    menu->add_item("Set as 8 bit bus", callback_bus8);
+    menu->add_item("Set as 16 bit bus", callback_bus16);
+    menu->add_item("Set as 32 bit bus", callback_bus32);
 }
 
 model_output::~model_output(void)
@@ -51,10 +85,10 @@ void model_output::drawAt(class canvas *canvas, float X, float Y, int type)
         }
         
     }
-    float dX = 0.0;
     if (ports[0]->Y == sizeY)
-	dX = 1.8;
-    name_edit->drawAt(canvas, X + dX, Y + sizeY, sizeX);
+      name_edit->drawAt(canvas, X, Y - 1, sizeX);
+    else
+      name_edit->drawAt(canvas, X, Y + sizeY, sizeX);
 
     if (ports[0]->value.type == VALUE_TYPE_INT) {
 	char buf[128];
