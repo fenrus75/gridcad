@@ -152,11 +152,11 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 			freshsplit = true;
 			current_scene->cycle_color();
 		}
-		if (dragging)
-			dragging->start_drag(x, y);
 
-		if (!dragging && !freshsplit) {
+		if (!freshsplit) {
 			dragging_port = current_scene->is_port(x, y);
+			if (dragging && dragging->class_id() != "model_label:")
+				dragging_port = NULL;
 			if (dragging_port) {
 				dragging_port->screenX = x;
 				dragging_port->screenY = y;
@@ -166,8 +166,12 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 							floorf(y),
 							floorf(x),
 							floorf(y));
+				dragging = NULL;
 			}
 		}
+
+		if (dragging)
+			dragging->start_drag(x, y);
 
 
 		if (floating.size() > 0) {
@@ -646,7 +650,7 @@ bool canvas::handle_event(SDL_Event &event)
 			if (dragging_wire) {
 				bool banned = false;
 				for (auto elem:	current_scene->elements) {
-					if (elem->intersect(x, y) && !elem->is_port(x,y))
+					if (elem->intersect(x, y) && !elem->is_port(x,y) && elem->class_id() != "model_label:")
 						banned = true;
 				}
 				if (!banned)
