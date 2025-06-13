@@ -5,7 +5,7 @@
             "Y": 27.0,
             "angle": 0,
             "class_id": "model_toggle:",
-            "name": "Input8",
+            "name": "I8",
             "parental_name": "/main",
             "ports": [
                 {
@@ -16,7 +16,7 @@
                     "direction": 1,
                     "distance_from_outport": 0,
                     "linked_uuid": "",
-                    "name": "Input8",
+                    "name": "I8",
                     "screenX": 3.0,
                     "screenY": 28.0,
                     "value": {
@@ -1150,7 +1150,7 @@
             "Y": 28.0,
             "angle": 0,
             "class_id": "model_output:",
-            "name": "Output8",
+            "name": "O8",
             "parental_name": "/main",
             "ports": [
                 {
@@ -1161,7 +1161,7 @@
                     "direction": 0,
                     "distance_from_outport": 1,
                     "linked_uuid": "",
-                    "name": "Output8",
+                    "name": "O8",
                     "screenX": 51.0,
                     "screenY": 29.0,
                     "value": {
