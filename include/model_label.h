@@ -25,8 +25,11 @@ public:
     bool in_edit_mode(void) override { return name_edit->get_edit_mode() && single && selected;};
     void enter_edit_mode(void) override { name_edit->set_edit_mode(true); selected = true; single = true;};    
     std::string get_verilog_main(void) override { return "";};
+    void set_color(int c) { color = c; };
+    int get_color(void) { return color; };
 private:
     class name *name_edit = NULL;
     void drawAt_early(canvas*, float, float, int);
+    int color = 0;
 };
 

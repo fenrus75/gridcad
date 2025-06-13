@@ -17,6 +17,13 @@
 
 #include <sys/time.h>
 
+void callback_color(class element *elem)
+{
+    class model_label *label = (class model_label *) elem;
+    int c = label->get_color();
+    label->set_color(++c);    
+}
+
 model_label::model_label(float _X, float _Y)  : element(1, 1, "Label")
 {
     sizeX = 3;
@@ -28,6 +35,7 @@ model_label::model_label(float _X, float _Y)  : element(1, 1, "Label")
     name_edit->allow_spaces();
     
     menu->add_item("Edit name", callback_editname);
+    menu->add_item("Change color", callback_color);
 }
 
 model_label::~model_label(void)
@@ -37,13 +45,20 @@ model_label::~model_label(void)
 
 void model_label::drawAt_early(class canvas *canvas, float X, float Y, int type)
 {
+    int col = color % 2;
     if (!selected)
       name_edit->set_edit_mode(false);
       
     if (selected) {
-        canvas->draw_image("assets/label_selected.png", X, Y, sizeX, sizeY, 255);
+        if (col == 0)
+            canvas->draw_image("assets/label_selected.png", X, Y, sizeX, sizeY, 255);
+        if (col == 1)
+            canvas->draw_image("assets/label2_selected.png", X, Y, sizeX, sizeY, 255);
     } else {
-        canvas->draw_image("assets/label.png", X, Y, sizeX, sizeY, 255);
+        if (col == 0)
+            canvas->draw_image("assets/label.png", X, Y, sizeX, sizeY, 255);
+        if (col == 1)
+            canvas->draw_image("assets/label2.png", X, Y, sizeX, sizeY, 255);
         
     }
 
@@ -55,10 +70,12 @@ void model_label::drawAt_early(class canvas *canvas, float X, float Y, int type)
 void model_label::to_json(json &j)
 {
      element::to_json(j);
+     j["color"] = color;
 }
 void model_label::from_json(json &j)
 {
      element::from_json(j);
+     color = j.value("color", 0);
 }
 
 void model_label::handle_event(class canvas *canvas, SDL_Event &event)
