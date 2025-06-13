@@ -85,11 +85,10 @@ void model_toggle::drawAt(class canvas *canvas, float X, float Y, int type)
     
     canvas->draw_image(icon, X, Y, sizeX, sizeY, Alpha(type));
     
-    float dY = 0;
-    float dX = 0;
     if (ports[0]->Y == sizeY)  /* if our port is at the bottom, we move the text by one */
-	dX = 1.2;
-    name_edit->drawAt(canvas,X + dX, Y + sizeY + dY, sizeX);
+      name_edit->drawAt(canvas,X, Y - 1, sizeX);
+    else
+      name_edit->drawAt(canvas,X, Y + sizeY, sizeX);
 
     if (ports[0]->get_width() > 1 || value.type == VALUE_TYPE_INT) {
 	char buf[128];
