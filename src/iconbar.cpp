@@ -52,6 +52,7 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
     init_icon->set_element("model_delayline:", "assets/delayline.png", "Delay line");
     init_icon->set_element("model_clock:", "assets/clock_on.png", "Clock");
     init_icon->set_element("model_datascope:", "assets/datascope.png", "Data scope");
+    init_icon->set_element("model_label:", "assets/label.png", "Area Label");
 
     icons.push_back(init_icon);
     current_icons = init_icon;    

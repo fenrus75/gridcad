@@ -95,6 +95,8 @@ bool scene::can_place_element(float x, float y, int w, int h,
 		int _x, _y;
 		if (elem == myself)
 			continue;
+		if (elem->class_id() == "model_label:") /* labels are special and can be placed upon */
+			continue;
 		for (_y = -1; _y <= h + 1; _y++)
 			for (_x = -1; _x <= w + 1 ; _x++)
 				if (elem->intersect(x + _x, y + _y))

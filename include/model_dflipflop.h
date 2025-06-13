@@ -16,7 +16,7 @@ public:
     void drawAt(class canvas *canvas, float X, float Y, int type) override;
     virtual void to_json(json &j) override;
     virtual void from_json(json &j) override;
-    void handle_event(class canvas *canvas, SDL_Event &event);
+    void handle_event(class canvas *canvas, SDL_Event &event) override;
 
     bool in_edit_mode(void) override { return name_edit->get_edit_mode() && selected && single;};
     void enter_edit_mode(void) override { name_edit->set_edit_mode(true); selected = true; single = true;};

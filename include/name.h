@@ -18,6 +18,7 @@ public:
     void toggle_edit_mode(void) { edit_mode = !edit_mode; printf("TOGGLE%i\n", edit_mode);};
     bool get_edit_mode(void) { return edit_mode;};
     void want_numbers_only(void) { numbers_only = true; };
+    void allow_spaces(void) { spaces = true; };
 
 
 
@@ -31,5 +32,6 @@ private:
     unsigned int cursorpos = 0;
     bool edit_mode = false;
     bool numbers_only = false;
+    bool spaces = false;
 };
 

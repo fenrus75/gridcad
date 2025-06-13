@@ -16,8 +16,8 @@ public:
     virtual void to_json(json &j) override;
     virtual void from_json(json &j) override;
     struct value get_value(void);
-    void handle_event(class canvas *canvas, SDL_Event &event);
-    void rotate_ports(void);
+    void handle_event(class canvas *canvas, SDL_Event &event) override;
+    void rotate_ports(void) override;
     class port *get_clk_port(void) override { return ports[0];};
     std::string get_verilog_main(void) override;
     bool mouse_select(float _X, float _Y) override;

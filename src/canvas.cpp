@@ -787,16 +787,27 @@ void canvas::draw(void)
 	/* draw the elements */
 	for (auto const elem: current_scene->elements) {
 		if (elem != dragging)
+			elem->draw_early(this, DRAW_NORMAL);
+		else
+			elem->draw_early(this, DRAW_ORIGIN);
+	}
+
+	for (auto const elem: current_scene->elements) {
+		if (elem != dragging)
 			elem->draw(this, DRAW_NORMAL);
 		else
 			elem->draw(this, DRAW_ORIGIN);
 	}
 
 	if (dragging) {
+		dragging->draw_early(this, DRAW_GHOST);
+		dragging->draw_early(this, DRAW_DND);
 		dragging->draw(this, DRAW_GHOST);
 		dragging->draw(this, DRAW_DND);
 	}
 	for (auto flt : floating) {
+		flt->draw_early(this, DRAW_GHOST);
+		flt->draw_early(this, DRAW_DND);
 		flt->draw(this, DRAW_GHOST);
 		flt->draw(this, DRAW_DND);
 	}

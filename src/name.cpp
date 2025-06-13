@@ -138,6 +138,11 @@ void name::handle_event(SDL_Event &event)
                     c += event.key.keysym.sym - SDLK_a;
                     insert_char(c);
                     break;
+                case SDLK_SPACE:
+                    if (!spaces)
+                        break;
+                    insert_char(' ');
+                    break;
                 case SDLK_RIGHT:
                     cursorpos++;
                     if (cursorpos >= value->size())
