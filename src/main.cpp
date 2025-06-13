@@ -25,6 +25,8 @@
 #include "gridcad.h"
 #include "document.h"
 
+static unsigned char signalstack[2 * 1024 * 1024];
+
 void segv_handler(int sig) {
 	void *entries[32];
 	size_t count;
@@ -39,8 +41,21 @@ int main(int argc, char **argv)
 {	
 	std::string name = "default";
 	class document *document;
+
+	stack_t stack = {};
+	struct sigaction segv = {};
 	
-	signal(SIGSEGV, segv_handler);
+	stack.ss_sp = &signalstack;
+	stack.ss_size = sizeof(signalstack);
+	stack.ss_flags = 0;
+	
+	sigaltstack(&stack, NULL);
+	
+	segv.sa_handler = &segv_handler;
+	segv.sa_flags = SA_ONSTACK;
+	
+	
+	sigaction(SIGSEGV, &segv, NULL);
 	
 	if (argc > 1)
 		name = argv[1];
