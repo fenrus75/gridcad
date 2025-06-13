@@ -28,6 +28,8 @@ public:
     void set_color(int c) { color = c; };
     int get_color(void) { return color; };
     void rotate_ports(void) override;
+    
+    bool is_background(void) override {return true;};
 private:
     class name *name_edit = NULL;
     void drawAt_early(canvas*, float, float, int);

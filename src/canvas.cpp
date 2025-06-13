@@ -111,7 +111,7 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 		for (auto elem:	current_scene->elements) {
 			if (elem->intersect(x, y) && !elem->is_port(x,y)) {
 				printf("Start drag: %5.2f %5.2f \n", x, y);
-				if (dragging == NULL || dragging->class_id() == "model_label:")
+				if (dragging == NULL || dragging->is_background())
 					dragging = elem;
 			}
 		}
@@ -155,7 +155,7 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 
 		if (!freshsplit) {
 			dragging_port = current_scene->is_port(x, y);
-			if (dragging && dragging->class_id() != "model_label:")
+			if (dragging && dragging->is_background() == false)
 				dragging_port = NULL;
 			if (dragging_port) {
 				dragging_port->screenX = x;
@@ -204,7 +204,7 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 		y = scr_to_Y(event.motion.y);
 		for (auto elem:	current_scene->elements) {
 			if (elem->intersect(x, y)) {
-				if (here == NULL || elem->class_id() != "model_label:") {
+				if (here == NULL || elem->is_background() == false) {
 					printf("HERE %s\n", elem->class_id().c_str());
 					here = elem;
 				}
@@ -219,7 +219,7 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 			active_menu = here->get_menu();
 		} 
 		
-		if (!here || here->class_id() == "model_label:")  {
+		if (!here || here->is_background())  {
 			if (is_port) {
 				active_menu = is_port->get_menu();
 			} else if (!wr && !here) {
@@ -653,7 +653,7 @@ bool canvas::handle_event(SDL_Event &event)
 			if (dragging_wire) {
 				bool banned = false;
 				for (auto elem:	current_scene->elements) {
-					if (elem->intersect(x, y) && !elem->is_port(x,y) && elem->class_id() != "model_label:")
+					if (elem->intersect(x, y) && !elem->is_port(x,y) && elem->is_background() == false)
 						banned = true;
 				}
 				if (!banned)
