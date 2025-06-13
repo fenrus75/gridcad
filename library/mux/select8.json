@@ -1,0 +1,4388 @@
+{
+    "elements": [
+        {
+            "X": 0.0,
+            "Y": 27.0,
+            "angle": 0,
+            "class_id": "model_toggle:",
+            "name": "Input8",
+            "parental_name": "/main",
+            "ports": [
+                {
+                    "X": 3,
+                    "Y": 1,
+                    "bus_width": 0,
+                    "color": 3,
+                    "direction": 1,
+                    "distance_from_outport": 0,
+                    "linked_uuid": "",
+                    "name": "Input8",
+                    "screenX": 3.0,
+                    "screenY": 28.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 63,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 1,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 3,
+                            "X2": 4,
+                            "Y1": 28,
+                            "Y2": 28,
+                            "color": 3,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684c9ecf-4e99924f-8319-1e85-",
+                            "points": [
+                                {
+                                    "X": 4,
+                                    "Y": 28
+                                },
+                                {
+                                    "X": 3,
+                                    "Y": 28
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 63,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 1,
+                                "valid": true
+                            },
+                            "width": 8
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 3,
+            "sizeY": 3,
+            "uuid": "684c9ebf-3e9018d1-9df8-f9e2-8f2c-13534db34072",
+            "value": {
+                "arrayval": 0,
+                "boolval": false,
+                "floatval": 0.0,
+                "intval": 63,
+                "is_clock": false,
+                "is_error": false,
+                "type": 1,
+                "valid": true
+            },
+            "verilog_name": ""
+        },
+        {
+            "X": 5.0,
+            "Y": 23.0,
+            "angle": 0,
+            "class_id": "model_8to1:",
+            "name": "",
+            "parental_name": "/main",
+            "ports": [
+                {
+                    "X": 2,
+                    "Y": 1,
+                    "bus_width": 0,
+                    "color": 4,
+                    "direction": 1,
+                    "distance_from_outport": 0,
+                    "linked_uuid": "",
+                    "name": "Bit0",
+                    "screenX": 7.0,
+                    "screenY": 24.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": true,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 7,
+                            "X2": 7,
+                            "Y1": 12,
+                            "Y2": 24,
+                            "color": 4,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684ca166-efea9768-883f-7a2d-",
+                            "points": [
+                                {
+                                    "X": 7,
+                                    "Y": 12
+                                },
+                                {
+                                    "X": 7,
+                                    "Y": 24
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": true,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": 2,
+                    "Y": 2,
+                    "bus_width": 0,
+                    "color": 4,
+                    "direction": 1,
+                    "distance_from_outport": 0,
+                    "linked_uuid": "",
+                    "name": "Bit1",
+                    "screenX": 7.0,
+                    "screenY": 25.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": true,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 7,
+                            "X2": 8,
+                            "Y1": 25,
+                            "Y2": 16,
+                            "color": 4,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684ca178-647c6f66-2d26-124e-",
+                            "points": [
+                                {
+                                    "X": 8,
+                                    "Y": 16
+                                },
+                                {
+                                    "X": 8,
+                                    "Y": 24
+                                },
+                                {
+                                    "X": 7,
+                                    "Y": 25
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": true,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": 2,
+                    "Y": 3,
+                    "bus_width": 0,
+                    "color": 4,
+                    "direction": 1,
+                    "distance_from_outport": 0,
+                    "linked_uuid": "",
+                    "name": "Bit2",
+                    "screenX": 7.0,
+                    "screenY": 26.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": true,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 7,
+                            "X2": 9,
+                            "Y1": 26,
+                            "Y2": 20,
+                            "color": 4,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684ca181-1c0195f0-f9db-0c37-",
+                            "points": [
+                                {
+                                    "X": 9,
+                                    "Y": 20
+                                },
+                                {
+                                    "X": 9,
+                                    "Y": 24
+                                },
+                                {
+                                    "X": 7,
+                                    "Y": 26
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": true,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": 2,
+                    "Y": 4,
+                    "bus_width": 0,
+                    "color": 4,
+                    "direction": 1,
+                    "distance_from_outport": 0,
+                    "linked_uuid": "",
+                    "name": "Bit3",
+                    "screenX": 7.0,
+                    "screenY": 27.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": true,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 7,
+                            "X2": 22,
+                            "Y1": 27,
+                            "Y2": 24,
+                            "color": 4,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684ca055-3ccfb3b9-d9f6-6675-",
+                            "points": [
+                                {
+                                    "X": 22,
+                                    "Y": 24
+                                },
+                                {
+                                    "X": 10,
+                                    "Y": 24
+                                },
+                                {
+                                    "X": 7,
+                                    "Y": 27
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": true,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": 2,
+                    "Y": 5,
+                    "bus_width": 0,
+                    "color": 4,
+                    "direction": 1,
+                    "distance_from_outport": 0,
+                    "linked_uuid": "",
+                    "name": "Bit4",
+                    "screenX": 7.0,
+                    "screenY": 28.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": true,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 7,
+                            "X2": 22,
+                            "Y1": 28,
+                            "Y2": 28,
+                            "color": 4,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684ca052-a02409c5-034c-4eb9-",
+                            "points": [
+                                {
+                                    "X": 22,
+                                    "Y": 28
+                                },
+                                {
+                                    "X": 7,
+                                    "Y": 28
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": true,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": 2,
+                    "Y": 6,
+                    "bus_width": 0,
+                    "color": 4,
+                    "direction": 1,
+                    "distance_from_outport": 0,
+                    "linked_uuid": "",
+                    "name": "Bit5",
+                    "screenX": 7.0,
+                    "screenY": 29.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": true,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 7,
+                            "X2": 9,
+                            "Y1": 29,
+                            "Y2": 32,
+                            "color": 4,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684ca1a6-87a6afe8-d612-a232-",
+                            "points": [
+                                {
+                                    "X": 9,
+                                    "Y": 32
+                                },
+                                {
+                                    "X": 9,
+                                    "Y": 31
+                                },
+                                {
+                                    "X": 7,
+                                    "Y": 29
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": true,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": 2,
+                    "Y": 7,
+                    "bus_width": 0,
+                    "color": 4,
+                    "direction": 1,
+                    "distance_from_outport": 0,
+                    "linked_uuid": "",
+                    "name": "Bit6",
+                    "screenX": 7.0,
+                    "screenY": 30.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 7,
+                            "X2": 8,
+                            "Y1": 30,
+                            "Y2": 36,
+                            "color": 4,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684ca19e-bca1b4c9-8520-8c0a-",
+                            "points": [
+                                {
+                                    "X": 8,
+                                    "Y": 36
+                                },
+                                {
+                                    "X": 8,
+                                    "Y": 31
+                                },
+                                {
+                                    "X": 7,
+                                    "Y": 30
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": 2,
+                    "Y": 8,
+                    "bus_width": 0,
+                    "color": 4,
+                    "direction": 1,
+                    "distance_from_outport": 0,
+                    "linked_uuid": "",
+                    "name": "Bit7",
+                    "screenX": 7.0,
+                    "screenY": 31.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 7,
+                            "X2": 7,
+                            "Y1": 31,
+                            "Y2": 40,
+                            "color": 4,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684ca191-b877487c-9670-707c-",
+                            "points": [
+                                {
+                                    "X": 7,
+                                    "Y": 40
+                                },
+                                {
+                                    "X": 7,
+                                    "Y": 31
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": -1,
+                    "Y": 5,
+                    "bus_width": 8,
+                    "color": 0,
+                    "direction": 0,
+                    "distance_from_outport": 1,
+                    "linked_uuid": "",
+                    "name": "0-7",
+                    "screenX": 4.0,
+                    "screenY": 28.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 63,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 1,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 3,
+                            "X2": 4,
+                            "Y1": 28,
+                            "Y2": 28,
+                            "color": 3,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684c9ecf-4e99924f-8319-1e85-",
+                            "points": [
+                                {
+                                    "X": 4,
+                                    "Y": 28
+                                },
+                                {
+                                    "X": 3,
+                                    "Y": 28
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 63,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 1,
+                                "valid": true
+                            },
+                            "width": 8
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 2,
+            "sizeY": 10,
+            "uuid": "684c9ec6-b6e088e4-8089-e596-f72a-afae9f3e7c98",
+            "verilog_name": ""
+        },
+        {
+            "X": 43.0,
+            "Y": 24.0,
+            "angle": 0,
+            "class_id": "model_1to8:",
+            "name": "1to8",
+            "parental_name": "/main",
+            "ports": [
+                {
+                    "X": -1,
+                    "Y": 1,
+                    "bus_width": 1,
+                    "color": 0,
+                    "direction": 0,
+                    "distance_from_outport": 1,
+                    "linked_uuid": "",
+                    "name": "Bit0",
+                    "screenX": 42.0,
+                    "screenY": 25.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 27,
+                            "X2": 42,
+                            "Y1": 13,
+                            "Y2": 25,
+                            "color": 0,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684c9f62-4a70fff0-a899-3e5c-",
+                            "points": [
+                                {
+                                    "X": 42,
+                                    "Y": 25
+                                },
+                                {
+                                    "X": 30,
+                                    "Y": 13
+                                },
+                                {
+                                    "X": 27,
+                                    "Y": 13
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": -1,
+                    "Y": 2,
+                    "bus_width": 1,
+                    "color": 0,
+                    "direction": 0,
+                    "distance_from_outport": 1,
+                    "linked_uuid": "",
+                    "name": "Bit1",
+                    "screenX": 42.0,
+                    "screenY": 26.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 27,
+                            "X2": 42,
+                            "Y1": 17,
+                            "Y2": 26,
+                            "color": 0,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684c9f65-5b2b64c0-7222-67f8-",
+                            "points": [
+                                {
+                                    "X": 42,
+                                    "Y": 26
+                                },
+                                {
+                                    "X": 33,
+                                    "Y": 17
+                                },
+                                {
+                                    "X": 27,
+                                    "Y": 17
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": -1,
+                    "Y": 3,
+                    "bus_width": 1,
+                    "color": 0,
+                    "direction": 0,
+                    "distance_from_outport": 1,
+                    "linked_uuid": "",
+                    "name": "Bit2",
+                    "screenX": 42.0,
+                    "screenY": 27.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 27,
+                            "X2": 42,
+                            "Y1": 21,
+                            "Y2": 27,
+                            "color": 0,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684c9f67-1cc6dbb3-e240-9ca4-",
+                            "points": [
+                                {
+                                    "X": 42,
+                                    "Y": 27
+                                },
+                                {
+                                    "X": 36,
+                                    "Y": 21
+                                },
+                                {
+                                    "X": 27,
+                                    "Y": 21
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": -1,
+                    "Y": 4,
+                    "bus_width": 1,
+                    "color": 0,
+                    "direction": 0,
+                    "distance_from_outport": 1,
+                    "linked_uuid": "",
+                    "name": "Bit3",
+                    "screenX": 42.0,
+                    "screenY": 28.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 27,
+                            "X2": 42,
+                            "Y1": 25,
+                            "Y2": 28,
+                            "color": 0,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684c9f6a-5a4514cb-1996-4aae-",
+                            "points": [
+                                {
+                                    "X": 42,
+                                    "Y": 28
+                                },
+                                {
+                                    "X": 39,
+                                    "Y": 25
+                                },
+                                {
+                                    "X": 27,
+                                    "Y": 25
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": -1,
+                    "Y": 5,
+                    "bus_width": 1,
+                    "color": 0,
+                    "direction": 0,
+                    "distance_from_outport": 1,
+                    "linked_uuid": "",
+                    "name": "Bit4",
+                    "screenX": 42.0,
+                    "screenY": 29.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 27,
+                            "X2": 42,
+                            "Y1": 29,
+                            "Y2": 29,
+                            "color": 0,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684c9f6f-6a2a7b9c-fa9c-0e9f-",
+                            "points": [
+                                {
+                                    "X": 42,
+                                    "Y": 29
+                                },
+                                {
+                                    "X": 27,
+                                    "Y": 29
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": -1,
+                    "Y": 6,
+                    "bus_width": 1,
+                    "color": 0,
+                    "direction": 0,
+                    "distance_from_outport": 1,
+                    "linked_uuid": "",
+                    "name": "Bit5",
+                    "screenX": 42.0,
+                    "screenY": 30.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 27,
+                            "X2": 42,
+                            "Y1": 33,
+                            "Y2": 30,
+                            "color": 0,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684c9f71-46edee4f-7fd9-9309-",
+                            "points": [
+                                {
+                                    "X": 42,
+                                    "Y": 30
+                                },
+                                {
+                                    "X": 39,
+                                    "Y": 33
+                                },
+                                {
+                                    "X": 27,
+                                    "Y": 33
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": -1,
+                    "Y": 7,
+                    "bus_width": 1,
+                    "color": 0,
+                    "direction": 0,
+                    "distance_from_outport": 1,
+                    "linked_uuid": "",
+                    "name": "Bit6",
+                    "screenX": 42.0,
+                    "screenY": 31.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 27,
+                            "X2": 42,
+                            "Y1": 37,
+                            "Y2": 31,
+                            "color": 0,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684c9f74-9ef2468f-5b65-4100-",
+                            "points": [
+                                {
+                                    "X": 42,
+                                    "Y": 31
+                                },
+                                {
+                                    "X": 36,
+                                    "Y": 37
+                                },
+                                {
+                                    "X": 27,
+                                    "Y": 37
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": -1,
+                    "Y": 8,
+                    "bus_width": 1,
+                    "color": 0,
+                    "direction": 0,
+                    "distance_from_outport": 1,
+                    "linked_uuid": "",
+                    "name": "Bit7",
+                    "screenX": 42.0,
+                    "screenY": 32.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 27,
+                            "X2": 42,
+                            "Y1": 41,
+                            "Y2": 32,
+                            "color": 0,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684c9f77-1ba4b645-e176-cb23-",
+                            "points": [
+                                {
+                                    "X": 42,
+                                    "Y": 32
+                                },
+                                {
+                                    "X": 33,
+                                    "Y": 41
+                                },
+                                {
+                                    "X": 27,
+                                    "Y": 41
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": 2,
+                    "Y": 5,
+                    "bus_width": 8,
+                    "color": 0,
+                    "direction": 1,
+                    "distance_from_outport": 0,
+                    "linked_uuid": "",
+                    "name": "0-7",
+                    "screenX": 45.0,
+                    "screenY": 29.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": true,
+                        "type": 1,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 51,
+                            "X2": 45,
+                            "Y1": 29,
+                            "Y2": 29,
+                            "color": 0,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684c9edf-bdd2bad6-35e7-8123-",
+                            "points": [
+                                {
+                                    "X": 51,
+                                    "Y": 29
+                                },
+                                {
+                                    "X": 45,
+                                    "Y": 29
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": true,
+                                "type": 1,
+                                "valid": true
+                            },
+                            "width": 8
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 2,
+            "sizeY": 10,
+            "uuid": "684c9ecd-1c5cfb17-495e-cf44-6f7c-227a92534d9e",
+            "verilog_name": ""
+        },
+        {
+            "X": 52.0,
+            "Y": 28.0,
+            "angle": 0,
+            "class_id": "model_output:",
+            "name": "Output8",
+            "parental_name": "/main",
+            "ports": [
+                {
+                    "X": -1,
+                    "Y": 1,
+                    "bus_width": 0,
+                    "color": 0,
+                    "direction": 0,
+                    "distance_from_outport": 1,
+                    "linked_uuid": "",
+                    "name": "Output8",
+                    "screenX": 51.0,
+                    "screenY": 29.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": true,
+                        "type": 1,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 51,
+                            "X2": 45,
+                            "Y1": 29,
+                            "Y2": 29,
+                            "color": 0,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684c9edf-bdd2bad6-35e7-8123-",
+                            "points": [
+                                {
+                                    "X": 51,
+                                    "Y": 29
+                                },
+                                {
+                                    "X": 45,
+                                    "Y": 29
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": true,
+                                "type": 1,
+                                "valid": true
+                            },
+                            "width": 8
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 3,
+            "sizeY": 3,
+            "uuid": "684c9ed9-85a4a29c-72f5-df7c-a077-8c71bc3f2015",
+            "value": {
+                "arrayval": 0,
+                "boolval": false,
+                "floatval": 0.0,
+                "intval": 0,
+                "is_clock": false,
+                "is_error": false,
+                "type": 0,
+                "valid": false
+            },
+            "verilog_name": ""
+        },
+        {
+            "X": 12.0,
+            "Y": 5.0,
+            "angle": 0,
+            "class_id": "model_toggle:",
+            "name": "Select",
+            "parental_name": "/main",
+            "ports": [
+                {
+                    "X": 1,
+                    "Y": 3,
+                    "bus_width": 0,
+                    "color": 1,
+                    "direction": 1,
+                    "distance_from_outport": 0,
+                    "linked_uuid": "",
+                    "name": "Select",
+                    "screenX": 13.0,
+                    "screenY": 8.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 13,
+                            "X2": 13,
+                            "Y1": 8,
+                            "Y2": 14,
+                            "color": 1,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684c9fa7-fc2088ce-fee7-c7e5-",
+                            "points": [
+                                {
+                                    "X": 13,
+                                    "Y": 14
+                                },
+                                {
+                                    "X": 13,
+                                    "Y": 8
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 0
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 3,
+            "sizeY": 3,
+            "uuid": "684c9ee6-f81732a5-a30b-192f-2407-47fe05a388ab",
+            "value": {
+                "arrayval": 0,
+                "boolval": false,
+                "floatval": 0.0,
+                "intval": 0,
+                "is_clock": false,
+                "is_error": false,
+                "type": 0,
+                "valid": true
+            },
+            "verilog_name": ""
+        },
+        {
+            "X": 23.0,
+            "Y": 28.0,
+            "angle": 0,
+            "class_id": "model_and:",
+            "name": "",
+            "parental_name": "/main",
+            "ports": [
+                {
+                    "X": -1,
+                    "Y": 0,
+                    "bus_width": 1,
+                    "color": 0,
+                    "direction": 0,
+                    "distance_from_outport": 1,
+                    "linked_uuid": "",
+                    "name": "In1",
+                    "screenX": 22.0,
+                    "screenY": 28.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": true,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 7,
+                            "X2": 22,
+                            "Y1": 28,
+                            "Y2": 28,
+                            "color": 4,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684ca052-a02409c5-034c-4eb9-",
+                            "points": [
+                                {
+                                    "X": 22,
+                                    "Y": 28
+                                },
+                                {
+                                    "X": 7,
+                                    "Y": 28
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": true,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": -1,
+                    "Y": 2,
+                    "bus_width": 1,
+                    "color": 0,
+                    "direction": 0,
+                    "distance_from_outport": 6,
+                    "linked_uuid": "",
+                    "name": "In2",
+                    "screenX": 22.0,
+                    "screenY": 30.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 22,
+                            "X2": 13,
+                            "Y1": 30,
+                            "Y2": 30,
+                            "color": 1,
+                            "distance_from_outport": 5,
+                            "name": "Wire-684ca025-2a0f3bb6-d66a-a7d8-",
+                            "points": [
+                                {
+                                    "X": 22,
+                                    "Y": 30
+                                },
+                                {
+                                    "X": 13,
+                                    "Y": 30
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": 4,
+                    "Y": 1,
+                    "bus_width": 1,
+                    "color": 0,
+                    "direction": 1,
+                    "distance_from_outport": 0,
+                    "linked_uuid": "",
+                    "name": "Out",
+                    "screenX": 27.0,
+                    "screenY": 29.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 27,
+                            "X2": 42,
+                            "Y1": 29,
+                            "Y2": 29,
+                            "color": 0,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684c9f6f-6a2a7b9c-fa9c-0e9f-",
+                            "points": [
+                                {
+                                    "X": 42,
+                                    "Y": 29
+                                },
+                                {
+                                    "X": 27,
+                                    "Y": 29
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 4,
+            "sizeY": 3,
+            "uuid": "684c9f0a-0e112111-87fe-313e-72ff-8c0d3fe3766f",
+            "verilog_name": ""
+        },
+        {
+            "X": 23.0,
+            "Y": 32.0,
+            "angle": 0,
+            "class_id": "model_and:",
+            "name": "",
+            "parental_name": "/main",
+            "ports": [
+                {
+                    "X": -1,
+                    "Y": 0,
+                    "bus_width": 1,
+                    "color": 0,
+                    "direction": 0,
+                    "distance_from_outport": 2,
+                    "linked_uuid": "",
+                    "name": "In1",
+                    "screenX": 22.5,
+                    "screenY": 32.400001525878906,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": true,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 22,
+                            "X2": 9,
+                            "Y1": 32,
+                            "Y2": 32,
+                            "color": 4,
+                            "distance_from_outport": 1,
+                            "name": "Wire-684ca1a4-e605fd59-910f-f83c-",
+                            "points": [
+                                {
+                                    "X": 22,
+                                    "Y": 32
+                                },
+                                {
+                                    "X": 9,
+                                    "Y": 32
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": true,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": -1,
+                    "Y": 2,
+                    "bus_width": 1,
+                    "color": 0,
+                    "direction": 0,
+                    "distance_from_outport": 7,
+                    "linked_uuid": "",
+                    "name": "In2",
+                    "screenX": 22.0,
+                    "screenY": 34.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 22,
+                            "X2": 13,
+                            "Y1": 34,
+                            "Y2": 34,
+                            "color": 1,
+                            "distance_from_outport": 6,
+                            "name": "Wire-684c9fe2-14705387-ba47-ac19-",
+                            "points": [
+                                {
+                                    "X": 22,
+                                    "Y": 34
+                                },
+                                {
+                                    "X": 13,
+                                    "Y": 34
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": 4,
+                    "Y": 1,
+                    "bus_width": 1,
+                    "color": 0,
+                    "direction": 1,
+                    "distance_from_outport": 0,
+                    "linked_uuid": "",
+                    "name": "Out",
+                    "screenX": 27.0,
+                    "screenY": 33.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 27,
+                            "X2": 42,
+                            "Y1": 33,
+                            "Y2": 30,
+                            "color": 0,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684c9f71-46edee4f-7fd9-9309-",
+                            "points": [
+                                {
+                                    "X": 42,
+                                    "Y": 30
+                                },
+                                {
+                                    "X": 39,
+                                    "Y": 33
+                                },
+                                {
+                                    "X": 27,
+                                    "Y": 33
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 4,
+            "sizeY": 3,
+            "uuid": "684c9f0b-454f5e7f-9a7e-d6e8-4e07-721fcfaf56e0",
+            "verilog_name": ""
+        },
+        {
+            "X": 23.0,
+            "Y": 36.0,
+            "angle": 0,
+            "class_id": "model_and:",
+            "name": "",
+            "parental_name": "/main",
+            "ports": [
+                {
+                    "X": -1,
+                    "Y": 0,
+                    "bus_width": 1,
+                    "color": 0,
+                    "direction": 0,
+                    "distance_from_outport": 2,
+                    "linked_uuid": "",
+                    "name": "In1",
+                    "screenX": 22.350000381469727,
+                    "screenY": 36.45000076293945,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 22,
+                            "X2": 8,
+                            "Y1": 36,
+                            "Y2": 36,
+                            "color": 4,
+                            "distance_from_outport": 2147483647,
+                            "name": "Wire-684ca19a-ccc50e38-bc25-2ecf-",
+                            "points": [
+                                {
+                                    "X": 22,
+                                    "Y": 36
+                                },
+                                {
+                                    "X": 8,
+                                    "Y": 36
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": -1,
+                    "Y": 2,
+                    "bus_width": 1,
+                    "color": 0,
+                    "direction": 0,
+                    "distance_from_outport": 8,
+                    "linked_uuid": "",
+                    "name": "In2",
+                    "screenX": 22.0,
+                    "screenY": 38.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 22,
+                            "X2": 13,
+                            "Y1": 38,
+                            "Y2": 38,
+                            "color": 1,
+                            "distance_from_outport": 7,
+                            "name": "Wire-684ca02e-43c6726f-080c-4ee0-",
+                            "points": [
+                                {
+                                    "X": 22,
+                                    "Y": 38
+                                },
+                                {
+                                    "X": 13,
+                                    "Y": 38
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": 4,
+                    "Y": 1,
+                    "bus_width": 1,
+                    "color": 0,
+                    "direction": 1,
+                    "distance_from_outport": 0,
+                    "linked_uuid": "",
+                    "name": "Out",
+                    "screenX": 27.0,
+                    "screenY": 37.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 27,
+                            "X2": 42,
+                            "Y1": 37,
+                            "Y2": 31,
+                            "color": 0,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684c9f74-9ef2468f-5b65-4100-",
+                            "points": [
+                                {
+                                    "X": 42,
+                                    "Y": 31
+                                },
+                                {
+                                    "X": 36,
+                                    "Y": 37
+                                },
+                                {
+                                    "X": 27,
+                                    "Y": 37
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 4,
+            "sizeY": 3,
+            "uuid": "684c9f0c-6153572f-4b34-b1db-1188-2e08e287912a",
+            "verilog_name": ""
+        },
+        {
+            "X": 23.0,
+            "Y": 12.0,
+            "angle": 0,
+            "class_id": "model_and:",
+            "name": "",
+            "parental_name": "/main",
+            "ports": [
+                {
+                    "X": -1,
+                    "Y": 0,
+                    "bus_width": 1,
+                    "color": 0,
+                    "direction": 0,
+                    "distance_from_outport": 2,
+                    "linked_uuid": "",
+                    "name": "In1",
+                    "screenX": 22.25,
+                    "screenY": 12.649999618530273,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": true,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 22,
+                            "X2": 7,
+                            "Y1": 12,
+                            "Y2": 12,
+                            "color": 4,
+                            "distance_from_outport": 1,
+                            "name": "Wire-684ca162-138a9420-bab5-3843-",
+                            "points": [
+                                {
+                                    "X": 22,
+                                    "Y": 12
+                                },
+                                {
+                                    "X": 7,
+                                    "Y": 12
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": true,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": -1,
+                    "Y": 2,
+                    "bus_width": 1,
+                    "color": 0,
+                    "direction": 0,
+                    "distance_from_outport": 2,
+                    "linked_uuid": "",
+                    "name": "In2",
+                    "screenX": 22.0,
+                    "screenY": 14.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 22,
+                            "X2": 13,
+                            "Y1": 14,
+                            "Y2": 14,
+                            "color": 1,
+                            "distance_from_outport": 1,
+                            "name": "Wire-684c9fa5-4473b701-7e5c-ff92-",
+                            "points": [
+                                {
+                                    "X": 22,
+                                    "Y": 14
+                                },
+                                {
+                                    "X": 13,
+                                    "Y": 14
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": 4,
+                    "Y": 1,
+                    "bus_width": 1,
+                    "color": 0,
+                    "direction": 1,
+                    "distance_from_outport": 0,
+                    "linked_uuid": "",
+                    "name": "Out",
+                    "screenX": 27.0,
+                    "screenY": 13.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 27,
+                            "X2": 42,
+                            "Y1": 13,
+                            "Y2": 25,
+                            "color": 0,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684c9f62-4a70fff0-a899-3e5c-",
+                            "points": [
+                                {
+                                    "X": 42,
+                                    "Y": 25
+                                },
+                                {
+                                    "X": 30,
+                                    "Y": 13
+                                },
+                                {
+                                    "X": 27,
+                                    "Y": 13
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 4,
+            "sizeY": 3,
+            "uuid": "684c9f3e-2e8c3f1f-98f8-e2bd-c1d3-9cc4d9b2b6f0",
+            "verilog_name": ""
+        },
+        {
+            "X": 23.0,
+            "Y": 16.0,
+            "angle": 0,
+            "class_id": "model_and:",
+            "name": "",
+            "parental_name": "/main",
+            "ports": [
+                {
+                    "X": -1,
+                    "Y": 0,
+                    "bus_width": 1,
+                    "color": 0,
+                    "direction": 0,
+                    "distance_from_outport": 2,
+                    "linked_uuid": "",
+                    "name": "In1",
+                    "screenX": 22.549999237060547,
+                    "screenY": 16.299999237060547,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": true,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 22,
+                            "X2": 8,
+                            "Y1": 16,
+                            "Y2": 16,
+                            "color": 4,
+                            "distance_from_outport": 1,
+                            "name": "Wire-684ca176-85300c5f-cbcb-e5e0-",
+                            "points": [
+                                {
+                                    "X": 22,
+                                    "Y": 16
+                                },
+                                {
+                                    "X": 8,
+                                    "Y": 16
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": true,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": -1,
+                    "Y": 2,
+                    "bus_width": 1,
+                    "color": 0,
+                    "direction": 0,
+                    "distance_from_outport": 3,
+                    "linked_uuid": "",
+                    "name": "In2",
+                    "screenX": 22.0,
+                    "screenY": 18.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 22,
+                            "X2": 13,
+                            "Y1": 18,
+                            "Y2": 18,
+                            "color": 1,
+                            "distance_from_outport": 2,
+                            "name": "Wire-684c9fa9-59c9fb19-472a-6550-",
+                            "points": [
+                                {
+                                    "X": 22,
+                                    "Y": 18
+                                },
+                                {
+                                    "X": 13,
+                                    "Y": 18
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": 4,
+                    "Y": 1,
+                    "bus_width": 1,
+                    "color": 0,
+                    "direction": 1,
+                    "distance_from_outport": 0,
+                    "linked_uuid": "",
+                    "name": "Out",
+                    "screenX": 27.0,
+                    "screenY": 17.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 27,
+                            "X2": 42,
+                            "Y1": 17,
+                            "Y2": 26,
+                            "color": 0,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684c9f65-5b2b64c0-7222-67f8-",
+                            "points": [
+                                {
+                                    "X": 42,
+                                    "Y": 26
+                                },
+                                {
+                                    "X": 33,
+                                    "Y": 17
+                                },
+                                {
+                                    "X": 27,
+                                    "Y": 17
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 4,
+            "sizeY": 3,
+            "uuid": "684c9f3f-538f0b6a-a7a9-f02a-9b6d-67406fe62123",
+            "verilog_name": ""
+        },
+        {
+            "X": 23.0,
+            "Y": 20.0,
+            "angle": 0,
+            "class_id": "model_and:",
+            "name": "",
+            "parental_name": "/main",
+            "ports": [
+                {
+                    "X": -1,
+                    "Y": 0,
+                    "bus_width": 1,
+                    "color": 0,
+                    "direction": 0,
+                    "distance_from_outport": 2,
+                    "linked_uuid": "",
+                    "name": "In1",
+                    "screenX": 22.549999237060547,
+                    "screenY": 20.700000762939453,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": true,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 22,
+                            "X2": 9,
+                            "Y1": 20,
+                            "Y2": 20,
+                            "color": 4,
+                            "distance_from_outport": 1,
+                            "name": "Wire-684ca17f-4801239e-20fe-de6c-",
+                            "points": [
+                                {
+                                    "X": 22,
+                                    "Y": 20
+                                },
+                                {
+                                    "X": 9,
+                                    "Y": 20
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": true,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": -1,
+                    "Y": 2,
+                    "bus_width": 1,
+                    "color": 0,
+                    "direction": 0,
+                    "distance_from_outport": 4,
+                    "linked_uuid": "",
+                    "name": "In2",
+                    "screenX": 22.0,
+                    "screenY": 22.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 22,
+                            "X2": 13,
+                            "Y1": 22,
+                            "Y2": 22,
+                            "color": 1,
+                            "distance_from_outport": 3,
+                            "name": "Wire-684ca020-a00c3ef9-202a-6935-",
+                            "points": [
+                                {
+                                    "X": 22,
+                                    "Y": 22
+                                },
+                                {
+                                    "X": 13,
+                                    "Y": 22
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": 4,
+                    "Y": 1,
+                    "bus_width": 1,
+                    "color": 0,
+                    "direction": 1,
+                    "distance_from_outport": 0,
+                    "linked_uuid": "",
+                    "name": "Out",
+                    "screenX": 27.0,
+                    "screenY": 21.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 27,
+                            "X2": 42,
+                            "Y1": 21,
+                            "Y2": 27,
+                            "color": 0,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684c9f67-1cc6dbb3-e240-9ca4-",
+                            "points": [
+                                {
+                                    "X": 42,
+                                    "Y": 27
+                                },
+                                {
+                                    "X": 36,
+                                    "Y": 21
+                                },
+                                {
+                                    "X": 27,
+                                    "Y": 21
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 4,
+            "sizeY": 3,
+            "uuid": "684c9f41-1c6ff0ca-af47-e9c8-468b-970891c9ff91",
+            "verilog_name": ""
+        },
+        {
+            "X": 23.0,
+            "Y": 24.0,
+            "angle": 0,
+            "class_id": "model_and:",
+            "name": "",
+            "parental_name": "/main",
+            "ports": [
+                {
+                    "X": -1,
+                    "Y": 0,
+                    "bus_width": 1,
+                    "color": 0,
+                    "direction": 0,
+                    "distance_from_outport": 1,
+                    "linked_uuid": "",
+                    "name": "In1",
+                    "screenX": 22.0,
+                    "screenY": 24.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": true,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 7,
+                            "X2": 22,
+                            "Y1": 27,
+                            "Y2": 24,
+                            "color": 4,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684ca055-3ccfb3b9-d9f6-6675-",
+                            "points": [
+                                {
+                                    "X": 22,
+                                    "Y": 24
+                                },
+                                {
+                                    "X": 10,
+                                    "Y": 24
+                                },
+                                {
+                                    "X": 7,
+                                    "Y": 27
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": true,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": -1,
+                    "Y": 2,
+                    "bus_width": 1,
+                    "color": 0,
+                    "direction": 0,
+                    "distance_from_outport": 5,
+                    "linked_uuid": "",
+                    "name": "In2",
+                    "screenX": 22.0,
+                    "screenY": 26.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 22,
+                            "X2": 13,
+                            "Y1": 26,
+                            "Y2": 26,
+                            "color": 1,
+                            "distance_from_outport": 4,
+                            "name": "Wire-684ca023-0801ba02-0eaf-b566-",
+                            "points": [
+                                {
+                                    "X": 22,
+                                    "Y": 26
+                                },
+                                {
+                                    "X": 13,
+                                    "Y": 26
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": 4,
+                    "Y": 1,
+                    "bus_width": 1,
+                    "color": 0,
+                    "direction": 1,
+                    "distance_from_outport": 0,
+                    "linked_uuid": "",
+                    "name": "Out",
+                    "screenX": 27.0,
+                    "screenY": 25.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 27,
+                            "X2": 42,
+                            "Y1": 25,
+                            "Y2": 28,
+                            "color": 0,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684c9f6a-5a4514cb-1996-4aae-",
+                            "points": [
+                                {
+                                    "X": 42,
+                                    "Y": 28
+                                },
+                                {
+                                    "X": 39,
+                                    "Y": 25
+                                },
+                                {
+                                    "X": 27,
+                                    "Y": 25
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 4,
+            "sizeY": 3,
+            "uuid": "684c9f42-eb05e5fb-9c07-d058-73cd-e4378655588a",
+            "verilog_name": ""
+        },
+        {
+            "X": 23.0,
+            "Y": 40.0,
+            "angle": 0,
+            "class_id": "model_and:",
+            "name": "",
+            "parental_name": "/main",
+            "ports": [
+                {
+                    "X": -1,
+                    "Y": 0,
+                    "bus_width": 1,
+                    "color": 0,
+                    "direction": 0,
+                    "distance_from_outport": 2,
+                    "linked_uuid": "",
+                    "name": "In1",
+                    "screenX": 22.700000762939453,
+                    "screenY": 40.349998474121094,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 22,
+                            "X2": 7,
+                            "Y1": 40,
+                            "Y2": 40,
+                            "color": 4,
+                            "distance_from_outport": 2147483647,
+                            "name": "Wire-684ca18e-da337272-20c9-ac82-",
+                            "points": [
+                                {
+                                    "X": 22,
+                                    "Y": 40
+                                },
+                                {
+                                    "X": 7,
+                                    "Y": 40
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": -1,
+                    "Y": 2,
+                    "bus_width": 1,
+                    "color": 0,
+                    "direction": 0,
+                    "distance_from_outport": 9,
+                    "linked_uuid": "",
+                    "name": "In2",
+                    "screenX": 22.0,
+                    "screenY": 42.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 22,
+                            "X2": 13,
+                            "Y1": 42,
+                            "Y2": 42,
+                            "color": 1,
+                            "distance_from_outport": 8,
+                            "name": "Wire-684ca028-ae9a69b3-36a6-ba80-",
+                            "points": [
+                                {
+                                    "X": 22,
+                                    "Y": 42
+                                },
+                                {
+                                    "X": 13,
+                                    "Y": 42
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                },
+                {
+                    "X": 4,
+                    "Y": 1,
+                    "bus_width": 1,
+                    "color": 0,
+                    "direction": 1,
+                    "distance_from_outport": 0,
+                    "linked_uuid": "",
+                    "name": "Out",
+                    "screenX": 27.0,
+                    "screenY": 41.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 27,
+                            "X2": 42,
+                            "Y1": 41,
+                            "Y2": 32,
+                            "color": 0,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684c9f77-1ba4b645-e176-cb23-",
+                            "points": [
+                                {
+                                    "X": 42,
+                                    "Y": 32
+                                },
+                                {
+                                    "X": 33,
+                                    "Y": 41
+                                },
+                                {
+                                    "X": 27,
+                                    "Y": 41
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 4,
+            "sizeY": 3,
+            "uuid": "684c9f46-d22a65de-8f6b-daa0-9c16-ae35b30b585b",
+            "verilog_name": ""
+        },
+        {
+            "X": 13.0,
+            "Y": 14.0,
+            "angle": 0,
+            "class_id": "connector:",
+            "name": "",
+            "parental_name": "/main",
+            "ports": [
+                {
+                    "X": 0,
+                    "Y": 0,
+                    "bus_width": 0,
+                    "color": 0,
+                    "direction": 2,
+                    "distance_from_outport": 1,
+                    "linked_uuid": "",
+                    "name": "Connector",
+                    "screenX": 13.0,
+                    "screenY": 14.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 13,
+                            "X2": 13,
+                            "Y1": 8,
+                            "Y2": 14,
+                            "color": 1,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684c9fa7-fc2088ce-fee7-c7e5-",
+                            "points": [
+                                {
+                                    "X": 13,
+                                    "Y": 14
+                                },
+                                {
+                                    "X": 13,
+                                    "Y": 8
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 0
+                        },
+                        {
+                            "X1": 22,
+                            "X2": 13,
+                            "Y1": 14,
+                            "Y2": 14,
+                            "color": 1,
+                            "distance_from_outport": 1,
+                            "name": "Wire-684c9fa5-4473b701-7e5c-ff92-",
+                            "points": [
+                                {
+                                    "X": 22,
+                                    "Y": 14
+                                },
+                                {
+                                    "X": 13,
+                                    "Y": 14
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        },
+                        {
+                            "X1": 13,
+                            "X2": 13,
+                            "Y1": 14,
+                            "Y2": 18,
+                            "color": 1,
+                            "distance_from_outport": 1,
+                            "name": "Wire-684c9fab-b57ab76d-9dd6-612a-",
+                            "points": [
+                                {
+                                    "X": 13,
+                                    "Y": 18
+                                },
+                                {
+                                    "X": 13,
+                                    "Y": 14
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 1,
+            "sizeY": 1,
+            "uuid": "684c9fa7-6721cd03-5079-7eee-480a-67acfffc9bf4",
+            "verilog_name": ""
+        },
+        {
+            "X": 13.0,
+            "Y": 18.0,
+            "angle": 0,
+            "class_id": "connector:",
+            "name": "",
+            "parental_name": "/main",
+            "ports": [
+                {
+                    "X": 0,
+                    "Y": 0,
+                    "bus_width": 0,
+                    "color": 0,
+                    "direction": 2,
+                    "distance_from_outport": 2,
+                    "linked_uuid": "",
+                    "name": "Connector",
+                    "screenX": 13.0,
+                    "screenY": 18.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 22,
+                            "X2": 13,
+                            "Y1": 18,
+                            "Y2": 18,
+                            "color": 1,
+                            "distance_from_outport": 2,
+                            "name": "Wire-684c9fa9-59c9fb19-472a-6550-",
+                            "points": [
+                                {
+                                    "X": 22,
+                                    "Y": 18
+                                },
+                                {
+                                    "X": 13,
+                                    "Y": 18
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        },
+                        {
+                            "X1": 13,
+                            "X2": 13,
+                            "Y1": 14,
+                            "Y2": 18,
+                            "color": 1,
+                            "distance_from_outport": 1,
+                            "name": "Wire-684c9fab-b57ab76d-9dd6-612a-",
+                            "points": [
+                                {
+                                    "X": 13,
+                                    "Y": 18
+                                },
+                                {
+                                    "X": 13,
+                                    "Y": 14
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        },
+                        {
+                            "X1": 13,
+                            "X2": 13,
+                            "Y1": 18,
+                            "Y2": 22,
+                            "color": 1,
+                            "distance_from_outport": 2,
+                            "name": "Wire-684c9fb8-40b2b6ea-e60a-df42-",
+                            "points": [
+                                {
+                                    "X": 13,
+                                    "Y": 22
+                                },
+                                {
+                                    "X": 13,
+                                    "Y": 18
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 1,
+            "sizeY": 1,
+            "uuid": "684c9faa-612f7abe-83da-8bca-3c9e-bbbaf00579fe",
+            "verilog_name": ""
+        },
+        {
+            "X": 13.0,
+            "Y": 26.0,
+            "angle": 0,
+            "class_id": "connector:",
+            "name": "",
+            "parental_name": "/main",
+            "ports": [
+                {
+                    "X": 0,
+                    "Y": 0,
+                    "bus_width": 0,
+                    "color": 0,
+                    "direction": 2,
+                    "distance_from_outport": 4,
+                    "linked_uuid": "",
+                    "name": "Connector",
+                    "screenX": 13.0,
+                    "screenY": 26.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 13,
+                            "X2": 13,
+                            "Y1": 26,
+                            "Y2": 30,
+                            "color": 1,
+                            "distance_from_outport": 4,
+                            "name": "Wire-684c9ff3-54d94fc8-ea5f-8dde-",
+                            "points": [
+                                {
+                                    "X": 13,
+                                    "Y": 30
+                                },
+                                {
+                                    "X": 13,
+                                    "Y": 26
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        },
+                        {
+                            "X1": 13,
+                            "X2": 13,
+                            "Y1": 26,
+                            "Y2": 22,
+                            "color": 1,
+                            "distance_from_outport": 3,
+                            "name": "Wire-684ca022-0715f9dd-c77a-cb1b-",
+                            "points": [
+                                {
+                                    "X": 13,
+                                    "Y": 26
+                                },
+                                {
+                                    "X": 13,
+                                    "Y": 22
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        },
+                        {
+                            "X1": 22,
+                            "X2": 13,
+                            "Y1": 26,
+                            "Y2": 26,
+                            "color": 1,
+                            "distance_from_outport": 4,
+                            "name": "Wire-684ca023-0801ba02-0eaf-b566-",
+                            "points": [
+                                {
+                                    "X": 22,
+                                    "Y": 26
+                                },
+                                {
+                                    "X": 13,
+                                    "Y": 26
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 1,
+            "sizeY": 1,
+            "uuid": "684c9fb7-c04badd2-247d-e414-1ec2-5c098e1d305f",
+            "verilog_name": ""
+        },
+        {
+            "X": 13.0,
+            "Y": 34.0,
+            "angle": 0,
+            "class_id": "connector:",
+            "name": "",
+            "parental_name": "/main",
+            "ports": [
+                {
+                    "X": 0,
+                    "Y": 0,
+                    "bus_width": 0,
+                    "color": 0,
+                    "direction": 2,
+                    "distance_from_outport": 6,
+                    "linked_uuid": "",
+                    "name": "Connector",
+                    "screenX": 13.0,
+                    "screenY": 34.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 22,
+                            "X2": 13,
+                            "Y1": 34,
+                            "Y2": 34,
+                            "color": 1,
+                            "distance_from_outport": 6,
+                            "name": "Wire-684c9fe2-14705387-ba47-ac19-",
+                            "points": [
+                                {
+                                    "X": 22,
+                                    "Y": 34
+                                },
+                                {
+                                    "X": 13,
+                                    "Y": 34
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        },
+                        {
+                            "X1": 13,
+                            "X2": 13,
+                            "Y1": 34,
+                            "Y2": 30,
+                            "color": 1,
+                            "distance_from_outport": 5,
+                            "name": "Wire-684ca026-766914c1-dca8-8e11-",
+                            "points": [
+                                {
+                                    "X": 13,
+                                    "Y": 34
+                                },
+                                {
+                                    "X": 13,
+                                    "Y": 30
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        },
+                        {
+                            "X1": 13,
+                            "X2": 13,
+                            "Y1": 34,
+                            "Y2": 38,
+                            "color": 1,
+                            "distance_from_outport": 6,
+                            "name": "Wire-684ca02c-218bf95c-3efd-e51b-",
+                            "points": [
+                                {
+                                    "X": 13,
+                                    "Y": 38
+                                },
+                                {
+                                    "X": 13,
+                                    "Y": 34
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 1,
+            "sizeY": 1,
+            "uuid": "684c9fe4-303f9361-4f9a-5bd1-904f-35c0201390d3",
+            "verilog_name": ""
+        },
+        {
+            "X": 13.0,
+            "Y": 22.0,
+            "angle": 0,
+            "class_id": "connector:",
+            "name": "",
+            "parental_name": "/main",
+            "ports": [
+                {
+                    "X": 0,
+                    "Y": 0,
+                    "bus_width": 0,
+                    "color": 0,
+                    "direction": 2,
+                    "distance_from_outport": 3,
+                    "linked_uuid": "",
+                    "name": "Connector",
+                    "screenX": 13.0,
+                    "screenY": 22.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 13,
+                            "X2": 13,
+                            "Y1": 18,
+                            "Y2": 22,
+                            "color": 1,
+                            "distance_from_outport": 2,
+                            "name": "Wire-684c9fb8-40b2b6ea-e60a-df42-",
+                            "points": [
+                                {
+                                    "X": 13,
+                                    "Y": 22
+                                },
+                                {
+                                    "X": 13,
+                                    "Y": 18
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        },
+                        {
+                            "X1": 13,
+                            "X2": 13,
+                            "Y1": 26,
+                            "Y2": 22,
+                            "color": 1,
+                            "distance_from_outport": 3,
+                            "name": "Wire-684ca022-0715f9dd-c77a-cb1b-",
+                            "points": [
+                                {
+                                    "X": 13,
+                                    "Y": 26
+                                },
+                                {
+                                    "X": 13,
+                                    "Y": 22
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        },
+                        {
+                            "X1": 22,
+                            "X2": 13,
+                            "Y1": 22,
+                            "Y2": 22,
+                            "color": 1,
+                            "distance_from_outport": 3,
+                            "name": "Wire-684ca020-a00c3ef9-202a-6935-",
+                            "points": [
+                                {
+                                    "X": 22,
+                                    "Y": 22
+                                },
+                                {
+                                    "X": 13,
+                                    "Y": 22
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 1,
+            "sizeY": 1,
+            "uuid": "684ca021-e98d3dbd-a2bb-a742-7fd5-21832920a7ad",
+            "verilog_name": ""
+        },
+        {
+            "X": 13.0,
+            "Y": 30.0,
+            "angle": 0,
+            "class_id": "connector:",
+            "name": "",
+            "parental_name": "/main",
+            "ports": [
+                {
+                    "X": 0,
+                    "Y": 0,
+                    "bus_width": 0,
+                    "color": 0,
+                    "direction": 2,
+                    "distance_from_outport": 5,
+                    "linked_uuid": "",
+                    "name": "Connector",
+                    "screenX": 13.0,
+                    "screenY": 30.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 13,
+                            "X2": 13,
+                            "Y1": 26,
+                            "Y2": 30,
+                            "color": 1,
+                            "distance_from_outport": 4,
+                            "name": "Wire-684c9ff3-54d94fc8-ea5f-8dde-",
+                            "points": [
+                                {
+                                    "X": 13,
+                                    "Y": 30
+                                },
+                                {
+                                    "X": 13,
+                                    "Y": 26
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        },
+                        {
+                            "X1": 13,
+                            "X2": 13,
+                            "Y1": 34,
+                            "Y2": 30,
+                            "color": 1,
+                            "distance_from_outport": 5,
+                            "name": "Wire-684ca026-766914c1-dca8-8e11-",
+                            "points": [
+                                {
+                                    "X": 13,
+                                    "Y": 34
+                                },
+                                {
+                                    "X": 13,
+                                    "Y": 30
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        },
+                        {
+                            "X1": 22,
+                            "X2": 13,
+                            "Y1": 30,
+                            "Y2": 30,
+                            "color": 1,
+                            "distance_from_outport": 5,
+                            "name": "Wire-684ca025-2a0f3bb6-d66a-a7d8-",
+                            "points": [
+                                {
+                                    "X": 22,
+                                    "Y": 30
+                                },
+                                {
+                                    "X": 13,
+                                    "Y": 30
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 1,
+            "sizeY": 1,
+            "uuid": "684ca026-5a4072b5-4ee6-163a-bff5-25c849ccf0ff",
+            "verilog_name": ""
+        },
+        {
+            "X": 13.0,
+            "Y": 42.0,
+            "angle": 0,
+            "class_id": "connector:",
+            "name": "",
+            "parental_name": "/main",
+            "ports": [
+                {
+                    "X": 0,
+                    "Y": 0,
+                    "bus_width": 0,
+                    "color": 0,
+                    "direction": 2,
+                    "distance_from_outport": 8,
+                    "linked_uuid": "",
+                    "name": "Connector",
+                    "screenX": 13.0,
+                    "screenY": 42.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 22,
+                            "X2": 13,
+                            "Y1": 42,
+                            "Y2": 42,
+                            "color": 1,
+                            "distance_from_outport": 8,
+                            "name": "Wire-684ca028-ae9a69b3-36a6-ba80-",
+                            "points": [
+                                {
+                                    "X": 22,
+                                    "Y": 42
+                                },
+                                {
+                                    "X": 13,
+                                    "Y": 42
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        },
+                        {
+                            "X1": 13,
+                            "X2": 13,
+                            "Y1": 42,
+                            "Y2": 38,
+                            "color": 1,
+                            "distance_from_outport": 7,
+                            "name": "Wire-684ca030-72542754-17e5-c1ac-",
+                            "points": [
+                                {
+                                    "X": 13,
+                                    "Y": 42
+                                },
+                                {
+                                    "X": 13,
+                                    "Y": 38
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 1,
+            "sizeY": 1,
+            "uuid": "684ca02a-c391e9e8-d6df-5fe8-436e-469686fb3d80",
+            "verilog_name": ""
+        },
+        {
+            "X": 13.0,
+            "Y": 38.0,
+            "angle": 0,
+            "class_id": "connector:",
+            "name": "",
+            "parental_name": "/main",
+            "ports": [
+                {
+                    "X": 0,
+                    "Y": 0,
+                    "bus_width": 0,
+                    "color": 0,
+                    "direction": 2,
+                    "distance_from_outport": 7,
+                    "linked_uuid": "",
+                    "name": "Connector",
+                    "screenX": 13.0,
+                    "screenY": 38.0,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 13,
+                            "X2": 13,
+                            "Y1": 34,
+                            "Y2": 38,
+                            "color": 1,
+                            "distance_from_outport": 6,
+                            "name": "Wire-684ca02c-218bf95c-3efd-e51b-",
+                            "points": [
+                                {
+                                    "X": 13,
+                                    "Y": 38
+                                },
+                                {
+                                    "X": 13,
+                                    "Y": 34
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        },
+                        {
+                            "X1": 13,
+                            "X2": 13,
+                            "Y1": 42,
+                            "Y2": 38,
+                            "color": 1,
+                            "distance_from_outport": 7,
+                            "name": "Wire-684ca030-72542754-17e5-c1ac-",
+                            "points": [
+                                {
+                                    "X": 13,
+                                    "Y": 42
+                                },
+                                {
+                                    "X": 13,
+                                    "Y": 38
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        },
+                        {
+                            "X1": 22,
+                            "X2": 13,
+                            "Y1": 38,
+                            "Y2": 38,
+                            "color": 1,
+                            "distance_from_outport": 7,
+                            "name": "Wire-684ca02e-43c6726f-080c-4ee0-",
+                            "points": [
+                                {
+                                    "X": 22,
+                                    "Y": 38
+                                },
+                                {
+                                    "X": 13,
+                                    "Y": 38
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 1,
+            "sizeY": 1,
+            "uuid": "684ca030-3aed0776-2e04-8cae-6c34-70aa8a833566",
+            "verilog_name": ""
+        },
+        {
+            "X": 7.0,
+            "Y": 12.0,
+            "angle": 0,
+            "class_id": "connector:",
+            "name": "",
+            "parental_name": "/main",
+            "ports": [
+                {
+                    "X": 0,
+                    "Y": 0,
+                    "bus_width": 0,
+                    "color": 0,
+                    "direction": 2,
+                    "distance_from_outport": 1,
+                    "linked_uuid": "",
+                    "name": "Connector",
+                    "screenX": 7.649999618530273,
+                    "screenY": 12.350000381469727,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": true,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 22,
+                            "X2": 7,
+                            "Y1": 12,
+                            "Y2": 12,
+                            "color": 4,
+                            "distance_from_outport": 1,
+                            "name": "Wire-684ca162-138a9420-bab5-3843-",
+                            "points": [
+                                {
+                                    "X": 22,
+                                    "Y": 12
+                                },
+                                {
+                                    "X": 7,
+                                    "Y": 12
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": true,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        },
+                        {
+                            "X1": 7,
+                            "X2": 7,
+                            "Y1": 12,
+                            "Y2": 24,
+                            "color": 4,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684ca166-efea9768-883f-7a2d-",
+                            "points": [
+                                {
+                                    "X": 7,
+                                    "Y": 12
+                                },
+                                {
+                                    "X": 7,
+                                    "Y": 24
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": true,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 1,
+            "sizeY": 1,
+            "uuid": "684ca164-a84d4780-9b1f-d7a6-6126-78cc0e290ebd",
+            "verilog_name": ""
+        },
+        {
+            "X": 8.0,
+            "Y": 16.0,
+            "angle": 0,
+            "class_id": "connector:",
+            "name": "",
+            "parental_name": "/main",
+            "ports": [
+                {
+                    "X": 0,
+                    "Y": 0,
+                    "bus_width": 0,
+                    "color": 0,
+                    "direction": 2,
+                    "distance_from_outport": 1,
+                    "linked_uuid": "",
+                    "name": "Connector",
+                    "screenX": 8.300000190734863,
+                    "screenY": 16.600000381469727,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": true,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 22,
+                            "X2": 8,
+                            "Y1": 16,
+                            "Y2": 16,
+                            "color": 4,
+                            "distance_from_outport": 1,
+                            "name": "Wire-684ca176-85300c5f-cbcb-e5e0-",
+                            "points": [
+                                {
+                                    "X": 22,
+                                    "Y": 16
+                                },
+                                {
+                                    "X": 8,
+                                    "Y": 16
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": true,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        },
+                        {
+                            "X1": 7,
+                            "X2": 8,
+                            "Y1": 25,
+                            "Y2": 16,
+                            "color": 4,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684ca178-647c6f66-2d26-124e-",
+                            "points": [
+                                {
+                                    "X": 8,
+                                    "Y": 16
+                                },
+                                {
+                                    "X": 8,
+                                    "Y": 24
+                                },
+                                {
+                                    "X": 7,
+                                    "Y": 25
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": true,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 1,
+            "sizeY": 1,
+            "uuid": "684ca178-2b5d6dcb-e0e0-ec7a-39f7-6a720a2e2ca6",
+            "verilog_name": ""
+        },
+        {
+            "X": 9.0,
+            "Y": 20.0,
+            "angle": 0,
+            "class_id": "connector:",
+            "name": "",
+            "parental_name": "/main",
+            "ports": [
+                {
+                    "X": 0,
+                    "Y": 0,
+                    "bus_width": 0,
+                    "color": 0,
+                    "direction": 2,
+                    "distance_from_outport": 1,
+                    "linked_uuid": "",
+                    "name": "Connector",
+                    "screenX": 9.600000381469727,
+                    "screenY": 20.649999618530273,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": true,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 22,
+                            "X2": 9,
+                            "Y1": 20,
+                            "Y2": 20,
+                            "color": 4,
+                            "distance_from_outport": 1,
+                            "name": "Wire-684ca17f-4801239e-20fe-de6c-",
+                            "points": [
+                                {
+                                    "X": 22,
+                                    "Y": 20
+                                },
+                                {
+                                    "X": 9,
+                                    "Y": 20
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": true,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        },
+                        {
+                            "X1": 7,
+                            "X2": 9,
+                            "Y1": 26,
+                            "Y2": 20,
+                            "color": 4,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684ca181-1c0195f0-f9db-0c37-",
+                            "points": [
+                                {
+                                    "X": 9,
+                                    "Y": 20
+                                },
+                                {
+                                    "X": 9,
+                                    "Y": 24
+                                },
+                                {
+                                    "X": 7,
+                                    "Y": 26
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": true,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 1,
+            "sizeY": 1,
+            "uuid": "684ca180-62c96da3-06fa-2e88-acc5-9082420e8d3d",
+            "verilog_name": ""
+        },
+        {
+            "X": 7.0,
+            "Y": 40.0,
+            "angle": 0,
+            "class_id": "connector:",
+            "name": "",
+            "parental_name": "/main",
+            "ports": [
+                {
+                    "X": 0,
+                    "Y": 0,
+                    "bus_width": 0,
+                    "color": 0,
+                    "direction": 2,
+                    "distance_from_outport": 1,
+                    "linked_uuid": "",
+                    "name": "Connector",
+                    "screenX": 7.649999618530273,
+                    "screenY": 40.400001525878906,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 22,
+                            "X2": 7,
+                            "Y1": 40,
+                            "Y2": 40,
+                            "color": 4,
+                            "distance_from_outport": 2147483647,
+                            "name": "Wire-684ca18e-da337272-20c9-ac82-",
+                            "points": [
+                                {
+                                    "X": 22,
+                                    "Y": 40
+                                },
+                                {
+                                    "X": 7,
+                                    "Y": 40
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        },
+                        {
+                            "X1": 7,
+                            "X2": 7,
+                            "Y1": 31,
+                            "Y2": 40,
+                            "color": 4,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684ca191-b877487c-9670-707c-",
+                            "points": [
+                                {
+                                    "X": 7,
+                                    "Y": 40
+                                },
+                                {
+                                    "X": 7,
+                                    "Y": 31
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 1,
+            "sizeY": 1,
+            "uuid": "684ca190-fd75c947-126d-3d05-e8c1-df775121a442",
+            "verilog_name": ""
+        },
+        {
+            "X": 8.0,
+            "Y": 36.0,
+            "angle": 0,
+            "class_id": "connector:",
+            "name": "",
+            "parental_name": "/main",
+            "ports": [
+                {
+                    "X": 0,
+                    "Y": 0,
+                    "bus_width": 0,
+                    "color": 0,
+                    "direction": 2,
+                    "distance_from_outport": 1,
+                    "linked_uuid": "",
+                    "name": "Connector",
+                    "screenX": 8.449999809265137,
+                    "screenY": 36.650001525878906,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": false,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 22,
+                            "X2": 8,
+                            "Y1": 36,
+                            "Y2": 36,
+                            "color": 4,
+                            "distance_from_outport": 2147483647,
+                            "name": "Wire-684ca19a-ccc50e38-bc25-2ecf-",
+                            "points": [
+                                {
+                                    "X": 22,
+                                    "Y": 36
+                                },
+                                {
+                                    "X": 8,
+                                    "Y": 36
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        },
+                        {
+                            "X1": 7,
+                            "X2": 8,
+                            "Y1": 30,
+                            "Y2": 36,
+                            "color": 4,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684ca19e-bca1b4c9-8520-8c0a-",
+                            "points": [
+                                {
+                                    "X": 8,
+                                    "Y": 36
+                                },
+                                {
+                                    "X": 8,
+                                    "Y": 31
+                                },
+                                {
+                                    "X": 7,
+                                    "Y": 30
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": false,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 1,
+            "sizeY": 1,
+            "uuid": "684ca19d-e05ba360-60a8-97af-5c1c-0b907e0bc3e7",
+            "verilog_name": ""
+        },
+        {
+            "X": 9.0,
+            "Y": 32.0,
+            "angle": 0,
+            "class_id": "connector:",
+            "name": "",
+            "parental_name": "/main",
+            "ports": [
+                {
+                    "X": 0,
+                    "Y": 0,
+                    "bus_width": 0,
+                    "color": 0,
+                    "direction": 2,
+                    "distance_from_outport": 1,
+                    "linked_uuid": "",
+                    "name": "Connector",
+                    "screenX": 9.350000381469727,
+                    "screenY": 32.650001525878906,
+                    "value": {
+                        "arrayval": 0,
+                        "boolval": true,
+                        "floatval": 0.0,
+                        "intval": 0,
+                        "is_clock": false,
+                        "is_error": false,
+                        "type": 0,
+                        "valid": true
+                    },
+                    "verilog_name": "",
+                    "wires": [
+                        {
+                            "X1": 22,
+                            "X2": 9,
+                            "Y1": 32,
+                            "Y2": 32,
+                            "color": 4,
+                            "distance_from_outport": 1,
+                            "name": "Wire-684ca1a4-e605fd59-910f-f83c-",
+                            "points": [
+                                {
+                                    "X": 22,
+                                    "Y": 32
+                                },
+                                {
+                                    "X": 9,
+                                    "Y": 32
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": true,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        },
+                        {
+                            "X1": 7,
+                            "X2": 9,
+                            "Y1": 29,
+                            "Y2": 32,
+                            "color": 4,
+                            "distance_from_outport": 0,
+                            "name": "Wire-684ca1a6-87a6afe8-d612-a232-",
+                            "points": [
+                                {
+                                    "X": 9,
+                                    "Y": 32
+                                },
+                                {
+                                    "X": 9,
+                                    "Y": 31
+                                },
+                                {
+                                    "X": 7,
+                                    "Y": 29
+                                }
+                            ],
+                            "value": {
+                                "arrayval": 0,
+                                "boolval": true,
+                                "floatval": 0.0,
+                                "intval": 0,
+                                "is_clock": false,
+                                "is_error": false,
+                                "type": 0,
+                                "valid": true
+                            },
+                            "width": 1
+                        }
+                    ]
+                }
+            ],
+            "sizeX": 1,
+            "sizeY": 1,
+            "uuid": "684ca1a6-dedf8bc4-5d53-8f72-fcf7-f9d5e1072278",
+            "verilog_name": ""
+        }
+    ],
+    "name": "main",
+    "parental_name": "",
+    "sizeX": 200.0,
+    "sizeY": 200.0,
+    "verilog_name": ""
+}
