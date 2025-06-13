@@ -111,7 +111,8 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 		for (auto elem:	current_scene->elements) {
 			if (elem->intersect(x, y) && !elem->is_port(x,y)) {
 				printf("Start drag: %5.2f %5.2f \n", x, y);
-				dragging = elem;
+				if (dragging == NULL || dragging->class_id() == "model_label:")
+					dragging = elem;
 			}
 		}
 
@@ -199,19 +200,25 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 		y = scr_to_Y(event.motion.y);
 		for (auto elem:	current_scene->elements) {
 			if (elem->intersect(x, y)) {
-				here = elem;
+				if (here == NULL || elem->class_id() != "model_label:") {
+					printf("HERE %s\n", elem->class_id().c_str());
+					here = elem;
+				}
 			}
 		}
 		active_menu = NULL;
+		class wire *wr = current_scene->is_wire(x, y);
+		class port *is_port = current_scene->is_port(x,y);
+			
+
 		if (here) {
 			active_menu = here->get_menu();
-		} else {
-			class wire *wr = current_scene->is_wire(x, y);
-			class port *is_port = current_scene->is_port(x,y);
-			
+		} 
+		
+		if (!here || here->class_id() == "model_label:")  {
 			if (is_port) {
 				active_menu = is_port->get_menu();
-			} else if (!wr) {
+			} else if (!wr && !here) {
 				active_menu = current_scene->get_menu();
 			}			
 		}

@@ -13,7 +13,7 @@ name::~name(void)
 {
 }
 
-float name::relative_cursor_pos(class canvas *canvas, std::string text)
+float name::relative_cursor_pos(class canvas *canvas, std::string text, float H)
 {
 	SDL_Point size;
 	float w,h,W = 40;
@@ -24,17 +24,17 @@ float name::relative_cursor_pos(class canvas *canvas, std::string text)
 	SDL_Texture *texture = canvas->text_to_texture(text);
 	SDL_QueryTexture(texture, NULL, NULL, &size.x, &size.y);
 		
-	h = 1;
+	h = H;
 	w = 1.0 * size.x / size.y * h;
 	if (w > W) {
 		w = W;
-		h = 1.0 * size.y / size.x * w;
+		h = H * size.y / size.x * w;
 	}
 	return w;
 }
 
 
-void name::drawAt(class canvas *canvas, float X, float Y, float W)
+void name::drawAt(class canvas *canvas, float X, float Y, float W, float H)
 {
     if (edit_mode) {
           struct timeval tv;
@@ -48,14 +48,14 @@ void name::drawAt(class canvas *canvas, float X, float Y, float W)
              after = "";
          };
           if (tv.tv_usec > 500000)
-             canvas->draw_image("assets/lightgray.png", X + relative_cursor_pos(canvas, before), Y, 0.2, 1);
-          canvas->draw_text_left(*value, X, Y, W + 5, 1);
+             canvas->draw_image("assets/lightgray.png", X + relative_cursor_pos(canvas, before, H), Y, 0.2, H);
+          canvas->draw_text_left(*value, X, Y, W + 5, H);
 
           if (tv.tv_usec > 500000)
-             canvas->draw_text_left("|", X + relative_cursor_pos(canvas, before), Y, W + 5, 1);
+             canvas->draw_text_left("|", X + relative_cursor_pos(canvas, before, H), Y, W + 5, H);
 
     } else {
-      canvas->draw_text(*value + " ", X, Y, W, 1);
+      canvas->draw_text(*value + " ", X, Y, W, H);
     }
 }
 

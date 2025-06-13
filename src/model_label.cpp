@@ -47,7 +47,7 @@ void model_label::drawAt_early(class canvas *canvas, float X, float Y, int type)
         
     }
 
-    name_edit->drawAt(canvas, X, Y + sizeY-1.2, sizeX);
+    name_edit->drawAt(canvas, X, Y + sizeY-1.7, sizeX, 1.5);
 }
 
 
