@@ -407,6 +407,8 @@ void iconbar::create_menu(void)
     init_icon = new class oneiconbar(renderer, rect, "Bus converters");    
     init_icon->set_element("model_4to1:", "assets/4to1.png", "Bus to 4 bits split");
     init_icon->set_element("model_1to4:", "assets/1to4.png", "4 bits to Bus concentrator");
+    init_icon->set_element("model_8to1:", "assets/8to1.png", "Bus to 8 bits split");
+    init_icon->set_element("model_1to8:", "assets/1to8.png", "8 bits to Bus concentrator");
     init_icon->set_element("model_8to4:", "assets/8to4.png", "bus8 to 2 bus4 split");
     init_icon->set_element("model_4to8:", "assets/4to8.png", "2 bus4 to bus8 concentrator");
     init_icon->set_element("model_16to8:", "assets/16to8.png", "bus16 to 2 bus8 split");

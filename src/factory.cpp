@@ -26,6 +26,8 @@
 #include "model_nest.h"
 #include "model_4to1.h"
 #include "model_1to4.h"
+#include "model_8to1.h"
+#include "model_1to8.h"
 #include "model_8to4.h"
 #include "model_4to8.h"
 #include "model_16to8.h"
@@ -59,6 +61,8 @@ class element *element_from_class_id(std::string classid)
     ELEMENT(model_nest);
     ELEMENT(model_4to1);
     ELEMENT(model_1to4);
+    ELEMENT(model_8to1);
+    ELEMENT(model_1to8);
     ELEMENT(model_8to4);
     ELEMENT(model_4to8);
     ELEMENT(model_16to8);
