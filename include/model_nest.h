@@ -32,6 +32,7 @@ public:
     std::string get_verilog_modules(void) override;
     void set_library_origin(std::string origin, std::string elm) override { from_library_collection = origin; from_library_element = elm;};
     void reset_to_library(void);
+    void save_to_library(std::string library_path);
 private:
 
     float bX1,bY1,bX2,bY2; /* bounding box of the scene -- no save*/

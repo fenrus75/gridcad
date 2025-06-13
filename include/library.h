@@ -14,3 +14,4 @@ struct library_block {
 
 extern std::vector<struct library_block> library;
 extern struct library_block * find_in_library(std::string collection, std::string element);
+extern void clear_library(void);

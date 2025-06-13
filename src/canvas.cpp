@@ -290,6 +290,9 @@ bool canvas::handle_event(SDL_Event &event)
 		tooltip_eligable = true;
 	else
 		tooltip_eligable = false;
+		
+	if (event.type == EVENT_RELOAD_ICONBAR)
+		icon_bar->create_menu();
 
 
 	if (event.type == EVENT_ZOOM_TO_FIT && event.user.data1 == current_scene) {  /* zoom to fit the screen */

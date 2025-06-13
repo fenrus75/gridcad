@@ -90,6 +90,7 @@ public:
     class icon *current_icon(int ScreenX, int ScreenY);
     std::string current_tooltip(int ScreenX, int ScreenY);
     class contextmenu *get_menu(int ScreenX, int ScreenY);
+    void create_menu(void);
     
 private:
     SDL_Rect rect = {};

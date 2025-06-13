@@ -26,68 +26,10 @@ void callback_ib(class iconbar *bar, class oneiconbar *choice)
 
 iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
 {
-    unsigned int li;
-    
-    class oneiconbar *init_icon, *libtab;
     renderer = _renderer;
     rect = _rect;
     
-    init_icon = new class oneiconbar(_renderer, _rect, "Logic");
-
-    init_icon->set_element("model_zero:", "assets/zero.png", "constant zero value");
-    init_icon->set_element("model_one:", "assets/one.png", "constant one value");
-    init_icon->set_element("model_not:", "assets/inverter.png", "bit inverter");
-    init_icon->insert_blank();
-    init_icon->set_element("model_nand:", "assets/nandgate.png", "bitwise NAND gate");
-    init_icon->set_element("model_and:", "assets/andgate.png", "bitwise AND gate");
-    init_icon->set_element("model_nor:", "assets/norgate.png", "bitwise NOR gate");
-    init_icon->set_element("model_or:", "assets/orgate.png", "bitwise OR gate");
-    init_icon->set_element("model_xor:", "assets/xorgate.png", "bitwise XOR gate");
-    init_icon->insert_blank();
-    init_icon->set_element("model_toggle:", "assets/toggle_off.png", "Input element");
-    init_icon->set_element("model_output:", "assets/output_on.png", "Output element");
-    init_icon->set_element("model_nest:", "assets/nest/nest_icon.png", "Nested scene");
-    init_icon->set_element("model_truth:", "assets/model_truth/truthtable_icon.png", "Truth table");
-    init_icon->set_element("model_dflipflop:", "assets/dflipflop.png", "D flip flop");
-    init_icon->set_element("model_delayline:", "assets/delayline.png", "Delay line");
-    init_icon->set_element("model_clock:", "assets/clock_on.png", "Clock");
-    init_icon->set_element("model_datascope:", "assets/datascope.png", "Data scope");
-    init_icon->set_element("model_label:", "assets/label.png", "Area Label");
-
-    icons.push_back(init_icon);
-    current_icons = init_icon;    
-    init_icon = new class oneiconbar(_renderer, _rect, "Bus converters");    
-    init_icon->set_element("model_4to1:", "assets/4to1.png", "Bus to 4 bits split");
-    init_icon->set_element("model_1to4:", "assets/1to4.png", "4 bits to Bus concentrator");
-    init_icon->set_element("model_8to4:", "assets/8to4.png", "bus8 to 2 bus4 split");
-    init_icon->set_element("model_4to8:", "assets/4to8.png", "2 bus4 to bus8 concentrator");
-    init_icon->set_element("model_16to8:", "assets/16to8.png", "bus16 to 2 bus8 split");
-    init_icon->set_element("model_8to16:", "assets/8to16.png", "2 bus8 to bus16 concentrator");
-    icons.push_back(init_icon);
-
-    init_icon = new class oneiconbar(_renderer, _rect, "Memory");
-    init_icon->set_element("model_memory:", "assets/memory.png", "8 Bit Memory");
-    init_icon->insert_blank();
-    init_icon->set_element("model_clock:", "assets/clock_on.png", "Clock");
-    init_icon->set_element("model_dflipflop:", "assets/dflipflop.png", "D flip flop");
-    icons.push_back(init_icon);
-    
-    
-    for (li = 0; li < library.size(); li++) {
-        if (libtabs.find(library[li].collection) == libtabs.end()) {
-            libtab = new class oneiconbar(_renderer, _rect, library[li].collection );
-            libtabs[library[li].collection] = libtab;
-            icons.push_back(libtab);
-        }
-        libtab = libtabs[library[li].collection];
-        libtab->set_element("library", &library[li]);
-    }
-    
-    menu = new icon_contextmenu(this);
-    for (auto ib : icons) {
-       menu->add_item(ib->get_name(), ib, callback_ib);
-    }
-    
+    create_menu();    
 }
 
 void oneiconbar::set_element(unsigned int X, unsigned int Y, std::string class_id, std::string filename, std::string tooltip, struct library_block *block)
@@ -420,4 +362,78 @@ void iconbar::set(class oneiconbar *b)
          if (icons[i] == b)
             active_index = i;
      }
+}
+
+void iconbar::create_menu(void)
+{
+     unsigned int li;
+    
+    class oneiconbar *init_icon, *libtab;
+   if (menu) {
+     delete menu;
+     menu = NULL;
+    }
+    
+    for (auto I : icons) {
+        delete I;
+    }
+    icons.clear();
+    libtabs.clear();
+    
+    init_icon = new class oneiconbar(renderer, rect, "Logic");
+
+    init_icon->set_element("model_zero:", "assets/zero.png", "constant zero value");
+    init_icon->set_element("model_one:", "assets/one.png", "constant one value");
+    init_icon->set_element("model_not:", "assets/inverter.png", "bit inverter");
+    init_icon->insert_blank();
+    init_icon->set_element("model_nand:", "assets/nandgate.png", "bitwise NAND gate");
+    init_icon->set_element("model_and:", "assets/andgate.png", "bitwise AND gate");
+    init_icon->set_element("model_nor:", "assets/norgate.png", "bitwise NOR gate");
+    init_icon->set_element("model_or:", "assets/orgate.png", "bitwise OR gate");
+    init_icon->set_element("model_xor:", "assets/xorgate.png", "bitwise XOR gate");
+    init_icon->insert_blank();
+    init_icon->set_element("model_toggle:", "assets/toggle_off.png", "Input element");
+    init_icon->set_element("model_output:", "assets/output_on.png", "Output element");
+    init_icon->set_element("model_nest:", "assets/nest/nest_icon.png", "Nested scene");
+    init_icon->set_element("model_truth:", "assets/model_truth/truthtable_icon.png", "Truth table");
+    init_icon->set_element("model_dflipflop:", "assets/dflipflop.png", "D flip flop");
+    init_icon->set_element("model_delayline:", "assets/delayline.png", "Delay line");
+    init_icon->set_element("model_clock:", "assets/clock_on.png", "Clock");
+    init_icon->set_element("model_datascope:", "assets/datascope.png", "Data scope");
+    init_icon->set_element("model_label:", "assets/label.png", "Area Label");
+
+    icons.push_back(init_icon);
+    current_icons = init_icon;    
+    init_icon = new class oneiconbar(renderer, rect, "Bus converters");    
+    init_icon->set_element("model_4to1:", "assets/4to1.png", "Bus to 4 bits split");
+    init_icon->set_element("model_1to4:", "assets/1to4.png", "4 bits to Bus concentrator");
+    init_icon->set_element("model_8to4:", "assets/8to4.png", "bus8 to 2 bus4 split");
+    init_icon->set_element("model_4to8:", "assets/4to8.png", "2 bus4 to bus8 concentrator");
+    init_icon->set_element("model_16to8:", "assets/16to8.png", "bus16 to 2 bus8 split");
+    init_icon->set_element("model_8to16:", "assets/8to16.png", "2 bus8 to bus16 concentrator");
+    icons.push_back(init_icon);
+
+    init_icon = new class oneiconbar(renderer, rect, "Memory");
+    init_icon->set_element("model_memory:", "assets/memory.png", "8 Bit Memory");
+    init_icon->insert_blank();
+    init_icon->set_element("model_clock:", "assets/clock_on.png", "Clock");
+    init_icon->set_element("model_dflipflop:", "assets/dflipflop.png", "D flip flop");
+    icons.push_back(init_icon);
+    
+
+    for (li = 0; li < library.size(); li++) {
+        if (libtabs.find(library[li].collection) == libtabs.end()) {
+            libtab = new class oneiconbar(renderer, rect, library[li].collection );
+            libtabs[library[li].collection] = libtab;
+            icons.push_back(libtab);
+        }
+        libtab = libtabs[library[li].collection];
+        libtab->set_element("library", &library[li]);
+    }
+
+    menu = new icon_contextmenu(this);
+    for (auto ib : icons) {
+       menu->add_item(ib->get_name(), ib, callback_ib);
+    }
+
 }

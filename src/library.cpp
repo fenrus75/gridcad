@@ -29,6 +29,8 @@ void populate_library(std::string directory)
 {
     const std::filesystem::path libpath{directory};
     
+    printf("Loading library from %s\n", directory.c_str());
+    
     if (!std::filesystem::exists(libpath))
         return;
     
@@ -78,3 +80,7 @@ struct library_block * find_in_library(std::string collection, std::string eleme
 }
 
 
+void clear_library(void)
+{
+     library.clear();   
+}

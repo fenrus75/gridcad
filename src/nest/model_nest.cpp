@@ -24,6 +24,8 @@
 #include <algorithm>
 #include <sys/time.h>
 #include <nlohmann/json.hpp>
+#include <iostream>
+#include <fstream>
 
 static float dist(float X1, float Y1, float X2, float Y2)
 {
@@ -36,6 +38,18 @@ void callback_reset(class element *element)
 	nest->reset_to_library();
 }
 
+void callback_save_to_library(class element *element)
+{
+	SDL_Event ev = {};
+
+
+	ev.type = EVENT_SAVE_TO_LIBRARY;
+	ev.user.code = 0;
+	ev.user.data1 = element;
+	SDL_PushEvent(&ev);
+}
+	
+
 model_nest::model_nest(float _X, float _Y) : element(_X,_Y, "SubScreen")
 {
 	sizeX = 4;
@@ -46,6 +60,7 @@ model_nest::model_nest(float _X, float _Y) : element(_X,_Y, "SubScreen")
 	_scene = new class scene(name, get_full_name());
 	menu->add_item("Edit name", callback_editname);
 	menu->add_item("Reset to library version", callback_reset);
+	menu->add_item("Save to library", callback_save_to_library);
 	
 	name_edit = new class name(&name);
 }
@@ -529,4 +544,40 @@ void model_nest::reset_to_library(void)
 
 	load_scene_from_json(lib->logic);
 	set_icon(lib->icon, lib->icon_selected);		
+}
+
+extern std::map<std::string, const unsigned char *> datamap;
+extern std::map<std::string, unsigned int> sizemap;
+
+void model_nest::save_to_library(std::string library_path)
+{
+	std::filesystem::create_directory(library_path);
+	
+	if (canvas)
+		_scene =  canvas->get_scene();
+
+	json j;
+
+	_scene->to_json(j);
+
+	std::ofstream output(library_path + "/" + name + ".json");
+
+	output << j.dump(4);
+	output.close();
+	/* write an icon */
+	const unsigned char *pixels;
+	unsigned int size;
+	pixels = datamap["assets/nest/nest_icon.png"];
+	size = sizemap["assets/nest/nest_icon.png"];
+
+	std::ofstream outputpng(library_path + "/" + name + ".json.png",  std::ios::binary);
+
+	outputpng.write((const char *)pixels, size);
+	outputpng.close();
+
+	/* write a tooltip */	
+	std::ofstream outputtt(library_path + "/" + name + ".json.tooltip",  std::ios::binary);
+
+	outputtt << "Custom library element for a '" + name + "'";
+	outputtt.close();
 }

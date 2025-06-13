@@ -13,6 +13,8 @@
 #include "gridcad.h"
 #include "document.h"
 #include "model_clock.h"
+#include "model_nest.h"
+#include "library.h"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
@@ -145,6 +147,19 @@ void document::run(void)
 				printf("Receive start clock\n");
 				clock_running = true;
 			}
+			if (event.type == EVENT_SAVE_TO_LIBRARY) {
+				class model_nest *nest = (class model_nest *)event.user.data1;
+				nest->save_to_library(name + "/library");
+				clear_library();
+				populate_library("library/");
+				populate_library(name + "/library");
+				
+				SDL_Event ev = {};
+
+				ev.type = EVENT_RELOAD_ICONBAR;
+			        ev.user.code = 0;
+			        SDL_PushEvent(&ev);				
+			}
 			if ((event.type == SDL_timer_event && clock_running) || event.type == EVENT_SINGLE_CLOCK) {
 				global_clock.valid = true;
 				global_clock.is_clock = true;
@@ -155,7 +170,7 @@ void document::run(void)
 				auto canvas = canvases[i];
 				bool thisret = false;
 
-				if (event.window.windowID == canvas->get_window_ID() || event.type >= SDL_timer_event ) {
+				if (event.window.windowID == canvas->get_window_ID() || event.type >= SDL_timer_event) {
 					thisret = canvas->handle_event(event);
 					if (thisret) {
 						if (i == 0)
