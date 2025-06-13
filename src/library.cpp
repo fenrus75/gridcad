@@ -29,6 +29,9 @@ void populate_library(std::string directory)
 {
     const std::filesystem::path libpath{directory};
     
+    if (!std::filesystem::exists(libpath))
+        return;
+    
     for (auto const &dir_entry : std::filesystem::recursive_directory_iterator{libpath}) {
         std::string path = dir_entry.path();
         

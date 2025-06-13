@@ -63,6 +63,9 @@ int main(int argc, char **argv)
 	populate_library("library/");
 
 	name = "projects/" + name;
+	
+	/* project based library */
+	populate_library(name + "/library");
 
 	document = new class document(name);
 
