@@ -62,7 +62,10 @@ void model_label::drawAt_early(class canvas *canvas, float X, float Y, int type)
         
     }
 
-    name_edit->drawAt(canvas, X, Y + sizeY-1.7, sizeX, 1.5);
+    if (bottomlabel)
+        name_edit->drawAt(canvas, X, Y + sizeY-1.7, sizeX, 1.5);
+    else
+        name_edit->drawAt(canvas, X, Y + 0.2, sizeX, 1.5);
 }
 
 
@@ -71,11 +74,13 @@ void model_label::to_json(json &j)
 {
      element::to_json(j);
      j["color"] = color;
+     j["bottomlabel"] = bottomlabel;
 }
 void model_label::from_json(json &j)
 {
      element::from_json(j);
      color = j.value("color", 0);
+     bottomlabel = j.value("bottomlabel", true);
 }
 
 void model_label::handle_event(class canvas *canvas, SDL_Event &event)
@@ -146,4 +151,10 @@ void model_label::update_drag(class canvas *canvas, class scene *scene, float _X
     _Yghost = floorf(_Y - Y_in_drag + 0.25);
     Xghost = _Xghost;
     Yghost = _Yghost;
+}
+
+
+void model_label::rotate_ports(void)
+{
+    bottomlabel = !bottomlabel;
 }

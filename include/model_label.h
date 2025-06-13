@@ -27,9 +27,11 @@ public:
     std::string get_verilog_main(void) override { return "";};
     void set_color(int c) { color = c; };
     int get_color(void) { return color; };
+    void rotate_ports(void) override;
 private:
     class name *name_edit = NULL;
     void drawAt_early(canvas*, float, float, int);
     int color = 0;
+    bool bottomlabel = true;
 };
 
