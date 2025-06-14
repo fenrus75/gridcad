@@ -80,8 +80,12 @@ void projcanvas::draw(void)
 	for (unsigned int T = 0; T < templates.size(); T++) {
 		if (T == active_template)
 			draw_image("assets/radiobox_selected.png", TEMPLATE_X - 0.2, TEMPLATE_Y + RADIO_HEIGHT * T, TEMPLATE_WIDTH, RADIO_HEIGHT - 0.1);
-		else
-			draw_image("assets/radiobox.png", TEMPLATE_X - 0.2, TEMPLATE_Y + RADIO_HEIGHT * T, TEMPLATE_WIDTH , RADIO_HEIGHT - 0.1);
+		else {
+			if (currentX >= TEMPLATE_X && currentX <= TEMPLATE_X + TEMPLATE_WIDTH && currentY > TEMPLATE_Y + RADIO_HEIGHT * T && currentY <= TEMPLATE_Y + RADIO_HEIGHT * (T+1))
+				draw_image("assets/radiobox_hover.png", TEMPLATE_X - 0.2, TEMPLATE_Y + RADIO_HEIGHT * T, TEMPLATE_WIDTH , RADIO_HEIGHT - 0.1);
+			else
+				draw_image("assets/radiobox.png", TEMPLATE_X - 0.2, TEMPLATE_Y + RADIO_HEIGHT * T, TEMPLATE_WIDTH , RADIO_HEIGHT - 0.1);
+		}
 			
 		draw_text_left(template_descriptions[templates[T]], TEMPLATE_X, TEMPLATE_Y + 0.2 + RADIO_HEIGHT * T, TEMPLATE_WIDTH -1, 1);
 	}
@@ -111,8 +115,12 @@ void projcanvas::draw(void)
 	for (unsigned int T = 0; T < projects.size(); T++) {
 		if (T == active_project)
 			draw_image("assets/radiobox_selected.png", PROJECT_X - 0.2, PROJECT_Y + RADIO_HEIGHT * T, PROJECT_WIDTH, RADIO_HEIGHT - 0.1);
-		else
-			draw_image("assets/radiobox.png", PROJECT_X - 0.2, PROJECT_Y + RADIO_HEIGHT * T, PROJECT_WIDTH, RADIO_HEIGHT - 0.1);
+		else {
+			if (currentX >= PROJECT_X && currentX <= PROJECT_X + PROJECT_WIDTH && currentY > PROJECT_Y + RADIO_HEIGHT * T && currentY <= PROJECT_Y + RADIO_HEIGHT * (T+1))
+				draw_image("assets/radiobox_hover.png", PROJECT_X - 0.2, PROJECT_Y + RADIO_HEIGHT * T, PROJECT_WIDTH, RADIO_HEIGHT - 0.1);
+			else
+				draw_image("assets/radiobox.png", PROJECT_X - 0.2, PROJECT_Y + RADIO_HEIGHT * T, PROJECT_WIDTH, RADIO_HEIGHT - 0.1);
+		}
 			
 		draw_text_left(projects[T], PROJECT_X, PROJECT_Y + 0.2 + RADIO_HEIGHT * T, PROJECT_WIDTH - 1, 1);
 	}
