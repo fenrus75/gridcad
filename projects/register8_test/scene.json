@@ -1505,7 +1505,7 @@
                     "screenX": 21.0,
                     "screenY": 18.0,
                     "value": {
-                        "arrayval": 63,
+                        "arrayval": 9,
                         "boolval": true,
                         "floatval": 0.0,
                         "intval": 0,
@@ -1539,7 +1539,7 @@
                                 }
                             ],
                             "value": {
-                                "arrayval": 63,
+                                "arrayval": 9,
                                 "boolval": true,
                                 "floatval": 0.0,
                                 "intval": 0,
@@ -1896,7 +1896,7 @@
                     "screenX": 25.0,
                     "screenY": 13.0,
                     "value": {
-                        "arrayval": 63,
+                        "arrayval": 9,
                         "boolval": true,
                         "floatval": 0.0,
                         "intval": 0,
@@ -1930,7 +1930,7 @@
                                 }
                             ],
                             "value": {
-                                "arrayval": 63,
+                                "arrayval": 9,
                                 "boolval": true,
                                 "floatval": 0.0,
                                 "intval": 0,
@@ -3935,7 +3935,7 @@
                                 "screenX": 6.0,
                                 "screenY": 55.0,
                                 "value": {
-                                    "arrayval": 63,
+                                    "arrayval": 9,
                                     "boolval": true,
                                     "floatval": 0.0,
                                     "intval": 0,
@@ -3965,7 +3965,7 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 63,
+                                            "arrayval": 9,
                                             "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
@@ -3983,7 +3983,7 @@
                         "sizeY": 3,
                         "uuid": "683a3e45-7b2c93fe-21e2-c690-6354-c7b6884c08cf",
                         "value": {
-                            "arrayval": 63,
+                            "arrayval": 9,
                             "boolval": true,
                             "floatval": 0.0,
                             "intval": 0,
@@ -4608,7 +4608,7 @@
                                 "screenX": 32.0,
                                 "screenY": 55.0,
                                 "value": {
-                                    "arrayval": 63,
+                                    "arrayval": 9,
                                     "boolval": true,
                                     "floatval": 0.0,
                                     "intval": 0,
@@ -4638,7 +4638,7 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 63,
+                                            "arrayval": 9,
                                             "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
@@ -4668,7 +4668,7 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 63,
+                                            "arrayval": 9,
                                             "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
@@ -4698,7 +4698,7 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 63,
+                                            "arrayval": 9,
                                             "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
@@ -4737,7 +4737,7 @@
                                 "screenX": 32.0,
                                 "screenY": 13.0,
                                 "value": {
-                                    "arrayval": 63,
+                                    "arrayval": 9,
                                     "boolval": true,
                                     "floatval": 0.0,
                                     "intval": 0,
@@ -4767,7 +4767,7 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 63,
+                                            "arrayval": 9,
                                             "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
@@ -4797,7 +4797,7 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 63,
+                                            "arrayval": 9,
                                             "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
@@ -4827,7 +4827,7 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 63,
+                                            "arrayval": 9,
                                             "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
@@ -4866,7 +4866,7 @@
                                 "screenX": 32.0,
                                 "screenY": 48.0,
                                 "value": {
-                                    "arrayval": 63,
+                                    "arrayval": 9,
                                     "boolval": true,
                                     "floatval": 0.0,
                                     "intval": 0,
@@ -4896,7 +4896,7 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 63,
+                                            "arrayval": 9,
                                             "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
@@ -4926,7 +4926,7 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 63,
+                                            "arrayval": 9,
                                             "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
@@ -4956,7 +4956,7 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 63,
+                                            "arrayval": 9,
                                             "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
@@ -4995,7 +4995,7 @@
                                 "screenX": 32.0,
                                 "screenY": 41.0,
                                 "value": {
-                                    "arrayval": 63,
+                                    "arrayval": 9,
                                     "boolval": true,
                                     "floatval": 0.0,
                                     "intval": 0,
@@ -5025,7 +5025,7 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 63,
+                                            "arrayval": 9,
                                             "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
@@ -5055,7 +5055,7 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 63,
+                                            "arrayval": 9,
                                             "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
@@ -5085,7 +5085,7 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 63,
+                                            "arrayval": 9,
                                             "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
@@ -5124,7 +5124,7 @@
                                 "screenX": 32.0,
                                 "screenY": 34.0,
                                 "value": {
-                                    "arrayval": 63,
+                                    "arrayval": 9,
                                     "boolval": true,
                                     "floatval": 0.0,
                                     "intval": 0,
@@ -5154,7 +5154,7 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 63,
+                                            "arrayval": 9,
                                             "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
@@ -5184,7 +5184,7 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 63,
+                                            "arrayval": 9,
                                             "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
@@ -5214,7 +5214,7 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 63,
+                                            "arrayval": 9,
                                             "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
@@ -5253,7 +5253,7 @@
                                 "screenX": 32.0,
                                 "screenY": 27.0,
                                 "value": {
-                                    "arrayval": 63,
+                                    "arrayval": 9,
                                     "boolval": true,
                                     "floatval": 0.0,
                                     "intval": 0,
@@ -5283,7 +5283,7 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 63,
+                                            "arrayval": 9,
                                             "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
@@ -5313,7 +5313,7 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 63,
+                                            "arrayval": 9,
                                             "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
@@ -5343,7 +5343,7 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 63,
+                                            "arrayval": 9,
                                             "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
@@ -5382,7 +5382,7 @@
                                 "screenX": 32.0,
                                 "screenY": 20.0,
                                 "value": {
-                                    "arrayval": 63,
+                                    "arrayval": 9,
                                     "boolval": true,
                                     "floatval": 0.0,
                                     "intval": 0,
@@ -5412,7 +5412,7 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 63,
+                                            "arrayval": 9,
                                             "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
@@ -5442,7 +5442,7 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 63,
+                                            "arrayval": 9,
                                             "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
@@ -5472,7 +5472,7 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 63,
+                                            "arrayval": 9,
                                             "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
@@ -5511,7 +5511,7 @@
                                 "screenX": 32.0,
                                 "screenY": 6.0,
                                 "value": {
-                                    "arrayval": 63,
+                                    "arrayval": 9,
                                     "boolval": true,
                                     "floatval": 0.0,
                                     "intval": 0,
@@ -5541,7 +5541,7 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 63,
+                                            "arrayval": 9,
                                             "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
@@ -5571,7 +5571,7 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 63,
+                                            "arrayval": 9,
                                             "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
@@ -6703,7 +6703,7 @@
                                 "screenX": 35.0,
                                 "screenY": 6.0,
                                 "value": {
-                                    "arrayval": 63,
+                                    "arrayval": 9,
                                     "boolval": true,
                                     "floatval": 0.0,
                                     "intval": 0,
@@ -6733,7 +6733,7 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 63,
+                                            "arrayval": 9,
                                             "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
@@ -6824,7 +6824,7 @@
                                             "screenX": 48.0,
                                             "screenY": 16.0,
                                             "value": {
-                                                "arrayval": 63,
+                                                "arrayval": 9,
                                                 "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
@@ -6862,7 +6862,7 @@
                                                         }
                                                     ],
                                                     "value": {
-                                                        "arrayval": 63,
+                                                        "arrayval": 9,
                                                         "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
@@ -6904,7 +6904,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 0,
+                                                    "distance_from_outport": 2147483647,
                                                     "name": "Wire1748625928",
                                                     "points": [
                                                         {
@@ -6956,7 +6956,7 @@
                                         }
                                     ],
                                     "previous_clock": {
-                                        "arrayval": 63,
+                                        "arrayval": 9,
                                         "boolval": true,
                                         "floatval": 0.0,
                                         "intval": 0,
@@ -7079,7 +7079,7 @@
                                             "screenX": 11.0,
                                             "screenY": 20.0,
                                             "value": {
-                                                "arrayval": 63,
+                                                "arrayval": 9,
                                                 "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
@@ -7117,7 +7117,7 @@
                                                         }
                                                     ],
                                                     "value": {
-                                                        "arrayval": 63,
+                                                        "arrayval": 9,
                                                         "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
@@ -7135,7 +7135,7 @@
                                     "sizeY": 3,
                                     "uuid": "6839e9f9-e007b192-98bd-1151-aa48-8fec60efdb48",
                                     "value": {
-                                        "arrayval": 63,
+                                        "arrayval": 9,
                                         "boolval": true,
                                         "floatval": 0.0,
                                         "intval": 0,
@@ -8060,7 +8060,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 0,
+                                                    "distance_from_outport": 2147483647,
                                                     "name": "Wire1748625928",
                                                     "points": [
                                                         {
@@ -8579,7 +8579,7 @@
                                 "screenX": 35.0,
                                 "screenY": 13.0,
                                 "value": {
-                                    "arrayval": 63,
+                                    "arrayval": 9,
                                     "boolval": true,
                                     "floatval": 0.0,
                                     "intval": 0,
@@ -8609,7 +8609,7 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 63,
+                                            "arrayval": 9,
                                             "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
@@ -8700,7 +8700,7 @@
                                             "screenX": 48.0,
                                             "screenY": 16.0,
                                             "value": {
-                                                "arrayval": 63,
+                                                "arrayval": 9,
                                                 "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
@@ -8738,7 +8738,7 @@
                                                         }
                                                     ],
                                                     "value": {
-                                                        "arrayval": 63,
+                                                        "arrayval": 9,
                                                         "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
@@ -8780,7 +8780,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 0,
+                                                    "distance_from_outport": 2147483647,
                                                     "name": "Wire1748625928",
                                                     "points": [
                                                         {
@@ -8832,7 +8832,7 @@
                                         }
                                     ],
                                     "previous_clock": {
-                                        "arrayval": 63,
+                                        "arrayval": 9,
                                         "boolval": true,
                                         "floatval": 0.0,
                                         "intval": 0,
@@ -8955,7 +8955,7 @@
                                             "screenX": 11.0,
                                             "screenY": 20.0,
                                             "value": {
-                                                "arrayval": 63,
+                                                "arrayval": 9,
                                                 "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
@@ -8993,7 +8993,7 @@
                                                         }
                                                     ],
                                                     "value": {
-                                                        "arrayval": 63,
+                                                        "arrayval": 9,
                                                         "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
@@ -9011,7 +9011,7 @@
                                     "sizeY": 3,
                                     "uuid": "6839e9f9-e007b192-98bd-1151-aa48-8fec60efdb48",
                                     "value": {
-                                        "arrayval": 63,
+                                        "arrayval": 9,
                                         "boolval": true,
                                         "floatval": 0.0,
                                         "intval": 0,
@@ -9936,7 +9936,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 0,
+                                                    "distance_from_outport": 2147483647,
                                                     "name": "Wire1748625928",
                                                     "points": [
                                                         {
@@ -10455,7 +10455,7 @@
                                 "screenX": 35.0,
                                 "screenY": 20.0,
                                 "value": {
-                                    "arrayval": 63,
+                                    "arrayval": 9,
                                     "boolval": true,
                                     "floatval": 0.0,
                                     "intval": 0,
@@ -10485,7 +10485,7 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 63,
+                                            "arrayval": 9,
                                             "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
@@ -10576,7 +10576,7 @@
                                             "screenX": 48.0,
                                             "screenY": 16.0,
                                             "value": {
-                                                "arrayval": 63,
+                                                "arrayval": 9,
                                                 "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
@@ -10614,7 +10614,7 @@
                                                         }
                                                     ],
                                                     "value": {
-                                                        "arrayval": 63,
+                                                        "arrayval": 9,
                                                         "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
@@ -10656,7 +10656,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 0,
+                                                    "distance_from_outport": 2147483647,
                                                     "name": "Wire1748625928",
                                                     "points": [
                                                         {
@@ -10708,7 +10708,7 @@
                                         }
                                     ],
                                     "previous_clock": {
-                                        "arrayval": 63,
+                                        "arrayval": 9,
                                         "boolval": true,
                                         "floatval": 0.0,
                                         "intval": 0,
@@ -10831,7 +10831,7 @@
                                             "screenX": 11.0,
                                             "screenY": 20.0,
                                             "value": {
-                                                "arrayval": 63,
+                                                "arrayval": 9,
                                                 "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
@@ -10869,7 +10869,7 @@
                                                         }
                                                     ],
                                                     "value": {
-                                                        "arrayval": 63,
+                                                        "arrayval": 9,
                                                         "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
@@ -10887,7 +10887,7 @@
                                     "sizeY": 3,
                                     "uuid": "6839e9f9-e007b192-98bd-1151-aa48-8fec60efdb48",
                                     "value": {
-                                        "arrayval": 63,
+                                        "arrayval": 9,
                                         "boolval": true,
                                         "floatval": 0.0,
                                         "intval": 0,
@@ -11812,7 +11812,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 0,
+                                                    "distance_from_outport": 2147483647,
                                                     "name": "Wire1748625928",
                                                     "points": [
                                                         {
@@ -12335,7 +12335,7 @@
                                 "screenX": 35.0,
                                 "screenY": 27.0,
                                 "value": {
-                                    "arrayval": 63,
+                                    "arrayval": 9,
                                     "boolval": true,
                                     "floatval": 0.0,
                                     "intval": 0,
@@ -12365,7 +12365,7 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 63,
+                                            "arrayval": 9,
                                             "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
@@ -12456,7 +12456,7 @@
                                             "screenX": 48.0,
                                             "screenY": 16.0,
                                             "value": {
-                                                "arrayval": 63,
+                                                "arrayval": 9,
                                                 "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
@@ -12494,7 +12494,7 @@
                                                         }
                                                     ],
                                                     "value": {
-                                                        "arrayval": 63,
+                                                        "arrayval": 9,
                                                         "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
@@ -12536,7 +12536,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 0,
+                                                    "distance_from_outport": 2147483647,
                                                     "name": "Wire1748625928",
                                                     "points": [
                                                         {
@@ -12588,7 +12588,7 @@
                                         }
                                     ],
                                     "previous_clock": {
-                                        "arrayval": 63,
+                                        "arrayval": 9,
                                         "boolval": true,
                                         "floatval": 0.0,
                                         "intval": 0,
@@ -12711,7 +12711,7 @@
                                             "screenX": 11.0,
                                             "screenY": 20.0,
                                             "value": {
-                                                "arrayval": 63,
+                                                "arrayval": 9,
                                                 "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
@@ -12749,7 +12749,7 @@
                                                         }
                                                     ],
                                                     "value": {
-                                                        "arrayval": 63,
+                                                        "arrayval": 9,
                                                         "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
@@ -12767,7 +12767,7 @@
                                     "sizeY": 3,
                                     "uuid": "6839e9f9-e007b192-98bd-1151-aa48-8fec60efdb48",
                                     "value": {
-                                        "arrayval": 63,
+                                        "arrayval": 9,
                                         "boolval": true,
                                         "floatval": 0.0,
                                         "intval": 0,
@@ -13692,7 +13692,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 0,
+                                                    "distance_from_outport": 2147483647,
                                                     "name": "Wire1748625928",
                                                     "points": [
                                                         {
@@ -14211,7 +14211,7 @@
                                 "screenX": 35.0,
                                 "screenY": 34.0,
                                 "value": {
-                                    "arrayval": 63,
+                                    "arrayval": 9,
                                     "boolval": true,
                                     "floatval": 0.0,
                                     "intval": 0,
@@ -14241,7 +14241,7 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 63,
+                                            "arrayval": 9,
                                             "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
@@ -14332,7 +14332,7 @@
                                             "screenX": 48.0,
                                             "screenY": 16.0,
                                             "value": {
-                                                "arrayval": 63,
+                                                "arrayval": 9,
                                                 "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
@@ -14370,7 +14370,7 @@
                                                         }
                                                     ],
                                                     "value": {
-                                                        "arrayval": 63,
+                                                        "arrayval": 9,
                                                         "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
@@ -14412,7 +14412,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 0,
+                                                    "distance_from_outport": 2147483647,
                                                     "name": "Wire1748625928",
                                                     "points": [
                                                         {
@@ -14464,7 +14464,7 @@
                                         }
                                     ],
                                     "previous_clock": {
-                                        "arrayval": 63,
+                                        "arrayval": 9,
                                         "boolval": true,
                                         "floatval": 0.0,
                                         "intval": 0,
@@ -14587,7 +14587,7 @@
                                             "screenX": 11.0,
                                             "screenY": 20.0,
                                             "value": {
-                                                "arrayval": 63,
+                                                "arrayval": 9,
                                                 "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
@@ -14625,7 +14625,7 @@
                                                         }
                                                     ],
                                                     "value": {
-                                                        "arrayval": 63,
+                                                        "arrayval": 9,
                                                         "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
@@ -14643,7 +14643,7 @@
                                     "sizeY": 3,
                                     "uuid": "6839e9f9-e007b192-98bd-1151-aa48-8fec60efdb48",
                                     "value": {
-                                        "arrayval": 63,
+                                        "arrayval": 9,
                                         "boolval": true,
                                         "floatval": 0.0,
                                         "intval": 0,
@@ -15568,7 +15568,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 0,
+                                                    "distance_from_outport": 2147483647,
                                                     "name": "Wire1748625928",
                                                     "points": [
                                                         {
@@ -16083,7 +16083,7 @@
                                 "screenX": 35.0,
                                 "screenY": 41.0,
                                 "value": {
-                                    "arrayval": 63,
+                                    "arrayval": 9,
                                     "boolval": true,
                                     "floatval": 0.0,
                                     "intval": 0,
@@ -16113,7 +16113,7 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 63,
+                                            "arrayval": 9,
                                             "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
@@ -16204,7 +16204,7 @@
                                             "screenX": 48.0,
                                             "screenY": 16.0,
                                             "value": {
-                                                "arrayval": 63,
+                                                "arrayval": 9,
                                                 "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
@@ -16242,7 +16242,7 @@
                                                         }
                                                     ],
                                                     "value": {
-                                                        "arrayval": 63,
+                                                        "arrayval": 9,
                                                         "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
@@ -16284,7 +16284,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 0,
+                                                    "distance_from_outport": 2147483647,
                                                     "name": "Wire1748625928",
                                                     "points": [
                                                         {
@@ -16336,7 +16336,7 @@
                                         }
                                     ],
                                     "previous_clock": {
-                                        "arrayval": 63,
+                                        "arrayval": 9,
                                         "boolval": true,
                                         "floatval": 0.0,
                                         "intval": 0,
@@ -16459,7 +16459,7 @@
                                             "screenX": 11.0,
                                             "screenY": 20.0,
                                             "value": {
-                                                "arrayval": 63,
+                                                "arrayval": 9,
                                                 "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
@@ -16497,7 +16497,7 @@
                                                         }
                                                     ],
                                                     "value": {
-                                                        "arrayval": 63,
+                                                        "arrayval": 9,
                                                         "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
@@ -16515,7 +16515,7 @@
                                     "sizeY": 3,
                                     "uuid": "6839e9f9-e007b192-98bd-1151-aa48-8fec60efdb48",
                                     "value": {
-                                        "arrayval": 63,
+                                        "arrayval": 9,
                                         "boolval": true,
                                         "floatval": 0.0,
                                         "intval": 0,
@@ -17440,7 +17440,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 0,
+                                                    "distance_from_outport": 2147483647,
                                                     "name": "Wire1748625928",
                                                     "points": [
                                                         {
@@ -17955,7 +17955,7 @@
                                 "screenX": 35.0,
                                 "screenY": 48.0,
                                 "value": {
-                                    "arrayval": 63,
+                                    "arrayval": 9,
                                     "boolval": true,
                                     "floatval": 0.0,
                                     "intval": 0,
@@ -17985,7 +17985,7 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 63,
+                                            "arrayval": 9,
                                             "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
@@ -18076,7 +18076,7 @@
                                             "screenX": 48.0,
                                             "screenY": 16.0,
                                             "value": {
-                                                "arrayval": 63,
+                                                "arrayval": 9,
                                                 "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
@@ -18114,7 +18114,7 @@
                                                         }
                                                     ],
                                                     "value": {
-                                                        "arrayval": 63,
+                                                        "arrayval": 9,
                                                         "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
@@ -18156,7 +18156,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 0,
+                                                    "distance_from_outport": 2147483647,
                                                     "name": "Wire1748625928",
                                                     "points": [
                                                         {
@@ -18208,7 +18208,7 @@
                                         }
                                     ],
                                     "previous_clock": {
-                                        "arrayval": 63,
+                                        "arrayval": 9,
                                         "boolval": true,
                                         "floatval": 0.0,
                                         "intval": 0,
@@ -18331,7 +18331,7 @@
                                             "screenX": 11.0,
                                             "screenY": 20.0,
                                             "value": {
-                                                "arrayval": 63,
+                                                "arrayval": 9,
                                                 "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
@@ -18369,7 +18369,7 @@
                                                         }
                                                     ],
                                                     "value": {
-                                                        "arrayval": 63,
+                                                        "arrayval": 9,
                                                         "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
@@ -18387,7 +18387,7 @@
                                     "sizeY": 3,
                                     "uuid": "6839e9f9-e007b192-98bd-1151-aa48-8fec60efdb48",
                                     "value": {
-                                        "arrayval": 63,
+                                        "arrayval": 9,
                                         "boolval": true,
                                         "floatval": 0.0,
                                         "intval": 0,
@@ -19312,7 +19312,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 0,
+                                                    "distance_from_outport": 2147483647,
                                                     "name": "Wire1748625928",
                                                     "points": [
                                                         {
@@ -19835,7 +19835,7 @@
                                 "screenX": 35.0,
                                 "screenY": 55.0,
                                 "value": {
-                                    "arrayval": 63,
+                                    "arrayval": 9,
                                     "boolval": true,
                                     "floatval": 0.0,
                                     "intval": 0,
@@ -19865,7 +19865,7 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 63,
+                                            "arrayval": 9,
                                             "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
@@ -19956,7 +19956,7 @@
                                             "screenX": 48.0,
                                             "screenY": 16.0,
                                             "value": {
-                                                "arrayval": 63,
+                                                "arrayval": 9,
                                                 "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
@@ -19994,7 +19994,7 @@
                                                         }
                                                     ],
                                                     "value": {
-                                                        "arrayval": 63,
+                                                        "arrayval": 9,
                                                         "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
@@ -20036,7 +20036,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 0,
+                                                    "distance_from_outport": 2147483647,
                                                     "name": "Wire1748625928",
                                                     "points": [
                                                         {
@@ -20088,7 +20088,7 @@
                                         }
                                     ],
                                     "previous_clock": {
-                                        "arrayval": 63,
+                                        "arrayval": 9,
                                         "boolval": true,
                                         "floatval": 0.0,
                                         "intval": 0,
@@ -20211,7 +20211,7 @@
                                             "screenX": 11.0,
                                             "screenY": 20.0,
                                             "value": {
-                                                "arrayval": 63,
+                                                "arrayval": 9,
                                                 "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
@@ -20249,7 +20249,7 @@
                                                         }
                                                     ],
                                                     "value": {
-                                                        "arrayval": 63,
+                                                        "arrayval": 9,
                                                         "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
@@ -20267,7 +20267,7 @@
                                     "sizeY": 3,
                                     "uuid": "6839e9f9-e007b192-98bd-1151-aa48-8fec60efdb48",
                                     "value": {
-                                        "arrayval": 63,
+                                        "arrayval": 9,
                                         "boolval": true,
                                         "floatval": 0.0,
                                         "intval": 0,
@@ -21192,7 +21192,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 0,
+                                                    "distance_from_outport": 2147483647,
                                                     "name": "Wire1748625928",
                                                     "points": [
                                                         {

@@ -225,13 +225,33 @@ void projcanvas::crawl_filesystem(void)
         return;
     }
     
+    std::string newest_project = "NONE";
+    std::filesystem::file_time_type newest_time = {};
+    bool first = true;
+    
     for (auto const &dir_entry : std::filesystem::directory_iterator{projpath}) {
         std::string path = dir_entry.path().filename();
+	std::string jsonstr = dir_entry.path();
+        jsonstr = jsonstr + "/scene.json";
+	std::filesystem::path jsonpath(jsonstr);
+        
+        if (std::filesystem::last_write_time(jsonpath) > newest_time || first) {
+        	newest_time = std::filesystem::last_write_time(jsonpath);
+        	newest_project = path;
+        }
+        first = false;
         
         if (!dir_entry.is_directory())
             continue;
             
         projects.push_back(path);
+     }
+     
+     printf("newest project is %s \n", newest_project.c_str());
+     
+     for (unsigned int i = 0; i < projects.size() ; i++) {
+     	if (projects[i] == newest_project)
+     		active_project = i;
      }
 
 }
