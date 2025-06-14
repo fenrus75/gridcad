@@ -40,7 +40,7 @@ void populate_library(std::string directory)
         if (!dir_entry.is_regular_file())
             continue;
             
-        printf("PATH is %s\n", path.c_str());
+//        printf("PATH is %s\n", path.c_str());
         
         if (path.ends_with(".json")) {
             struct library_block block;

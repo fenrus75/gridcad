@@ -56,7 +56,7 @@ element::element(int _sizeX, int _sizeY, std::string _name, std::string _parent)
 
 element::~element()
 {
-    printf("Destructor for element %s\n", name.c_str());
+//    printf("Destructor for element %s\n", name.c_str());
     for (auto port : ports) {
         delete port;
     }

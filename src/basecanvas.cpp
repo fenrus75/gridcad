@@ -25,7 +25,7 @@ basecanvas::basecanvas(void)
 
 basecanvas::~basecanvas(void)
 {
-	printf("basecanvas destructor\n");
+//	printf("basecanvas destructor\n");
 	if (font)
 		TTF_CloseFont(font);
 	font = NULL;
@@ -297,7 +297,7 @@ void basecanvas::draw_image(std::string filename, float X, float Y, float W, flo
 	if (texture_cache.find(filename) != texture_cache.end()) {
 		image = texture_cache[filename];
 	} else {
-		printf("image cache miss %s\n", filename.c_str());
+//		printf("image cache miss %s\n", filename.c_str());
 		image = load_image(filename);
 		if (!image) {
 			printf("Failure to load %s\n", filename.c_str());
@@ -330,7 +330,7 @@ void basecanvas::draw_image_fragment(std::string filename, float X, float Y, flo
 	if (texture_cache.find(filename) != texture_cache.end()) {
 		image = texture_cache[filename];
 	} else {
-		printf("image cache miss %s\n", filename.c_str());
+//		printf("image cache miss %s\n", filename.c_str());
 		image = load_image(filename);
 		if (!image) {
 			printf("Failure to load %s\n", filename.c_str());
@@ -347,7 +347,7 @@ SDL_Texture *basecanvas::text_to_texture(const char *text)
 	SDL_Texture *tx;
 	SDL_Surface *surface;
 	
-	printf("Text miss: %s\n", text);
+//	printf("Text miss: %s\n", text);
 		
 	if (!font)
 		font = TTF_OpenFont("fonts/Roboto-Medium-webfont.ttf", 28);

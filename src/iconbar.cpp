@@ -225,7 +225,7 @@ oneiconbar::oneiconbar(SDL_Renderer *_renderer, SDL_Rect _rect, std::string _nam
 oneiconbar::~oneiconbar(void)
 {
       unsigned int y,x;
-      printf("oneiconbar destructor\n");
+//      printf("oneiconbar destructor\n");
       for (y = 0; y < icons.size(); y++) {
            for (x = 0; x < icons[y].size(); x++) {
               delete icons[y][x];
