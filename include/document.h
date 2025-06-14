@@ -10,7 +10,7 @@ public:
 	document(std::string name);
 	~document(void);
 	
-	void save_verilog(std::string filename);
+	void save_verilog(std::string path, std::string filename);
 	void save_json(std::string filename);
 
 	void run(void);

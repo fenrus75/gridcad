@@ -25,7 +25,7 @@ public:
     void calculate(int ttl) override;
     void queued_calculate(int ttl) override;
     std::string get_verilog_main(void) override;
-    std::string get_verilog_modules(void) override;
+    std::string get_verilog_modules(std::string path) override;
     unsigned int highest_addr_bit(unsigned int size);
     void update_memory_size(unsigned int newsize);
     

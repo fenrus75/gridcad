@@ -487,14 +487,14 @@ std::string model_nest::get_verilog_main(void)
     return s;
 }
 
-std::string model_nest::get_verilog_modules(void)
+std::string model_nest::get_verilog_modules(std::string path)
 {
     std::string s = "";
 	if (canvas)
 		_scene = canvas->get_scene();
     
     s += _scene->get_verilog_main();
-    s += _scene->get_verilog_modules();
+    s += _scene->get_verilog_modules(path);
     
     return s;
 }

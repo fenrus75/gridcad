@@ -373,12 +373,12 @@ std::string scene::get_verilog_main(void)
 }
 
 
-std::string scene::get_verilog_modules(void)
+std::string scene::get_verilog_modules(std::string verilog_path)
 {
 	std::string s = "";
 	
 	for (auto elem : elements) {
-		s = s + elem->get_verilog_modules();
+		s = s + elem->get_verilog_modules(verilog_path);
 	}	
 	
 	return s;

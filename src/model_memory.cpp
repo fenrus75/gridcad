@@ -265,7 +265,7 @@ std::string model_memory::get_verilog_main(void)
 }
 
 /* TODO -- rather than a pure basic SOP, run espresso on this and make it more minimal */
-std::string model_memory::get_verilog_modules(void)
+std::string model_memory::get_verilog_modules(std::string path)
 {
         unsigned int addrbits = highest_addr_bit(data.size());
         

@@ -425,7 +425,7 @@ std::string model_truth::get_verilog_main(void)
 }
 
 /* TODO -- rather than a pure basic SOP, run espresso on this and make it more minimal */
-std::string model_truth::get_verilog_modules(void)
+std::string model_truth::get_verilog_modules(std::string path)
 {
 	std::string s = "";
 	

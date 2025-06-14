@@ -29,7 +29,7 @@ public:
     void set_icon(std::string _icon, std::string _selected) { icon = _icon; icon_selected = _selected;};
     void create_verilog_name(int seqno, std::vector<std::string> *existing) override;
     std::string get_verilog_main(void) override;
-    std::string get_verilog_modules(void) override;
+    std::string get_verilog_modules(std::string verilog_path) override;
     void set_library_origin(std::string origin, std::string elm) override { from_library_collection = origin; from_library_element = elm;};
     void reset_to_library(void);
     void save_to_library(std::string library_path);

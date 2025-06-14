@@ -74,7 +74,7 @@ document::document(std::string _name)
 	_scene->cycle_color();
 }
 
-void document::save_verilog(std::string filename)
+void document::save_verilog(std::string path, std::string filename)
 {
 	printf("Saving as %s\n", filename.c_str());
 	std::ofstream output(filename);
@@ -82,7 +82,7 @@ void document::save_verilog(std::string filename)
 	class canvas *_canvas = (class canvas *)canvases[0];
 	_scene = _canvas->get_scene();
 	
-	output << _scene->get_verilog_main() << "\n" << _scene->get_verilog_modules();
+	output << _scene->get_verilog_main() << "\n" << _scene->get_verilog_modules(path);
 	output.close();
 }
 
@@ -111,7 +111,7 @@ document::~document(void)
 		
 
 	save_json(filename);	
-	save_verilog(name + "/main.v");
+	save_verilog(name, name + "/main.v");
 	delete _canvas;
 
 	TTF_Quit();
