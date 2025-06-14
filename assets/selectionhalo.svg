@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="200mm"
+   height="200mm"
+   viewBox="0 0 200 200"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   sodipodi:docname="selectionhalo.svg"
+   inkscape:export-filename="selectionhalo.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.53273008"
+     inkscape:cx="372.60896"
+     inkscape:cy="561.25984"
+     inkscape:window-width="1536"
+     inkscape:window-height="779"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       id="rect234"
+       style="fill:#cfcd45;stroke:none;stroke-width:2;fill-opacity:0.99705088;opacity:0.49505286"
+       d="M 0 0 L 0 200.0002 L 200.0002 200.0002 L 200.0002 0 L 0 0 z M 44.999837 25.000024 L 154.99984 25.000024 C 166.07983 25.000024 175.00017 33.919848 175.00017 44.999837 L 175.00017 154.99984 C 175.00017 166.07983 166.07983 175.00017 154.99984 175.00017 L 44.999837 175.00017 C 33.919848 175.00017 25.000024 166.07983 25.000024 154.99984 L 25.000024 44.999837 C 25.000024 33.919848 33.919848 25.000024 44.999837 25.000024 z " />
+    <rect
+       style="opacity:0.495053;fill:#774c1f;fill-opacity:0.99705088;stroke:none;stroke-width:2"
+       id="rect2530"
+       width="150"
+       height="150"
+       x="25"
+       y="25"
+       rx="20"
+       ry="20" />
+  </g>
+</svg>

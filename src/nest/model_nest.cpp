@@ -93,6 +93,8 @@ void model_nest::drawAt(class canvas *canvas, float X, float Y, int type)
 			canvas->draw_image("assets/nest/nest_selected.png", X, Y, sizeX, sizeY, Alpha(type));
 		else {
 			canvas->draw_image(icon_selected, X, Y, sizeX, sizeY, Alpha(type));
+			if (!icon_selected.starts_with("assets/") && !icon_selected.starts_with("library/") )
+				canvas->draw_image("assets/selectionhalo.png", X-0.1, Y-0.1, sizeX+0.2, sizeY+0.2, Alpha(type));
 		}
 	}
 
