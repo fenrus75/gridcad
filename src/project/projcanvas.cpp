@@ -86,7 +86,11 @@ void projcanvas::draw(void)
 		draw_text_left(template_descriptions[templates[T]], TEMPLATE_X, TEMPLATE_Y + 0.2 + RADIO_HEIGHT * T, TEMPLATE_WIDTH -1, 1);
 	}
 	
-	draw_image("assets/buttonbox.png", TEMPLATE_X + 4, TEMPLATE_Y + RADIO_HEIGHT * (templates.size() + 1), TEMPLATE_WIDTH - 4, RADIO_HEIGHT - 0.1);	
+	
+	if (currentX >= TEMPLATE_X + 4 && currentX <= TEMPLATE_X + TEMPLATE_WIDTH && currentY >= TEMPLATE_Y + RADIO_HEIGHT * (templates.size() + 1) && currentY <= TEMPLATE_Y + RADIO_HEIGHT * (templates.size() + 2))
+		draw_image("assets/buttonbox_hover.png", TEMPLATE_X + 4, TEMPLATE_Y + RADIO_HEIGHT * (templates.size() + 1), TEMPLATE_WIDTH - 4, RADIO_HEIGHT - 0.1);	
+	else
+		draw_image("assets/buttonbox.png", TEMPLATE_X + 4, TEMPLATE_Y + RADIO_HEIGHT * (templates.size() + 1), TEMPLATE_WIDTH - 4, RADIO_HEIGHT - 0.1);	
 	
 	bool is_existing = false;
 	for (auto e : projects) {
@@ -113,7 +117,10 @@ void projcanvas::draw(void)
 		draw_text_left(projects[T], PROJECT_X, PROJECT_Y + 0.2 + RADIO_HEIGHT * T, PROJECT_WIDTH - 1, 1);
 	}
 
-	draw_image("assets/buttonbox.png", PROJECT_X + 4, PROJECT_Y + RADIO_HEIGHT * (projects.size() + 1), PROJECT_WIDTH - 4.2, RADIO_HEIGHT - 0.1);	
+	if (currentX >= PROJECT_X + 4 && currentX <= PROJECT_X + PROJECT_WIDTH && currentY >= PROJECT_Y + RADIO_HEIGHT * (projects.size() + 1) && currentY <= PROJECT_Y + RADIO_HEIGHT * (projects.size() + 2))
+		draw_image("assets/buttonbox_hover.png", PROJECT_X + 4, PROJECT_Y + RADIO_HEIGHT * (projects.size() + 1), PROJECT_WIDTH - 4.2, RADIO_HEIGHT - 0.1);	
+	else
+		draw_image("assets/buttonbox.png", PROJECT_X + 4, PROJECT_Y + RADIO_HEIGHT * (projects.size() + 1), PROJECT_WIDTH - 4.2, RADIO_HEIGHT - 0.1);	
 	draw_text("Open project " + projects[active_project], PROJECT_X + 4, PROJECT_Y + RADIO_HEIGHT * (projects.size() + 1)+0.2, PROJECT_WIDTH - 4, 1);
 	
 	SDL_RenderPresent(renderer);
@@ -125,6 +132,7 @@ bool projcanvas::handle_event(SDL_Event &event)
 	switch (event.type) {
                 case SDL_QUIT:
                         printf("QUIT\n");
+                        exit(0);
                         return true;
                         break;
 		case SDL_MOUSEBUTTONDOWN:
@@ -156,6 +164,10 @@ bool projcanvas::handle_event(SDL_Event &event)
 				}
                         }
                         
+                        break;
+		case SDL_MOUSEMOTION:
+                        currentX = scr_to_X(event.motion.x);
+                        currentY = scr_to_Y(event.motion.y);
                         break;
 	}
 	

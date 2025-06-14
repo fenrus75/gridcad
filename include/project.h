@@ -30,6 +30,8 @@ protected:
     unsigned int active_template = 0;
     unsigned int active_project = 0;
     
+    float currentX = 0, currentY = 0;
+    
     class name *newname = NULL;
     
     void crawl_filesystem(void);
