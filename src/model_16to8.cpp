@@ -79,7 +79,7 @@ std::string model_16to8::get_verilog_main(void)
 
     ports[2]->collect_wires(&wiremap_in);
     if (wiremap_in.size() < 1)
-        wiremap_in.push_back("1'b1");
+        wiremap_in.push_back("1'b0");
 
     ports[0]->collect_wires(&wiremap);
     

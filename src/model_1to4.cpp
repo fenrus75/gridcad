@@ -80,16 +80,16 @@ std::string model_1to4::get_verilog_main(void)
     ports[4]->collect_wires(&wiremap);
     ports[0]->collect_wires(&wiremap_in1);
     if (wiremap_in1.size() < 1)
-        wiremap_in1.push_back("1'b1");
+        wiremap_in1.push_back("1'b0");
     ports[1]->collect_wires(&wiremap_in2);
     if (wiremap_in2.size() < 1)
-        wiremap_in2.push_back("1'b1");
+        wiremap_in2.push_back("1'b0");
     ports[2]->collect_wires(&wiremap_in3);
     if (wiremap_in3.size() < 1)
-        wiremap_in3.push_back("1'b1");
+        wiremap_in3.push_back("1'b0");
     ports[3]->collect_wires(&wiremap_in4);
     if (wiremap_in4.size() < 1)
-        wiremap_in4.push_back("1'b1");
+        wiremap_in4.push_back("1'b0");
     
     for (auto wr : wiremap) {
       s = s + "assign " + wr + " = {" + wiremap_in1[0] + ", " + wiremap_in2[0]+ ", " + wiremap_in3[0]+ ", " + wiremap_in4[0] + "};\n";
