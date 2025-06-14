@@ -46,10 +46,10 @@ projcanvas::~projcanvas(void)
 #define RADIO_HEIGHT 1.5
 #define TEMPLATE_X 2
 #define TEMPLATE_Y 7.5
-#define TEMPLATE_WIDTH 15
-#define PROJECT_X 19
+#define TEMPLATE_WIDTH 18
+#define PROJECT_X (TEMPLATE_X + TEMPLATE_WIDTH + 2)
 #define PROJECT_Y 4.5
-#define PROJECT_WIDTH 15
+#define PROJECT_WIDTH 18
 
 void projcanvas::draw(void)
 {
@@ -79,9 +79,9 @@ void projcanvas::draw(void)
 	
 	for (unsigned int T = 0; T < templates.size(); T++) {
 		if (T == active_template)
-			draw_image("assets/radiobox_selected.png", TEMPLATE_X - 0.2, TEMPLATE_Y + RADIO_HEIGHT * T, TEMPLATE_WIDTH + 0.4 , RADIO_HEIGHT - 0.1);
+			draw_image("assets/radiobox_selected.png", TEMPLATE_X - 0.2, TEMPLATE_Y + RADIO_HEIGHT * T, TEMPLATE_WIDTH, RADIO_HEIGHT - 0.1);
 		else
-			draw_image("assets/radiobox.png", TEMPLATE_X - 0.2, TEMPLATE_Y + RADIO_HEIGHT * T, TEMPLATE_WIDTH + 0.4 , RADIO_HEIGHT - 0.1);
+			draw_image("assets/radiobox.png", TEMPLATE_X - 0.2, TEMPLATE_Y + RADIO_HEIGHT * T, TEMPLATE_WIDTH , RADIO_HEIGHT - 0.1);
 			
 		draw_text_left(template_descriptions[templates[T]], TEMPLATE_X, TEMPLATE_Y + 0.2 + RADIO_HEIGHT * T, TEMPLATE_WIDTH -1, 1);
 	}
@@ -106,7 +106,7 @@ void projcanvas::draw(void)
 
 
 
-	draw_image("assets/label2.png", PROJECT_X - 0.5, 2.5, 16, RADIO_HEIGHT * projects.size() + 6.5);
+	draw_image("assets/label2.png", PROJECT_X - 0.5, 2.5, PROJECT_WIDTH + 1, RADIO_HEIGHT * projects.size() + 6.5);
 	draw_text_left("Existing projects", PROJECT_X,3,15,1);
 	for (unsigned int T = 0; T < projects.size(); T++) {
 		if (T == active_project)

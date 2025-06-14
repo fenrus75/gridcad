@@ -65,6 +65,7 @@ canvas::canvas(class scene *_scene)
 	icon_bar = new iconbar(renderer, ui_area_rect);
 	current_scene = _scene;
 	callback_fit_to_screen(current_scene);
+	SDL_MaximizeWindow(window);
 }
 
 canvas::~canvas(void)
