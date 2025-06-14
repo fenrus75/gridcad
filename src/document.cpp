@@ -107,11 +107,13 @@ document::~document(void)
 	std::string filename;
 
 	filename = name;
+	std::filesystem::create_directory(name);
 	filename = filename + "/scene.json";
 		
 
 	save_json(filename);	
-	save_verilog(name, name + "/main.v");
+	std::filesystem::create_directory(name + "/verilog");
+	save_verilog(name + "/verilog", name + "/verilog//main.v");
 	delete _canvas;
 
 	TTF_Quit();
