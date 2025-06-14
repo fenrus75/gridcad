@@ -112,7 +112,7 @@ std::string model_1to8::get_verilog_main(void)
         wiremap_in8.push_back("1'b1");
     
     for (auto wr : wiremap) {
-      s = s + "assign " + wr + " = {" + wiremap_in1[0] + ", " + wiremap_in2[0]+ ", " + wiremap_in3[0]+ ", " + wiremap_in4[0] + wiremap_in5[0] + ", " + wiremap_in6[0]+ ", " + wiremap_in7[0]+ ", " + wiremap_in8[0]+ "};\n";
+      s = s + "assign " + wr + " = {" + wiremap_in1[0] + ", " + wiremap_in2[0]+ ", " + wiremap_in3[0]+ ", " + wiremap_in4[0] + ", " + wiremap_in5[0] + ", " + wiremap_in6[0]+ ", " + wiremap_in7[0]+ ", " + wiremap_in8[0]+ "};\n";
     }
     
     return s;

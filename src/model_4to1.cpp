@@ -90,7 +90,7 @@ std::string model_4to1::get_verilog_main(void)
 
     ports[4]->collect_wires(&wiremap_in);
     if (wiremap_in.size() < 1)
-        wiremap_in.push_back("1'1");
+        wiremap_in.push_back("1'b1");
 
     for (unsigned int i = 0; i < 4; i++) {
         ports[i]->collect_wires(&wiremap);

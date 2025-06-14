@@ -18,7 +18,8 @@
 
 #include <algorithm>
 #include <string>
-
+#include <iostream>
+#include <fstream>
 #include <sys/time.h>
 
 
@@ -269,17 +270,34 @@ std::string model_memory::get_verilog_modules(std::string path)
 {
         unsigned int addrbits = highest_addr_bit(data.size());
         
+        std::string datapath = path + "/vdata";
+        std::filesystem::create_directory(datapath);
+        std::string shortfilename = "vdata/mem_" + verilog_module_name + ".data";        
+        std::string filename = datapath + "/mem_" + verilog_module_name + ".data";        
+        
+	std::ofstream output(filename);
+
+        for (unsigned int i = 0; i < data.size(); i++) {
+            char buffer[32];
+            std::string d;
+            sprintf(buffer, "%02x ", data[i]);
+            d = buffer;
+            output << d;
+            if ((i % 16) == 0)
+                output << "\n";
+        }
+	output.close();
+        
 	std::string s = "";
 	s = s + "module " + verilog_module_name + "\n";
 	s = s + "(input [7:0] Di, input clk, output reg [7:0] Do, input [" + std::to_string(addrbits) +":0] Addr, input WrEn);\n\n";
 
-#if 0
-    initial begin
-        $readmemh("memory.txt", memory); // Load from a text file
-    end
-#endif
 
-        s = s + "reg [7:0] data [0:" + std::to_string(data.size()-1) + "];";
+        s = s + "reg [7:0] data [0:" + std::to_string(data.size()-1) + "];\n";
+        s = s + "initial begin\n";
+        s = s + "   $readmemh(\"" + shortfilename + "\", data); \n";
+        s = s + "end\n";
+
 	s = s + "always @(posedge clk) \n";
 	s = s + "begin\n";
 	s = s + "  if (WrEn) begin\n";
