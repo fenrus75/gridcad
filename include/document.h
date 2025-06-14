@@ -20,3 +20,4 @@ private:
 	
 };
 
+extern void init_SDL(void);

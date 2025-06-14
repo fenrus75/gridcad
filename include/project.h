@@ -1,0 +1,37 @@
+#pragma once
+
+/* Project startup dialog logic */
+
+#include "gridcad.h"
+
+
+
+class projcanvas : public basecanvas
+{
+public:
+    projcanvas(void);
+    virtual ~projcanvas(void);
+    
+
+    void draw(void) override;
+    bool handle_event(SDL_Event &event) override;
+    
+    
+    void run(void);
+    
+    std::string get_name(void) {return name;};
+
+protected:
+    std::string name = "default";
+    std::vector<std::string> templates;
+    std::vector<std::string> projects;
+    
+    std::map<std::string, std::string> template_descriptions;
+    unsigned int active_template = 0;
+    unsigned int active_project = 0;
+    
+    class name *newname = NULL;
+    
+    void crawl_filesystem(void);
+    void create_project_from_template(std::string name, std::string templ);
+};

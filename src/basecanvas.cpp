@@ -359,6 +359,9 @@ SDL_Texture *basecanvas::text_to_texture(const char *text)
 		TTF_SetFontStyle(font, TTF_STYLE_NORMAL);
 	}
 	surface = TTF_RenderUTF8_Blended(font, text, white);
+	if (!surface) {
+		printf("text_to_texture error %s\n", SDL_GetError());
+	}
 	tx = SDL_CreateTextureFromSurface(renderer, surface);
 	SDL_FreeSurface(surface);
 	return tx;

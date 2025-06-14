@@ -41,9 +41,13 @@ def print_prologue():
     print("")
     print("std::map<std::string, const unsigned char *> datamap;")
     print("std::map<std::string, unsigned int> sizemap;")
+    print("static bool initialized = false;")
     print("")
     print("void fill_png_maps(void)");
     print("{");
+    print("   if (initialized)");
+    print("          return;");
+    print("   initialized = true;");
     for f in files:
         (filename, varname, len) = f
         print("    datamap[\"" + filename + "\"] = "+varname+";")

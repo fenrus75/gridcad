@@ -32,11 +32,26 @@ static std::vector<class basecanvas *> canvases;
 
 extern void fill_png_maps(void);
 extern void set_timer(void);
+
+
+static bool sdl_initialized = false;
+void init_SDL(void)
+{
+	if (sdl_initialized)
+		return;
+	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
+	TTF_Init();
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2");
+	
+	sdl_initialized = true;
+}
 document::document(std::string _name)
 {
 	class canvas *_canvas;
 	class scene *_scene;
 	float d1,d2,d3;
+	
+	init_SDL();
 	
 	std::string filename;
 	
@@ -44,9 +59,6 @@ document::document(std::string _name)
 
 	name = _name;
 
-	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
-	TTF_Init();
-	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2");
 	
 	SDL_GetDisplayDPI(0, &d1, &d2, &d3);
 	printf("DPI %5.2f %5.2f %5.2f\n", d1, d2, d3);

@@ -13,7 +13,7 @@ name::~name(void)
 {
 }
 
-float name::relative_cursor_pos(class canvas *canvas, std::string text, float H)
+float name::relative_cursor_pos(class basecanvas *canvas, std::string text, float H)
 {
 	SDL_Point size;
 	float w,h,W = 40;
@@ -34,7 +34,7 @@ float name::relative_cursor_pos(class canvas *canvas, std::string text, float H)
 }
 
 
-void name::drawAt(class canvas *canvas, float X, float Y, float W, float H)
+void name::drawAt(class basecanvas *canvas, float X, float Y, float W, float H)
 {
     if (edit_mode) {
           struct timeval tv;

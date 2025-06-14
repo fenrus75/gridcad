@@ -24,6 +24,7 @@
 
 #include "gridcad.h"
 #include "document.h"
+#include "project.h"
 
 static unsigned char signalstack[2 * 1024 * 1024];
 
@@ -54,11 +55,20 @@ int main(int argc, char **argv)
 	segv.sa_handler = &segv_handler;
 	segv.sa_flags = SA_ONSTACK;
 	
-	
 	sigaction(SIGSEGV, &segv, NULL);
 	
-	if (argc > 1)
+	if (argc > 1) {
 		name = argv[1];
+	} else {
+		class projcanvas *proj = new projcanvas();
+		
+		proj->run();
+		name = proj->get_name();
+		
+		delete proj;
+	}
+	
+	printf("Starting project %s\n", name.c_str());
 	
 	populate_library("library/");
 
