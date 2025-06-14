@@ -551,6 +551,8 @@ extern std::map<std::string, unsigned int> sizemap;
 
 void model_nest::save_to_library(std::string library_path)
 {
+	char buf[65];
+	std::string icon;
 	std::filesystem::create_directory(library_path);
 	
 	if (canvas)
@@ -565,10 +567,18 @@ void model_nest::save_to_library(std::string library_path)
 	output << j.dump(4);
 	output.close();
 	/* write an icon */
-	const unsigned char *pixels;
+	const unsigned char *pixels = NULL;
 	unsigned int size;
-	pixels = datamap["assets/nest/nest_icon.png"];
-	size = sizemap["assets/nest/nest_icon.png"];
+	srand(time(NULL));
+	while (pixels == NULL) {
+		int i = rand() % 64;
+		sprintf(buf, "assets/random/icon%i.png", i);
+		icon = buf;
+		if (datamap.find(icon) == datamap.end())
+			continue;
+		pixels = datamap[icon];
+		size = sizemap[icon];
+	}
 
 	std::ofstream outputpng(library_path + "/" + name + ".json.png",  std::ios::binary);
 
