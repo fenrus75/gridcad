@@ -131,6 +131,8 @@ void model_truth::to_json(json & j)
 	j["values"] = values;
 	j["inputs"] = inputs;
 	j["outputs"] = outputs;
+	j["flip_input_ports"] = flip_input_ports;
+	j["flip_output_ports"] = flip_output_ports;
 }
 
 void model_truth::from_json(json & j)
@@ -141,6 +143,8 @@ void model_truth::from_json(json & j)
 	values = j["values"];	
 	inputs = j["inputs"];
 	outputs = j["outputs"];
+	flip_input_ports = j.value("flip_input_ports", false);
+	flip_output_ports = j.value("flip_output_ports", false);
 		
 }
 
@@ -155,7 +159,7 @@ void model_truth::add_output(void)
 	sprintf(buf, "Out%i", outputs -1);
 	names.push_back(buf);
 	
-	add_port(sizeX, outputs, buf, PORT_OUT);
+	add_port(sizeX, outputs, buf, PORT_OUT, 1);
 	
 	sizeY = std::max(outputs + 2, std::max(inputs + 2, 4U));
 	
@@ -229,7 +233,7 @@ void model_truth::add_input(void)
 	
 	std::sort(values.begin(), values.end(), compare_line);
 
-	_port = new port(buf, PORT_IN);
+	_port = new port(buf, PORT_IN, 1);
         _port->X = -1;
         _port->Y = inputs;
         _port->parent = this;
@@ -366,8 +370,19 @@ void model_truth::calculate(int ttl)
 void model_truth::names_to_ports(void)
 {
 	unsigned int x;
-	for (x = 0; x < names.size(); x++)
-		ports[x]->update_name(names[x]);
+	
+	for (x = 0; x < inputs; x++) {
+		if (!flip_input_ports)
+			ports[x]->update_name(names[x]);
+		else
+			ports[inputs - x - 1]->update_name(names[x]);
+	}
+	for (x = inputs; x < names.size(); x++) {
+		if (!flip_output_ports)
+			ports[x]->update_name(names[x]);
+		else
+			ports[inputs + outputs -1 -x]->update_name(names[x]);
+	}
 }
 
 void model_truth::handle_event(class canvas *canvas, SDL_Event &event)
@@ -499,3 +514,4 @@ std::string model_truth::get_verilog_name(void)
 	
 	return verilog_name;
 }
+

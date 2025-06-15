@@ -13,6 +13,7 @@
 #include "gridcad.h"
 #include "truthcanvas.h"
 #include "model_truth.h"
+#include "widget.h"
 #include <cstdlib>
 
 
@@ -126,7 +127,9 @@ void truthcanvas::fill_grid(void)
         }
 	  
 	  
-         
+
+        add_widget(new class slider(2,1,11,1, "Reverse input port order", &element->flip_input_ports));         
+        add_widget(new class slider(15,1,11,1, "Reverse output port order", &element->flip_output_ports));         
 	
 	add_widget(new class button(calcX(inputs-1, inputs), 2, 2.4,1.8, "assets/model_truth/minus.png", ACTION_DEL_INPUT, this));
 	add_widget(new class button(calcX(inputs-1, inputs)+2.5, 2, 2.4,1.8, "assets/model_truth/plus.png", ACTION_ADD_INPUT, this));
@@ -233,6 +236,7 @@ bool truthcanvas::handle_event(SDL_Event &event)
                selectY = widget->get_gridY();
                widget->select();
               }
+         element->names_to_ports();
                
           break;
    

@@ -70,3 +70,16 @@ private:
     std::string icon = "";
     class truthcanvas *canvas;
 };
+
+class slider : public widget {
+public:
+    slider(float X, float Y, float W, float H, std::string description, bool *origin);
+    virtual ~slider(void);
+    
+    void draw(class truthcanvas *canvas) override;
+    void select(void) override;
+    void handle_event(SDL_Event &event) override {};
+private:
+    bool *origin = NULL;
+    std::string description;
+};

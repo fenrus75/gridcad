@@ -20,6 +20,8 @@ public:
     
     std::vector<std::vector<char>> values;
     std::vector<std::string> names;
+    bool flip_input_ports = false;
+    bool flip_output_ports = false;
     int get_inputs(void) { return inputs;};
     int get_output(void) { return outputs;};
     void turn_from_X(unsigned int X, unsigned int Y);    
@@ -39,6 +41,7 @@ public:
 private:
     class truthcanvas *canvas = NULL;
     class name *name_edit = NULL;
+    
 
     unsigned int inputs = 2;
     unsigned int outputs = 1;
