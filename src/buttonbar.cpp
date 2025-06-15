@@ -4,7 +4,7 @@
 
 
 
-buttonbar::buttonbar(class basecanvas *_canvas, unsigned int _width)
+buttonbar::buttonbar(class canvas *_canvas, unsigned int _width)
 {
     canvas = _canvas;
     width = _width - 5;
@@ -47,12 +47,12 @@ void buttonbar::handle_event(SDL_Event &event)
 
 void buttonbar::add_button(std::string text, std::string icon, int _event)
 {
-    class barbutton *button = new barbutton(text, icon, _event);
+    class barbutton *button = new barbutton(text, icon, _event, canvas);
     buttons.push_back(button);
 }
 
 
-void buttonbar::draw_at(class basecanvas *canvas, int W, int H)
+void buttonbar::draw_at(class canvas *canvas, int W, int H)
 {
     float w, h;
     
@@ -67,11 +67,12 @@ void buttonbar::draw_at(class basecanvas *canvas, int W, int H)
 
 
 
-barbutton::barbutton(std::string _text, std::string _icon, int _event)
+barbutton::barbutton(std::string _text, std::string _icon, int _event, class canvas *_canvas)
 {
     text = text;
     icon = _icon;
     eventnr = _event;
+    canvas = _canvas;
 }
 
 barbutton::~barbutton(void)
@@ -79,7 +80,7 @@ barbutton::~barbutton(void)
 }
 
 
-void barbutton::draw_at(class basecanvas *canvas, float X, float Y, float W, float H)
+void barbutton::draw_at(class canvas *canvas, float X, float Y, float W, float H)
 {	
     if (active) {
         canvas->draw_image("assets/lightgray.png", X,Y,W,H);
@@ -96,7 +97,7 @@ void barbutton::activate(void)
 
 	ev.type = eventnr;
 	ev.user.code = 0;
-	ev.user.data1 = 0;
+	ev.user.data1 = canvas->get_scene();
 	SDL_PushEvent(&ev);
 	active = true;
-}
+} 

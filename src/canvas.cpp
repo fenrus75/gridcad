@@ -74,6 +74,7 @@ canvas::canvas(class scene *_scene)
 	icon_bar = new iconbar(renderer, ui_area_rect);
 	button_bar = new buttonbar(this, button_rect.w);
 	button_bar->add_button("Save design to file", "assets/save_icon.png", EVENT_SAVE);
+	button_bar->add_button("Fit to screen", "assets/icon_fit_to_screen.png", EVENT_ZOOM_TO_FIT);
 	current_scene = _scene;
 	callback_fit_to_screen(current_scene);
 	SDL_MaximizeWindow(window);
