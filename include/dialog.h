@@ -7,11 +7,11 @@
 
 class dialog {
 public:
-    dialog(int screenX, int screenY);
-    ~dialog(void);
+    dialog(int screenX, int screenY, std::string minwidthstring = "");
+    virtual ~dialog(void);
     
     void draw(class basecanvas *canvas);
-    virtual void handle_event(SDL_Event &event);
+    virtual void handle_event(class canvas *canvas, SDL_Event &event);
     
     void update_screen_size(int _screenX, int _screenY) { screenX = _screenX; screenY = _screenY; };
     
@@ -22,6 +22,10 @@ public:
 private:
     int screenX = 0;
     int screenY = 0;
+    std::string minwtext = "";
     std::vector<std::string> content;
     bool has_ok_button = false;
+    
+    float buttonX1 = 0, buttonY1 = 0,buttonW = 0, buttonH = 0;
+    float currentX = 0, currentY = 0;
 };

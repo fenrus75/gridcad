@@ -324,12 +324,19 @@ bool canvas::handle_event(SDL_Event &event)
 	}
 
 	if (event.type == EVENT_RUN_VERILOG && event.user.data1 == current_scene) {
-		class dialog *dialog = new class dialog(main_area_rect.w + ui_area_rect.w + button_rect.w, main_area_rect.h);
+		class dialog *dialog = new class dialog(main_area_rect.w + ui_area_rect.w + button_rect.w, main_area_rect.h, "THIS IS THE MINIMUM WIDTH WE WANT THE BOX TO BE");
 		
 		set_dialog(dialog);
 		
 		dialog->append_line("This is a test");
 		dialog->append_line("This is a test2");
+		dialog->enable_ok_button();
+	}
+
+	if (event.type == EVENT_CLOSE_DIALOG && event.user.data1 == current_scene) {
+		if (dialogbox)
+			delete dialogbox;
+		dialogbox = NULL;
 	}
 
 	if (event.type == EVENT_ZOOM_TO_FIT && event.user.data1 == current_scene) {  /* zoom to fit the screen */
@@ -528,7 +535,7 @@ bool canvas::handle_event(SDL_Event &event)
 				shift_down = false;
 			break;
 		case SDL_MOUSEBUTTONDOWN:
-			if (active_menu) {
+			if (active_menu && !dialogbox) {
 				float x, y;
 				x = scr_to_X(event.motion.x);
 				y = scr_to_Y(event.motion.y);
@@ -715,6 +722,8 @@ bool canvas::handle_event(SDL_Event &event)
 			break;
 			
 		case SDL_MOUSEWHEEL:
+			if (dialogbox)
+				break;
 			if (event.wheel.y > 0) {
 				float cX, cY;
 				int count = 0;
@@ -785,6 +794,8 @@ bool canvas::handle_event(SDL_Event &event)
 	for (auto elem : current_scene->elements)
 		elem->handle_event(this, event);
 	button_bar->handle_event(event);
+	if (dialogbox)
+		dialogbox->handle_event(this, event);
 	run_queued_calculations();
 	current_scene->remove_orphans();
 	return leave;

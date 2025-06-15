@@ -2,10 +2,11 @@
 #include "dialog.h"
 #include "contextmenu.h"
 
-dialog::dialog(int _screenX, int _screenY)
+dialog::dialog(int _screenX, int _screenY, std::string text)
 {
     screenX = _screenX;
     screenY = _screenY;
+    minwtext = text;
 }
 
 dialog::~dialog(void)
@@ -30,6 +31,8 @@ void dialog::draw(class basecanvas *canvas)
         maxX = std::max(maxX, Xsize(canvas, item));
         maxY = std::max(maxY, Ysize(canvas, item));
     }
+    maxX = std::max(maxX, Xsize(canvas, minwtext));
+    maxY = std::max(maxY, Ysize(canvas, minwtext));
     
     maxX = maxX / get_scale();
     maxY = maxY / get_scale();
@@ -46,7 +49,7 @@ void dialog::draw(class basecanvas *canvas)
     
     canvas->draw_image("assets/lightgray.png", canvas->scr_to_X(0), canvas->scr_to_Y(0), canvas->scale_to_X(screenX), canvas->scale_to_Y(screenY));
     
-    canvas->draw_image("assets/dialog.png", posX, posY, maxX + canvas->scale_to_X(10), maxY * lines + canvas->scale_to_Y(10));
+    canvas->draw_image("assets/dialog.png", posX - canvas->scale_to_X(5), posY - canvas->scale_to_Y(5), maxX + canvas->scale_to_X(10), maxY * lines + canvas->scale_to_Y(10));
     
     float cX, cY;
     
@@ -60,15 +63,55 @@ void dialog::draw(class basecanvas *canvas)
 
     /* TODO: fix the mess below by just storing a few things in variables and reuse */    
     if (has_ok_button) {
+        float X1, Y1, W, H;
+        float marginX, marginY;
         cY += maxY;
-        canvas->draw_image("assets/buttonbox.png", posX + (maxX - canvas->scale_to_X(Xsize(canvas, "  OK  ")/get_scale() - 5))/2, cY - canvas->scale_to_Y(5), canvas->scale_to_X(Xsize(canvas, "  OK  ")/get_scale() + 10), maxY + canvas->scale_to_Y(10)); 
+
+
+        X1 = posX + (maxX - canvas->scale_to_X(Xsize(canvas, "  OK  ")/get_scale()))/2;
+        Y1 = cY;
+        W = canvas->scale_to_X(Xsize(canvas, "  OK  ")/get_scale() );
+        H = maxY;
+        
+        buttonX1 = X1;
+        buttonY1 = Y1;
+        buttonW = W;
+        buttonH = H;
+        
+        marginX = canvas->scale_to_X(10);
+        marginY = canvas->scale_to_Y(10);
+        
+        if (currentX >= X1 && currentX <= X1 + W && currentY >= Y1 && currentY <= Y1 + H)
+            canvas->draw_image("assets/buttonbox_hover.png", X1 - marginX/2, Y1 - marginY/2, W + marginX, maxY + marginY); 
+        else
+            canvas->draw_image("assets/buttonbox.png", X1 - marginX/2, Y1 - marginY/2, W + marginX, maxY + marginY); 
                 
-        canvas->draw_text("OK", posX + (maxX - canvas->scale_to_X(Xsize(canvas, "  OK  ")/get_scale() - 0))/2, cY - canvas->scale_to_Y(0), canvas->scale_to_X(Xsize(canvas, "  OK  ")/get_scale() + 0), maxY + canvas->scale_to_Y(0)); 
+        canvas->draw_text("OK", X1, Y1, W, H);
     }
 
 }
 
-void dialog::handle_event(SDL_Event &event)
+void dialog::handle_event(class canvas *canvas, SDL_Event &event)
 {
-}
+	switch (event.type) {
+		case SDL_MOUSEBUTTONDOWN:
+			float x, y;
+                        x = canvas->scr_to_X(event.motion.x);
+                        y = canvas->scr_to_Y(event.motion.y);
 
+                        if (has_ok_button && x >= buttonX1 && x <= buttonX1 + buttonW && y >= buttonY1 && y <= buttonY1 + buttonH) {
+                        	SDL_Event ev = {};
+
+                                ev.type = EVENT_CLOSE_DIALOG;
+                        	ev.user.code = 0;
+                        	ev.user.data1 = canvas->get_scene();
+	
+                        	SDL_PushEvent(&ev);                            
+                        }
+
+		case SDL_MOUSEMOTION:
+                        currentX = canvas->scr_to_X(event.motion.x);
+                        currentY = canvas->scr_to_Y(event.motion.y);
+                        break;
+	}	
+}
