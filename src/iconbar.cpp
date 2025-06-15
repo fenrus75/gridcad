@@ -397,7 +397,7 @@ void iconbar::create_menu(void)
     init_icon->set_element("model_nest:", "assets/nest/nest_icon.png", "Nested scene");
     init_icon->set_element("model_truth:", "assets/model_truth/truthtable_icon.png", "Truth table");
     init_icon->set_element("model_dflipflop:", "assets/dflipflop.png", "D flip flop");
-    init_icon->set_element("model_delayline:", "assets/delayline.png", "Delay line");
+    init_icon->set_element("model_deflipflop:", "assets/deflipflop.png", "D flip flop with enable signal");
     init_icon->set_element("model_clock:", "assets/clock_on.png", "Clock");
     init_icon->set_element("model_datascope:", "assets/datascope.png", "Data scope");
     init_icon->set_element("model_label:", "assets/label.png", "Area Label");

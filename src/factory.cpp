@@ -34,6 +34,7 @@
 #include "model_8to16.h"
 #include "model_datascope.h"
 #include "model_dflipflop.h"
+#include "model_deflipflop.h"
 #include "model_delayline.h"
 #include "model_clock.h"
 #include "model_memory.h"
@@ -69,6 +70,7 @@ class element *element_from_class_id(std::string classid)
     ELEMENT(model_8to16);
     ELEMENT(model_datascope);
     ELEMENT(model_dflipflop);
+    ELEMENT(model_deflipflop);
     ELEMENT(model_memory);
     ELEMENT(model_delayline);
     ELEMENT(model_clock);

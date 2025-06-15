@@ -11,14 +11,14 @@
  */
 
 #include "gridcad.h"
-#include "model_dflipflop.h"
+#include "model_deflipflop.h"
 #include "port.h"
 #include "contextmenu.h"
 #include "name.h"
 
 #include <sys/time.h>
 
-model_dflipflop::model_dflipflop(float _X, float _Y)  : element(1, 1, "Flipflop")
+model_deflipflop::model_deflipflop(float _X, float _Y)  : element(1, 1, "Flipflop")
 {
     sizeX = 3;
     sizeY = 4;    
@@ -28,26 +28,26 @@ model_dflipflop::model_dflipflop(float _X, float _Y)  : element(1, 1, "Flipflop"
     add_port(-1, 1, "D", PORT_IN, 1);    
     add_port(-1, 3, "clk", PORT_IN, 1);    
     add_port(sizeX, 1, "Q", PORT_OUT, 1);    
-    add_port(sizeX, 2, "ǭ", PORT_OUT, 1);    
+    add_port(1, -1, "En", PORT_IN ,1);    
     menu->add_item("Edit name", callback_editname);
     
     name_edit = new class name(&name);
 }
 
-model_dflipflop::~model_dflipflop(void)
+model_deflipflop::~model_deflipflop(void)
 {
      if (name_edit)
         delete name_edit;
 }
 
-void model_dflipflop::drawAt(class canvas *canvas, float X, float Y, int type)
+void model_deflipflop::drawAt(class canvas *canvas, float X, float Y, int type)
 {
     if (!selected)
       name_edit->set_edit_mode(false);
     if (selected) {
-        canvas->draw_image("assets/dflipflop_selected.png", X, Y, sizeX, sizeY, Alpha(type));
+        canvas->draw_image("assets/deflipflop_selected.png", X, Y, sizeX, sizeY, Alpha(type));
     } else {
-        canvas->draw_image("assets/dflipflop.png", X, Y, sizeX, sizeY, Alpha(type));
+        canvas->draw_image("assets/deflipflop.png", X, Y, sizeX, sizeY, Alpha(type));
     }
     name_edit->drawAt(canvas, X, Y + sizeY, sizeX);
 
@@ -59,20 +59,20 @@ void model_dflipflop::drawAt(class canvas *canvas, float X, float Y, int type)
 
 
 
-void model_dflipflop::to_json(json &j)
+void model_deflipflop::to_json(json &j)
 {
      element::to_json(j);
      j["value"] = value;
      j["previous_clock"] = previous_clock;
 }
-void model_dflipflop::from_json(json &j)
+void model_deflipflop::from_json(json &j)
 {
      element::from_json(j);
      value = j["value"];
      previous_clock = j.value("previous_clock", previous_clock);
 }
 
-void model_dflipflop::handle_event(class canvas *canvas, SDL_Event &event)
+void model_deflipflop::handle_event(class canvas *canvas, SDL_Event &event)
 {
     if (!selected || !single)
         return;
@@ -89,7 +89,7 @@ void model_dflipflop::handle_event(class canvas *canvas, SDL_Event &event)
     name_edit->handle_event(event);
 }
 
-void model_dflipflop::rotate_ports(void)
+void model_deflipflop::rotate_ports(void)
 {
     for (auto port : ports) {
         float x,y,_x,_y;
@@ -112,7 +112,7 @@ void model_dflipflop::rotate_ports(void)
     reseat();
 }
 
-void model_dflipflop::calculate(int ttl)
+void model_deflipflop::calculate(int ttl)
 {
      struct value newclock;
      newclock = ports[1]->value;
@@ -122,12 +122,15 @@ void model_dflipflop::calculate(int ttl)
      if (newclock.boolval) { /* rising edge */
           bool changed = false;
           previous_clock = newclock;
-          /* latch in the D value */
+          /* latch in the D value -- but only if enable is set*/
           
-          if (memcmp(&value, &(ports[0]->value), sizeof(struct value)) != 0)
-              changed = true;
-          value = ports[0]->value;  
+           
+          if (ports[3]->value.boolval) {
           
+              if (memcmp(&value, &(ports[0]->value), sizeof(struct value)) != 0)
+                  changed = true;
+              value = ports[0]->value;  
+          }
           if (changed)
               queue_calculate(this); /* schedule calculations for the propagation */
      };
@@ -135,18 +138,13 @@ void model_dflipflop::calculate(int ttl)
      previous_clock = newclock;
 }
 
-void model_dflipflop::queued_calculate(int ttl)
+void model_deflipflop::queued_calculate(int ttl)
 {
-     struct value notQ;
-
      ports[2]->update_value(&value, ttl - 1); 
-     notQ = value;
-     notQ.boolval = !notQ.boolval;
-     ports[3]->update_value(&notQ, ttl - 1); 
 }
 
 
-std::string model_dflipflop::get_verilog_main(void)
+std::string model_deflipflop::get_verilog_main(void)
 {
     std::string s = "";
     std::vector<std::string> wiremap;
@@ -210,7 +208,7 @@ std::string model_dflipflop::get_verilog_main(void)
   	        s = s + ", ";
             first = false;
     
-            s = s + ".Q_n(";
+            s = s + ".En(";
             s = s + wiremap[0];
             s = s + ")";
     	
@@ -224,18 +222,19 @@ std::string model_dflipflop::get_verilog_main(void)
 }
 
 /* TODO -- rather than a pure basic SOP, run espresso on this and make it more minimal */
-std::string model_dflipflop::get_verilog_modules(std::string path)
+std::string model_deflipflop::get_verilog_modules(std::string path)
 {
 	std::string s = "";
 	
 	s = s + "module " + verilog_module_name + "\n";
-	s = s + "(input D, input clk, output reg Q, output Q_n);\n\n";
+	s = s + "(input D, input clk, output reg Q, input En);\n\n";
 	
 	s = s + "always @(posedge clk) \n";
 	s = s + "begin\n";
-	s = s + "Q <= D;\n";
+	s = s + "  if (En) begin \n";
+	s = s + "       Q <= D;\n";
+	s = s + "  end\n";
         s = s + "end \n";
-        s = s + "assign Q_n = !Q;\n";
 	s = s + "endmodule\n\n";
 	
 	

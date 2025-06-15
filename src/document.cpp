@@ -51,6 +51,8 @@ document::document(std::string _name)
 	class scene *_scene;
 	float d1,d2,d3;
 	
+	struct capabilities cap = {};
+	
 	init_SDL();
 	
 	std::string filename;
@@ -58,6 +60,9 @@ document::document(std::string _name)
 	fill_png_maps();
 
 	name = _name;
+	
+	if (std::filesystem::exists(name + "/verilog/Makefile"))
+		cap.has_full_workflow = true;
 
 	
 	SDL_GetDisplayDPI(0, &d1, &d2, &d3);
@@ -69,7 +74,7 @@ document::document(std::string _name)
 
 	_scene = new scene("main");
 
-	_canvas = new canvas(_scene);
+	_canvas = new canvas(_scene, &cap);
 
 	register_new_canvas(_canvas);
 	

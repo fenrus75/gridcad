@@ -16,6 +16,8 @@
 #define __INCLUDE_GUARD_
 
 #include "wirepath.h"
+#include "capabilities.h"
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
@@ -119,7 +121,7 @@ protected:
 class canvas : public basecanvas
 {
 public:
-    canvas (class scene *_scene);
+    canvas (class scene *_scene, struct capabilities *cap = NULL);
     virtual ~canvas(void);
     
     void draw(void) override;
@@ -172,6 +174,8 @@ protected:
     void draw_tooltip(float X, float Y, std::string tooltip);
     bool fittoscreen = false;
     float DPI = 96;    
+    
+    bool show_toolchain = false;
 };
 
 /* logical representation of a (sub)circuit */

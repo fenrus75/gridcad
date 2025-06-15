@@ -34,9 +34,12 @@ extern void callback_autoclock(class scene *scene);
 
 static std::string clipboard;
 
-canvas::canvas(class scene *_scene)
+canvas::canvas(class scene *_scene, struct capabilities *cap)
 {
 	std::string s;
+	
+	if (cap) 
+		show_toolchain = cap->has_full_workflow;
 	
 	s = "GridCad " + _scene->get_full_name();
 	window =
@@ -77,11 +80,13 @@ canvas::canvas(class scene *_scene)
 	button_bar->add_button("Save design to file", "assets/save_icon.png", EVENT_SAVE);
 	button_bar->add_button("Fit to screen", "assets/icon_fit_to_screen.png", EVENT_ZOOM_TO_FIT);
 	button_bar->add_button("Wire all clock signals", "assets/autoclock.png", EVENT_AUTOCLOCK);
-	button_bar->add_button("Compile verilog", "assets/icon_compile_verilog.png", EVENT_AUTOCLOCK);
+	if (show_toolchain)
+		button_bar->add_button("Compile verilog", "assets/icon_compile_verilog.png", EVENT_AUTOCLOCK);
 	current_scene = _scene;
 	callback_fit_to_screen(current_scene);
 	SDL_MaximizeWindow(window);
 }
+
 
 canvas::~canvas(void)
 {
