@@ -41,6 +41,11 @@ void buttonbar::handle_event(SDL_Event &event)
 		case SDL_MOUSEBUTTONUP:
 		        for (auto button : buttons)
                             button->deactivate();
+                        break;
+		case SDL_MOUSEMOTION:
+		    mouseX = event.motion.x;
+		    mouseY = event.motion.y;
+                        
         }
     
 }
@@ -55,23 +60,31 @@ void buttonbar::add_button(std::string text, std::string icon, int _event)
 void buttonbar::draw_at(class canvas *canvas, int W, int H)
 {
     float w, h;
+    unsigned int buttonindex;
+    
+    if (mouseX > width)
+        buttonindex = 600;
+    else
+        buttonindex = mouseY / (Y_SPACING * width);
     
     w = canvas->scale_to_X(W);
     h = canvas->scale_to_Y(W);
     
     for (unsigned int i = 0; i < buttons.size(); i++) {
         auto button = buttons[i];
-        button->draw_at(canvas, canvas->scr_to_X(0), canvas->scr_to_Y(0) + Y_SPACING * h  * i, w, h);
+        button->draw_at(canvas, canvas->scr_to_X(0), canvas->scr_to_Y(0) + Y_SPACING * h  * i, w, h, buttonindex == i);
     }
+    
+    
 }
 
 std::string buttonbar::current_tooltip(unsigned int x, unsigned int y)
 {
     unsigned int buttonindex;
     
-    if (x > width)
+    if (mouseX > width)
         return "";
-    buttonindex = y / (Y_SPACING * width);
+    buttonindex = mouseY / (Y_SPACING * width);
     if (buttonindex >= buttons.size()) 
         return "";
   
@@ -92,8 +105,11 @@ barbutton::~barbutton(void)
 }
 
 
-void barbutton::draw_at(class canvas *canvas, float X, float Y, float W, float H)
+void barbutton::draw_at(class canvas *canvas, float X, float Y, float W, float H, bool hover)
 {	
+    if (!active && hover) 
+        canvas->draw_image("assets/lightgray.png", X,Y,W,H);
+        
     if (active) {
         canvas->draw_image("assets/lightgray.png", X,Y,W,H);
         X = X + canvas->scale_to_X(5);

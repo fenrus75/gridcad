@@ -30,6 +30,7 @@
 using json = nlohmann::json;
 
 extern void callback_fit_to_screen(class scene *scene);
+extern void callback_autoclock(class scene *scene);
 
 static std::string clipboard;
 
@@ -75,6 +76,8 @@ canvas::canvas(class scene *_scene)
 	button_bar = new buttonbar(this, button_rect.w);
 	button_bar->add_button("Save design to file", "assets/save_icon.png", EVENT_SAVE);
 	button_bar->add_button("Fit to screen", "assets/icon_fit_to_screen.png", EVENT_ZOOM_TO_FIT);
+	button_bar->add_button("Wire all clock signals", "assets/autoclock.png", EVENT_AUTOCLOCK);
+	button_bar->add_button("Compile verilog", "assets/icon_compile_verilog.png", EVENT_AUTOCLOCK);
 	current_scene = _scene;
 	callback_fit_to_screen(current_scene);
 	SDL_MaximizeWindow(window);
@@ -258,6 +261,7 @@ bool canvas::handle_event_iconarea(SDL_Event &event)
 	class icon *this_icon;
 	
 	this_icon = icon_bar->current_icon(event.motion.x, event.motion.y);
+	
 	active_menu = icon_bar->get_menu(event.motion.x, event.motion.y);
 	
 
@@ -309,6 +313,9 @@ bool canvas::handle_event(SDL_Event &event)
 		icon_bar->create_menu();
 	
 
+	if (event.type == EVENT_AUTOCLOCK && event.user.data1 == current_scene) {
+		callback_autoclock(current_scene);
+	}
 
 	if (event.type == EVENT_ZOOM_TO_FIT && event.user.data1 == current_scene) {  /* zoom to fit the screen */
 		fittoscreen = true;
@@ -518,7 +525,8 @@ bool canvas::handle_event(SDL_Event &event)
 			if (event.motion.x < main_area_rect.w + main_area_rect.x && event.motion.x >= main_area_rect.x) 
 				canvas::handle_event_drawingarea(event);
 			else
-				canvas::handle_event_iconarea(event);
+				if (event.motion.x >= ui_area_rect.x)
+					canvas::handle_event_iconarea(event);	
 			break;
 		case SDL_MOUSEBUTTONUP:
 			if (event.button.button == SDL_BUTTON_LEFT) {

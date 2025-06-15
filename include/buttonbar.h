@@ -19,6 +19,8 @@ public:
 protected:
     class canvas *canvas = NULL;
     unsigned int width = 0;
+    unsigned int mouseX = 0;
+    unsigned int mouseY = 0;
     
     std::vector<class barbutton *>buttons;
 };
@@ -30,7 +32,7 @@ public:
     barbutton(std::string text, std::string icon, int event, class canvas *canvas);
     ~barbutton(void);
 
-    void draw_at(class canvas *canvas, float X, float Y, float  W, float H);    
+    void draw_at(class canvas *canvas, float X, float Y, float  W, float H, bool hover = false);    
     
     void activate(void);
     void deactivate(void) {active = false; };
