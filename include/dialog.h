@@ -28,4 +28,5 @@ protected:
     
     float buttonX1 = 0, buttonY1 = 0,buttonW = 0, buttonH = 0;
     float currentX = 0, currentY = 0;
+    float largestX = 0;
 };

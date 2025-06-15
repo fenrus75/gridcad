@@ -33,6 +33,14 @@ void dialog::draw(class basecanvas *canvas)
     }
     maxX = std::max(maxX, Xsize(canvas, minwtext));
     maxY = std::max(maxY, Ysize(canvas, minwtext));
+
+
+    /* remember the maximum width over time so that the dialog box doesn't get jumpy in width as things scroll through */    
+    if (maxX > largestX) {
+        largestX = maxX;
+    } else {
+        maxX = largestX;
+    }
     
     maxX = maxX / get_scale();
     maxY = maxY / get_scale();
