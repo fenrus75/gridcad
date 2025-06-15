@@ -372,6 +372,7 @@ void model_truth::names_to_ports(void)
 
 void model_truth::handle_event(class canvas *canvas, SDL_Event &event)
 {
+    element::handle_event(canvas, event);
     switch (event.type) {
 	case SDL_MOUSEMOTION:
 		mouseX = canvas->scr_to_X(event.motion.x); 
