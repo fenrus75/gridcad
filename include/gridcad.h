@@ -55,7 +55,7 @@ class basecanvas;
 struct value;
 class contextmenu;
 class buttonbar;
-
+class dialog;
 
 class base
 {
@@ -142,6 +142,8 @@ public:
     void clear_floating(void);
     
     float screen_width(void);
+    
+    void set_dialog(class dialog *D) { dialogbox = D;};
          
 protected:
     bool draw_grid = false;
@@ -156,6 +158,7 @@ protected:
     class icon *active_icon = NULL;
     class buttonbar *button_bar = NULL;
     class contextmenu *active_menu = NULL;
+    class dialog *dialogbox = NULL;
     bool left_mouse_down = false;
     float mouseX = 0.0, mouseY = 0.0;
     uint64_t mouse_timestamp = 0; /* SDL_GetTicks64 time of when the mouse last moved */

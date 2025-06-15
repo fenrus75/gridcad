@@ -25,6 +25,7 @@
 #include "iconbar.h"
 #include "contextmenu.h"
 #include "buttonbar.h"
+#include "dialog.h"
 
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
@@ -81,7 +82,7 @@ canvas::canvas(class scene *_scene, struct capabilities *cap)
 	button_bar->add_button("Fit to screen", "assets/icon_fit_to_screen.png", EVENT_ZOOM_TO_FIT);
 	button_bar->add_button("Wire all clock signals", "assets/autoclock.png", EVENT_AUTOCLOCK);
 	if (show_toolchain)
-		button_bar->add_button("Compile verilog", "assets/icon_compile_verilog.png", EVENT_AUTOCLOCK);
+		button_bar->add_button("Compile verilog", "assets/icon_compile_verilog.png", EVENT_RUN_VERILOG);
 	current_scene = _scene;
 	callback_fit_to_screen(current_scene);
 	SDL_MaximizeWindow(window);
@@ -322,6 +323,15 @@ bool canvas::handle_event(SDL_Event &event)
 		callback_autoclock(current_scene);
 	}
 
+	if (event.type == EVENT_RUN_VERILOG && event.user.data1 == current_scene) {
+		class dialog *dialog = new class dialog(main_area_rect.w + ui_area_rect.w + button_rect.w, main_area_rect.h);
+		
+		set_dialog(dialog);
+		
+		dialog->append_line("This is a test");
+		dialog->append_line("This is a test2");
+	}
+
 	if (event.type == EVENT_ZOOM_TO_FIT && event.user.data1 == current_scene) {  /* zoom to fit the screen */
 		fittoscreen = true;
 		float bX1 = current_scene->sizeX, bY1 = current_scene->sizeY, bX2 = 0, bY2 = 0;
@@ -527,10 +537,10 @@ bool canvas::handle_event(SDL_Event &event)
 				current_scene->process_delete_requests();
 				break;
 			}
-			if (event.motion.x < main_area_rect.w + main_area_rect.x && event.motion.x >= main_area_rect.x) 
+			if (event.motion.x < main_area_rect.w + main_area_rect.x && event.motion.x >= main_area_rect.x && !dialogbox) 
 				canvas::handle_event_drawingarea(event);
 			else
-				if (event.motion.x >= ui_area_rect.x)
+				if (event.motion.x >= ui_area_rect.x && !dialogbox)
 					canvas::handle_event_iconarea(event);	
 			break;
 		case SDL_MOUSEBUTTONUP:
@@ -915,6 +925,9 @@ void canvas::draw(void)
 		SDL_RenderSetClipRect(renderer, NULL);
 		active_menu->draw_at(this);
 	}
+	
+	if (dialogbox)
+		dialogbox->draw(this);
 
 	if (window_shown)
 		SDL_RenderPresent(renderer);
