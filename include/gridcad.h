@@ -52,6 +52,7 @@ class iconbar;
 class basecanvas;
 struct value;
 class contextmenu;
+class buttonbar;
 
 
 class base
@@ -144,13 +145,14 @@ protected:
     bool draw_grid = false;
     bool window_shown = true;
     class scene *current_scene = NULL;
-    SDL_Rect main_area_rect, ui_area_rect;
+    SDL_Rect main_area_rect, ui_area_rect, button_rect;
     class element *dragging = NULL;
     std::vector<class element *> floating;
     class port *dragging_port = NULL;
     class wire *dragging_wire = NULL, *hover_wire = NULL;
     class iconbar *icon_bar = NULL;
     class icon *active_icon = NULL;
+    class buttonbar *button_bar = NULL;
     class contextmenu *active_menu = NULL;
     bool left_mouse_down = false;
     float mouseX = 0.0, mouseY = 0.0;
@@ -169,7 +171,7 @@ protected:
     bool handle_event_drawingarea(SDL_Event &event);
     void draw_tooltip(float X, float Y, std::string tooltip);
     bool fittoscreen = false;
-    
+    float DPI = 96;    
 };
 
 /* logical representation of a (sub)circuit */
@@ -383,6 +385,7 @@ extern unsigned int SDL_timer_event;
 #define EVENT_START_CLOCK  (SDL_timer_event + 4)
 #define EVENT_SAVE_TO_LIBRARY (SDL_timer_event + 5)
 #define EVENT_RELOAD_ICONBAR (SDL_timer_event + 6)
+#define EVENT_SAVE (SDL_timer_event + 7)
 
 extern void callback_editname(class element *element);
 extern SDL_Texture *IMG_LoadTextureFromMem(SDL_Renderer *renderer, const char *filename);

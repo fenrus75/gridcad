@@ -98,10 +98,15 @@ void document::save_verilog(std::string path, std::string filename)
 	output.close();
 }
 
-void document::save_json(std::string filename)
+void document::save_json(void)
 {
 	class canvas *_canvas = (class canvas *)canvases[0];
 	class scene *_scene =  _canvas->get_scene();
+	std::string filename;
+	
+	filename = name + "/scene.json";
+	
+	printf("Saving to %s \n", filename.c_str());
 
 	json j;
 
@@ -116,14 +121,10 @@ void document::save_json(std::string filename)
 document::~document(void)
 {
 	class canvas *_canvas = (class canvas *)canvases[0];
-	std::string filename;
 
-	filename = name;
 	std::filesystem::create_directory(name);
-	filename = filename + "/scene.json";
-		
 
-	save_json(filename);	
+	save_json();	
 	std::filesystem::create_directory(name + "/verilog");
 	save_verilog(name + "/verilog", name + "/verilog//main.v");
 	delete _canvas;
@@ -173,6 +174,9 @@ void document::run(void)
 				ev.type = EVENT_RELOAD_ICONBAR;
 			        ev.user.code = 0;
 			        SDL_PushEvent(&ev);				
+			}
+			if (event.type == EVENT_SAVE) {
+				save_json();
 			}
 			if ((event.type == SDL_timer_event && clock_running) || event.type == EVENT_SINGLE_CLOCK) {
 				global_clock.valid = true;

@@ -24,6 +24,7 @@
 #include "port.h"
 #include "iconbar.h"
 #include "contextmenu.h"
+#include "buttonbar.h"
 
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
@@ -45,15 +46,23 @@ canvas::canvas(class scene *_scene)
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
 	windowID = SDL_GetWindowID(window);
+	SDL_GetDisplayDPI(0, &DPI, NULL, NULL);
+	if (DPI < 96)
+		DPI = 96;
 
-	main_area_rect.x = 0;
-	main_area_rect.y = 0;
-	main_area_rect.w = 820;
-	main_area_rect.h = 768;
-	ui_area_rect.x = 800;
+
+	button_rect.x = 0;
+	button_rect.y = 0;
+	button_rect.w = DPI/2;
+	button_rect.h = 768;
+	ui_area_rect.x = 820;
 	ui_area_rect.y = 0;
 	ui_area_rect.w = 1024 - 820;
 	ui_area_rect.h = 768;
+	main_area_rect.x = button_rect.w;
+	main_area_rect.y = 0;
+	main_area_rect.w = 1024 - ui_area_rect.w - button_rect.w;
+	main_area_rect.h = 768;
 
 	scaleX = 25;
 	scaleY = 25;
@@ -63,6 +72,8 @@ canvas::canvas(class scene *_scene)
 	dragging_port = NULL;
 	dragging_wire = NULL;
 	icon_bar = new iconbar(renderer, ui_area_rect);
+	button_bar = new buttonbar(this, button_rect.w);
+	button_bar->add_button("Save design to file", "assets/save_icon.png", EVENT_SAVE);
 	current_scene = _scene;
 	callback_fit_to_screen(current_scene);
 	SDL_MaximizeWindow(window);
@@ -77,6 +88,7 @@ canvas::~canvas(void)
 	SDL_DestroyWindow(window);
 	delete icon_bar;  icon_bar = NULL;
 	delete current_scene;
+	delete button_bar; button_bar = NULL;
 }
 
 bool canvas::handle_event_drawingarea(SDL_Event &event)
@@ -294,6 +306,7 @@ bool canvas::handle_event(SDL_Event &event)
 		
 	if (event.type == EVENT_RELOAD_ICONBAR)
 		icon_bar->create_menu();
+	
 
 
 	if (event.type == EVENT_ZOOM_TO_FIT && event.user.data1 == current_scene) {  /* zoom to fit the screen */
@@ -727,11 +740,11 @@ bool canvas::handle_event(SDL_Event &event)
 		        	window_shown = false;
 		        	break;
 			case SDL_WINDOWEVENT_RESIZED:
-				main_area_rect.w = event.window.data1 - 220;;
+				main_area_rect.w = event.window.data1 - 220 - button_rect.w;
 				main_area_rect.h = event.window.data2;
-				ui_area_rect.x = main_area_rect.w;
+				ui_area_rect.x = main_area_rect.w + button_rect.w;
 				ui_area_rect.y = 0;
-				ui_area_rect.w = event.window.data1 - main_area_rect.w;
+				ui_area_rect.w = event.window.data1 - ui_area_rect.x;
 				ui_area_rect.h = event.window.data2;
 				icon_bar->resize(ui_area_rect);
 				if (fittoscreen)
@@ -747,6 +760,7 @@ bool canvas::handle_event(SDL_Event &event)
 		
 	for (auto elem : current_scene->elements)
 		elem->handle_event(this, event);
+	button_bar->handle_event(event);
 	run_queued_calculations();
 	current_scene->remove_orphans();
 	return leave;
@@ -755,12 +769,12 @@ bool canvas::handle_event(SDL_Event &event)
 void canvas::draw(void)
 {
 	/* first, draw the lighter gray background */
+	
 	SDL_SetRenderDrawColor(renderer, R(COLOR_BACKGROUND_GRID),
 			       G(COLOR_BACKGROUND_GRID),
 			       B(COLOR_BACKGROUND_GRID),
 			       Alpha(COLOR_BACKGROUND_GRID));
 	SDL_RenderClear(renderer);
-	
 	icon_bar->draw();
 	SDL_RenderSetClipRect(renderer, &main_area_rect);
 
@@ -867,6 +881,9 @@ void canvas::draw(void)
 
 		draw_image(area_select_texture, X1, Y1, X2-X1, Y2-Y1, 64);
 	}
+
+	SDL_RenderSetClipRect(renderer, NULL);
+	button_bar->draw_at(this, button_rect.w, button_rect.h);
 	
 	if (tooltip_eligable) {
 		std::string tooltip = icon_bar->current_tooltip(X_to_scr(mouseX), X_to_scr(mouseY));
