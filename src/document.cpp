@@ -75,6 +75,8 @@ document::document(std::string _name)
 	_scene = new scene("main");
 
 	_canvas = new canvas(_scene, &cap);
+	
+	_canvas->set_project_name(name);
 
 	register_new_canvas(_canvas);
 	
@@ -180,7 +182,7 @@ void document::run(void)
 			        ev.user.code = 0;
 			        SDL_PushEvent(&ev);				
 			}
-			if (event.type == EVENT_SAVE) {
+			if (event.type == EVENT_SAVE || event.type == EVENT_RUN_VERILOG) {
 				save_json();
 				save_verilog(name + "/verilog", name + "/verilog//main.v");
 			}

@@ -19,7 +19,7 @@ public:
     void append_line(std::string line) { content.push_back(line); };
     void replace_content(std::vector<std::string> newcontent) { content = newcontent; };
     void enable_ok_button(void) { has_ok_button = true; };
-private:
+protected:
     int screenX = 0;
     int screenY = 0;
     std::string minwtext = "";

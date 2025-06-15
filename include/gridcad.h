@@ -144,6 +144,7 @@ public:
     float screen_width(void);
     
     void set_dialog(class dialog *D) { dialogbox = D;};
+    void set_project_name(std::string _projectname) { projectname = _projectname;};
          
 protected:
     bool draw_grid = false;
@@ -170,6 +171,7 @@ protected:
     float area_select_X1 = 0.0, area_select_Y1 = 0.0;
     SDL_Texture *area_select_texture = NULL;
     bool tooltip_eligable = false;
+    std::string projectname = "";
     
     
     bool handle_event_iconarea(SDL_Event &event);
@@ -396,6 +398,8 @@ extern unsigned int SDL_timer_event;
 #define EVENT_RUN_VERILOG (SDL_timer_event + 8)
 #define EVENT_AUTOCLOCK (SDL_timer_event + 9)
 #define EVENT_CLOSE_DIALOG (SDL_timer_event + 10)
+#define EVENT_SYNTH_DATA (SDL_timer_event + 11)
+#define EVENT_SYNTH_DONE (SDL_timer_event + 12)
 
 extern void callback_editname(class element *element);
 extern SDL_Texture *IMG_LoadTextureFromMem(SDL_Renderer *renderer, const char *filename);

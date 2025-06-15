@@ -26,6 +26,7 @@
 #include "contextmenu.h"
 #include "buttonbar.h"
 #include "dialog.h"
+#include "synth.h"
 
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
@@ -324,13 +325,9 @@ bool canvas::handle_event(SDL_Event &event)
 	}
 
 	if (event.type == EVENT_RUN_VERILOG && event.user.data1 == current_scene) {
-		class dialog *dialog = new class dialog(main_area_rect.w + ui_area_rect.w + button_rect.w, main_area_rect.h, "THIS IS THE MINIMUM WIDTH WE WANT THE BOX TO BE");
+		class synth *dialog = new class synth(main_area_rect.w + ui_area_rect.w + button_rect.w, main_area_rect.h, projectname);
 		
 		set_dialog(dialog);
-		
-		dialog->append_line("This is a test");
-		dialog->append_line("This is a test2");
-		dialog->enable_ok_button();
 	}
 
 	if (event.type == EVENT_CLOSE_DIALOG && event.user.data1 == current_scene) {
@@ -782,6 +779,8 @@ bool canvas::handle_event(SDL_Event &event)
 				icon_bar->resize(ui_area_rect);
 				if (fittoscreen)
 					callback_fit_to_screen(current_scene);
+				if (dialogbox)
+					dialogbox->update_screen_size(event.window.data1, event.window.data2);
 				break;
 			case SDL_WINDOWEVENT_CLOSE:   /* user clicked the 'x' */
 				SDL_HideWindow(window);
