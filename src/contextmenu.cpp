@@ -4,6 +4,9 @@
 #include <algorithm>
 
 
+static float scale = -1;
+
+
 contextmenu::contextmenu(class element *_element)
 {
     element = _element;
@@ -63,7 +66,7 @@ void contextmenu::set_inactive(std::string name)
 	}
 }
 
-float Xsize(class basecanvas *canvas, std::string str, float scale)
+float Xsize(class basecanvas *canvas, std::string str)
 {
 	SDL_Texture *text;
 	
@@ -78,10 +81,10 @@ float Xsize(class basecanvas *canvas, std::string str, float scale)
 	return size.x;
 }
 
-float Ysize(class basecanvas *canvas, std::string str, float scale)
+float Ysize(class basecanvas *canvas, std::string str)
 {
 	SDL_Texture *text;
-	
+
 	text = canvas->text_to_texture(str)	;
 	if (!text)
 		return 0;
@@ -93,7 +96,7 @@ float Ysize(class basecanvas *canvas, std::string str, float scale)
 	return size.y;
 }
 
-void draw_menu_item(class basecanvas *canvas, float X, float Y, float W, float H, std::string string, float scale, bool selected)
+void draw_menu_item(class basecanvas *canvas, float X, float Y, float W, float H, std::string string, bool selected)
 {
 	SDL_Texture *shade;
 	
@@ -106,7 +109,7 @@ void draw_menu_item(class basecanvas *canvas, float X, float Y, float W, float H
 	canvas->draw_text_left(string, X, Y, W, H);
 }
 
-void draw_menu_item_color(class basecanvas *canvas, float X, float Y, float W, float H, std::string string, float scale, bool selected, int color)
+void draw_menu_item_color(class basecanvas *canvas, float X, float Y, float W, float H, std::string string, bool selected, int color)
 {
 	SDL_Texture *text, *shade;
 	
@@ -127,7 +130,6 @@ void draw_menu_item_color(class basecanvas *canvas, float X, float Y, float W, f
 	canvas->draw_text_left(string, X + canvas->scale_to_X(36), Y, W, H);
 }
 
-static float scale = -1;
 
 static void fill_scale(void)
 {
@@ -149,8 +151,8 @@ void contextmenu::draw_at(class basecanvas *canvas, float X, float Y)
     maxY = 0;
 
     for (auto item : items) {
-        maxX = std::max(maxX, Xsize(canvas, item->menu_text, scale));
-        maxY = std::max(maxY, Ysize(canvas, item->menu_text, scale));
+        maxX = std::max(maxX, Xsize(canvas, item->menu_text));
+        maxY = std::max(maxY, Ysize(canvas, item->menu_text));
     }
     
     maxX = maxX / scale;
@@ -166,7 +168,7 @@ void contextmenu::draw_at(class basecanvas *canvas, float X, float Y)
     	std::string asterix = "";
     	if (!item->active)
     		asterix = "*";
-    	draw_menu_item(canvas, X, Y, maxX, maxY, asterix + item->menu_text, scale, ((int)i == selection) && item->active);
+    	draw_menu_item(canvas, X, Y, maxX, maxY, asterix + item->menu_text, ((int)i == selection) && item->active);
     	Y += maxY;
     }
     
@@ -267,8 +269,8 @@ void port_contextmenu::draw_at(class basecanvas *canvas, float X, float Y)
     maxY = 0;
 
     for (auto item : items) {
-        maxX = std::max(maxX, Xsize(canvas, item->menu_text, scale));
-        maxY = std::max(maxY, Ysize(canvas, item->menu_text, scale));
+        maxX = std::max(maxX, Xsize(canvas, item->menu_text));
+        maxY = std::max(maxY, Ysize(canvas, item->menu_text));
     }
     
     maxX = maxX / scale;
@@ -281,7 +283,7 @@ void port_contextmenu::draw_at(class basecanvas *canvas, float X, float Y)
     
     for (unsigned int i = 0; i < items.size(); i++) {
     	auto item = items[i];
-    	draw_menu_item_color(canvas, X, Y, maxX, maxY, item->menu_text, scale, (int)i == selection, item->color);
+    	draw_menu_item_color(canvas, X, Y, maxX, maxY, item->menu_text, (int)i == selection, item->color);
     	Y += maxY;
     }
     
