@@ -386,6 +386,7 @@ extern unsigned int SDL_timer_event;
 #define EVENT_SAVE_TO_LIBRARY (SDL_timer_event + 5)
 #define EVENT_RELOAD_ICONBAR (SDL_timer_event + 6)
 #define EVENT_SAVE (SDL_timer_event + 7)
+#define EVENT_RUN_VERILOG (SDL_timer_event + 8)
 
 extern void callback_editname(class element *element);
 extern SDL_Texture *IMG_LoadTextureFromMem(SDL_Renderer *renderer, const char *filename);

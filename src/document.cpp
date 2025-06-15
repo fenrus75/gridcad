@@ -177,6 +177,7 @@ void document::run(void)
 			}
 			if (event.type == EVENT_SAVE) {
 				save_json();
+				save_verilog(name + "/verilog", name + "/verilog//main.v");
 			}
 			if ((event.type == SDL_timer_event && clock_running) || event.type == EVENT_SINGLE_CLOCK) {
 				global_clock.valid = true;

@@ -515,7 +515,7 @@ bool canvas::handle_event(SDL_Event &event)
 				current_scene->process_delete_requests();
 				break;
 			}
-			if (event.motion.x < main_area_rect.w) 
+			if (event.motion.x < main_area_rect.w + main_area_rect.x && event.motion.x >= main_area_rect.x) 
 				canvas::handle_event_drawingarea(event);
 			else
 				canvas::handle_event_iconarea(event);
