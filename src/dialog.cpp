@@ -42,6 +42,12 @@ void dialog::draw(class basecanvas *canvas)
         maxX = largestX;
     }
     
+    if (lines < largest_lines) {
+        lines = largest_lines;
+    } else {
+        largest_lines = lines;
+    }
+    
     maxX = maxX / get_scale();
     maxY = maxY / get_scale();
     
