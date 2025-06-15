@@ -87,3 +87,9 @@ public:
 private:
     class iconbar *bar = NULL;
 };
+
+
+
+extern float Xsize(class basecanvas *canvas, std::string str);
+extern float Ysize(class basecanvas *canvas, std::string str);
+extern float get_scale(void);

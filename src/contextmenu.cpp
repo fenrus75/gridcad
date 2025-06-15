@@ -96,6 +96,7 @@ float Ysize(class basecanvas *canvas, std::string str)
 	return size.y;
 }
 
+
 void draw_menu_item(class basecanvas *canvas, float X, float Y, float W, float H, std::string string, bool selected)
 {
 	SDL_Texture *shade;
@@ -141,6 +142,13 @@ static void fill_scale(void)
     		dpi = 96;
     	scale = 1.3 * 96.0 / dpi;
 }
+
+float get_scale(void)
+{
+	fill_scale();
+	return scale;
+}
+
 
 void contextmenu::draw_at(class basecanvas *canvas, float X, float Y)
 {
