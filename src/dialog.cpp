@@ -16,6 +16,10 @@ void dialog::draw(class basecanvas *canvas)
 {
     float maxX = 0;
     float maxY = 0;
+    int lines = content.size();
+    
+    if (has_ok_button) 
+        lines += 3;
     
     float posX, posY;
    /* step 1: how large is the text */
@@ -32,7 +36,7 @@ void dialog::draw(class basecanvas *canvas)
     
     /* center the dialog box */
     posX = (screenX - maxX - 10)/2;
-    posY = (screenY - maxY * content.size() - 10)/2;
+    posY = (screenY - maxY * lines - 10)/2;
     /* upto here we're in screen pixels */
     
     maxX = canvas->scale_to_X(maxX);
@@ -42,7 +46,7 @@ void dialog::draw(class basecanvas *canvas)
     
     canvas->draw_image("assets/lightgray.png", canvas->scr_to_X(0), canvas->scr_to_Y(0), canvas->scale_to_X(screenX), canvas->scale_to_Y(screenY));
     
-    canvas->draw_image("assets/dialog.png", posX, posY, maxX + canvas->scale_to_X(10), maxY * content.size() + canvas->scale_to_Y(10));
+    canvas->draw_image("assets/dialog.png", posX, posY, maxX + canvas->scale_to_X(10), maxY * lines + canvas->scale_to_Y(10));
     
     float cX, cY;
     
@@ -50,8 +54,16 @@ void dialog::draw(class basecanvas *canvas)
     cY = posY + canvas->scale_to_Y(5);
     
     for (auto line : content) {
-        canvas->draw_text(line, cX, cY, maxX, maxY);
+        canvas->draw_text_left(line, cX, cY, maxX, maxY);
         cY += maxY;
+    }
+
+    /* TODO: fix the mess below by just storing a few things in variables and reuse */    
+    if (has_ok_button) {
+        cY += maxY;
+        canvas->draw_image("assets/buttonbox.png", posX + (maxX - canvas->scale_to_X(Xsize(canvas, "  OK  ")/get_scale() - 5))/2, cY - canvas->scale_to_Y(5), canvas->scale_to_X(Xsize(canvas, "  OK  ")/get_scale() + 10), maxY + canvas->scale_to_Y(10)); 
+                
+        canvas->draw_text("OK", posX + (maxX - canvas->scale_to_X(Xsize(canvas, "  OK  ")/get_scale() - 0))/2, cY - canvas->scale_to_Y(0), canvas->scale_to_X(Xsize(canvas, "  OK  ")/get_scale() + 0), maxY + canvas->scale_to_Y(0)); 
     }
 
 }
