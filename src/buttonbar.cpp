@@ -65,11 +65,23 @@ void buttonbar::draw_at(class canvas *canvas, int W, int H)
     }
 }
 
+std::string buttonbar::current_tooltip(unsigned int x, unsigned int y)
+{
+    unsigned int buttonindex;
+    
+    if (x > width)
+        return "";
+    buttonindex = y / (Y_SPACING * width);
+    if (buttonindex >= buttons.size()) 
+        return "";
+  
+    return buttons[buttonindex]->get_tool_tip();
+}
 
 
 barbutton::barbutton(std::string _text, std::string _icon, int _event, class canvas *_canvas)
 {
-    text = text;
+    text = _text;
     icon = _icon;
     eventnr = _event;
     canvas = _canvas;

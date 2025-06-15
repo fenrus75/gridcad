@@ -300,7 +300,7 @@ bool canvas::handle_event(SDL_Event &event)
 	bool leave = false;
 	bool someone_in_editmode = false;
 	
-	if (SDL_GetTicks64() - mouse_timestamp > 1000 && X_to_scr(mouseX) > main_area_rect.w && active_menu == NULL) 
+	if (SDL_GetTicks64() - mouse_timestamp > 1000 && ( (X_to_scr(mouseX) > main_area_rect.x + main_area_rect.w) || (X_to_scr(mouseX) < main_area_rect.x)) && active_menu == NULL) 
 		tooltip_eligable = true;
 	else
 		tooltip_eligable = false;
@@ -887,7 +887,11 @@ void canvas::draw(void)
 	button_bar->draw_at(this, button_rect.w, button_rect.h);
 	
 	if (tooltip_eligable) {
-		std::string tooltip = icon_bar->current_tooltip(X_to_scr(mouseX), X_to_scr(mouseY));
+		std::string tooltip = "";
+		if (X_to_scr(mouseX) > main_area_rect.x + main_area_rect.w)
+			tooltip = icon_bar->current_tooltip(X_to_scr(mouseX), X_to_scr(mouseY));
+		if (X_to_scr(mouseX) < main_area_rect.x)
+			tooltip = button_bar->current_tooltip(X_to_scr(mouseX), X_to_scr(mouseY));
 		
 		if (tooltip != "") {
 			draw_tooltip(mouseX, mouseY, tooltip);
@@ -933,8 +937,13 @@ void canvas::draw_tooltip(float X, float Y, std::string tooltip)
 	
 	SDL_QueryTexture(text, NULL, NULL, &size.x, &size.y);
 
-	x = X_to_scr(X) - size.x/scale;
-	y = Y_to_scr(Y) - size.y/scale;
+	x = X_to_scr(X);
+	if (x > size.x/scale) 
+		x = x - size.x/scale;
+	y = Y_to_scr(Y);
+	if (y > size.y/scale)
+		y = y - size.y/scale;
+	
 
 	rect.x = x;
 	rect.y = y;

@@ -14,6 +14,8 @@ public:
     void handle_event(SDL_Event &event);
     
     void add_button(std::string text, std::string icon, int event);
+    
+    std::string current_tooltip(unsigned int X, unsigned int Y);
 protected:
     class canvas *canvas = NULL;
     unsigned int width = 0;
@@ -32,6 +34,7 @@ public:
     
     void activate(void);
     void deactivate(void) {active = false; };
+    std::string get_tool_tip(void) { return text;};
 
 protected:
 
