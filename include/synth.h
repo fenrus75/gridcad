@@ -8,7 +8,7 @@
 class synth : public dialog
 {
 public:
-    synth(int screenX, int screenY, std::string projectname);
+    synth(int screenX, int screenY, std::string projectname, std::string maketarget);
     virtual ~synth(void);
     void handle_event(class canvas *canvas, SDL_Event &event) override;
     

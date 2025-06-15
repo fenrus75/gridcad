@@ -82,8 +82,10 @@ canvas::canvas(class scene *_scene, struct capabilities *cap)
 	button_bar->add_button("Save design to file", "assets/save_icon.png", EVENT_SAVE);
 	button_bar->add_button("Fit to screen", "assets/icon_fit_to_screen.png", EVENT_ZOOM_TO_FIT);
 	button_bar->add_button("Wire all clock signals", "assets/autoclock.png", EVENT_AUTOCLOCK);
-	if (show_toolchain)
+	if (show_toolchain) {
 		button_bar->add_button("Compile verilog", "assets/icon_compile_verilog.png", EVENT_RUN_VERILOG);
+		button_bar->add_button("Upload to FPGA", "assets/icon_program_fpga.png", EVENT_PROGRAM_FPGA);
+	}
 	current_scene = _scene;
 	callback_fit_to_screen(current_scene);
 	SDL_MaximizeWindow(window);
@@ -325,7 +327,12 @@ bool canvas::handle_event(SDL_Event &event)
 	}
 
 	if (event.type == EVENT_RUN_VERILOG && event.user.data1 == current_scene) {
-		class synth *dialog = new class synth(main_area_rect.w + ui_area_rect.w + button_rect.w, main_area_rect.h, projectname);
+		class synth *dialog = new class synth(main_area_rect.w + ui_area_rect.w + button_rect.w, main_area_rect.h, projectname, "");
+		
+		set_dialog(dialog);
+	}
+	if (event.type == EVENT_PROGRAM_FPGA && event.user.data1 == current_scene) {
+		class synth *dialog = new class synth(main_area_rect.w + ui_area_rect.w + button_rect.w, main_area_rect.h, projectname, "program");
 		
 		set_dialog(dialog);
 	}

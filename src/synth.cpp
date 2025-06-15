@@ -98,11 +98,11 @@ static void *polling_thread(void * data)
     return NULL;
 }
 
-synth::synth(int screenX, int screenY, std::string projectname) : dialog::dialog(screenX, screenY, "THIS IS THE MINIMUM WIDTH OF THE DIALOG BOX")
+synth::synth(int screenX, int screenY, std::string projectname, std::string make_target) : dialog::dialog(screenX, screenY, "THIS IS THE MINIMUM WIDTH OF THE DIALOG BOX")
 {
     std::string command;
     
-    command = "make -C " + projectname + "/verilog ";
+    command = "make -C " + projectname + "/verilog " + make_target;
     pipe = popen(command.c_str(), "r");
 
     phase = 0;

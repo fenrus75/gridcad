@@ -19,7 +19,7 @@ buttonbar::~buttonbar(void)
     buttons.clear();
 }
 
-#define Y_SPACING 1.1
+#define Y_SPACING 1.2
 
 void buttonbar::handle_event(SDL_Event &event)
 {
@@ -66,7 +66,7 @@ void buttonbar::draw_at(class canvas *canvas, int W, int H)
         buttonindex = 600;
     else
         buttonindex = mouseY / (Y_SPACING * width);
-    
+        
     w = canvas->scale_to_X(W);
     h = canvas->scale_to_Y(W);
     
