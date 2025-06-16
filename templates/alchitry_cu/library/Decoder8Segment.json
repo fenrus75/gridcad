@@ -32,8 +32,8 @@
                     "verilog_name": "",
                     "wires": [
                         {
-                            "X1": 38,
-                            "X2": 45,
+                            "X1": 45,
+                            "X2": 38,
                             "Y1": 16,
                             "Y2": 16,
                             "color": 0,
@@ -87,8 +87,8 @@
                     "verilog_name": "",
                     "wires": [
                         {
-                            "X1": 38,
-                            "X2": 45,
+                            "X1": 45,
+                            "X2": 38,
                             "Y1": 17,
                             "Y2": 17,
                             "color": 0,
@@ -142,8 +142,8 @@
                     "verilog_name": "",
                     "wires": [
                         {
-                            "X1": 38,
-                            "X2": 45,
+                            "X1": 45,
+                            "X2": 38,
                             "Y1": 18,
                             "Y2": 18,
                             "color": 0,
@@ -197,8 +197,8 @@
                     "verilog_name": "",
                     "wires": [
                         {
-                            "X1": 38,
-                            "X2": 45,
+                            "X1": 45,
+                            "X2": 38,
                             "Y1": 19,
                             "Y2": 19,
                             "color": 0,
@@ -252,8 +252,8 @@
                     "verilog_name": "",
                     "wires": [
                         {
-                            "X1": 38,
-                            "X2": 45,
+                            "X1": 45,
+                            "X2": 38,
                             "Y1": 20,
                             "Y2": 20,
                             "color": 0,
@@ -307,8 +307,8 @@
                     "verilog_name": "",
                     "wires": [
                         {
-                            "X1": 38,
-                            "X2": 45,
+                            "X1": 45,
+                            "X2": 38,
                             "Y1": 21,
                             "Y2": 21,
                             "color": 0,
@@ -362,8 +362,8 @@
                     "verilog_name": "",
                     "wires": [
                         {
-                            "X1": 38,
-                            "X2": 45,
+                            "X1": 45,
+                            "X2": 38,
                             "Y1": 22,
                             "Y2": 22,
                             "color": 0,
@@ -417,8 +417,8 @@
                     "verilog_name": "",
                     "wires": [
                         {
-                            "X1": 38,
-                            "X2": 45,
+                            "X1": 45,
+                            "X2": 38,
                             "Y1": 23,
                             "Y2": 23,
                             "color": 0,
@@ -526,8 +526,8 @@
                     "distance_from_outport": 0,
                     "linked_uuid": "",
                     "name": "Bit0",
-                    "screenX": 28.47256088256836,
-                    "screenY": 16.55487823486328,
+                    "screenX": 28.0,
+                    "screenY": 16.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -581,8 +581,8 @@
                     "distance_from_outport": 0,
                     "linked_uuid": "",
                     "name": "Bit1",
-                    "screenX": 28.307926177978516,
-                    "screenY": 17.487804412841797,
+                    "screenX": 28.0,
+                    "screenY": 17.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -636,8 +636,8 @@
                     "distance_from_outport": 0,
                     "linked_uuid": "",
                     "name": "Bit2",
-                    "screenX": 28.47256088256836,
-                    "screenY": 18.557926177978516,
+                    "screenX": 28.0,
+                    "screenY": 18.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -691,8 +691,8 @@
                     "distance_from_outport": 0,
                     "linked_uuid": "",
                     "name": "Bit3",
-                    "screenX": 28.47256088256836,
-                    "screenY": 19.490854263305664,
+                    "screenX": 28.0,
+                    "screenY": 19.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -980,7 +980,7 @@
                 "MT"
             ],
             "outputs": 8,
-            "parental_name": "/main/Decoder8Segment/Decoder8Segment",
+            "parental_name": "/SubScreen/SubScreen",
             "ports": [
                 {
                     "X": -1,
@@ -1211,8 +1211,8 @@
                     "distance_from_outport": 0,
                     "linked_uuid": "",
                     "name": "Dot",
-                    "screenX": 38.48780822753906,
-                    "screenY": 16.52743911743164,
+                    "screenX": 38.0,
+                    "screenY": 16.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": true,
@@ -1226,8 +1226,8 @@
                     "verilog_name": "Dot",
                     "wires": [
                         {
-                            "X1": 38,
-                            "X2": 45,
+                            "X1": 45,
+                            "X2": 38,
                             "Y1": 16,
                             "Y2": 16,
                             "color": 0,
@@ -1266,8 +1266,8 @@
                     "distance_from_outport": 0,
                     "linked_uuid": "",
                     "name": "MM",
-                    "screenX": 38.51524353027344,
-                    "screenY": 17.378047943115234,
+                    "screenX": 38.0,
+                    "screenY": 17.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": true,
@@ -1281,8 +1281,8 @@
                     "verilog_name": "MM",
                     "wires": [
                         {
-                            "X1": 38,
-                            "X2": 45,
+                            "X1": 45,
+                            "X2": 38,
                             "Y1": 17,
                             "Y2": 17,
                             "color": 0,
@@ -1321,8 +1321,8 @@
                     "distance_from_outport": 0,
                     "linked_uuid": "",
                     "name": "LT",
-                    "screenX": 38.51524353027344,
-                    "screenY": 18.420732498168945,
+                    "screenX": 38.0,
+                    "screenY": 18.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -1336,8 +1336,8 @@
                     "verilog_name": "LT",
                     "wires": [
                         {
-                            "X1": 38,
-                            "X2": 45,
+                            "X1": 45,
+                            "X2": 38,
                             "Y1": 18,
                             "Y2": 18,
                             "color": 0,
@@ -1376,8 +1376,8 @@
                     "distance_from_outport": 0,
                     "linked_uuid": "",
                     "name": "LB",
-                    "screenX": 38.48780822753906,
-                    "screenY": 19.408536911010742,
+                    "screenX": 38.0,
+                    "screenY": 19.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -1391,8 +1391,8 @@
                     "verilog_name": "LB",
                     "wires": [
                         {
-                            "X1": 38,
-                            "X2": 45,
+                            "X1": 45,
+                            "X2": 38,
                             "Y1": 19,
                             "Y2": 19,
                             "color": 0,
@@ -1431,8 +1431,8 @@
                     "distance_from_outport": 0,
                     "linked_uuid": "",
                     "name": "MB",
-                    "screenX": 38.48780822753906,
-                    "screenY": 20.42378044128418,
+                    "screenX": 38.0,
+                    "screenY": 20.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -1446,8 +1446,8 @@
                     "verilog_name": "MB",
                     "wires": [
                         {
-                            "X1": 38,
-                            "X2": 45,
+                            "X1": 45,
+                            "X2": 38,
                             "Y1": 20,
                             "Y2": 20,
                             "color": 0,
@@ -1486,8 +1486,8 @@
                     "distance_from_outport": 0,
                     "linked_uuid": "",
                     "name": "RB",
-                    "screenX": 38.57012176513672,
-                    "screenY": 21.41158676147461,
+                    "screenX": 38.0,
+                    "screenY": 21.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -1501,8 +1501,8 @@
                     "verilog_name": "RB",
                     "wires": [
                         {
-                            "X1": 38,
-                            "X2": 45,
+                            "X1": 45,
+                            "X2": 38,
                             "Y1": 21,
                             "Y2": 21,
                             "color": 0,
@@ -1541,8 +1541,8 @@
                     "distance_from_outport": 0,
                     "linked_uuid": "",
                     "name": "RT",
-                    "screenX": 38.3780517578125,
-                    "screenY": 22.454269409179688,
+                    "screenX": 38.0,
+                    "screenY": 22.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -1556,8 +1556,8 @@
                     "verilog_name": "RT",
                     "wires": [
                         {
-                            "X1": 38,
-                            "X2": 45,
+                            "X1": 45,
+                            "X2": 38,
                             "Y1": 22,
                             "Y2": 22,
                             "color": 0,
@@ -1596,8 +1596,8 @@
                     "distance_from_outport": 0,
                     "linked_uuid": "",
                     "name": "MT",
-                    "screenX": 38.67987823486328,
-                    "screenY": 23.414634704589844,
+                    "screenX": 38.0,
+                    "screenY": 23.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -1611,8 +1611,8 @@
                     "verilog_name": "MT",
                     "wires": [
                         {
-                            "X1": 38,
-                            "X2": 45,
+                            "X1": 45,
+                            "X2": 38,
                             "Y1": 23,
                             "Y2": 23,
                             "color": 0,
@@ -1793,12 +1793,12 @@
                     49,
                     48,
                     48,
-                    88,
+                    48,
+                    48,
                     48,
                     49,
                     48,
                     48,
-                    49,
                     48
                 ],
                 [
@@ -1807,41 +1807,69 @@
                     49,
                     49,
                     48,
-                    88,
-                    88,
-                    88,
-                    88,
-                    88,
-                    88,
-                    88
+                    48,
+                    48,
+                    48,
+                    48,
+                    48,
+                    48,
+                    48
                 ],
                 [
                     49,
                     49,
-                    88,
-                    88,
                     48,
-                    88,
-                    88,
-                    88,
-                    88,
-                    88,
-                    88,
-                    88
+                    48,
+                    48,
+                    49,
+                    48,
+                    48,
+                    48,
+                    49,
+                    49,
+                    48
                 ],
                 [
                     49,
                     49,
-                    88,
-                    88,
                     48,
-                    88,
-                    88,
-                    88,
-                    88,
-                    88,
-                    88,
-                    88
+                    49,
+                    48,
+                    49,
+                    48,
+                    48,
+                    48,
+                    48,
+                    48,
+                    48
+                ],
+                [
+                    49,
+                    49,
+                    49,
+                    48,
+                    48,
+                    48,
+                    48,
+                    48,
+                    48,
+                    49,
+                    49,
+                    48
+                ],
+                [
+                    49,
+                    49,
+                    49,
+                    49,
+                    48,
+                    48,
+                    48,
+                    48,
+                    49,
+                    49,
+                    49,
+                    48
                 ]
             ],
             "verilog_name": "Truth_Table"

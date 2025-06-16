@@ -55,6 +55,9 @@ void populate_library(std::string directory)
             }
             block.icon = path + ".png";
             block.icon_selected = path + ".selected.png";
+            
+            if (!std::filesystem::exists(block.icon_selected))
+                block.icon_selected = block.icon;
 
             std::ifstream input_tooltip(path + ".tooltip");
             

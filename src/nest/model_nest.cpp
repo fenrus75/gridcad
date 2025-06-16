@@ -93,7 +93,7 @@ void model_nest::drawAt(class canvas *canvas, float X, float Y, int type)
 			canvas->draw_image("assets/nest/nest_selected.png", X, Y, sizeX, sizeY, Alpha(type));
 		else {
 			canvas->draw_image(icon_selected, X, Y, sizeX, sizeY, Alpha(type));
-			if (!icon_selected.starts_with("assets/") && !icon_selected.starts_with("library/") )
+			if (icon == icon_selected)
 				canvas->draw_image("assets/selectionhalo.png", X-0.1, Y-0.1, sizeX+0.2, sizeY+0.2, Alpha(type));
 		}
 	}
@@ -586,10 +586,6 @@ void model_nest::save_to_library(std::string library_path)
 
 	outputpng.write((const char *)pixels, size);
 	outputpng.close();
-	std::ofstream outputpng2(library_path + "/" + name + ".json.selected.png",  std::ios::binary);
-
-	outputpng2.write((const char *)pixels, size);
-	outputpng2.close();
 
 	/* write a tooltip */	
 	std::ofstream outputtt(library_path + "/" + name + ".json.tooltip",  std::ios::binary);
