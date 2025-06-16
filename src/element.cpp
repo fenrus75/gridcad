@@ -133,7 +133,7 @@ void element::start_drag(float _X, float _Y)
 
 void element::update_drag(class canvas *canvas, class scene *scene, float _X, float _Y)
 {
-    if (fabsf(_X - X) > 2 || fabsf(_Y - Y) > 2)
+    if (fabsf(_X - X) > 1 || fabsf(_Y - Y) > 1)
         over_drag_threshold = true;
         
         
