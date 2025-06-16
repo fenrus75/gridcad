@@ -23,7 +23,7 @@
                         "arrayval": 0,
                         "boolval": false,
                         "floatval": 0.0,
-                        "intval": 9,
+                        "intval": 13,
                         "is_clock": false,
                         "is_error": true,
                         "type": 1,
@@ -61,7 +61,7 @@
                                 "arrayval": 0,
                                 "boolval": false,
                                 "floatval": 0.0,
-                                "intval": 9,
+                                "intval": 13,
                                 "is_clock": false,
                                 "is_error": true,
                                 "type": 1,
@@ -149,7 +149,7 @@
                         "arrayval": 0,
                         "boolval": false,
                         "floatval": 0.0,
-                        "intval": 73,
+                        "intval": 77,
                         "is_clock": false,
                         "is_error": false,
                         "type": 1,
@@ -163,7 +163,7 @@
                             "Y1": 12,
                             "Y2": 12,
                             "color": 1,
-                            "distance_from_outport": 2147483647,
+                            "distance_from_outport": 0,
                             "name": "Wire-6849a09c-27633b18-40cf-6231-",
                             "points": [
                                 {
@@ -179,7 +179,7 @@
                                 "arrayval": 0,
                                 "boolval": false,
                                 "floatval": 0.0,
-                                "intval": 73,
+                                "intval": 77,
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 1,
@@ -334,13 +334,13 @@
                     "screenY": 7.0,
                     "value": {
                         "arrayval": 0,
-                        "boolval": false,
+                        "boolval": true,
                         "floatval": 0.0,
-                        "intval": 0,
+                        "intval": 1,
                         "is_clock": false,
                         "is_error": false,
                         "type": 0,
-                        "valid": false
+                        "valid": true
                     },
                     "verilog_name": "Bit2",
                     "wires": [
@@ -368,13 +368,13 @@
                             ],
                             "value": {
                                 "arrayval": 0,
-                                "boolval": false,
+                                "boolval": true,
                                 "floatval": 0.0,
-                                "intval": 0,
+                                "intval": 1,
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -450,7 +450,7 @@
                         "arrayval": 0,
                         "boolval": false,
                         "floatval": 0.0,
-                        "intval": 9,
+                        "intval": 13,
                         "is_clock": false,
                         "is_error": true,
                         "type": 1,
@@ -488,7 +488,7 @@
                                 "arrayval": 0,
                                 "boolval": false,
                                 "floatval": 0.0,
-                                "intval": 9,
+                                "intval": 13,
                                 "is_clock": false,
                                 "is_error": true,
                                 "type": 1,
@@ -1084,20 +1084,20 @@
                     "bus_width": 0,
                     "color": 1,
                     "direction": 1,
-                    "distance_from_outport": 2147483647,
+                    "distance_from_outport": 0,
                     "linked_uuid": "",
                     "name": "Input",
                     "screenX": 7.0,
                     "screenY": 6.0,
                     "value": {
                         "arrayval": 0,
-                        "boolval": false,
+                        "boolval": true,
                         "floatval": 0.0,
-                        "intval": 0,
+                        "intval": 1,
                         "is_clock": false,
                         "is_error": false,
                         "type": 0,
-                        "valid": false
+                        "valid": true
                     },
                     "verilog_name": "Input",
                     "wires": [
@@ -1125,13 +1125,13 @@
                             ],
                             "value": {
                                 "arrayval": 0,
-                                "boolval": false,
+                                "boolval": true,
                                 "floatval": 0.0,
-                                "intval": 0,
+                                "intval": 1,
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -1143,9 +1143,9 @@
             "uuid": "683a3fba-14856b69-271a-8694-2d63-591ab5f5deb3",
             "value": {
                 "arrayval": 0,
-                "boolval": false,
+                "boolval": true,
                 "floatval": 0.0,
-                "intval": 0,
+                "intval": 1,
                 "is_clock": false,
                 "is_error": false,
                 "type": 0,
@@ -1505,8 +1505,8 @@
                     "screenX": 21.0,
                     "screenY": 18.0,
                     "value": {
-                        "arrayval": 9,
-                        "boolval": true,
+                        "arrayval": 92,
+                        "boolval": false,
                         "floatval": 0.0,
                         "intval": 0,
                         "is_clock": true,
@@ -1539,8 +1539,8 @@
                                 }
                             ],
                             "value": {
-                                "arrayval": 9,
-                                "boolval": true,
+                                "arrayval": 92,
+                                "boolval": false,
                                 "floatval": 0.0,
                                 "intval": 0,
                                 "is_clock": true,
@@ -1572,7 +1572,7 @@
                     "bus_width": 0,
                     "color": 6,
                     "direction": 1,
-                    "distance_from_outport": 2147483647,
+                    "distance_from_outport": 0,
                     "linked_uuid": "",
                     "name": "Input",
                     "screenX": 27.0,
@@ -1595,7 +1595,7 @@
                             "Y1": 5,
                             "Y2": 10,
                             "color": 6,
-                            "distance_from_outport": 2147483647,
+                            "distance_from_outport": 0,
                             "name": "Wire-6849a09a-59e0cc24-c6ba-7122-",
                             "points": [
                                 {
@@ -1661,7 +1661,7 @@
                         "arrayval": 0,
                         "boolval": false,
                         "floatval": 0.0,
-                        "intval": 0,
+                        "intval": 77,
                         "is_clock": false,
                         "is_error": false,
                         "type": 1,
@@ -1691,7 +1691,7 @@
                                 "arrayval": 0,
                                 "boolval": false,
                                 "floatval": 0.0,
-                                "intval": 0,
+                                "intval": 77,
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 1,
@@ -1748,7 +1748,7 @@
                             "Y1": 5,
                             "Y2": 10,
                             "color": 6,
-                            "distance_from_outport": 2147483647,
+                            "distance_from_outport": 0,
                             "name": "Wire-6849a09a-59e0cc24-c6ba-7122-",
                             "points": [
                                 {
@@ -1789,7 +1789,7 @@
                         "arrayval": 0,
                         "boolval": false,
                         "floatval": 0.0,
-                        "intval": 0,
+                        "intval": 77,
                         "is_clock": false,
                         "is_error": false,
                         "type": 1,
@@ -1819,7 +1819,7 @@
                                 "arrayval": 0,
                                 "boolval": false,
                                 "floatval": 0.0,
-                                "intval": 0,
+                                "intval": 77,
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 1,
@@ -1844,7 +1844,7 @@
                         "arrayval": 0,
                         "boolval": false,
                         "floatval": 0.0,
-                        "intval": 73,
+                        "intval": 77,
                         "is_clock": false,
                         "is_error": false,
                         "type": 1,
@@ -1858,7 +1858,7 @@
                             "Y1": 12,
                             "Y2": 12,
                             "color": 1,
-                            "distance_from_outport": 2147483647,
+                            "distance_from_outport": 0,
                             "name": "Wire-6849a09c-27633b18-40cf-6231-",
                             "points": [
                                 {
@@ -1874,7 +1874,7 @@
                                 "arrayval": 0,
                                 "boolval": false,
                                 "floatval": 0.0,
-                                "intval": 73,
+                                "intval": 77,
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 1,
@@ -1896,8 +1896,8 @@
                     "screenX": 25.0,
                     "screenY": 13.0,
                     "value": {
-                        "arrayval": 9,
-                        "boolval": true,
+                        "arrayval": 92,
+                        "boolval": false,
                         "floatval": 0.0,
                         "intval": 0,
                         "is_clock": true,
@@ -1930,8 +1930,8 @@
                                 }
                             ],
                             "value": {
-                                "arrayval": 9,
-                                "boolval": true,
+                                "arrayval": 92,
+                                "boolval": false,
                                 "floatval": 0.0,
                                 "intval": 0,
                                 "is_clock": true,
@@ -1969,7 +1969,7 @@
                                     "arrayval": 0,
                                     "boolval": false,
                                     "floatval": 0.0,
-                                    "intval": 73,
+                                    "intval": 77,
                                     "is_clock": false,
                                     "is_error": false,
                                     "type": 1,
@@ -1999,7 +1999,7 @@
                                             "arrayval": 0,
                                             "boolval": false,
                                             "floatval": 0.0,
-                                            "intval": 73,
+                                            "intval": 77,
                                             "is_clock": false,
                                             "is_error": false,
                                             "type": 1,
@@ -2017,7 +2017,7 @@
                             "arrayval": 0,
                             "boolval": false,
                             "floatval": 0.0,
-                            "intval": 73,
+                            "intval": 77,
                             "is_clock": false,
                             "is_error": false,
                             "type": 1,
@@ -2048,7 +2048,7 @@
                                     "arrayval": 0,
                                     "boolval": false,
                                     "floatval": 0.0,
-                                    "intval": 9,
+                                    "intval": 13,
                                     "is_clock": false,
                                     "is_error": false,
                                     "type": 1,
@@ -2086,7 +2086,7 @@
                                             "arrayval": 0,
                                             "boolval": false,
                                             "floatval": 0.0,
-                                            "intval": 9,
+                                            "intval": 13,
                                             "is_clock": false,
                                             "is_error": false,
                                             "type": 1,
@@ -2174,7 +2174,7 @@
                                     "arrayval": 0,
                                     "boolval": false,
                                     "floatval": 0.0,
-                                    "intval": 73,
+                                    "intval": 77,
                                     "is_clock": false,
                                     "is_error": false,
                                     "type": 1,
@@ -2204,7 +2204,7 @@
                                             "arrayval": 0,
                                             "boolval": false,
                                             "floatval": 0.0,
-                                            "intval": 73,
+                                            "intval": 77,
                                             "is_clock": false,
                                             "is_error": false,
                                             "type": 1,
@@ -2355,7 +2355,7 @@
                                 "screenY": 18.0,
                                 "value": {
                                     "arrayval": 0,
-                                    "boolval": false,
+                                    "boolval": true,
                                     "floatval": 0.0,
                                     "intval": 0,
                                     "is_clock": false,
@@ -2389,7 +2389,7 @@
                                         ],
                                         "value": {
                                             "arrayval": 0,
-                                            "boolval": false,
+                                            "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": false,
@@ -2471,7 +2471,7 @@
                                     "arrayval": 0,
                                     "boolval": false,
                                     "floatval": 0.0,
-                                    "intval": 9,
+                                    "intval": 13,
                                     "is_clock": false,
                                     "is_error": false,
                                     "type": 1,
@@ -2509,7 +2509,7 @@
                                             "arrayval": 0,
                                             "boolval": false,
                                             "floatval": 0.0,
-                                            "intval": 9,
+                                            "intval": 13,
                                             "is_clock": false,
                                             "is_error": false,
                                             "type": 1,
@@ -3935,8 +3935,8 @@
                                 "screenX": 6.0,
                                 "screenY": 55.0,
                                 "value": {
-                                    "arrayval": 9,
-                                    "boolval": true,
+                                    "arrayval": 92,
+                                    "boolval": false,
                                     "floatval": 0.0,
                                     "intval": 0,
                                     "is_clock": true,
@@ -3965,8 +3965,8 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 9,
-                                            "boolval": true,
+                                            "arrayval": 92,
+                                            "boolval": false,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": true,
@@ -3983,8 +3983,8 @@
                         "sizeY": 3,
                         "uuid": "683a3e45-7b2c93fe-21e2-c690-6354-c7b6884c08cf",
                         "value": {
-                            "arrayval": 9,
-                            "boolval": true,
+                            "arrayval": 92,
+                            "boolval": false,
                             "floatval": 0.0,
                             "intval": 0,
                             "is_clock": true,
@@ -4608,8 +4608,8 @@
                                 "screenX": 32.0,
                                 "screenY": 55.0,
                                 "value": {
-                                    "arrayval": 9,
-                                    "boolval": true,
+                                    "arrayval": 92,
+                                    "boolval": false,
                                     "floatval": 0.0,
                                     "intval": 0,
                                     "is_clock": true,
@@ -4638,8 +4638,8 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 9,
-                                            "boolval": true,
+                                            "arrayval": 92,
+                                            "boolval": false,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": true,
@@ -4668,8 +4668,8 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 9,
-                                            "boolval": true,
+                                            "arrayval": 92,
+                                            "boolval": false,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": true,
@@ -4698,8 +4698,8 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 9,
-                                            "boolval": true,
+                                            "arrayval": 92,
+                                            "boolval": false,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": true,
@@ -4737,8 +4737,8 @@
                                 "screenX": 32.0,
                                 "screenY": 13.0,
                                 "value": {
-                                    "arrayval": 9,
-                                    "boolval": true,
+                                    "arrayval": 92,
+                                    "boolval": false,
                                     "floatval": 0.0,
                                     "intval": 0,
                                     "is_clock": true,
@@ -4767,8 +4767,8 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 9,
-                                            "boolval": true,
+                                            "arrayval": 92,
+                                            "boolval": false,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": true,
@@ -4797,8 +4797,8 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 9,
-                                            "boolval": true,
+                                            "arrayval": 92,
+                                            "boolval": false,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": true,
@@ -4827,8 +4827,8 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 9,
-                                            "boolval": true,
+                                            "arrayval": 92,
+                                            "boolval": false,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": true,
@@ -4866,8 +4866,8 @@
                                 "screenX": 32.0,
                                 "screenY": 48.0,
                                 "value": {
-                                    "arrayval": 9,
-                                    "boolval": true,
+                                    "arrayval": 92,
+                                    "boolval": false,
                                     "floatval": 0.0,
                                     "intval": 0,
                                     "is_clock": true,
@@ -4896,8 +4896,8 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 9,
-                                            "boolval": true,
+                                            "arrayval": 92,
+                                            "boolval": false,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": true,
@@ -4926,8 +4926,8 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 9,
-                                            "boolval": true,
+                                            "arrayval": 92,
+                                            "boolval": false,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": true,
@@ -4956,8 +4956,8 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 9,
-                                            "boolval": true,
+                                            "arrayval": 92,
+                                            "boolval": false,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": true,
@@ -4995,8 +4995,8 @@
                                 "screenX": 32.0,
                                 "screenY": 41.0,
                                 "value": {
-                                    "arrayval": 9,
-                                    "boolval": true,
+                                    "arrayval": 92,
+                                    "boolval": false,
                                     "floatval": 0.0,
                                     "intval": 0,
                                     "is_clock": true,
@@ -5025,8 +5025,8 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 9,
-                                            "boolval": true,
+                                            "arrayval": 92,
+                                            "boolval": false,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": true,
@@ -5055,8 +5055,8 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 9,
-                                            "boolval": true,
+                                            "arrayval": 92,
+                                            "boolval": false,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": true,
@@ -5085,8 +5085,8 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 9,
-                                            "boolval": true,
+                                            "arrayval": 92,
+                                            "boolval": false,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": true,
@@ -5124,8 +5124,8 @@
                                 "screenX": 32.0,
                                 "screenY": 34.0,
                                 "value": {
-                                    "arrayval": 9,
-                                    "boolval": true,
+                                    "arrayval": 92,
+                                    "boolval": false,
                                     "floatval": 0.0,
                                     "intval": 0,
                                     "is_clock": true,
@@ -5154,8 +5154,8 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 9,
-                                            "boolval": true,
+                                            "arrayval": 92,
+                                            "boolval": false,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": true,
@@ -5184,8 +5184,8 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 9,
-                                            "boolval": true,
+                                            "arrayval": 92,
+                                            "boolval": false,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": true,
@@ -5214,8 +5214,8 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 9,
-                                            "boolval": true,
+                                            "arrayval": 92,
+                                            "boolval": false,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": true,
@@ -5253,8 +5253,8 @@
                                 "screenX": 32.0,
                                 "screenY": 27.0,
                                 "value": {
-                                    "arrayval": 9,
-                                    "boolval": true,
+                                    "arrayval": 92,
+                                    "boolval": false,
                                     "floatval": 0.0,
                                     "intval": 0,
                                     "is_clock": true,
@@ -5283,8 +5283,8 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 9,
-                                            "boolval": true,
+                                            "arrayval": 92,
+                                            "boolval": false,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": true,
@@ -5313,8 +5313,8 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 9,
-                                            "boolval": true,
+                                            "arrayval": 92,
+                                            "boolval": false,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": true,
@@ -5343,8 +5343,8 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 9,
-                                            "boolval": true,
+                                            "arrayval": 92,
+                                            "boolval": false,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": true,
@@ -5382,8 +5382,8 @@
                                 "screenX": 32.0,
                                 "screenY": 20.0,
                                 "value": {
-                                    "arrayval": 9,
-                                    "boolval": true,
+                                    "arrayval": 92,
+                                    "boolval": false,
                                     "floatval": 0.0,
                                     "intval": 0,
                                     "is_clock": true,
@@ -5412,8 +5412,8 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 9,
-                                            "boolval": true,
+                                            "arrayval": 92,
+                                            "boolval": false,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": true,
@@ -5442,8 +5442,8 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 9,
-                                            "boolval": true,
+                                            "arrayval": 92,
+                                            "boolval": false,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": true,
@@ -5472,8 +5472,8 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 9,
-                                            "boolval": true,
+                                            "arrayval": 92,
+                                            "boolval": false,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": true,
@@ -5511,8 +5511,8 @@
                                 "screenX": 32.0,
                                 "screenY": 6.0,
                                 "value": {
-                                    "arrayval": 9,
-                                    "boolval": true,
+                                    "arrayval": 92,
+                                    "boolval": false,
                                     "floatval": 0.0,
                                     "intval": 0,
                                     "is_clock": true,
@@ -5541,8 +5541,8 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 9,
-                                            "boolval": true,
+                                            "arrayval": 92,
+                                            "boolval": false,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": true,
@@ -5571,8 +5571,8 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 9,
-                                            "boolval": true,
+                                            "arrayval": 92,
+                                            "boolval": false,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": true,
@@ -5729,7 +5729,7 @@
                                 "screenY": 44.0,
                                 "value": {
                                     "arrayval": 0,
-                                    "boolval": false,
+                                    "boolval": true,
                                     "floatval": 0.0,
                                     "intval": 0,
                                     "is_clock": false,
@@ -5763,7 +5763,7 @@
                                         ],
                                         "value": {
                                             "arrayval": 0,
-                                            "boolval": false,
+                                            "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": false,
@@ -5857,7 +5857,7 @@
                                     "arrayval": 0,
                                     "boolval": false,
                                     "floatval": 0.0,
-                                    "intval": 0,
+                                    "intval": 4,
                                     "is_clock": false,
                                     "is_error": true,
                                     "type": 1,
@@ -5895,7 +5895,7 @@
                                             "arrayval": 0,
                                             "boolval": false,
                                             "floatval": 0.0,
-                                            "intval": 0,
+                                            "intval": 4,
                                             "is_clock": false,
                                             "is_error": true,
                                             "type": 1,
@@ -5932,7 +5932,7 @@
                                 "screenY": 14.0,
                                 "value": {
                                     "arrayval": 0,
-                                    "boolval": false,
+                                    "boolval": true,
                                     "floatval": 0.0,
                                     "intval": 0,
                                     "is_clock": false,
@@ -5966,7 +5966,7 @@
                                         ],
                                         "value": {
                                             "arrayval": 0,
-                                            "boolval": false,
+                                            "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": false,
@@ -6050,7 +6050,7 @@
                                 "screenY": 16.0,
                                 "value": {
                                     "arrayval": 0,
-                                    "boolval": false,
+                                    "boolval": true,
                                     "floatval": 0.0,
                                     "intval": 0,
                                     "is_clock": false,
@@ -6084,7 +6084,7 @@
                                         ],
                                         "value": {
                                             "arrayval": 0,
-                                            "boolval": false,
+                                            "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": false,
@@ -6109,7 +6109,7 @@
                                 "screenY": 17.0,
                                 "value": {
                                     "arrayval": 0,
-                                    "boolval": false,
+                                    "boolval": true,
                                     "floatval": 0.0,
                                     "intval": 0,
                                     "is_clock": false,
@@ -6151,7 +6151,7 @@
                                         ],
                                         "value": {
                                             "arrayval": 0,
-                                            "boolval": false,
+                                            "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": false,
@@ -6178,7 +6178,7 @@
                                     "arrayval": 0,
                                     "boolval": false,
                                     "floatval": 0.0,
-                                    "intval": 0,
+                                    "intval": 13,
                                     "is_clock": false,
                                     "is_error": true,
                                     "type": 1,
@@ -6216,7 +6216,7 @@
                                             "arrayval": 0,
                                             "boolval": false,
                                             "floatval": 0.0,
-                                            "intval": 0,
+                                            "intval": 13,
                                             "is_clock": false,
                                             "is_error": true,
                                             "type": 1,
@@ -6255,7 +6255,7 @@
                                     "arrayval": 0,
                                     "boolval": false,
                                     "floatval": 0.0,
-                                    "intval": 0,
+                                    "intval": 13,
                                     "is_clock": false,
                                     "is_error": true,
                                     "type": 1,
@@ -6293,7 +6293,7 @@
                                             "arrayval": 0,
                                             "boolval": false,
                                             "floatval": 0.0,
-                                            "intval": 0,
+                                            "intval": 13,
                                             "is_clock": false,
                                             "is_error": true,
                                             "type": 1,
@@ -6318,7 +6318,7 @@
                                     "arrayval": 0,
                                     "boolval": false,
                                     "floatval": 0.0,
-                                    "intval": 0,
+                                    "intval": 4,
                                     "is_clock": false,
                                     "is_error": true,
                                     "type": 1,
@@ -6356,7 +6356,7 @@
                                             "arrayval": 0,
                                             "boolval": false,
                                             "floatval": 0.0,
-                                            "intval": 0,
+                                            "intval": 4,
                                             "is_clock": false,
                                             "is_error": true,
                                             "type": 1,
@@ -6381,7 +6381,7 @@
                                     "arrayval": 0,
                                     "boolval": false,
                                     "floatval": 0.0,
-                                    "intval": 0,
+                                    "intval": 77,
                                     "is_clock": false,
                                     "is_error": false,
                                     "type": 1,
@@ -6411,7 +6411,7 @@
                                             "arrayval": 0,
                                             "boolval": false,
                                             "floatval": 0.0,
-                                            "intval": 0,
+                                            "intval": 77,
                                             "is_clock": false,
                                             "is_error": false,
                                             "type": 1,
@@ -6450,7 +6450,7 @@
                                     "arrayval": 0,
                                     "boolval": false,
                                     "floatval": 0.0,
-                                    "intval": 0,
+                                    "intval": 77,
                                     "is_clock": false,
                                     "is_error": false,
                                     "type": 1,
@@ -6480,7 +6480,7 @@
                                             "arrayval": 0,
                                             "boolval": false,
                                             "floatval": 0.0,
-                                            "intval": 0,
+                                            "intval": 77,
                                             "is_clock": false,
                                             "is_error": false,
                                             "type": 1,
@@ -6590,7 +6590,7 @@
                                 "screenY": 5.0,
                                 "value": {
                                     "arrayval": 0,
-                                    "boolval": false,
+                                    "boolval": true,
                                     "floatval": 0.0,
                                     "intval": 0,
                                     "is_clock": false,
@@ -6624,7 +6624,7 @@
                                         ],
                                         "value": {
                                             "arrayval": 0,
-                                            "boolval": false,
+                                            "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": false,
@@ -6703,8 +6703,8 @@
                                 "screenX": 35.0,
                                 "screenY": 6.0,
                                 "value": {
-                                    "arrayval": 9,
-                                    "boolval": true,
+                                    "arrayval": 92,
+                                    "boolval": false,
                                     "floatval": 0.0,
                                     "intval": 0,
                                     "is_clock": true,
@@ -6733,8 +6733,8 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 9,
-                                            "boolval": true,
+                                            "arrayval": 92,
+                                            "boolval": false,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": true,
@@ -6770,7 +6770,7 @@
                                             "screenY": 14.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -6800,7 +6800,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -6824,8 +6824,8 @@
                                             "screenX": 48.0,
                                             "screenY": 16.0,
                                             "value": {
-                                                "arrayval": 9,
-                                                "boolval": true,
+                                                "arrayval": 92,
+                                                "boolval": false,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": true,
@@ -6862,8 +6862,8 @@
                                                         }
                                                     ],
                                                     "value": {
-                                                        "arrayval": 9,
-                                                        "boolval": true,
+                                                        "arrayval": 92,
+                                                        "boolval": false,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": true,
@@ -6888,7 +6888,7 @@
                                             "screenY": 14.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -6904,7 +6904,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 2147483647,
+                                                    "distance_from_outport": 0,
                                                     "name": "Wire1748625928",
                                                     "points": [
                                                         {
@@ -6918,7 +6918,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -6943,7 +6943,7 @@
                                             "screenY": 15.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": true,
+                                                "boolval": false,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -6956,8 +6956,8 @@
                                         }
                                     ],
                                     "previous_clock": {
-                                        "arrayval": 9,
-                                        "boolval": true,
+                                        "arrayval": 92,
+                                        "boolval": false,
                                         "floatval": 0.0,
                                         "intval": 0,
                                         "is_clock": true,
@@ -6970,7 +6970,7 @@
                                     "uuid": "6839e9ec-8346e6dd-9b34-0fdd-6b2e-2a6bd14ef978",
                                     "value": {
                                         "arrayval": 0,
-                                        "boolval": false,
+                                        "boolval": true,
                                         "floatval": 0.0,
                                         "intval": 0,
                                         "is_clock": false,
@@ -7001,7 +7001,7 @@
                                             "screenY": 14.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -7017,7 +7017,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 2147483647,
+                                                    "distance_from_outport": 1,
                                                     "name": "Wire1748625925",
                                                     "points": [
                                                         {
@@ -7031,7 +7031,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -7079,8 +7079,8 @@
                                             "screenX": 11.0,
                                             "screenY": 20.0,
                                             "value": {
-                                                "arrayval": 9,
-                                                "boolval": true,
+                                                "arrayval": 92,
+                                                "boolval": false,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": true,
@@ -7117,8 +7117,8 @@
                                                         }
                                                     ],
                                                     "value": {
-                                                        "arrayval": 9,
-                                                        "boolval": true,
+                                                        "arrayval": 92,
+                                                        "boolval": false,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": true,
@@ -7135,8 +7135,8 @@
                                     "sizeY": 3,
                                     "uuid": "6839e9f9-e007b192-98bd-1151-aa48-8fec60efdb48",
                                     "value": {
-                                        "arrayval": 9,
-                                        "boolval": true,
+                                        "arrayval": 92,
+                                        "boolval": false,
                                         "floatval": 0.0,
                                         "intval": 0,
                                         "is_clock": true,
@@ -7167,7 +7167,7 @@
                                             "screenY": 13.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -7201,7 +7201,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -7281,7 +7281,7 @@
                                             "screenY": 14.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -7311,7 +7311,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -7350,7 +7350,7 @@
                                             "screenY": 9.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -7366,7 +7366,7 @@
                                                     "Y1": 9,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 2147483647,
+                                                    "distance_from_outport": 1,
                                                     "name": "Wire1748625932",
                                                     "points": [
                                                         {
@@ -7392,7 +7392,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -7472,7 +7472,7 @@
                                             "screenY": 10.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -7506,7 +7506,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -8014,7 +8014,7 @@
                                             "screenY": 14.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -8030,7 +8030,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 2147483647,
+                                                    "distance_from_outport": 1,
                                                     "name": "Wire1748625925",
                                                     "points": [
                                                         {
@@ -8044,7 +8044,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -8060,7 +8060,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 2147483647,
+                                                    "distance_from_outport": 0,
                                                     "name": "Wire1748625928",
                                                     "points": [
                                                         {
@@ -8074,7 +8074,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -8090,7 +8090,7 @@
                                                     "Y1": 9,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 2147483647,
+                                                    "distance_from_outport": 1,
                                                     "name": "Wire1748625932",
                                                     "points": [
                                                         {
@@ -8116,7 +8116,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -8579,8 +8579,8 @@
                                 "screenX": 35.0,
                                 "screenY": 13.0,
                                 "value": {
-                                    "arrayval": 9,
-                                    "boolval": true,
+                                    "arrayval": 92,
+                                    "boolval": false,
                                     "floatval": 0.0,
                                     "intval": 0,
                                     "is_clock": true,
@@ -8609,8 +8609,8 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 9,
-                                            "boolval": true,
+                                            "arrayval": 92,
+                                            "boolval": false,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": true,
@@ -8700,8 +8700,8 @@
                                             "screenX": 48.0,
                                             "screenY": 16.0,
                                             "value": {
-                                                "arrayval": 9,
-                                                "boolval": true,
+                                                "arrayval": 92,
+                                                "boolval": false,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": true,
@@ -8738,8 +8738,8 @@
                                                         }
                                                     ],
                                                     "value": {
-                                                        "arrayval": 9,
-                                                        "boolval": true,
+                                                        "arrayval": 92,
+                                                        "boolval": false,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": true,
@@ -8780,7 +8780,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 2147483647,
+                                                    "distance_from_outport": 0,
                                                     "name": "Wire1748625928",
                                                     "points": [
                                                         {
@@ -8832,8 +8832,8 @@
                                         }
                                     ],
                                     "previous_clock": {
-                                        "arrayval": 9,
-                                        "boolval": true,
+                                        "arrayval": 92,
+                                        "boolval": false,
                                         "floatval": 0.0,
                                         "intval": 0,
                                         "is_clock": true,
@@ -8955,8 +8955,8 @@
                                             "screenX": 11.0,
                                             "screenY": 20.0,
                                             "value": {
-                                                "arrayval": 9,
-                                                "boolval": true,
+                                                "arrayval": 92,
+                                                "boolval": false,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": true,
@@ -8993,8 +8993,8 @@
                                                         }
                                                     ],
                                                     "value": {
-                                                        "arrayval": 9,
-                                                        "boolval": true,
+                                                        "arrayval": 92,
+                                                        "boolval": false,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": true,
@@ -9011,8 +9011,8 @@
                                     "sizeY": 3,
                                     "uuid": "6839e9f9-e007b192-98bd-1151-aa48-8fec60efdb48",
                                     "value": {
-                                        "arrayval": 9,
-                                        "boolval": true,
+                                        "arrayval": 92,
+                                        "boolval": false,
                                         "floatval": 0.0,
                                         "intval": 0,
                                         "is_clock": true,
@@ -9936,7 +9936,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 2147483647,
+                                                    "distance_from_outport": 0,
                                                     "name": "Wire1748625928",
                                                     "points": [
                                                         {
@@ -10338,7 +10338,7 @@
                                 "screenY": 19.0,
                                 "value": {
                                     "arrayval": 0,
-                                    "boolval": false,
+                                    "boolval": true,
                                     "floatval": 0.0,
                                     "intval": 0,
                                     "is_clock": false,
@@ -10372,7 +10372,7 @@
                                         ],
                                         "value": {
                                             "arrayval": 0,
-                                            "boolval": false,
+                                            "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": false,
@@ -10397,7 +10397,7 @@
                                 "screenY": 19.0,
                                 "value": {
                                     "arrayval": 0,
-                                    "boolval": false,
+                                    "boolval": true,
                                     "floatval": 0.0,
                                     "intval": 0,
                                     "is_clock": false,
@@ -10431,7 +10431,7 @@
                                         ],
                                         "value": {
                                             "arrayval": 0,
-                                            "boolval": false,
+                                            "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": false,
@@ -10455,8 +10455,8 @@
                                 "screenX": 35.0,
                                 "screenY": 20.0,
                                 "value": {
-                                    "arrayval": 9,
-                                    "boolval": true,
+                                    "arrayval": 92,
+                                    "boolval": false,
                                     "floatval": 0.0,
                                     "intval": 0,
                                     "is_clock": true,
@@ -10485,8 +10485,8 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 9,
-                                            "boolval": true,
+                                            "arrayval": 92,
+                                            "boolval": false,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": true,
@@ -10522,7 +10522,7 @@
                                             "screenY": 14.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -10552,7 +10552,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -10576,8 +10576,8 @@
                                             "screenX": 48.0,
                                             "screenY": 16.0,
                                             "value": {
-                                                "arrayval": 9,
-                                                "boolval": true,
+                                                "arrayval": 92,
+                                                "boolval": false,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": true,
@@ -10614,8 +10614,8 @@
                                                         }
                                                     ],
                                                     "value": {
-                                                        "arrayval": 9,
-                                                        "boolval": true,
+                                                        "arrayval": 92,
+                                                        "boolval": false,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": true,
@@ -10640,7 +10640,7 @@
                                             "screenY": 14.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -10656,7 +10656,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 2147483647,
+                                                    "distance_from_outport": 0,
                                                     "name": "Wire1748625928",
                                                     "points": [
                                                         {
@@ -10670,7 +10670,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -10695,7 +10695,7 @@
                                             "screenY": 15.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": true,
+                                                "boolval": false,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -10708,8 +10708,8 @@
                                         }
                                     ],
                                     "previous_clock": {
-                                        "arrayval": 9,
-                                        "boolval": true,
+                                        "arrayval": 92,
+                                        "boolval": false,
                                         "floatval": 0.0,
                                         "intval": 0,
                                         "is_clock": true,
@@ -10722,7 +10722,7 @@
                                     "uuid": "6839e9ec-8346e6dd-9b34-0fdd-6b2e-2a6bd14ef978",
                                     "value": {
                                         "arrayval": 0,
-                                        "boolval": false,
+                                        "boolval": true,
                                         "floatval": 0.0,
                                         "intval": 0,
                                         "is_clock": false,
@@ -10753,7 +10753,7 @@
                                             "screenY": 14.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -10769,7 +10769,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 2147483647,
+                                                    "distance_from_outport": 1,
                                                     "name": "Wire1748625925",
                                                     "points": [
                                                         {
@@ -10783,7 +10783,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -10831,8 +10831,8 @@
                                             "screenX": 11.0,
                                             "screenY": 20.0,
                                             "value": {
-                                                "arrayval": 9,
-                                                "boolval": true,
+                                                "arrayval": 92,
+                                                "boolval": false,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": true,
@@ -10869,8 +10869,8 @@
                                                         }
                                                     ],
                                                     "value": {
-                                                        "arrayval": 9,
-                                                        "boolval": true,
+                                                        "arrayval": 92,
+                                                        "boolval": false,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": true,
@@ -10887,8 +10887,8 @@
                                     "sizeY": 3,
                                     "uuid": "6839e9f9-e007b192-98bd-1151-aa48-8fec60efdb48",
                                     "value": {
-                                        "arrayval": 9,
-                                        "boolval": true,
+                                        "arrayval": 92,
+                                        "boolval": false,
                                         "floatval": 0.0,
                                         "intval": 0,
                                         "is_clock": true,
@@ -10919,7 +10919,7 @@
                                             "screenY": 13.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -10953,7 +10953,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -11033,7 +11033,7 @@
                                             "screenY": 14.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -11063,7 +11063,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -11102,7 +11102,7 @@
                                             "screenY": 9.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -11118,7 +11118,7 @@
                                                     "Y1": 9,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 2147483647,
+                                                    "distance_from_outport": 1,
                                                     "name": "Wire1748625932",
                                                     "points": [
                                                         {
@@ -11144,7 +11144,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -11224,7 +11224,7 @@
                                             "screenY": 10.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -11258,7 +11258,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -11500,7 +11500,7 @@
                                             "screenY": 16.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -11530,7 +11530,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -11548,7 +11548,7 @@
                                     "uuid": "6839ea97-b38fc233-4b6f-51b7-72f8-28e876d37a47",
                                     "value": {
                                         "arrayval": 0,
-                                        "boolval": false,
+                                        "boolval": true,
                                         "floatval": 0.0,
                                         "intval": 0,
                                         "is_clock": false,
@@ -11642,7 +11642,7 @@
                                             "screenY": 16.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -11672,7 +11672,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -11766,7 +11766,7 @@
                                             "screenY": 14.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -11782,7 +11782,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 2147483647,
+                                                    "distance_from_outport": 1,
                                                     "name": "Wire1748625925",
                                                     "points": [
                                                         {
@@ -11796,7 +11796,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -11812,7 +11812,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 2147483647,
+                                                    "distance_from_outport": 0,
                                                     "name": "Wire1748625928",
                                                     "points": [
                                                         {
@@ -11826,7 +11826,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -11842,7 +11842,7 @@
                                                     "Y1": 9,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 2147483647,
+                                                    "distance_from_outport": 1,
                                                     "name": "Wire1748625932",
                                                     "points": [
                                                         {
@@ -11868,7 +11868,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -12214,7 +12214,7 @@
                                 "screenY": 26.0,
                                 "value": {
                                     "arrayval": 0,
-                                    "boolval": false,
+                                    "boolval": true,
                                     "floatval": 0.0,
                                     "intval": 0,
                                     "is_clock": false,
@@ -12256,7 +12256,7 @@
                                         ],
                                         "value": {
                                             "arrayval": 0,
-                                            "boolval": false,
+                                            "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": false,
@@ -12335,8 +12335,8 @@
                                 "screenX": 35.0,
                                 "screenY": 27.0,
                                 "value": {
-                                    "arrayval": 9,
-                                    "boolval": true,
+                                    "arrayval": 92,
+                                    "boolval": false,
                                     "floatval": 0.0,
                                     "intval": 0,
                                     "is_clock": true,
@@ -12365,8 +12365,8 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 9,
-                                            "boolval": true,
+                                            "arrayval": 92,
+                                            "boolval": false,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": true,
@@ -12402,7 +12402,7 @@
                                             "screenY": 14.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -12432,7 +12432,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -12456,8 +12456,8 @@
                                             "screenX": 48.0,
                                             "screenY": 16.0,
                                             "value": {
-                                                "arrayval": 9,
-                                                "boolval": true,
+                                                "arrayval": 92,
+                                                "boolval": false,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": true,
@@ -12494,8 +12494,8 @@
                                                         }
                                                     ],
                                                     "value": {
-                                                        "arrayval": 9,
-                                                        "boolval": true,
+                                                        "arrayval": 92,
+                                                        "boolval": false,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": true,
@@ -12520,7 +12520,7 @@
                                             "screenY": 14.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -12536,7 +12536,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 2147483647,
+                                                    "distance_from_outport": 0,
                                                     "name": "Wire1748625928",
                                                     "points": [
                                                         {
@@ -12550,7 +12550,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -12575,7 +12575,7 @@
                                             "screenY": 15.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": true,
+                                                "boolval": false,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -12588,8 +12588,8 @@
                                         }
                                     ],
                                     "previous_clock": {
-                                        "arrayval": 9,
-                                        "boolval": true,
+                                        "arrayval": 92,
+                                        "boolval": false,
                                         "floatval": 0.0,
                                         "intval": 0,
                                         "is_clock": true,
@@ -12602,7 +12602,7 @@
                                     "uuid": "6839e9ec-8346e6dd-9b34-0fdd-6b2e-2a6bd14ef978",
                                     "value": {
                                         "arrayval": 0,
-                                        "boolval": false,
+                                        "boolval": true,
                                         "floatval": 0.0,
                                         "intval": 0,
                                         "is_clock": false,
@@ -12633,7 +12633,7 @@
                                             "screenY": 14.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -12649,7 +12649,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 2147483647,
+                                                    "distance_from_outport": 1,
                                                     "name": "Wire1748625925",
                                                     "points": [
                                                         {
@@ -12663,7 +12663,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -12711,8 +12711,8 @@
                                             "screenX": 11.0,
                                             "screenY": 20.0,
                                             "value": {
-                                                "arrayval": 9,
-                                                "boolval": true,
+                                                "arrayval": 92,
+                                                "boolval": false,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": true,
@@ -12749,8 +12749,8 @@
                                                         }
                                                     ],
                                                     "value": {
-                                                        "arrayval": 9,
-                                                        "boolval": true,
+                                                        "arrayval": 92,
+                                                        "boolval": false,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": true,
@@ -12767,8 +12767,8 @@
                                     "sizeY": 3,
                                     "uuid": "6839e9f9-e007b192-98bd-1151-aa48-8fec60efdb48",
                                     "value": {
-                                        "arrayval": 9,
-                                        "boolval": true,
+                                        "arrayval": 92,
+                                        "boolval": false,
                                         "floatval": 0.0,
                                         "intval": 0,
                                         "is_clock": true,
@@ -12799,7 +12799,7 @@
                                             "screenY": 13.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -12833,7 +12833,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -12913,7 +12913,7 @@
                                             "screenY": 14.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -12943,7 +12943,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -12982,7 +12982,7 @@
                                             "screenY": 9.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -12998,7 +12998,7 @@
                                                     "Y1": 9,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 2147483647,
+                                                    "distance_from_outport": 1,
                                                     "name": "Wire1748625932",
                                                     "points": [
                                                         {
@@ -13024,7 +13024,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -13104,7 +13104,7 @@
                                             "screenY": 10.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -13138,7 +13138,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -13646,7 +13646,7 @@
                                             "screenY": 14.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -13662,7 +13662,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 2147483647,
+                                                    "distance_from_outport": 1,
                                                     "name": "Wire1748625925",
                                                     "points": [
                                                         {
@@ -13676,7 +13676,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -13692,7 +13692,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 2147483647,
+                                                    "distance_from_outport": 0,
                                                     "name": "Wire1748625928",
                                                     "points": [
                                                         {
@@ -13706,7 +13706,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -13722,7 +13722,7 @@
                                                     "Y1": 9,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 2147483647,
+                                                    "distance_from_outport": 1,
                                                     "name": "Wire1748625932",
                                                     "points": [
                                                         {
@@ -13748,7 +13748,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -14211,8 +14211,8 @@
                                 "screenX": 35.0,
                                 "screenY": 34.0,
                                 "value": {
-                                    "arrayval": 9,
-                                    "boolval": true,
+                                    "arrayval": 92,
+                                    "boolval": false,
                                     "floatval": 0.0,
                                     "intval": 0,
                                     "is_clock": true,
@@ -14241,8 +14241,8 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 9,
-                                            "boolval": true,
+                                            "arrayval": 92,
+                                            "boolval": false,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": true,
@@ -14332,8 +14332,8 @@
                                             "screenX": 48.0,
                                             "screenY": 16.0,
                                             "value": {
-                                                "arrayval": 9,
-                                                "boolval": true,
+                                                "arrayval": 92,
+                                                "boolval": false,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": true,
@@ -14370,8 +14370,8 @@
                                                         }
                                                     ],
                                                     "value": {
-                                                        "arrayval": 9,
-                                                        "boolval": true,
+                                                        "arrayval": 92,
+                                                        "boolval": false,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": true,
@@ -14412,7 +14412,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 2147483647,
+                                                    "distance_from_outport": 0,
                                                     "name": "Wire1748625928",
                                                     "points": [
                                                         {
@@ -14464,8 +14464,8 @@
                                         }
                                     ],
                                     "previous_clock": {
-                                        "arrayval": 9,
-                                        "boolval": true,
+                                        "arrayval": 92,
+                                        "boolval": false,
                                         "floatval": 0.0,
                                         "intval": 0,
                                         "is_clock": true,
@@ -14587,8 +14587,8 @@
                                             "screenX": 11.0,
                                             "screenY": 20.0,
                                             "value": {
-                                                "arrayval": 9,
-                                                "boolval": true,
+                                                "arrayval": 92,
+                                                "boolval": false,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": true,
@@ -14625,8 +14625,8 @@
                                                         }
                                                     ],
                                                     "value": {
-                                                        "arrayval": 9,
-                                                        "boolval": true,
+                                                        "arrayval": 92,
+                                                        "boolval": false,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": true,
@@ -14643,8 +14643,8 @@
                                     "sizeY": 3,
                                     "uuid": "6839e9f9-e007b192-98bd-1151-aa48-8fec60efdb48",
                                     "value": {
-                                        "arrayval": 9,
-                                        "boolval": true,
+                                        "arrayval": 92,
+                                        "boolval": false,
                                         "floatval": 0.0,
                                         "intval": 0,
                                         "is_clock": true,
@@ -15568,7 +15568,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 2147483647,
+                                                    "distance_from_outport": 0,
                                                     "name": "Wire1748625928",
                                                     "points": [
                                                         {
@@ -16083,8 +16083,8 @@
                                 "screenX": 35.0,
                                 "screenY": 41.0,
                                 "value": {
-                                    "arrayval": 9,
-                                    "boolval": true,
+                                    "arrayval": 92,
+                                    "boolval": false,
                                     "floatval": 0.0,
                                     "intval": 0,
                                     "is_clock": true,
@@ -16113,8 +16113,8 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 9,
-                                            "boolval": true,
+                                            "arrayval": 92,
+                                            "boolval": false,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": true,
@@ -16204,8 +16204,8 @@
                                             "screenX": 48.0,
                                             "screenY": 16.0,
                                             "value": {
-                                                "arrayval": 9,
-                                                "boolval": true,
+                                                "arrayval": 92,
+                                                "boolval": false,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": true,
@@ -16242,8 +16242,8 @@
                                                         }
                                                     ],
                                                     "value": {
-                                                        "arrayval": 9,
-                                                        "boolval": true,
+                                                        "arrayval": 92,
+                                                        "boolval": false,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": true,
@@ -16284,7 +16284,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 2147483647,
+                                                    "distance_from_outport": 0,
                                                     "name": "Wire1748625928",
                                                     "points": [
                                                         {
@@ -16336,8 +16336,8 @@
                                         }
                                     ],
                                     "previous_clock": {
-                                        "arrayval": 9,
-                                        "boolval": true,
+                                        "arrayval": 92,
+                                        "boolval": false,
                                         "floatval": 0.0,
                                         "intval": 0,
                                         "is_clock": true,
@@ -16459,8 +16459,8 @@
                                             "screenX": 11.0,
                                             "screenY": 20.0,
                                             "value": {
-                                                "arrayval": 9,
-                                                "boolval": true,
+                                                "arrayval": 92,
+                                                "boolval": false,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": true,
@@ -16497,8 +16497,8 @@
                                                         }
                                                     ],
                                                     "value": {
-                                                        "arrayval": 9,
-                                                        "boolval": true,
+                                                        "arrayval": 92,
+                                                        "boolval": false,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": true,
@@ -16515,8 +16515,8 @@
                                     "sizeY": 3,
                                     "uuid": "6839e9f9-e007b192-98bd-1151-aa48-8fec60efdb48",
                                     "value": {
-                                        "arrayval": 9,
-                                        "boolval": true,
+                                        "arrayval": 92,
+                                        "boolval": false,
                                         "floatval": 0.0,
                                         "intval": 0,
                                         "is_clock": true,
@@ -17440,7 +17440,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 2147483647,
+                                                    "distance_from_outport": 0,
                                                     "name": "Wire1748625928",
                                                     "points": [
                                                         {
@@ -17842,7 +17842,7 @@
                                 "screenY": 47.0,
                                 "value": {
                                     "arrayval": 0,
-                                    "boolval": false,
+                                    "boolval": true,
                                     "floatval": 0.0,
                                     "intval": 0,
                                     "is_clock": false,
@@ -17876,7 +17876,7 @@
                                         ],
                                         "value": {
                                             "arrayval": 0,
-                                            "boolval": false,
+                                            "boolval": true,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": false,
@@ -17955,8 +17955,8 @@
                                 "screenX": 35.0,
                                 "screenY": 48.0,
                                 "value": {
-                                    "arrayval": 9,
-                                    "boolval": true,
+                                    "arrayval": 92,
+                                    "boolval": false,
                                     "floatval": 0.0,
                                     "intval": 0,
                                     "is_clock": true,
@@ -17985,8 +17985,8 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 9,
-                                            "boolval": true,
+                                            "arrayval": 92,
+                                            "boolval": false,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": true,
@@ -18022,7 +18022,7 @@
                                             "screenY": 14.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -18052,7 +18052,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -18076,8 +18076,8 @@
                                             "screenX": 48.0,
                                             "screenY": 16.0,
                                             "value": {
-                                                "arrayval": 9,
-                                                "boolval": true,
+                                                "arrayval": 92,
+                                                "boolval": false,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": true,
@@ -18114,8 +18114,8 @@
                                                         }
                                                     ],
                                                     "value": {
-                                                        "arrayval": 9,
-                                                        "boolval": true,
+                                                        "arrayval": 92,
+                                                        "boolval": false,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": true,
@@ -18140,7 +18140,7 @@
                                             "screenY": 14.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -18156,7 +18156,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 2147483647,
+                                                    "distance_from_outport": 0,
                                                     "name": "Wire1748625928",
                                                     "points": [
                                                         {
@@ -18170,7 +18170,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -18195,7 +18195,7 @@
                                             "screenY": 15.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": true,
+                                                "boolval": false,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -18208,8 +18208,8 @@
                                         }
                                     ],
                                     "previous_clock": {
-                                        "arrayval": 9,
-                                        "boolval": true,
+                                        "arrayval": 92,
+                                        "boolval": false,
                                         "floatval": 0.0,
                                         "intval": 0,
                                         "is_clock": true,
@@ -18222,7 +18222,7 @@
                                     "uuid": "6839e9ec-8346e6dd-9b34-0fdd-6b2e-2a6bd14ef978",
                                     "value": {
                                         "arrayval": 0,
-                                        "boolval": false,
+                                        "boolval": true,
                                         "floatval": 0.0,
                                         "intval": 0,
                                         "is_clock": false,
@@ -18253,7 +18253,7 @@
                                             "screenY": 14.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -18269,7 +18269,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 2147483647,
+                                                    "distance_from_outport": 1,
                                                     "name": "Wire1748625925",
                                                     "points": [
                                                         {
@@ -18283,7 +18283,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -18331,8 +18331,8 @@
                                             "screenX": 11.0,
                                             "screenY": 20.0,
                                             "value": {
-                                                "arrayval": 9,
-                                                "boolval": true,
+                                                "arrayval": 92,
+                                                "boolval": false,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": true,
@@ -18369,8 +18369,8 @@
                                                         }
                                                     ],
                                                     "value": {
-                                                        "arrayval": 9,
-                                                        "boolval": true,
+                                                        "arrayval": 92,
+                                                        "boolval": false,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": true,
@@ -18387,8 +18387,8 @@
                                     "sizeY": 3,
                                     "uuid": "6839e9f9-e007b192-98bd-1151-aa48-8fec60efdb48",
                                     "value": {
-                                        "arrayval": 9,
-                                        "boolval": true,
+                                        "arrayval": 92,
+                                        "boolval": false,
                                         "floatval": 0.0,
                                         "intval": 0,
                                         "is_clock": true,
@@ -18419,7 +18419,7 @@
                                             "screenY": 13.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -18453,7 +18453,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -18533,7 +18533,7 @@
                                             "screenY": 14.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -18563,7 +18563,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -18602,7 +18602,7 @@
                                             "screenY": 9.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -18618,7 +18618,7 @@
                                                     "Y1": 9,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 2147483647,
+                                                    "distance_from_outport": 1,
                                                     "name": "Wire1748625932",
                                                     "points": [
                                                         {
@@ -18644,7 +18644,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -18724,7 +18724,7 @@
                                             "screenY": 10.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -18758,7 +18758,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -19266,7 +19266,7 @@
                                             "screenY": 14.0,
                                             "value": {
                                                 "arrayval": 0,
-                                                "boolval": false,
+                                                "boolval": true,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
@@ -19282,7 +19282,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 2147483647,
+                                                    "distance_from_outport": 1,
                                                     "name": "Wire1748625925",
                                                     "points": [
                                                         {
@@ -19296,7 +19296,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -19312,7 +19312,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 2147483647,
+                                                    "distance_from_outport": 0,
                                                     "name": "Wire1748625928",
                                                     "points": [
                                                         {
@@ -19326,7 +19326,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -19342,7 +19342,7 @@
                                                     "Y1": 9,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 2147483647,
+                                                    "distance_from_outport": 1,
                                                     "name": "Wire1748625932",
                                                     "points": [
                                                         {
@@ -19368,7 +19368,7 @@
                                                     ],
                                                     "value": {
                                                         "arrayval": 0,
-                                                        "boolval": false,
+                                                        "boolval": true,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
@@ -19835,8 +19835,8 @@
                                 "screenX": 35.0,
                                 "screenY": 55.0,
                                 "value": {
-                                    "arrayval": 9,
-                                    "boolval": true,
+                                    "arrayval": 92,
+                                    "boolval": false,
                                     "floatval": 0.0,
                                     "intval": 0,
                                     "is_clock": true,
@@ -19865,8 +19865,8 @@
                                             }
                                         ],
                                         "value": {
-                                            "arrayval": 9,
-                                            "boolval": true,
+                                            "arrayval": 92,
+                                            "boolval": false,
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": true,
@@ -19956,8 +19956,8 @@
                                             "screenX": 48.0,
                                             "screenY": 16.0,
                                             "value": {
-                                                "arrayval": 9,
-                                                "boolval": true,
+                                                "arrayval": 92,
+                                                "boolval": false,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": true,
@@ -19994,8 +19994,8 @@
                                                         }
                                                     ],
                                                     "value": {
-                                                        "arrayval": 9,
-                                                        "boolval": true,
+                                                        "arrayval": 92,
+                                                        "boolval": false,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": true,
@@ -20036,7 +20036,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 2147483647,
+                                                    "distance_from_outport": 0,
                                                     "name": "Wire1748625928",
                                                     "points": [
                                                         {
@@ -20088,8 +20088,8 @@
                                         }
                                     ],
                                     "previous_clock": {
-                                        "arrayval": 9,
-                                        "boolval": true,
+                                        "arrayval": 92,
+                                        "boolval": false,
                                         "floatval": 0.0,
                                         "intval": 0,
                                         "is_clock": true,
@@ -20211,8 +20211,8 @@
                                             "screenX": 11.0,
                                             "screenY": 20.0,
                                             "value": {
-                                                "arrayval": 9,
-                                                "boolval": true,
+                                                "arrayval": 92,
+                                                "boolval": false,
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": true,
@@ -20249,8 +20249,8 @@
                                                         }
                                                     ],
                                                     "value": {
-                                                        "arrayval": 9,
-                                                        "boolval": true,
+                                                        "arrayval": 92,
+                                                        "boolval": false,
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": true,
@@ -20267,8 +20267,8 @@
                                     "sizeY": 3,
                                     "uuid": "6839e9f9-e007b192-98bd-1151-aa48-8fec60efdb48",
                                     "value": {
-                                        "arrayval": 9,
-                                        "boolval": true,
+                                        "arrayval": 92,
+                                        "boolval": false,
                                         "floatval": 0.0,
                                         "intval": 0,
                                         "is_clock": true,
@@ -21192,7 +21192,7 @@
                                                     "Y1": 14,
                                                     "Y2": 14,
                                                     "color": 0,
-                                                    "distance_from_outport": 2147483647,
+                                                    "distance_from_outport": 0,
                                                     "name": "Wire1748625928",
                                                     "points": [
                                                         {

@@ -358,10 +358,10 @@
             "Y": 30.0,
             "angle": 0,
             "class_id": "model_nest:",
-            "from_library_collection": "projects/newfpga/library",
+            "from_library_collection": "$project/library",
             "from_library_element": "Decoder8Segment",
-            "icon": "projects/newfpga/library/Decoder8Segment.json.png",
-            "icon_selected": "projects/newfpga/library/Decoder8Segment.json.selected.png",
+            "icon": "$project/library/Decoder8Segment.json.png",
+            "icon_selected": "$project/library/Decoder8Segment.json.selected.png",
             "name": "Decoder8Segment",
             "parental_name": "/main",
             "ports": [
@@ -2326,7 +2326,7 @@
                 "parental_name": "/main/Decoder8Segment",
                 "sizeX": 200.0,
                 "sizeY": 200.0,
-                "verilog_name": "_main_Decoder8Segment_Decoder8Segment_7410a584_99a7_"
+                "verilog_name": ""
             },
             "sizeX": 4,
             "sizeY": 4,
@@ -2719,7 +2719,7 @@
                     "screenX": 6.0,
                     "screenY": 29.0,
                     "value": {
-                        "arrayval": 1155,
+                        "arrayval": 7,
                         "boolval": true,
                         "floatval": 0.0,
                         "intval": 0,
@@ -3060,5 +3060,5 @@
     "parental_name": "",
     "sizeX": 200.0,
     "sizeY": 200.0,
-    "verilog_name": "main"
+    "verilog_name": ""
 }

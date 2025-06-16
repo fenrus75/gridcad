@@ -193,10 +193,10 @@ void model_nest::to_json(json &j)
      else
      		canvas->get_scene()->to_json(p);
      j["scene"] = p;   
-     j["icon"] = icon;
-     j["icon_selected"] = icon_selected;
-     j["from_library_collection"] = from_library_collection;
-     j["from_library_element"] = from_library_element;
+     j["icon"] = path_to_template(icon);
+     j["icon_selected"] = path_to_template(icon_selected);
+     j["from_library_collection"] = path_to_template(from_library_collection);
+     j["from_library_element"] = path_to_template(from_library_element);
 }
 void model_nest::from_json(json &j)
 {
@@ -206,10 +206,10 @@ void model_nest::from_json(json &j)
      else
      	canvas->get_scene()->from_json(j["scene"]);
      	
-     icon = j.value("icon", "");
-     icon_selected = j.value("icon_selected", "");
-     from_library_collection = j.value("from_library_collection", "");
-     from_library_element = j.value("from_library_element", "");
+     icon = template_to_path(j.value("icon", ""));
+     icon_selected = template_to_path(j.value("icon_selected", ""));
+     from_library_collection = template_to_path(j.value("from_library_collection", ""));
+     from_library_element = template_to_path(j.value("from_library_element", ""));
      
      if (from_library_collection == "")
      	menu->set_inactive("Reset to library version");

@@ -22,6 +22,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <regex>
+
 #include <unistd.h>
 
 #include <nlohmann/json.hpp>
@@ -45,6 +47,8 @@ void init_SDL(void)
 	
 	sdl_initialized = true;
 }
+
+extern std::string current_project;
 document::document(std::string _name)
 {
 	class canvas *_canvas;
@@ -60,6 +64,8 @@ document::document(std::string _name)
 	fill_png_maps();
 
 	name = _name;
+	
+	current_project = name;
 	
 	if (std::filesystem::exists(name + "/verilog/Makefile"))
 		cap.has_full_workflow = true;
@@ -244,3 +250,27 @@ void unregister_canvas(class basecanvas *canvas)
    +1 == fit-to-screen
  */
 unsigned int SDL_timer_event = 0;
+
+std::string current_project = "";
+
+/* replace project/<name/ with $project and back */
+std::string path_to_template(std::string instr)
+{
+	std::string s = instr;
+	size_t index;
+	std::string find = current_project;
+	index = s.find(find);
+	if (index != std::string::npos && index >= 0)
+		s.replace(index, find.size(), "$project"); 
+	return s;
+}
+std::string template_to_path(std::string instr)
+{
+	std::string s = instr;
+	size_t index;
+	std::string find = "$project";
+	index = s.find(find);
+	if (index != std::string::npos && index >= 0)
+		s.replace(index, find.size(), current_project); 
+	return s;
+}
