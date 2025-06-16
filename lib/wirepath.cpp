@@ -200,6 +200,8 @@ static const float COST2[9] = {1.4 * SQRT2, 1, 1.4 * SQRT2, 1, 0, 1, 1.4 * SQRT2
 
 static int recursecount = 0;
 
+static bool abort_all_walks = false;
+
 bool wiregrid::one_path_walk(double cost_so_far, int x, int y, int dx, int dy, int recurse, bool is_clock)
 {
     double costs[9];
@@ -208,6 +210,9 @@ bool wiregrid::one_path_walk(double cost_so_far, int x, int y, int dx, int dy, i
     double maxcost = 0;
     int i;
     const float *EFFECTIVE_COST;
+    
+    if (abort_all_walks)
+        return false;
 
     EFFECTIVE_COST = COST;
     if (is_clock) {
@@ -252,6 +257,7 @@ bool wiregrid::one_path_walk(double cost_so_far, int x, int y, int dx, int dy, i
 
     if (recurse > 1000) {
         printf("Recursion limit hit\n");
+        abort_all_walks = true;
         return false;
     }
     if (!grid[y][x].valid)
@@ -339,6 +345,18 @@ std::vector<struct waypoint> *  wiregrid::walk_back(void)
     vec = new std::vector<struct waypoint>;
     struct waypoint wp;
     
+    if (abort_all_walks) {
+        wp.X = targetX;
+        wp.Y = targetY;
+        vec->push_back(wp);
+        wp.X = originX;
+        wp.Y = originY;
+        vec->push_back(wp);
+        std::reverse(vec->begin(), vec->end());
+        abort_all_walks = false;
+        return vec;
+    }
+    
     x = targetX;
     y = targetY;
 
@@ -400,7 +418,8 @@ std::vector<struct waypoint> * wiregrid::path_walk(int x1, int y1, int x2, int y
     targetY = y2;
     
     recursecount = 0;
-    
+ 
+    abort_all_walks = false;   
     
     /* make sure the origin is not blocked -- which is quite possible as by default all terminal nodes
      * are blocked */
