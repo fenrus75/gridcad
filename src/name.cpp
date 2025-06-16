@@ -132,6 +132,10 @@ void name::handle_event(SDL_Event &event)
                 case SDLK_z:
                     if (numbers_only)
                         break;
+                    if (event.key.keysym.mod & (KMOD_LCTRL))
+                        break;
+                    if (event.key.keysym.mod & (KMOD_RCTRL))
+                        break;
                     c= 'a';
                     if (event.key.keysym.mod & (KMOD_LSHIFT))
                         c = 'A';
