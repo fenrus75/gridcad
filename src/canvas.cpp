@@ -521,11 +521,23 @@ bool canvas::handle_event(SDL_Event &event)
 				break;
 			case SDLK_v:
 				if (event.key.keysym.mod & KMOD_LCTRL) {
+					float x1 = 1000000, x2 = -100000;
+					float y1 = 1000000, y2 = -100000;
 					printf("paste\n");
 					json p = json::parse(clipboard);
 					from_json_to_floating(p);
 					for (auto elem : floating) {
-						elem->start_drag(mouseX, mouseY);
+						if (elem->get_X() < x1)
+							x1 = elem->get_X();
+						if (elem->get_X() + elem->get_width() > x2)
+							x2 = elem->get_X() + elem->get_width();
+						if (elem->get_Y() < y1)
+							y1 = elem->get_Y();
+						if (elem->get_Y() + elem->get_height() > y2)
+							y2 = elem->get_Y() + elem->get_height();
+					}
+					for (auto elem : floating) {
+						elem->start_drag((x1+x2)/2, (y1+y2)/2);
 						elem->reseat();
 					}
 				}
