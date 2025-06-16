@@ -155,6 +155,14 @@ bool projcanvas::handle_event(SDL_Event &event)
                         		active_template = tY;
                         		
 				if (tY == templates.size()+1 && x >= TEMPLATE_X + 4) {
+					bool is_existing = false;
+					for (auto e : projects) {
+						if (e == name)
+							is_existing = true;
+					}
+						
+					if (is_existing)
+						return true;
 					create_project_from_template(name, templates[active_template]);
 					return true;;
 				}
@@ -163,6 +171,12 @@ bool projcanvas::handle_event(SDL_Event &event)
                         if (x >= PROJECT_X && x < PROJECT_X + PROJECT_WIDTH && y > PROJECT_Y) {
                         	unsigned int tY = floor((y - PROJECT_Y) / RADIO_HEIGHT);
                         	
+                        	
+                        	if (tY == active_project && time(NULL) - previous_click < 3) {
+                        		/* double click */
+					name = projects[active_project];
+					return true;
+                        	}
                         	if (tY >= 0 && tY < projects.size())
                         		active_project = tY;
 
@@ -172,6 +186,7 @@ bool projcanvas::handle_event(SDL_Event &event)
 				}
                         }
                         
+                        previous_click = time(NULL);
                         break;
 		case SDL_MOUSEMOTION:
                         currentX = scr_to_X(event.motion.x);

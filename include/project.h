@@ -36,4 +36,5 @@ protected:
     
     void crawl_filesystem(void);
     void create_project_from_template(std::string name, std::string templ);
+    time_t previous_click = 0;
 };
