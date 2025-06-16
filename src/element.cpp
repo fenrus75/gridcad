@@ -178,8 +178,47 @@ bool element::stop_drag(class canvas *canvas)
 /* does a mouse press hit this specific element */
 bool element::intersect(float _X, float _Y)
 {
-    if (_X >= X && _Y >= Y  && _X < X + sizeX && _Y < Y + sizeY)
+    int mX = _X, mY = _Y;
+    if (mX >= X && mY >= Y  && mX < X + sizeX && mY < Y + sizeY)
         return true;
+    return false;
+}
+
+bool element::intersect_full(float _X, float _Y)
+{
+    bool ret = false;
+    int mX = _X, mY = _Y;
+    ret = intersect(_X, _Y);
+    if (ret) {
+        return ret;
+    }
+        
+    for (auto port : ports) { 
+        if (port->screenX == mX && port->screenY == mY) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool element::intersect_float(float _X, float _Y)
+{
+    int Xd, Yd;
+    Xd = floorf(Xdnd + 0.25);
+    Yd = floorf(Ydnd + 0.25);
+    
+    int mX, mY;
+    mX = _X;
+    mY = _Y;
+    if (mX >= Xd && mY >= Yd  && mX < Xd + sizeX && mY < Yd + sizeY) {
+        return true;
+    }
+        
+    for (auto port : ports) {
+        if (port->X + Xd == mX && port->Y + Yd == mY) {
+            return true;
+        }
+    }
     return false;
 }
 

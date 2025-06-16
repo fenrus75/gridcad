@@ -69,7 +69,7 @@ void model_zero::fill_grid(class wiregrid *grid)
 
 bool model_zero::intersect(float _X, float _Y)
 {
-    if (_X >= X  && _Y >= Y  && _X < X + 1 && _Y <= Y + sizeY)
+    if (_X >= X  && _Y >= Y  && _X < X + 1 && _Y < Y + sizeY)
         return true;
     return false;
 }

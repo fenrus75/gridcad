@@ -272,6 +272,8 @@ public:
     bool stop_drag(class canvas *canva);
     
     virtual bool intersect(float X, float Y);
+    virtual bool intersect_full(float X, float Y);  /* includes the ports */
+    virtual bool intersect_float(float X, float Y);  /* includes the ports */
     
     const std::string  get_name(void) { return name; };
     const std::string  get_full_name(void) { return parental_name + "/" + name; };

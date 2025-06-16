@@ -97,10 +97,11 @@ bool scene::can_place_element(float x, float y, int w, int h,
 			continue;
 		if (elem->is_background()) /* labels are special and can be placed upon */
 			continue;
-		for (_y = -1; _y <= h + 1; _y++)
-			for (_x = -1; _x <= w + 1 ; _x++)
-				if (elem->intersect(x + _x, y + _y))
+		for (_y = -2; _y < h + 2; _y++)
+			for (_x = -2; _x < w + 2 ; _x++)
+				if (myself->intersect_float(x + _x, y + _y) && elem->intersect_full(x + _x, y + _y)) {
 					return false;
+				}
 	}
 	return true;
 }
