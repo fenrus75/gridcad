@@ -127,8 +127,16 @@ std::string model_dflipflop::get_verilog_main(void)
 {
     std::string s = "";
     std::vector<std::string> wiremap;
+    
+    std::string Qwire,Qnwire;
     if (verilog_module_name == "")
 	    verilog_module_name = append_random_bits(verilog_name + "_tt_");
+	    
+    Qwire = append_random_bits(get_verilog_name())+"_qwire";
+    Qnwire = append_random_bits(get_verilog_name())+"_qnwire";
+    
+    s += "wire " + Qwire + ";\n";
+    s += "wire " + Qnwire + ";\n";
 
     s = s + verilog_module_name + " " + get_verilog_name() + "(";
     bool first = true;
@@ -172,7 +180,7 @@ std::string model_dflipflop::get_verilog_main(void)
             first = false;
     
             s = s + ".Q(";
-            s = s + wiremap[0];
+            s = s + Qwire;
             s = s + ")";
     	
             wiremap.clear();
@@ -188,13 +196,26 @@ std::string model_dflipflop::get_verilog_main(void)
             first = false;
     
             s = s + ".Q_n(";
-            s = s + wiremap[0];
+            s = s + Qnwire;
             s = s + ")";
     	
             wiremap.clear();
         }
 
     s = s + ");\n";
+    
+    ports[2]->collect_wires(&wiremap);
+    for (auto w : wiremap) {
+            s = s + "assign " + w + " = " + Qwire + ";\n";
+     }
+     wiremap.clear();
+    ports[3]->collect_wires(&wiremap);
+    for (auto w : wiremap) {
+            s = s + "assign " + w + " = " + Qnwire + ";\n";
+     }
+     wiremap.clear();
+
+
     
     
     return s;
