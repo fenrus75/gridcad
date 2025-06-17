@@ -71,8 +71,11 @@ void port::add_wire(class wire * wire)
 			return;
 	}
 	
-	if (bus_width == 0 && wire->get_width() > 0)
+	if (bus_width == 0 && wire->get_width() > 0) {
 		bus_width = wire->get_width();
+		if (bus_width > 1)
+			value.type = VALUE_TYPE_INT;
+	}
 
 
 	/* Only allow one input wire */
@@ -86,6 +89,8 @@ void port::add_wire(class wire * wire)
 	
 	if (direction == PORT_OUT) {
 		wire->update_value(&value, DEFAULT_TTL);
+		distance_from_outport = 0;
+		wire->set_distance_from_outport(0);
 	}
 	wire->add_port(this);
 	
