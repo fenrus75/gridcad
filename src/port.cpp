@@ -102,6 +102,14 @@ void port::add_wire(class wire * wire)
 void port::update_value(struct value *newvalue, int ttl)
 {
 	unsigned int best_dist = INT_MAX;
+	
+	if (bus_width == 0)
+		for (auto wire:wires) {
+			if (wire->get_width() > bus_width)
+				bus_width = wire->get_width();
+	
+		}
+	
 
 	if (direction == PORT_OUT) {
 		distance_from_outport = 0;
