@@ -212,8 +212,16 @@ void port::drawConnector(class canvas * canvas, float X, float Y, int cX, int cY
 		if (value.type == VALUE_TYPE_INT || bus_width > 1)
 			icon = "assets/port_out_bus.png";
 	}
-	canvas->draw_image(icon, cX + X, cY + Y, 1, 1, Alpha(type));		
-        canvas->draw_text(name, cX + X, cY + Y + 0.35, 1, 0.3);
+	canvas->draw_image(icon, cX + X, cY + Y, 1, 1, Alpha(type));
+	
+	if (bus_width <= 1) {
+	        canvas->draw_text(name, cX + X, cY + Y + 0.35, 1, 0.3);
+	} else  {
+		char buf[128];
+		sprintf(buf, "%i", bus_width);
+		std::string s = buf;
+	        canvas->draw_text(s, cX + X, cY + Y + 0.15, 1, 0.55);
+	}
 }
 
 void port::stop_drag(class canvas *canvas)
