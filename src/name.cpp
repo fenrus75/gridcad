@@ -66,7 +66,8 @@ void name::handle_event(SDL_Event &event)
 	case SDL_KEYDOWN:
         	switch (event.key.keysym.sym) {
 		case SDLK_BACKSPACE:
-		    backspace();
+		    if (edit_mode)
+        		    backspace();
                     break;    
                 case SDLK_0:
                 case SDLK_1:
@@ -80,29 +81,34 @@ void name::handle_event(SDL_Event &event)
                 case SDLK_9:                
                     c = '0';
                     c += event.key.keysym.sym - SDLK_0;
-                    insert_char(c);
+                    if (edit_mode)
+                        insert_char(c);
                     break;
                 case SDLK_UNDERSCORE:                
                     c = '_';
-                    insert_char(c);
+                    if (edit_mode)
+                        insert_char(c);
                     break;
                 case SDLK_PLUS:   
                 case SDLK_KP_PLUS:             
                     c = '+';
-                    insert_char(c);
+                    if (edit_mode)
+                        insert_char(c);
                     break;
                 case SDLK_MINUS:                
                 case SDLK_KP_MINUS:
                     c = '-';
                     if (event.key.keysym.mod & (KMOD_LSHIFT))
                         c = '_';
-                    insert_char(c);
+                    if (edit_mode)
+                        insert_char(c);
                     break;
                 case SDLK_EQUALS:
                     c= '=';
                     if (event.key.keysym.mod & (KMOD_LSHIFT))
                         c = '+';
-                    insert_char(c);
+                    if (edit_mode)
+                        insert_char(c);
                     break;                
                 case SDLK_a:
                 case SDLK_b:
@@ -140,19 +146,25 @@ void name::handle_event(SDL_Event &event)
                     if (event.key.keysym.mod & (KMOD_LSHIFT))
                         c = 'A';
                     c += event.key.keysym.sym - SDLK_a;
-                    insert_char(c);
+                    if (edit_mode)
+                        insert_char(c);
                     break;
                 case SDLK_SPACE:
                     if (!spaces)
                         break;
-                    insert_char(' ');
+                    if (edit_mode)
+                        insert_char(' ');
                     break;
                 case SDLK_RIGHT:
+                    if (!edit_mode)
+                        break;
                     cursorpos++;
                     if (cursorpos >= value->size())
                         cursorpos = value->size();
                     break;
                 case SDLK_LEFT:
+                    if (!edit_mode)
+                        break;
                     if (cursorpos > 0)
                         cursorpos--;
                     break;

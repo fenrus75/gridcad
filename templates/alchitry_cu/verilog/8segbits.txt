@@ -1,0 +1,12 @@
+all are active low!
+
+0 = dot
+1 = MM
+2 = LT
+3 = LB
+4 = MB
+5 = RB
+6 = RT
+7 = MT
+
+
