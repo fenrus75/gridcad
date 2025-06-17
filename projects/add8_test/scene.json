@@ -41,20 +41,20 @@
                             "name": "Wire1748459833",
                             "points": [
                                 {
-                                    "X": 7,
-                                    "Y": 5
-                                },
-                                {
-                                    "X": 8,
-                                    "Y": 4
+                                    "X": 17,
+                                    "Y": 9
                                 },
                                 {
                                     "X": 12,
                                     "Y": 4
                                 },
                                 {
-                                    "X": 17,
-                                    "Y": 9
+                                    "X": 8,
+                                    "Y": 4
+                                },
+                                {
+                                    "X": 7,
+                                    "Y": 5
                                 }
                             ],
                             "value": {
@@ -104,16 +104,16 @@
                             "name": "Wire1748459834",
                             "points": [
                                 {
-                                    "X": 12,
-                                    "Y": 7
+                                    "X": 17,
+                                    "Y": 10
                                 },
                                 {
                                     "X": 14,
                                     "Y": 7
                                 },
                                 {
-                                    "X": 17,
-                                    "Y": 10
+                                    "X": 12,
+                                    "Y": 7
                                 }
                             ],
                             "value": {
@@ -163,16 +163,16 @@
                             "name": "Wire1748459835",
                             "points": [
                                 {
-                                    "X": 7,
-                                    "Y": 9
+                                    "X": 17,
+                                    "Y": 11
                                 },
                                 {
                                     "X": 15,
                                     "Y": 9
                                 },
                                 {
-                                    "X": 17,
-                                    "Y": 11
+                                    "X": 7,
+                                    "Y": 9
                                 }
                             ],
                             "value": {
@@ -222,20 +222,20 @@
                             "name": "Wire1748459836",
                             "points": [
                                 {
-                                    "X": 12,
-                                    "Y": 11
-                                },
-                                {
-                                    "X": 13,
-                                    "Y": 11
+                                    "X": 17,
+                                    "Y": 12
                                 },
                                 {
                                     "X": 14,
                                     "Y": 12
                                 },
                                 {
-                                    "X": 17,
-                                    "Y": 12
+                                    "X": 13,
+                                    "Y": 11
+                                },
+                                {
+                                    "X": 12,
+                                    "Y": 11
                                 }
                             ],
                             "value": {
@@ -362,16 +362,16 @@
                             "name": "Wire1748459837",
                             "points": [
                                 {
-                                    "X": 7,
-                                    "Y": 13
+                                    "X": 17,
+                                    "Y": 16
                                 },
                                 {
                                     "X": 14,
                                     "Y": 13
                                 },
                                 {
-                                    "X": 17,
-                                    "Y": 16
+                                    "X": 7,
+                                    "Y": 13
                                 }
                             ],
                             "value": {
@@ -421,16 +421,16 @@
                             "name": "Wire1748459838",
                             "points": [
                                 {
-                                    "X": 12,
-                                    "Y": 15
+                                    "X": 17,
+                                    "Y": 17
                                 },
                                 {
                                     "X": 15,
                                     "Y": 15
                                 },
                                 {
-                                    "X": 17,
-                                    "Y": 17
+                                    "X": 12,
+                                    "Y": 15
                                 }
                             ],
                             "value": {
@@ -480,20 +480,20 @@
                             "name": "Wire1748459839",
                             "points": [
                                 {
-                                    "X": 7,
-                                    "Y": 17
-                                },
-                                {
-                                    "X": 13,
-                                    "Y": 17
+                                    "X": 17,
+                                    "Y": 18
                                 },
                                 {
                                     "X": 14,
                                     "Y": 18
                                 },
                                 {
-                                    "X": 17,
-                                    "Y": 18
+                                    "X": 13,
+                                    "Y": 17
+                                },
+                                {
+                                    "X": 7,
+                                    "Y": 17
                                 }
                             ],
                             "value": {
@@ -543,11 +543,11 @@
                             "name": "Wire1748459840",
                             "points": [
                                 {
-                                    "X": 12,
+                                    "X": 17,
                                     "Y": 19
                                 },
                                 {
-                                    "X": 17,
+                                    "X": 12,
                                     "Y": 19
                                 }
                             ],
@@ -797,7 +797,7 @@
                             "Y1": 16,
                             "Y2": 22,
                             "color": 1,
-                            "distance_from_outport": 2147483647,
+                            "distance_from_outport": 0,
                             "name": "Wire1748969152",
                             "points": [
                                 {
@@ -843,7 +843,7 @@
                     "bus_width": 0,
                     "color": 1,
                     "direction": 1,
-                    "distance_from_outport": 2147483647,
+                    "distance_from_outport": 0,
                     "linked_uuid": "",
                     "name": "Input",
                     "screenX": 7.0,
@@ -870,16 +870,16 @@
                             "name": "Wire1748459837",
                             "points": [
                                 {
-                                    "X": 7,
-                                    "Y": 13
+                                    "X": 17,
+                                    "Y": 16
                                 },
                                 {
                                     "X": 14,
                                     "Y": 13
                                 },
                                 {
-                                    "X": 17,
-                                    "Y": 16
+                                    "X": 7,
+                                    "Y": 13
                                 }
                             ],
                             "value": {
@@ -926,7 +926,7 @@
                     "bus_width": 0,
                     "color": 1,
                     "direction": 1,
-                    "distance_from_outport": 2147483647,
+                    "distance_from_outport": 0,
                     "linked_uuid": "",
                     "name": "Input",
                     "screenX": 12.0,
@@ -953,16 +953,16 @@
                             "name": "Wire1748459834",
                             "points": [
                                 {
-                                    "X": 12,
-                                    "Y": 7
+                                    "X": 17,
+                                    "Y": 10
                                 },
                                 {
                                     "X": 14,
                                     "Y": 7
                                 },
                                 {
-                                    "X": 17,
-                                    "Y": 10
+                                    "X": 12,
+                                    "Y": 7
                                 }
                             ],
                             "value": {
@@ -1009,7 +1009,7 @@
                     "bus_width": 0,
                     "color": 1,
                     "direction": 1,
-                    "distance_from_outport": 2147483647,
+                    "distance_from_outport": 0,
                     "linked_uuid": "",
                     "name": "Input",
                     "screenX": 7.0,
@@ -1036,20 +1036,20 @@
                             "name": "Wire1748459833",
                             "points": [
                                 {
-                                    "X": 7,
-                                    "Y": 5
-                                },
-                                {
-                                    "X": 8,
-                                    "Y": 4
+                                    "X": 17,
+                                    "Y": 9
                                 },
                                 {
                                     "X": 12,
                                     "Y": 4
                                 },
                                 {
-                                    "X": 17,
-                                    "Y": 9
+                                    "X": 8,
+                                    "Y": 4
+                                },
+                                {
+                                    "X": 7,
+                                    "Y": 5
                                 }
                             ],
                             "value": {
@@ -1096,7 +1096,7 @@
                     "bus_width": 0,
                     "color": 1,
                     "direction": 1,
-                    "distance_from_outport": 2147483647,
+                    "distance_from_outport": 0,
                     "linked_uuid": "",
                     "name": "Input",
                     "screenX": 7.0,
@@ -1123,16 +1123,16 @@
                             "name": "Wire1748459835",
                             "points": [
                                 {
-                                    "X": 7,
-                                    "Y": 9
+                                    "X": 17,
+                                    "Y": 11
                                 },
                                 {
                                     "X": 15,
                                     "Y": 9
                                 },
                                 {
-                                    "X": 17,
-                                    "Y": 11
+                                    "X": 7,
+                                    "Y": 9
                                 }
                             ],
                             "value": {
@@ -1179,7 +1179,7 @@
                     "bus_width": 0,
                     "color": 1,
                     "direction": 1,
-                    "distance_from_outport": 2147483647,
+                    "distance_from_outport": 0,
                     "linked_uuid": "",
                     "name": "Input",
                     "screenX": 12.0,
@@ -1206,11 +1206,11 @@
                             "name": "Wire1748459840",
                             "points": [
                                 {
-                                    "X": 12,
+                                    "X": 17,
                                     "Y": 19
                                 },
                                 {
-                                    "X": 17,
+                                    "X": 12,
                                     "Y": 19
                                 }
                             ],
@@ -1258,7 +1258,7 @@
                     "bus_width": 0,
                     "color": 1,
                     "direction": 1,
-                    "distance_from_outport": 2147483647,
+                    "distance_from_outport": 0,
                     "linked_uuid": "",
                     "name": "Input",
                     "screenX": 12.0,
@@ -1285,20 +1285,20 @@
                             "name": "Wire1748459836",
                             "points": [
                                 {
-                                    "X": 12,
-                                    "Y": 11
-                                },
-                                {
-                                    "X": 13,
-                                    "Y": 11
+                                    "X": 17,
+                                    "Y": 12
                                 },
                                 {
                                     "X": 14,
                                     "Y": 12
                                 },
                                 {
-                                    "X": 17,
-                                    "Y": 12
+                                    "X": 13,
+                                    "Y": 11
+                                },
+                                {
+                                    "X": 12,
+                                    "Y": 11
                                 }
                             ],
                             "value": {
@@ -1345,7 +1345,7 @@
                     "bus_width": 0,
                     "color": 1,
                     "direction": 1,
-                    "distance_from_outport": 2147483647,
+                    "distance_from_outport": 0,
                     "linked_uuid": "",
                     "name": "Input",
                     "screenX": 12.0,
@@ -1372,16 +1372,16 @@
                             "name": "Wire1748459838",
                             "points": [
                                 {
-                                    "X": 12,
-                                    "Y": 15
+                                    "X": 17,
+                                    "Y": 17
                                 },
                                 {
                                     "X": 15,
                                     "Y": 15
                                 },
                                 {
-                                    "X": 17,
-                                    "Y": 17
+                                    "X": 12,
+                                    "Y": 15
                                 }
                             ],
                             "value": {
@@ -1428,7 +1428,7 @@
                     "bus_width": 0,
                     "color": 1,
                     "direction": 1,
-                    "distance_from_outport": 2147483647,
+                    "distance_from_outport": 0,
                     "linked_uuid": "",
                     "name": "Input",
                     "screenX": 7.0,
@@ -1455,20 +1455,20 @@
                             "name": "Wire1748459839",
                             "points": [
                                 {
-                                    "X": 7,
-                                    "Y": 17
-                                },
-                                {
-                                    "X": 13,
-                                    "Y": 17
+                                    "X": 17,
+                                    "Y": 18
                                 },
                                 {
                                     "X": 14,
                                     "Y": 18
                                 },
                                 {
-                                    "X": 17,
-                                    "Y": 18
+                                    "X": 13,
+                                    "Y": 17
+                                },
+                                {
+                                    "X": 7,
+                                    "Y": 17
                                 }
                             ],
                             "value": {
@@ -1542,20 +1542,20 @@
                             "name": "Wire1748459841",
                             "points": [
                                 {
-                                    "X": 7,
-                                    "Y": 25
-                                },
-                                {
-                                    "X": 8,
-                                    "Y": 24
+                                    "X": 17,
+                                    "Y": 29
                                 },
                                 {
                                     "X": 12,
                                     "Y": 24
                                 },
                                 {
-                                    "X": 17,
-                                    "Y": 29
+                                    "X": 8,
+                                    "Y": 24
+                                },
+                                {
+                                    "X": 7,
+                                    "Y": 25
                                 }
                             ],
                             "value": {
@@ -1605,16 +1605,16 @@
                             "name": "Wire1748459842",
                             "points": [
                                 {
-                                    "X": 12,
-                                    "Y": 27
+                                    "X": 17,
+                                    "Y": 30
                                 },
                                 {
                                     "X": 14,
                                     "Y": 27
                                 },
                                 {
-                                    "X": 17,
-                                    "Y": 30
+                                    "X": 12,
+                                    "Y": 27
                                 }
                             ],
                             "value": {
@@ -1723,20 +1723,20 @@
                             "name": "Wire1748459844",
                             "points": [
                                 {
-                                    "X": 12,
-                                    "Y": 31
-                                },
-                                {
-                                    "X": 13,
-                                    "Y": 31
+                                    "X": 17,
+                                    "Y": 32
                                 },
                                 {
                                     "X": 14,
                                     "Y": 32
                                 },
                                 {
-                                    "X": 17,
-                                    "Y": 32
+                                    "X": 13,
+                                    "Y": 31
+                                },
+                                {
+                                    "X": 12,
+                                    "Y": 31
                                 }
                             ],
                             "value": {
@@ -1863,16 +1863,16 @@
                             "name": "Wire1748459845",
                             "points": [
                                 {
-                                    "X": 7,
-                                    "Y": 33
+                                    "X": 17,
+                                    "Y": 36
                                 },
                                 {
                                     "X": 14,
                                     "Y": 33
                                 },
                                 {
-                                    "X": 17,
-                                    "Y": 36
+                                    "X": 7,
+                                    "Y": 33
                                 }
                             ],
                             "value": {
@@ -1981,20 +1981,20 @@
                             "name": "Wire1748459847",
                             "points": [
                                 {
-                                    "X": 7,
-                                    "Y": 37
-                                },
-                                {
-                                    "X": 13,
-                                    "Y": 37
+                                    "X": 17,
+                                    "Y": 38
                                 },
                                 {
                                     "X": 14,
                                     "Y": 38
                                 },
                                 {
-                                    "X": 17,
-                                    "Y": 38
+                                    "X": 13,
+                                    "Y": 37
+                                },
+                                {
+                                    "X": 7,
+                                    "Y": 37
                                 }
                             ],
                             "value": {
@@ -2044,11 +2044,11 @@
                             "name": "Wire1748459848",
                             "points": [
                                 {
-                                    "X": 12,
+                                    "X": 17,
                                     "Y": 39
                                 },
                                 {
-                                    "X": 17,
+                                    "X": 12,
                                     "Y": 39
                                 }
                             ],
@@ -2298,7 +2298,7 @@
                             "Y1": 36,
                             "Y2": 29,
                             "color": 2,
-                            "distance_from_outport": 2147483647,
+                            "distance_from_outport": 0,
                             "name": "Wire1748473246",
                             "points": [
                                 {
@@ -2348,7 +2348,7 @@
                     "bus_width": 0,
                     "color": 2,
                     "direction": 1,
-                    "distance_from_outport": 2147483647,
+                    "distance_from_outport": 0,
                     "linked_uuid": "",
                     "name": "Input",
                     "screenX": 7.0,
@@ -2375,16 +2375,16 @@
                             "name": "Wire1748459845",
                             "points": [
                                 {
-                                    "X": 7,
-                                    "Y": 33
+                                    "X": 17,
+                                    "Y": 36
                                 },
                                 {
                                     "X": 14,
                                     "Y": 33
                                 },
                                 {
-                                    "X": 17,
-                                    "Y": 36
+                                    "X": 7,
+                                    "Y": 33
                                 }
                             ],
                             "value": {
@@ -2431,7 +2431,7 @@
                     "bus_width": 0,
                     "color": 2,
                     "direction": 1,
-                    "distance_from_outport": 2147483647,
+                    "distance_from_outport": 0,
                     "linked_uuid": "",
                     "name": "Input",
                     "screenX": 12.0,
@@ -2458,16 +2458,16 @@
                             "name": "Wire1748459842",
                             "points": [
                                 {
-                                    "X": 12,
-                                    "Y": 27
+                                    "X": 17,
+                                    "Y": 30
                                 },
                                 {
                                     "X": 14,
                                     "Y": 27
                                 },
                                 {
-                                    "X": 17,
-                                    "Y": 30
+                                    "X": 12,
+                                    "Y": 27
                                 }
                             ],
                             "value": {
@@ -2514,7 +2514,7 @@
                     "bus_width": 0,
                     "color": 2,
                     "direction": 1,
-                    "distance_from_outport": 2147483647,
+                    "distance_from_outport": 0,
                     "linked_uuid": "",
                     "name": "Input",
                     "screenX": 7.0,
@@ -2541,20 +2541,20 @@
                             "name": "Wire1748459841",
                             "points": [
                                 {
-                                    "X": 7,
-                                    "Y": 25
-                                },
-                                {
-                                    "X": 8,
-                                    "Y": 24
+                                    "X": 17,
+                                    "Y": 29
                                 },
                                 {
                                     "X": 12,
                                     "Y": 24
                                 },
                                 {
-                                    "X": 17,
-                                    "Y": 29
+                                    "X": 8,
+                                    "Y": 24
+                                },
+                                {
+                                    "X": 7,
+                                    "Y": 25
                                 }
                             ],
                             "value": {
@@ -2684,7 +2684,7 @@
                     "bus_width": 0,
                     "color": 2,
                     "direction": 1,
-                    "distance_from_outport": 2147483647,
+                    "distance_from_outport": 0,
                     "linked_uuid": "",
                     "name": "Input",
                     "screenX": 12.0,
@@ -2711,11 +2711,11 @@
                             "name": "Wire1748459848",
                             "points": [
                                 {
-                                    "X": 12,
+                                    "X": 17,
                                     "Y": 39
                                 },
                                 {
-                                    "X": 17,
+                                    "X": 12,
                                     "Y": 39
                                 }
                             ],
@@ -2763,7 +2763,7 @@
                     "bus_width": 0,
                     "color": 2,
                     "direction": 1,
-                    "distance_from_outport": 2147483647,
+                    "distance_from_outport": 0,
                     "linked_uuid": "",
                     "name": "Input",
                     "screenX": 12.0,
@@ -2790,20 +2790,20 @@
                             "name": "Wire1748459844",
                             "points": [
                                 {
-                                    "X": 12,
-                                    "Y": 31
-                                },
-                                {
-                                    "X": 13,
-                                    "Y": 31
+                                    "X": 17,
+                                    "Y": 32
                                 },
                                 {
                                     "X": 14,
                                     "Y": 32
                                 },
                                 {
-                                    "X": 17,
-                                    "Y": 32
+                                    "X": 13,
+                                    "Y": 31
+                                },
+                                {
+                                    "X": 12,
+                                    "Y": 31
                                 }
                             ],
                             "value": {
@@ -2933,7 +2933,7 @@
                     "bus_width": 0,
                     "color": 2,
                     "direction": 1,
-                    "distance_from_outport": 2147483647,
+                    "distance_from_outport": 0,
                     "linked_uuid": "",
                     "name": "Input",
                     "screenX": 7.0,
@@ -2960,20 +2960,20 @@
                             "name": "Wire1748459847",
                             "points": [
                                 {
-                                    "X": 7,
-                                    "Y": 37
-                                },
-                                {
-                                    "X": 13,
-                                    "Y": 37
+                                    "X": 17,
+                                    "Y": 38
                                 },
                                 {
                                     "X": 14,
                                     "Y": 38
                                 },
                                 {
-                                    "X": 17,
-                                    "Y": 38
+                                    "X": 13,
+                                    "Y": 37
+                                },
+                                {
+                                    "X": 7,
+                                    "Y": 37
                                 }
                             ],
                             "value": {
@@ -4575,7 +4575,7 @@
                             "Y1": 14,
                             "Y2": 23,
                             "color": 4,
-                            "distance_from_outport": 2147483647,
+                            "distance_from_outport": 0,
                             "name": "Wire1748969147",
                             "points": [
                                 {
@@ -4760,7 +4760,7 @@
                     "bus_width": 0,
                     "color": 0,
                     "direction": 0,
-                    "distance_from_outport": 2,
+                    "distance_from_outport": 2147483648,
                     "linked_uuid": "",
                     "name": "Aval",
                     "screenX": 31.0,
@@ -4783,7 +4783,7 @@
                             "Y1": 22,
                             "Y2": 22,
                             "color": 1,
-                            "distance_from_outport": 2147483647,
+                            "distance_from_outport": 1,
                             "name": "Wire1748461480",
                             "points": [
                                 {
@@ -4839,7 +4839,7 @@
                     "bus_width": 0,
                     "color": 0,
                     "direction": 0,
-                    "distance_from_outport": 2,
+                    "distance_from_outport": 2147483648,
                     "linked_uuid": "",
                     "name": "Bval",
                     "screenX": 31.0,
@@ -4862,7 +4862,7 @@
                             "Y1": 29,
                             "Y2": 29,
                             "color": 2,
-                            "distance_from_outport": 2147483647,
+                            "distance_from_outport": 1,
                             "name": "Wire1748473247",
                             "points": [
                                 {
@@ -4941,7 +4941,7 @@
                             "Y1": 22,
                             "Y2": 22,
                             "color": 1,
-                            "distance_from_outport": 2147483647,
+                            "distance_from_outport": 1,
                             "name": "Wire1748461480",
                             "points": [
                                 {
@@ -4971,7 +4971,7 @@
                             "Y1": 22,
                             "Y2": 25,
                             "color": 1,
-                            "distance_from_outport": 2147483647,
+                            "distance_from_outport": 1,
                             "name": "Wire1748969151",
                             "points": [
                                 {
@@ -5005,7 +5005,7 @@
                             "Y1": 16,
                             "Y2": 22,
                             "color": 1,
-                            "distance_from_outport": 2147483647,
+                            "distance_from_outport": 0,
                             "name": "Wire1748969152",
                             "points": [
                                 {
@@ -5074,7 +5074,7 @@
                             "Y1": 36,
                             "Y2": 29,
                             "color": 2,
-                            "distance_from_outport": 2147483647,
+                            "distance_from_outport": 0,
                             "name": "Wire1748473246",
                             "points": [
                                 {
@@ -5108,7 +5108,7 @@
                             "Y1": 29,
                             "Y2": 29,
                             "color": 2,
-                            "distance_from_outport": 2147483647,
+                            "distance_from_outport": 1,
                             "name": "Wire1748473247",
                             "points": [
                                 {
@@ -5138,7 +5138,7 @@
                             "Y1": 29,
                             "Y2": 26,
                             "color": 2,
-                            "distance_from_outport": 2147483647,
+                            "distance_from_outport": 1,
                             "name": "Wire1748969153",
                             "points": [
                                 {
@@ -5285,7 +5285,7 @@
                             "Y1": 14,
                             "Y2": 23,
                             "color": 4,
-                            "distance_from_outport": 2147483647,
+                            "distance_from_outport": 0,
                             "name": "Wire1748969147",
                             "points": [
                                 {
@@ -5450,7 +5450,7 @@
                             "Y1": 22,
                             "Y2": 25,
                             "color": 1,
-                            "distance_from_outport": 2147483647,
+                            "distance_from_outport": 1,
                             "name": "Wire1748969151",
                             "points": [
                                 {
@@ -5509,7 +5509,7 @@
                             "Y1": 29,
                             "Y2": 26,
                             "color": 2,
-                            "distance_from_outport": 2147483647,
+                            "distance_from_outport": 1,
                             "name": "Wire1748969153",
                             "points": [
                                 {
@@ -10940,7 +10940,7 @@
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_clock": false,
-                                                                    "is_error": false,
+                                                                    "is_error": true,
                                                                     "type": 0,
                                                                     "valid": true
                                                                 },
@@ -11276,7 +11276,7 @@
                                                             "floatval": 0.0,
                                                             "intval": 0,
                                                             "is_clock": false,
-                                                            "is_error": false,
+                                                            "is_error": true,
                                                             "type": 0,
                                                             "valid": true
                                                         },
@@ -11296,7 +11296,7 @@
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_clock": false,
-                                                                    "is_error": false,
+                                                                    "is_error": true,
                                                                     "type": 0,
                                                                     "valid": true
                                                                 },
@@ -11619,7 +11619,7 @@
                                                             "floatval": 0.0,
                                                             "intval": 0,
                                                             "is_clock": false,
-                                                            "is_error": false,
+                                                            "is_error": true,
                                                             "type": 0,
                                                             "valid": true
                                                         },
@@ -11639,7 +11639,7 @@
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_clock": false,
-                                                                    "is_error": false,
+                                                                    "is_error": true,
                                                                     "type": 0,
                                                                     "valid": true
                                                                 },
@@ -12169,7 +12169,7 @@
                                                             "floatval": 0.0,
                                                             "intval": 0,
                                                             "is_clock": false,
-                                                            "is_error": false,
+                                                            "is_error": true,
                                                             "type": 0,
                                                             "valid": true
                                                         },
@@ -12189,7 +12189,7 @@
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_clock": false,
-                                                                    "is_error": false,
+                                                                    "is_error": true,
                                                                     "type": 0,
                                                                     "valid": true
                                                                 },
@@ -12209,7 +12209,7 @@
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_clock": false,
-                                                                    "is_error": false,
+                                                                    "is_error": true,
                                                                     "type": 0,
                                                                     "valid": true
                                                                 },
@@ -12229,7 +12229,7 @@
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_clock": false,
-                                                                    "is_error": false,
+                                                                    "is_error": true,
                                                                     "type": 0,
                                                                     "valid": true
                                                                 },
