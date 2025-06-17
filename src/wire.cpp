@@ -420,6 +420,9 @@ class wire *wire::split(void)
     printf("Splitting wire\n");
     wr->update_value(&value, 100);    
     wr->set_width(get_width());
+    /* upper bound the distance from outports */
+    wr->set_distance_from_outport(distance_from_outport + 1);
+    distance_from_outport++;
     if (ports.size() > 0) {
         ports[0]->replace_wire(this, wr);
         ports.erase(ports.begin() + 0);

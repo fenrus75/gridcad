@@ -390,6 +390,8 @@ void port::unsplice(void)
 		
 	p1 = w1->get_other_port(this);
 	p2 = w2->get_other_port(this);
+	w1->remove();
+	w2->remove();
 	
 	if (p1) {
 		w3->add_port(p1);
@@ -401,11 +403,9 @@ void port::unsplice(void)
 		w3->add_port(p2);
 		p2->add_wire(w3);
 	} else {
-		printf("NO P1\n");
+		printf("NO P3\n");
 	}
 	w3->push_wire_color(w1->get_color());
-	w1->remove();
-	w2->remove();
 	w3->reseat();
 	
 }
