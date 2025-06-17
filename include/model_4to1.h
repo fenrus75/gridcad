@@ -14,7 +14,6 @@ public:
     std::string get_verilog_main(void) override;
     
     void calculate(int ttl) override;
-//    void rotate_ports(void) override;
 
 protected:
     struct value value = {};

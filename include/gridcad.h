@@ -315,7 +315,7 @@ public:
     void reset_uuid(void);
     void delete_element(void);
     
-    virtual void rotate_ports(void) {};
+    virtual void rotate_ports(void);
     void update_name(std::string _name) { name = _name;};
     virtual void update_parental_name(std::string _name) { parental_name = _name;};
     std::string get_parental_name(void) { return parental_name;};

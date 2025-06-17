@@ -52,42 +52,6 @@ void model_logic2::calculate(int ttl)
 {
 }
 
-void model_logic2::rotate_ports(void)
-{
-    for (auto port : ports) {
-        float x,y,_x,_y;
-        x = port->X - (sizeX-1)/2.0;
-        y = port->Y - (sizeY-1)/2.0;
-        
-        _x = y;
-        _y = -x;
-
-	float tmp = sizeY;
-	sizeY = sizeX;
-	sizeX = tmp;
-
-        port->X = _x + (sizeX-1)/2.0 ;
-        port->Y = _y + (sizeY-1)/2.0;
-        port->screenX = X + port->X;
-        port->screenY = Y + port->Y;
-
-	tmp = sizeY;
-	sizeY = sizeX;
-	sizeX = tmp;
-        
-        port->route_wires();
-    }
-	float tmp = sizeY;
-	sizeY = sizeX;
-	sizeX = tmp;
-    reseat();
-    angle -= 90;
-    if (angle >= 360)
-	angle -= 360;
-    if (angle < 0)
-	angle += 360;
-}
-
 std::string model_logic2::get_verilog_main(void)
 {
     std::string s = "";

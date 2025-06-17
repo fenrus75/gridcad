@@ -43,9 +43,9 @@ void model_8to1::drawAt(class canvas *canvas, float X, float Y, int type)
     int alpha = Alpha(type);
 
     if (selected) {
-        canvas->draw_image("assets/8to1_selected.png", X, Y, sizeX, sizeY, alpha);
+        canvas->draw_image_rotated("assets/8to1_selected.png", X, Y, sizeX, sizeY, alpha, angle);
     } else {	
-        canvas->draw_image("assets/8to1.png", X, Y, sizeX , sizeY, alpha);
+        canvas->draw_image_rotated("assets/8to1.png", X, Y, sizeX , sizeY, alpha, angle);
     }
     hover_ports(canvas);
     for (auto port: ports) {

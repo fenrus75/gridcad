@@ -39,9 +39,9 @@ void model_4to1::drawAt(class canvas *canvas, float X, float Y, int type)
     int alpha = Alpha(type);
 
     if (selected) {
-        canvas->draw_image("assets/4to1_selected.png", X, Y, sizeX, sizeY, alpha);
+        canvas->draw_image_rotated("assets/4to1_selected.png", X, Y, sizeX, sizeY, alpha, angle);
     } else {	
-        canvas->draw_image("assets/4to1.png", X, Y, sizeX , sizeY, alpha);
+        canvas->draw_image_rotated("assets/4to1.png", X, Y, sizeX , sizeY, alpha, angle);
     }
     hover_ports(canvas);
     for (auto port: ports) {
@@ -104,3 +104,4 @@ std::string model_4to1::get_verilog_main(void)
     
     return s;
 }
+

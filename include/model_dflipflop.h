@@ -21,7 +21,6 @@ public:
     bool in_edit_mode(void) override { return name_edit->get_edit_mode() && selected && single;};
     void enter_edit_mode(void) override { name_edit->set_edit_mode(true); selected = true; single = true;};
         
-    void rotate_ports(void) override;
     int get_width(void) { return ports[0]->get_width();};
     void calculate(int ttl) override;
     void queued_calculate(int ttl) override;

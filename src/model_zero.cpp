@@ -17,7 +17,7 @@
 model_zero::model_zero(float _X, float _Y)  : element(1, 1, "")
 {
     struct value value = {};
-    sizeX = 2;
+    sizeX = 1;
     sizeY = 1;    
     X = floorf(_X);
     Y = floorf(_Y);
@@ -45,13 +45,15 @@ model_zero::~model_zero(void)
 void model_zero::drawAt(class canvas *canvas, float X, float Y, int type)
 {
     if (selected) {
-        canvas->draw_image("assets/zero_base.png", X, Y, sizeX, sizeY, Alpha(type));
+        canvas->draw_image_rotated("assets/zero_base.png", X, Y, sizeX, sizeY, Alpha(type), angle);
     } else {	
-        canvas->draw_image("assets/zero.png", X, Y, sizeX, sizeY, Alpha(type));
+        canvas->draw_image_rotated("assets/zero.png", X, Y, sizeX, sizeY, Alpha(type), angle);
     }
 
     for (auto port : ports) {
         port->draw_wires(canvas);
+        if (type != DRAW_NORMAL)
+            port->drawAt(canvas, X, Y, type);
     }
 }
 

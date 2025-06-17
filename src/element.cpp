@@ -494,3 +494,38 @@ void element::collect_wires(std::map<std::string, std::string> *wiremap)
     for (auto port : ports)
         port->collect_wires(wiremap);
 }
+
+void element::rotate_ports(void)
+{
+    for (auto port : ports) {
+                
+        if (port->X == -1) {
+            port->X = sizeY -1 - port->Y;
+            port->Y = -1;
+        } else if (port->Y == -1) {
+            port->Y = port->X;
+            port->X = sizeY;
+        } else if (port->X == sizeX) {
+            port->X = sizeY - 1 - port->Y;
+            port->Y = sizeX;
+        }  else { /* port-Y == sizeY; */
+            port->Y = port->X;
+            port->X = -1;
+        }
+        
+        
+        port->screenX = X + port->X;
+        port->screenY = Y + port->Y;
+
+        port->route_wires();
+    }
+	float tmp = sizeY;
+	sizeY = sizeX;
+	sizeX = tmp;
+    reseat();
+    angle += 90;
+    if (angle >= 360)
+	angle -= 360;
+    if (angle < 0)
+	angle += 360;
+}

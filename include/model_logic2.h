@@ -13,7 +13,6 @@ public:
     void drawAt(class canvas *canvas, float X, float Y, int type) override;
     
     void calculate(int ttl) override;
-    void rotate_ports(void) override;
     
     virtual std::string get_verilog_operand(void) { return "XXXX_NOT_IMPLEMENTED_XXXX";}
     

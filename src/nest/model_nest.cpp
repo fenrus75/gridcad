@@ -83,18 +83,18 @@ void model_nest::drawAt(class canvas *canvas, float X, float Y, int type)
     	  name_edit->set_edit_mode(false);
 	if (!selected) {
 		if (icon == "") {
-			canvas->draw_image("assets/nest/nest_back.png", X, Y, sizeX, sizeY, Alpha(type));
-			canvas->draw_image("assets/nest/icon.png", X+0.15, Y+0.15, sizeX-0.3, sizeY-0.3, Alpha(type), true);	
+			canvas->draw_image_rotated("assets/nest/nest_back.png", X, Y, sizeX, sizeY, Alpha(type), angle);
+			canvas->draw_image_rotated("assets/nest/icon.png", X+0.15, Y+0.15, sizeX-0.3, sizeY-0.3, Alpha(type), angle);	
 		} else {
-			canvas->draw_image(icon, X, Y, sizeX, sizeY, Alpha(type));
+			canvas->draw_image_rotated(icon, X, Y, sizeX, sizeY, Alpha(type), angle);
 		}
 	} else {
 		if (icon_selected == "") 
-			canvas->draw_image("assets/nest/nest_selected.png", X, Y, sizeX, sizeY, Alpha(type));
+			canvas->draw_image_rotated("assets/nest/nest_selected.png", X, Y, sizeX, sizeY, Alpha(type), angle);
 		else {
-			canvas->draw_image(icon_selected, X, Y, sizeX, sizeY, Alpha(type));
+			canvas->draw_image_rotated(icon_selected, X, Y, sizeX, sizeY, Alpha(type), angle);
 			if (icon == icon_selected)
-				canvas->draw_image("assets/selectionhalo.png", X-0.1, Y-0.1, sizeX+0.2, sizeY+0.2, Alpha(type));
+				canvas->draw_image_rotated("assets/selectionhalo.png", X-0.1, Y-0.1, sizeX+0.2, sizeY+0.2, Alpha(type), angle);
 		}
 	}
 

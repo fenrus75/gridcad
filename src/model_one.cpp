@@ -21,7 +21,7 @@ model_one::model_one(float _X, float _Y)  : model_zero(_X, _Y)
     memset(&value, 0, sizeof(struct value));
     value.boolval = true;
     value.valid = true;
-    sizeX = 2;
+    sizeX = 1;
     sizeY = 1;
 
     ports.clear();
@@ -47,6 +47,8 @@ void model_one::drawAt(class canvas *canvas, float X, float Y, int type)
     
     for (auto port : ports) {
         port->draw_wires(canvas);
+        if (type != DRAW_NORMAL)
+            port->drawAt(canvas, X, Y, type);
     }
 }
 
