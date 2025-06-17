@@ -63,6 +63,8 @@ public:
     
     unsigned int get_distance_from_outport(void) { return distance_from_outport;};
     void update_distances(void);
+    
+    std::string get_tooltip(void);
 
 	
 private:

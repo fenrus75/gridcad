@@ -497,3 +497,19 @@ std::string port::get_verilog_name(void)
 	std::replace(verilog_name.begin(), verilog_name.end(), '+', '_');
 	return verilog_name;
 }
+
+std::string port::get_tooltip(void)
+{
+	std::string s = ""; 
+	char buf[256];
+	if (value.type == VALUE_TYPE_INT)
+		sprintf(buf, "Name %s:%i value 0x%lx", name.c_str(), bus_width, value.intval);
+	else
+		sprintf(buf, "Name %s:%i value %i", name.c_str(), bus_width, value.boolval);
+	s = buf;
+	if (direction == PORT_IN)
+		s = "INPUT [" + s + "]";
+	if (direction == PORT_OUT)
+		s = "OUTPUT [" + s + "]";
+	return s;
+}

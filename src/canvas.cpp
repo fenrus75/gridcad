@@ -329,7 +329,7 @@ bool canvas::handle_event(SDL_Event &event)
 	bool leave = false;
 	bool someone_in_editmode = false;
 	
-	if (SDL_GetTicks64() - mouse_timestamp > 1000 && ( (X_to_scr(mouseX) > main_area_rect.x + main_area_rect.w) || (X_to_scr(mouseX) < main_area_rect.x)) && active_menu == NULL) 
+	if (SDL_GetTicks64() - mouse_timestamp > 1000 && active_menu == NULL) 
 		tooltip_eligable = true;
 	else
 		tooltip_eligable = false;
@@ -983,6 +983,12 @@ void canvas::draw(void)
 		if (X_to_scr(mouseX) < main_area_rect.x) {
 			tooltip = button_bar->current_tooltip(X_to_scr(mouseX), Y_to_scr(mouseY));
 		}		
+		if (X_to_scr(mouseX) >= main_area_rect.x && X_to_scr(mouseX) <= ui_area_rect.x) {
+			class port *prt = current_scene->is_port(mouseX,mouseY);
+			if (prt)
+				tooltip = prt->get_tooltip();
+			
+		}
 		if (tooltip != "") {
 			draw_tooltip(mouseX, mouseY, tooltip);
 		}
