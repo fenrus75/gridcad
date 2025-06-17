@@ -43,6 +43,7 @@ void model_logic2::drawAt(class canvas *canvas, float X, float Y, int type)
         canvas->draw_image_rotated(filename, X, Y, sizeX , sizeY, alpha, angle);
     }
     for (auto port: ports) {
+        port->draw_wires(canvas);
         port->drawAt(canvas, X, Y, type);
     }
 }
