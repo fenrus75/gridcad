@@ -940,11 +940,12 @@ void canvas::draw(void)
 	
 	if (tooltip_eligable) {
 		std::string tooltip = "";
-		if (X_to_scr(mouseX) > main_area_rect.x + main_area_rect.w)
-			tooltip = icon_bar->current_tooltip(X_to_scr(mouseX), X_to_scr(mouseY));
-		if (X_to_scr(mouseX) < main_area_rect.x)
-			tooltip = button_bar->current_tooltip(X_to_scr(mouseX), X_to_scr(mouseY));
-		
+		if (X_to_scr(mouseX) > main_area_rect.x + main_area_rect.w) {
+			tooltip = icon_bar->current_tooltip(X_to_scr(mouseX), Y_to_scr(mouseY));
+		}
+		if (X_to_scr(mouseX) < main_area_rect.x) {
+			tooltip = button_bar->current_tooltip(X_to_scr(mouseX), Y_to_scr(mouseY));
+		}		
 		if (tooltip != "") {
 			draw_tooltip(mouseX, mouseY, tooltip);
 		}
