@@ -464,6 +464,8 @@ void element::cycle_color(void)
 void element::reroute_all_wires(void)
 {
     for (auto port : ports)
+	port->update_distances();
+    for (auto port : ports)
         port->reroute_all_wires();
 }
 

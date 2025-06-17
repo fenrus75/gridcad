@@ -140,6 +140,26 @@ void port::update_value(struct value *newvalue, int ttl)
 		
 }
 
+void port::update_distances(void)
+{
+	unsigned int best_dist = INT_MAX;
+
+	if (direction == PORT_OUT) {
+		distance_from_outport = 0;
+		for (auto wire:wires)
+			wire->set_distance_from_outport(0);
+	} else {
+		for (auto wire:wires)
+			if (wire->get_distance_from_outport() < best_dist)
+				best_dist = wire->get_distance_from_outport();
+			
+		for (auto wire:wires) {
+			distance_from_outport = best_dist + 1;
+			wire->set_distance_from_outport(best_dist + 1);
+		}
+	}
+}
+
 
 
 void port::drawAt(class canvas * canvas, float _X, float _Y, int type)
@@ -198,6 +218,8 @@ void port::drawConnector(class canvas * canvas, float X, float Y, int cX, int cY
 
 void port::stop_drag(class canvas *canvas)
 {
+    update_distances();
+
     for (auto wire : wires) {
         wire->reseat();
         wire->route(canvas->get_scene());

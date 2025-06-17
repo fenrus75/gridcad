@@ -635,6 +635,7 @@ bool canvas::handle_event(SDL_Event &event)
 						wr2->reseat();
 						wr->route(current_scene);
 						wr2->route(current_scene);
+						_element->reroute_all_wires();
 						printf("new split code\n");
 					} else {
 						printf("not new split code\n");

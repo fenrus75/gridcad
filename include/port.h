@@ -62,6 +62,8 @@ public:
     std::string get_verilog_name(void);
     
     unsigned int get_distance_from_outport(void) { return distance_from_outport;};
+    void update_distances(void);
+
 	
 private:
     class port_contextmenu *menu = NULL;
