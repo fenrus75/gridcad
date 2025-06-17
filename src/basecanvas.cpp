@@ -275,6 +275,9 @@ void basecanvas::draw_image_rotated(SDL_Texture *image, float X, float Y, float 
 	
 	SDL_QueryTexture(image, NULL, NULL, &size.x, &size.y);
 
+	/* if we rotate something that isn't square, the "top left" point afterwards is no longer at (0,0)
+	   Adjust to move it back to 0,0 by half-of-the-shape-difference
+         */
 	if ((angle == 90 || angle == 270)) { X -= (H-W)/2; Y -= (W-H)/2; };
 	rect.x = X_to_scr(X);
 	rect.y = Y_to_scr(Y);
