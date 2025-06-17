@@ -81,9 +81,9 @@ void model_memory::drawAt(class canvas *canvas, float X, float Y, int type)
     if (!selected)
       name_edit->set_edit_mode(false);
     if (selected) {
-        canvas->draw_image("assets/memory_selected.png", X, Y, sizeX, sizeY, Alpha(type));
+        canvas->draw_image_rotated("assets/memory_selected.png", X, Y, sizeX, sizeY, Alpha(type), angle);
     } else {
-        canvas->draw_image("assets/memory.png", X, Y, sizeX, sizeY, Alpha(type));
+        canvas->draw_image_rotated("assets/memory.png", X, Y, sizeX, sizeY, Alpha(type), angle);
     }
     name_edit->drawAt(canvas, X, Y - 1, sizeX);
 
