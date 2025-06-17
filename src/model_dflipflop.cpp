@@ -45,9 +45,9 @@ void model_dflipflop::drawAt(class canvas *canvas, float X, float Y, int type)
     if (!selected)
       name_edit->set_edit_mode(false);
     if (selected) {
-        canvas->draw_image("assets/dflipflop_selected.png", X, Y, sizeX, sizeY, Alpha(type));
+        canvas->draw_image_rotated("assets/dflipflop_selected.png", X, Y, sizeX, sizeY, Alpha(type), angle);
     } else {
-        canvas->draw_image("assets/dflipflop.png", X, Y, sizeX, sizeY, Alpha(type));
+        canvas->draw_image_rotated("assets/dflipflop.png", X, Y, sizeX, sizeY, Alpha(type), angle);
     }
     name_edit->drawAt(canvas, X, Y + sizeY, sizeX);
 
@@ -92,24 +92,35 @@ void model_dflipflop::handle_event(class canvas *canvas, SDL_Event &event)
 void model_dflipflop::rotate_ports(void)
 {
     for (auto port : ports) {
-        float x,y,_x,_y;
-        x = port->X - (sizeX-1)/2.0;
-        y = port->Y - (sizeY-1)/2.0;
+        if (port->X == -1) {
+            port->X = sizeY -1 - port->Y;
+            port->Y = -1;
+        } else if (port->Y == -1) {
+            port->Y = port->X;
+            port->X = sizeY;
+        } else if (port->X == sizeX) {
+            port->X = sizeY - 1 - port->Y;
+            port->Y = sizeX;
+        }  else { /* port-Y == sizeY; */
+            port->Y = port->X;
+            port->X = -1;
+        }
         
-        _x = y;
-        _y = -x;
         
-        port->X = _x + (sizeX-1)/2.0 ;
-        port->Y = _y + (sizeY-1)/2.0;
         port->screenX = X + port->X;
         port->screenY = Y + port->Y;
-        
+
         port->route_wires();
     }
-    int tmp = sizeX;
-    sizeX = sizeY;
-    sizeY = tmp;
+	float tmp = sizeY;
+	sizeY = sizeX;
+	sizeX = tmp;
     reseat();
+    angle += 90;
+    if (angle >= 360)
+	angle -= 360;
+    if (angle < 0)
+	angle += 360;
 }
 
 void model_dflipflop::calculate(int ttl)

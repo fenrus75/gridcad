@@ -275,7 +275,7 @@ void basecanvas::draw_image_rotated(SDL_Texture *image, float X, float Y, float 
 	
 	SDL_QueryTexture(image, NULL, NULL, &size.x, &size.y);
 
-	if ((angle == 90 || angle == 270) && W != H) { X -= 0.5; Y += 0.5; };
+	if ((angle == 90 || angle == 270)) { X -= (H-W)/2; Y -= (W-H)/2; };
 	rect.x = X_to_scr(X);
 	rect.y = Y_to_scr(Y);
 	rect.w = W * scaleX;
