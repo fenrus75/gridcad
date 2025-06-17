@@ -2298,7 +2298,7 @@
                             "Y1": 36,
                             "Y2": 29,
                             "color": 2,
-                            "distance_from_outport": 0,
+                            "distance_from_outport": 2147483647,
                             "name": "Wire1748473246",
                             "points": [
                                 {
@@ -4575,7 +4575,7 @@
                             "Y1": 14,
                             "Y2": 23,
                             "color": 4,
-                            "distance_from_outport": 0,
+                            "distance_from_outport": 2147483647,
                             "name": "Wire1748969147",
                             "points": [
                                 {
@@ -4862,7 +4862,7 @@
                             "Y1": 29,
                             "Y2": 29,
                             "color": 2,
-                            "distance_from_outport": 1,
+                            "distance_from_outport": 2147483647,
                             "name": "Wire1748473247",
                             "points": [
                                 {
@@ -5074,7 +5074,7 @@
                             "Y1": 36,
                             "Y2": 29,
                             "color": 2,
-                            "distance_from_outport": 0,
+                            "distance_from_outport": 2147483647,
                             "name": "Wire1748473246",
                             "points": [
                                 {
@@ -5108,7 +5108,7 @@
                             "Y1": 29,
                             "Y2": 29,
                             "color": 2,
-                            "distance_from_outport": 1,
+                            "distance_from_outport": 2147483647,
                             "name": "Wire1748473247",
                             "points": [
                                 {
@@ -5138,7 +5138,7 @@
                             "Y1": 29,
                             "Y2": 26,
                             "color": 2,
-                            "distance_from_outport": 1,
+                            "distance_from_outport": 2147483647,
                             "name": "Wire1748969153",
                             "points": [
                                 {
@@ -5285,7 +5285,7 @@
                             "Y1": 14,
                             "Y2": 23,
                             "color": 4,
-                            "distance_from_outport": 0,
+                            "distance_from_outport": 2147483647,
                             "name": "Wire1748969147",
                             "points": [
                                 {
@@ -5509,7 +5509,7 @@
                             "Y1": 29,
                             "Y2": 26,
                             "color": 2,
-                            "distance_from_outport": 1,
+                            "distance_from_outport": 2147483647,
                             "name": "Wire1748969153",
                             "points": [
                                 {
@@ -10940,7 +10940,7 @@
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_clock": false,
-                                                                    "is_error": true,
+                                                                    "is_error": false,
                                                                     "type": 0,
                                                                     "valid": true
                                                                 },
@@ -11276,7 +11276,7 @@
                                                             "floatval": 0.0,
                                                             "intval": 0,
                                                             "is_clock": false,
-                                                            "is_error": true,
+                                                            "is_error": false,
                                                             "type": 0,
                                                             "valid": true
                                                         },
@@ -11296,7 +11296,7 @@
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_clock": false,
-                                                                    "is_error": true,
+                                                                    "is_error": false,
                                                                     "type": 0,
                                                                     "valid": true
                                                                 },
@@ -11619,7 +11619,7 @@
                                                             "floatval": 0.0,
                                                             "intval": 0,
                                                             "is_clock": false,
-                                                            "is_error": true,
+                                                            "is_error": false,
                                                             "type": 0,
                                                             "valid": true
                                                         },
@@ -11639,7 +11639,7 @@
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_clock": false,
-                                                                    "is_error": true,
+                                                                    "is_error": false,
                                                                     "type": 0,
                                                                     "valid": true
                                                                 },
@@ -12169,7 +12169,7 @@
                                                             "floatval": 0.0,
                                                             "intval": 0,
                                                             "is_clock": false,
-                                                            "is_error": true,
+                                                            "is_error": false,
                                                             "type": 0,
                                                             "valid": true
                                                         },
@@ -12189,7 +12189,7 @@
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_clock": false,
-                                                                    "is_error": true,
+                                                                    "is_error": false,
                                                                     "type": 0,
                                                                     "valid": true
                                                                 },
@@ -12209,7 +12209,7 @@
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_clock": false,
-                                                                    "is_error": true,
+                                                                    "is_error": false,
                                                                     "type": 0,
                                                                     "valid": true
                                                                 },
@@ -12229,7 +12229,7 @@
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_clock": false,
-                                                                    "is_error": true,
+                                                                    "is_error": false,
                                                                     "type": 0,
                                                                     "valid": true
                                                                 },

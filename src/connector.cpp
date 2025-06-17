@@ -39,8 +39,27 @@ connector::connector(float _X, float _Y)  : element(3, 3, "")
 connector::~connector(void)
 {
 }
-
+#if 0
 void connector::draw(class canvas *canvas, int type)
+{
+    std::string icon = "";
+    for (auto port: ports) 
+        port->draw_wires(canvas);
+        
+    if (ports[0]->value.boolval)
+        icon = "assets/connector_green.png";
+    else
+        icon = "assets/connector_red.png";
+        
+    if (ports[0]->get_width() > 1)
+        icon = "assets/connector_bus.png";
+        
+    canvas->draw_image(icon, X,Y,1,1);
+}
+
+#endif
+
+void connector::drawAt(class canvas *canvas, float X, float Y, int type)
 {
     std::string icon = "";
     for (auto port: ports) 

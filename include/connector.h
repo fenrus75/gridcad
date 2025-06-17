@@ -8,7 +8,9 @@ public:
     virtual ~connector();
 
     virtual std::string class_id(void) { return "connector:";};
-    void draw(class canvas *canvas, int type) override;
+//    void draw(class canvas *canvas, int type) override;
+    void drawAt(class canvas *canvas, float X, float Y, int type) override;
+
     void fill_grid(class wiregrid* grid) override;
     bool want_deleted(void) override;
     void draw_phase2(class canvas *canvas, int type) override;

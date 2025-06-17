@@ -259,6 +259,22 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 	if (event.button.button == SDL_BUTTON_MIDDLE) {
 		middle_X = event.motion.x;
 		middle_Y = event.motion.y;
+		float x,y;
+		x = scr_to_X(event.motion.x);
+		y = scr_to_Y(event.motion.y);
+
+		class element *here = NULL;
+		for (auto elem:	current_scene->elements) {
+			if (elem->intersect(x, y) && elem->class_id() == "connector:") {
+				here = elem;
+			}
+		}
+
+		if (here) {
+			printf("Setting dragging for MM\n");
+			dragging = here;
+			dragging->start_drag(x, y);
+		}
 	}
 	current_scene->remove_orphans();
 	run_queued_calculations();
@@ -651,8 +667,27 @@ bool canvas::handle_event(SDL_Event &event)
 				dragging_wire = NULL;
 			}
 			if (event.button.button == SDL_BUTTON_MIDDLE) {
+				float x, y;
+				x = scr_to_X(event.motion.x);
+				y = scr_to_Y(event.motion.y);
 				middle_X = event.motion.x;
 				middle_Y = event.motion.y;
+				if (dragging) {
+					printf("Up\n");
+					take_undo_snapshot(current_scene);
+					if (!dragging->has_moved())  {
+						printf("Click\n");
+						if (!dragging->mouse_select(x,y)) {
+							dragging->select();
+							if (current_scene->selected_count() == 1)
+								dragging->select_single();
+						}
+					}
+					if (dragging->stop_drag(this))
+						current_scene->rewire_section(dragging);
+					dragging = NULL;
+
+				}
 			}
 			current_scene->remove_orphans();
 			break;
@@ -702,6 +737,7 @@ bool canvas::handle_event(SDL_Event &event)
 				hover_wire->select();
 
 			if (dragging) {
+				printf("DRAAING UPDATE \n");
 				dragging->update_drag(this, current_scene,
 						      scr_to_X(event.motion.x),
 						      scr_to_Y(event.motion.y));
@@ -721,7 +757,7 @@ bool canvas::handle_event(SDL_Event &event)
 					dragging_wire->move_target(mouseX, mouseY);
 			}
 
-			if (event.motion.state & SDL_BUTTON_MMASK) {
+			if (event.motion.state & SDL_BUTTON_MMASK && !dragging) {
 				float fromX, fromY, toX, toY;
 				fromX = scr_to_X(middle_X);
 				fromY = scr_to_Y(middle_Y);
