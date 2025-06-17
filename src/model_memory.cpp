@@ -176,10 +176,15 @@ std::string model_memory::get_verilog_main(void)
 {
     unsigned int addrbits = highest_addr_bit(data.size());
     std::string s = "";
+    std::string datawire = "";
     
     std::vector<std::string> wiremap;
     if (verilog_module_name == "")
 	    verilog_module_name = append_random_bits(verilog_name + "_tt_");
+	    
+    datawire = append_random_bits(verilog_name + "_datawire_");
+    
+    s += "wire [7:0] "+ datawire + ";\n"; 
 
     s = s + verilog_module_name + " " + get_verilog_name() + "(";
     bool first = true;
@@ -254,13 +259,17 @@ std::string model_memory::get_verilog_main(void)
             first = false;
     
             s = s + ".Do(";
-            s = s + wiremap[0];
+            s = s + datawire;
             s = s + ")";
     	
             wiremap.clear();
         }
 
     s = s + ");\n";
+    ports[4]->collect_wires(&wiremap);
+    for (auto w : wiremap) {
+        s += "assign " + w + " = " + datawire + ";\n";
+    }
     
     return s;
 }
