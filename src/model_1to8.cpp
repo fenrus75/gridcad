@@ -66,7 +66,7 @@ void model_1to8::calculate(int ttl)
     }
     for (unsigned int i = 0; i < ports.size(); i++) {
         if (ports[i]->direction == PORT_OUT)
-            ports[i]->update_value(&value, ttl - 1);
+	    update_value_net(&value, i, ttl - 1);
     }
     
 }

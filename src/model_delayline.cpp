@@ -51,13 +51,13 @@ void model_delayline::calculate(int ttl)
     queue_calculate(this);
 
     if (ttl > DEFAULT_TTL - 10)
-        ports[1]->update_value(&value, ttl - 1);
+        update_value_net(&value, 1, ttl - 1);
 }
 
 void model_delayline::queued_calculate(int ttl)
 {
     printf("delated calculate %s from %i \n", name.c_str(), value.boolval);
-    ports[1]->update_value(&value, ttl - 1);
+    update_value_net(&value, 1, ttl - 1);
 }
 
 

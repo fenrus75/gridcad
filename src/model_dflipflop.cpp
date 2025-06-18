@@ -116,10 +116,12 @@ void model_dflipflop::queued_calculate(int ttl)
 {
      struct value notQ;
 
-     ports[2]->update_value(&value, ttl - 1); 
+     update_value_net(&value, 2, ttl - 1);
+
      notQ = value;
      notQ.boolval = !notQ.boolval;
-     ports[3]->update_value(&notQ, ttl - 1); 
+     update_value_net(&notQ, 3, ttl - 1);
+
 }
 
 

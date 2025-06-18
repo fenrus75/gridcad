@@ -62,8 +62,7 @@ void model_8to16::calculate(int ttl)
     
     out.intval = ports[0]->value.intval | (ports[1]->value.intval << 8);
 
-    ports[2]->update_value(&out, ttl-1);
-
+    update_value_net(&out, 2, ttl - 1);
 }
 
 std::string model_8to16::get_verilog_main(void)

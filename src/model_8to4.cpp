@@ -65,8 +65,11 @@ void model_8to4::calculate(int ttl)
     val = ports[2]->value.intval;
     out.intval = val >> 4;
     ports[1]->update_value(&out, ttl-1);
+    update_value_net(&out, 1, ttl - 1);
+
     out.intval = val & 15;
-    ports[0]->update_value(&out, ttl-1);
+    update_value_net(&out, 0, ttl - 1);
+
 
 }
 

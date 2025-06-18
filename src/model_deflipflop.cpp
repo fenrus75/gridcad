@@ -117,7 +117,7 @@ void model_deflipflop::calculate(int ttl)
 
 void model_deflipflop::queued_calculate(int ttl)
 {
-     ports[2]->update_value(&value, ttl - 1); 
+     update_value_net(&value, 2, ttl - 1);
 }
 
 

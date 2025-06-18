@@ -61,8 +61,9 @@ void model_1to4::calculate(int ttl)
             value.intval |= (1 << i);
     }
     for (unsigned int i = 0; i < ports.size(); i++) {
-        if (ports[i]->direction == PORT_OUT)
-            ports[i]->update_value(&value, ttl - 1);
+        if (ports[i]->direction == PORT_OUT) {
+	    update_value_net(&value, i, ttl - 1);
+	}
     }
     
 }

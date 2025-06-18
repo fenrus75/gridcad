@@ -78,7 +78,8 @@ void model_8to1::calculate(int ttl)
             out.boolval = true;
 	}
         if (ports[i]->direction == PORT_OUT) {
-            ports[i]->update_value(&out, ttl - 1);
+            update_value_net(&out, i, ttl - 1);
+
         }
     }
     

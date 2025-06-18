@@ -145,7 +145,7 @@ void model_clock::from_json(json &j)
 void model_clock::handle_event(class canvas *canvas, SDL_Event &event)
 {
     if (event.type == SDL_timer_event) {
-	    ports[0]->update_value(&global_clock, DEFAULT_TTL);
+	    update_value_net(&global_clock, 0, DEFAULT_TTL);
     }
 }
 

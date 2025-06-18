@@ -168,7 +168,7 @@ void model_memory::queued_calculate(int ttl)
      if (previous_address < data.size())
          val.intval = data[previous_address];
          
-     ports[4]->update_value(&val, ttl - 1); 
+     update_value_net(&val, 4, ttl - 1);
 }
 
 
