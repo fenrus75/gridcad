@@ -385,7 +385,7 @@ void iconbar::create_menu(void)
     init_icon->set_element("model_zero:", "assets/zero.png", "constant zero value");
     init_icon->set_element("model_one:", "assets/one.png", "constant one value");
     init_icon->set_element("model_not:", "assets/inverter.png", "bit inverter");
-    init_icon->insert_blank();
+    init_icon->set_element("model_buffer:", "assets/buffer.png", "buffer with Z-state output");
     init_icon->set_element("model_nand:", "assets/nandgate.png", "bitwise NAND gate");
     init_icon->set_element("model_and:", "assets/andgate.png", "bitwise AND gate");
     init_icon->set_element("model_nor:", "assets/norgate.png", "bitwise NOR gate");
