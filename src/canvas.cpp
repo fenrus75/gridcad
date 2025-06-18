@@ -746,7 +746,6 @@ bool canvas::handle_event(SDL_Event &event)
 				hover_wire->select();
 
 			if (dragging) {
-				printf("DRAAING UPDATE \n");
 				dragging->update_drag(this, current_scene,
 						      scr_to_X(event.motion.x),
 						      scr_to_Y(event.motion.y));
