@@ -98,7 +98,7 @@ int calc_angle(int x1, int y1, int x2, int y2)
     return 0;
 }
 
-void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y2, int color, int *step, struct value *value, int stepsize)
+void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y2, int color, int *step, struct value *value, int stepsize, int distance_from_outport)
 {
         double dx, dy,d;
         bool thick = false;
@@ -133,12 +133,13 @@ void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y
 	    totalstep++;
             if ((*step) >= stepsize) {
                 (*step) = 0;
-		if (value->type == VALUE_TYPE_INT){ 
+		if (value->type == VALUE_TYPE_INT || 1) { 
 			const float size = 0.24 * cursormag;
 			const float size2 = 0.20 * cursormag;
 			char buf[128];
 			std::string s;
 			sprintf(buf, "%li", value->intval);
+			sprintf(buf, "%i", distance_from_outport);
 			s = buf;
 			canvas->draw_box(x1-size, y1-size, x1+size, y1+size, COLOR_WIRE_MOTION);
 			canvas->draw_box(x1-size2, y1-size2, x1+size2, y1+size2, COLOR_BACKGROUND_MAIN);
@@ -215,7 +216,7 @@ void wire::draw(class canvas *canvas, int _color)
             first = false;
             continue;
         }
-        draw_snake_line(canvas, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, wire_to_color(color), &step, &value, stepsize);
+        draw_snake_line(canvas, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, wire_to_color(color), &step, &value, stepsize, distance_from_outport);
         prevX = point.X;
         prevY = point.Y;
     }
@@ -287,7 +288,7 @@ void wire::add_port(class port *port)
     }
     ports.push_back(port);
     if (port->direction != PORT_IN) {
-        update_value(&port->value, DEFAULT_TTL);
+        update_value_net(&port->value, DEFAULT_TTL);
     }
 }
 
@@ -312,7 +313,7 @@ void wire::reseat(void)
         }
     }
 }
-
+#if 0
 void wire::update_value(struct value *newvalue, int ttl)
 {
     if (ttl <= 0)
@@ -336,10 +337,10 @@ void wire::update_value(struct value *newvalue, int ttl)
     }
     notify(ttl - 1);
 }
+#endif
 
 void wire::update_value_final(struct value *newvalue, int ttl)
 {
-	printf("update final to %i \n", newvalue->boolval);
     value = *newvalue;
     notify(ttl - 1);
 }
@@ -348,6 +349,9 @@ void wire::update_value_net(struct value *newvalue, int ttl)
 {
     if (ttl <= 0)
         return;
+
+    if (!net)
+	return;
 
     net->update_value(newvalue, ttl - 1);
 }
@@ -434,7 +438,7 @@ class wire *wire::split(void)
     class wire *wr = new wire(0, 0, 0, 0, color);
 
     printf("Splitting wire\n");
-    wr->update_value(&value, 100);    
+    wr->update_value_final(&value, 100);    
     wr->set_width(get_width());
     /* upper bound the distance from outports */
     wr->set_distance_from_outport(distance_from_outport + 1);
@@ -632,8 +636,6 @@ void wire::add_net(class net *newnet)
 	if (net == newnet)
 		return;
 
-	printf("Wire %s adding net %i \n", name.c_str(), newnet->netnum);
-
 	net = newnet;
 
 	for (auto port : ports)
@@ -656,4 +658,19 @@ void wire::remove_net(void)
 
 	save->remove_wire(this);
 	
+}
+
+bool wire::update_distances(void)
+{	
+	unsigned int best = INT_MAX;
+
+	for (auto port:ports)
+		if (port->get_distance_from_outport() < best)
+			best = port->get_distance_from_outport();
+
+	if (distance_from_outport > best + 1) {
+		distance_from_outport = best + 1;
+		return true;
+	}
+	return false;
 }

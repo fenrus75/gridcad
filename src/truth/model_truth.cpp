@@ -359,7 +359,7 @@ void model_truth::calculate(int ttl)
 //				ports[inputs + x]->value.boolval = values[y][inputs + x] == '1';
 				//ports[inputs + x]->value.valid = true;
 //				ports[inputs + x]->notify(ttl - 1);
-				ports[inputs + x]->update_value(&value, ttl-1);
+				update_value_net(&value, inputs + x, ttl - 1);
 			}
 		}
 		

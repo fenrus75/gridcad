@@ -57,8 +57,33 @@ void net::remove_port(class port *port)
 
 void net::destroy(void)
 {
+	while (wires.size() > 0)
+		wires[0]->remove_net();
+
 }
 
+
+void net::update_net_distances(void)
+{
+	bool changed = true;
+	/* step 1: set all to high */
+
+	for (auto wire:wires)
+		wire->clear_distance_from_outport();
+	/* step 2: set OUT to 0 */
+	for (auto port : ports)
+		port->update_distances();
+	for (auto wire : wires)
+		wire->update_distances();
+	/* step 3: propagate until no more changes */
+	while (changed) {
+		changed = false;
+		for (auto port : ports)
+			changed |= port->update_distances();
+		for (auto wire : wires)
+			changed |= wire->update_distances();
+	}
+}
 
 
 void net::validate(void)
@@ -71,6 +96,7 @@ void net::validate(void)
 	if (count != 1) {
 		printf("NET IS INVALID, %i output ports\n", count);
 		value.is_error = true;
+		update_value(&value, 100);
 	} else {
 		value.is_error = false;
 	}
@@ -94,4 +120,12 @@ void net::update_value(struct value *newvalue, int ttl)
 
 	value = *newvalue;
 	set_value(newvalue, ttl);
+}
+
+
+void net::update_color(int _color)
+{
+	color = _color;
+	for (auto wire:wires) 
+		wire->set_color(_color);
 }

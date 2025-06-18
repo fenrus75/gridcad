@@ -363,6 +363,7 @@ void element::from_json(json &j)
         ports[i]->from_json(jj);
     }
     reseat();
+    add_nets();
 }
 
 bool element::want_deleted(void)
@@ -548,6 +549,7 @@ void element::add_nets(void)
 		class net *net = new class net();
 		net->add_port(port);
 		net->validate();
+		net->update_net_distances();
 	}
 }
 

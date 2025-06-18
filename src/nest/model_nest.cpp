@@ -112,6 +112,7 @@ void model_nest::drawAt(class canvas *canvas, float X, float Y, int type)
 void model_nest::calculate(int ttl)
 {
 	maybe_regen_ports();
+	add_nets();
 	for (auto port: ports) {
 		if (port->direction == PORT_IN) {
 			class model_toggle *tog;
@@ -129,7 +130,8 @@ void model_nest::calculate(int ttl)
 			tog = (class model_output *)port->get_linked_element();
 			if (tog) {
 				val = tog->get_value();
-				port->update_value(&val, ttl-1);
+				port->update_value_net(&val, ttl-1);
+				port->update_value_final(&val, ttl-1);
 				port->set_width(tog->get_width());
 			}
 		}
@@ -387,6 +389,8 @@ void model_nest::regen_ports(void)
 	ports.insert(ports.end(), south.begin(), south.end());
 	ports.insert(ports.end(), east.begin(), east.end());
 	ports.insert(ports.end(), west.begin(), west.end());
+	remove_nets();
+	add_nets();
 }
 
 

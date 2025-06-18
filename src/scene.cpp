@@ -215,8 +215,7 @@ void scene::from_json(json &j)
 		element->calculate(100);
 
 	cycle_color();
-	remove_nets();
-	add_nets();
+	redo_nets();
 }
 
 void scene::process_delete_requests(void)
@@ -283,6 +282,7 @@ void scene::cycle_color(void)
 {
 	for (auto elem:elements)
 		elem->cycle_color();
+	redo_nets();
 }
 
 void scene::reroute_all_wires(void)

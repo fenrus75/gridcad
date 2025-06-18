@@ -22,7 +22,6 @@ public:
     void add_port(class port *port);
     void reseat(void);
     
-    void update_value(struct value *newvalue, int ttl);
     void update_value_final(struct value *newvalue, int ttl);
     void update_value_net(struct value *newvalue, int ttl);
     virtual void notify(int ttl);
@@ -51,17 +50,20 @@ public:
     void set_width(int _width) { if (_width) width = _width;};
     class port * get_other_port(class port *port);
     void push_wire_color(int color);
+    void set_color(int _color) {color = _color;} ;
     int get_color(void) { return color; };
     
     std::string get_verilog_decl(void);
     
-    void clear_distance_from_outport(void) { distance_from_outport = INT_MAX;};
+    void clear_distance_from_outport(void) { distance_from_outport = INT_MAX - 5;};
     unsigned int get_distance_from_outport(void) { return distance_from_outport;};
-    void set_distance_from_outport(unsigned int dist) { if (dist < distance_from_outport) distance_from_outport = dist;};
+    int set_distance_from_outport(unsigned int dist) { if (dist < distance_from_outport) {distance_from_outport = dist; return 1;} return 0;};
+    bool update_distances(void);
 
     void add_net(class net *net);
     void remove_net(void);
     bool has_net(void) { return net != NULL;};
+    class net *get_net(void) { return net ; };
     
 protected:
     bool dead = false;

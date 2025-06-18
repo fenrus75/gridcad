@@ -22,12 +22,15 @@ public:
 
 	void set_value(class value *newval, int ttl);
 	void update_value(class value *newval, int ttl);
+	void update_net_distances(void);
+
+	void update_color(int color);
 	unsigned int netnum;
 protected:
 	std::vector<class wire *> wires;
 	std::vector<class port *> ports;
 
 	struct value value;
-
+	int color;
 };
 

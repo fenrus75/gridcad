@@ -22,7 +22,7 @@ void callback_set_color(class port *port, int color)
 {
 	printf("Pushing color %i \n", color);
 	port->color = color;
-	port->push_wire_color(color);
+	port->push_net_color(color);
 }
 
 void port::add_menu(void)
@@ -89,7 +89,8 @@ void port::add_wire(class wire * wire)
 	wires.push_back(wire);
 	
 	if (direction == PORT_OUT) {
-		wire->update_value(&value, DEFAULT_TTL);
+		wire->update_value_final(&value, DEFAULT_TTL);
+		wire->update_value_net(&value, DEFAULT_TTL);
 		distance_from_outport = 0;
 		wire->set_distance_from_outport(0);
 	}
@@ -100,7 +101,7 @@ void port::add_wire(class wire * wire)
 	}
 	
 	if (direction == PORT_IN) {
-		update_value(&(wire->value), DEFAULT_TTL);
+		update_value_final(&(wire->value), DEFAULT_TTL);
 	}
 	if (direction == PORT_OUT)
 		wire->push_wire_color(color);
@@ -108,7 +109,7 @@ void port::add_wire(class wire * wire)
 		parent->notify(DEFAULT_TTL);
 	wire->notify(DEFAULT_TTL);
 }
-
+#if 0
 void port::update_value(struct value *newvalue, int ttl)
 {
 	unsigned int best_dist = INT_MAX;
@@ -148,8 +149,6 @@ void port::update_value(struct value *newvalue, int ttl)
 	value = *newvalue;	
 	value_ttl = ttl;
 
-	printf("PORT UPDATE VALUE\n");
-
 	for (auto wire:wires) {
 		wire->update_value(newvalue, ttl -1);
 	}
@@ -159,6 +158,34 @@ void port::update_value(struct value *newvalue, int ttl)
 		parent->notify(ttl -1);
 		
 }
+#endif
+
+bool port::update_distances(void)
+{
+ 	unsigned int best_dist = INT_MAX - 50;
+	int changed = 0;
+
+	if (direction == PORT_OUT) {
+		distance_from_outport = 0;
+		for (auto wire:wires)
+			changed += wire->set_distance_from_outport(0);
+	} else {
+		for (auto wire:wires) {
+			if (wire->get_distance_from_outport() < best_dist) {
+				best_dist = wire->get_distance_from_outport();
+			}
+		}
+			
+		for (auto wire:wires) {
+			if (distance_from_outport != best_dist + 1)
+				changed++;
+			distance_from_outport = best_dist + 1;
+			changed += wire->set_distance_from_outport(best_dist + 1);
+		}
+	}
+	return changed > 0;
+}		
+
 
 void port::update_value_final(struct value *newvalue, int ttl)
 {
@@ -196,28 +223,6 @@ void port::update_value_final(struct value *newvalue, int ttl)
 		parent->notify(ttl -1);
 		
 }
-
-void port::update_distances(void)
-{
-	unsigned int best_dist = INT_MAX;
-
-	if (direction == PORT_OUT) {
-		distance_from_outport = 0;
-		for (auto wire:wires)
-			wire->set_distance_from_outport(0);
-	} else {
-		for (auto wire:wires)
-			if (wire->get_distance_from_outport() < best_dist)
-				best_dist = wire->get_distance_from_outport();
-			
-		for (auto wire:wires) {
-			distance_from_outport = best_dist + 1;
-			wire->set_distance_from_outport(best_dist + 1);
-		}
-	}
-}
-
-
 
 void port::drawAt(class canvas * canvas, float _X, float _Y, int type)
 {
@@ -294,13 +299,6 @@ void port::stop_drag(class canvas *canvas)
 
 void port::notify(int ttl)
 {	
-    if (ttl <= 0)
-    	return;
-    if (direction == PORT_IN)
-    	return;
-    for (auto wire : wires) {
-    	wire->update_value(&value, ttl -1);
-    }
 }
 
 class wire *port::is_wire(float X, float Y)
@@ -482,6 +480,18 @@ void port::push_wire_color(int color)
 		wire->push_wire_color(color);
 }
 
+void port::push_net_color(int color)
+{
+	if (wires.size() < 1)
+		return;
+	class net *net = wires[0]->get_net();
+
+	if (net)
+		net->update_color(color);
+}
+
+
+
 
 void port::cycle_color(void)
 {
@@ -503,16 +513,7 @@ void port::cycle_color(void)
 		push_wire_color(1);
 		
 	push_wire_color(color);
-	value.boolval = !value.boolval;
-	value.intval = ~value.intval;
-	for (auto wire:wires) {
-		wire->update_value(&value, DEFAULT_TTL);
-	}
-	value.boolval = !value.boolval;
-	value.intval = ~value.intval;
-	for (auto wire:wires) {
-		wire->update_value(&value, DEFAULT_TTL);
-	}	
+
 }
 
 void port::reroute_all_wires(void)

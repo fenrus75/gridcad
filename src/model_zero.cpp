@@ -33,7 +33,7 @@ model_zero::model_zero(float _X, float _Y)  : element(1, 1, "")
 
 
     for (auto port : ports) {
-        port->update_value(&value, DEFAULT_TTL);
+        port->update_value_final(&value, DEFAULT_TTL);
     }
 
 }

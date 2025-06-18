@@ -21,7 +21,6 @@ public:
     struct value value = {};
     int value_ttl = 0;
     void add_wire(class wire *wire);
-    void update_value(struct value *newvalue, int ttl);
     void update_value_final(struct value *newvalue, int ttl);
     void update_value_net(struct value *newvalue, int ttl);
     int direction = PORT_IN;
@@ -54,6 +53,7 @@ public:
     void route_wires();
     void unsplice(void);
     void push_wire_color(int color);
+    void push_net_color(int color);
     class contextmenu *get_menu(void) { return menu;};
     void add_menu(void);
     
@@ -65,8 +65,8 @@ public:
     
     std::string get_verilog_name(void);
     
-    unsigned int get_distance_from_outport(void) { return distance_from_outport;};
-    void update_distances(void);
+    unsigned int get_distance_from_outport(void) { if (direction == PORT_OUT) return 0; else return distance_from_outport;};
+    bool update_distances(void);
     
     std::string get_tooltip(void);
 
