@@ -98,7 +98,7 @@ int calc_angle(int x1, int y1, int x2, int y2)
     return 0;
 }
 
-void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y2, int color, int *step, struct value *value, int stepsize, int distance_from_outport)
+void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y2, int color, int *step, struct value *value, int stepsize)
 {
         double dx, dy,d;
         bool thick = false;
@@ -133,13 +133,12 @@ void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y
 	    totalstep++;
             if ((*step) >= stepsize) {
                 (*step) = 0;
-		if (value->type == VALUE_TYPE_INT || 1) { 
+		if (value->type == VALUE_TYPE_INT) { 
 			const float size = 0.24 * cursormag;
 			const float size2 = 0.20 * cursormag;
 			char buf[128];
 			std::string s;
 			sprintf(buf, "%li", value->intval);
-			sprintf(buf, "%i", distance_from_outport);
 			s = buf;
 			canvas->draw_box(x1-size, y1-size, x1+size, y1+size, COLOR_WIRE_MOTION);
 			canvas->draw_box(x1-size2, y1-size2, x1+size2, y1+size2, COLOR_BACKGROUND_MAIN);
@@ -216,7 +215,7 @@ void wire::draw(class canvas *canvas, int _color)
             first = false;
             continue;
         }
-        draw_snake_line(canvas, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, wire_to_color(color), &step, &value, stepsize, distance_from_outport);
+        draw_snake_line(canvas, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, wire_to_color(color), &step, &value, stepsize);
         prevX = point.X;
         prevY = point.Y;
     }
