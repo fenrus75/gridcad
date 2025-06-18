@@ -569,6 +569,8 @@ std::string port::get_tooltip(void)
 		s = "INPUT [" + s + "]";
 	if (direction == PORT_OUT)
 		s = "OUTPUT [" + s + "]";
+	if (direction == PORT_Z)
+		s = "TRISTATE [" + s + "]";
 	return s;
 }
 
