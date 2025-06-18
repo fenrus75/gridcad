@@ -177,6 +177,7 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 			wr2->route(current_scene);
 			freshsplit = true;
 			current_scene->cycle_color();
+			current_scene->redo_nets();
 		}
 
 		if (!freshsplit) {
@@ -212,6 +213,7 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 			if (active_icon)
 				floating.push_back(active_icon->create_element());
 			current_scene->cycle_color();
+			current_scene->redo_nets();
 		}
 
 
@@ -475,6 +477,7 @@ bool canvas::handle_event(SDL_Event &event)
 					current_scene->delete_selection();
 					current_scene->process_delete_requests();
 					current_scene->remove_orphans();
+					current_scene->redo_nets();
 				}
 				break;
 			case SDLK_SPACE:
@@ -499,6 +502,7 @@ bool canvas::handle_event(SDL_Event &event)
 					oldscene = swap_scene(get_undo());
 					if (oldscene)
 						delete(oldscene);
+					current_scene->redo_nets();
 				}
 				break;
 			case SDLK_a:
@@ -533,6 +537,7 @@ bool canvas::handle_event(SDL_Event &event)
 					current_scene->delete_selection();
 					current_scene->process_delete_requests();
 					current_scene->remove_orphans();
+					current_scene->redo_nets();
 				}
 				break;
 			case SDLK_v:
@@ -607,6 +612,7 @@ bool canvas::handle_event(SDL_Event &event)
 					if (dragging->stop_drag(this))
 						current_scene->rewire_section(dragging);
 
+					current_scene->redo_nets();
 				}
 				if (dragging_port && !current_scene->is_port(x, y)) {
 					class wire *wr;
@@ -644,6 +650,7 @@ bool canvas::handle_event(SDL_Event &event)
 					}
 
 					current_scene->cycle_color();
+					current_scene->redo_nets();
 				}
 				if (dragging_port && current_scene->is_port(x, y)) {
 					class port *port2 = current_scene->is_port(x, y);
@@ -657,6 +664,7 @@ bool canvas::handle_event(SDL_Event &event)
 						dragging_wire = NULL;
 						printf("Connection made\n");
 
+						current_scene->redo_nets();
 					}
 				} 
 				dragging = NULL;

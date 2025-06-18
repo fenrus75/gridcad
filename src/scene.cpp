@@ -406,3 +406,8 @@ void scene::add_nets(void)
 		elem->add_nets();
 }
 
+void scene::redo_nets(void)
+{
+	remove_nets();
+	add_nets();
+}
