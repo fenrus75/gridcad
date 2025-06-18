@@ -6,6 +6,8 @@
 #define PORT_OUT 1
 #define PORT_INOUT 2
 
+class net;
+
 class port : public base
 {
 public:
@@ -65,6 +67,9 @@ public:
     void update_distances(void);
     
     std::string get_tooltip(void);
+
+    void add_net(class net *net);
+    void remove_net(void);
 
 	
 private:

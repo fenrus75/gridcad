@@ -13,6 +13,7 @@
 #include "gridcad.h"
 #include "wire.h"
 #include "port.h"
+#include "net.h"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -529,4 +530,18 @@ std::string port::get_tooltip(void)
 	if (direction == PORT_OUT)
 		s = "OUTPUT [" + s + "]";
 	return s;
+}
+
+void port::add_net(class net *net)
+{
+	for (auto wire : wires)
+		wire->add_net(net);
+
+	net->add_port(this);
+}
+
+void port::remove_net(void)
+{
+	for (auto wire : wires)
+		wire->remove_net();
 }

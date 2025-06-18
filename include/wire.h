@@ -3,6 +3,9 @@
 #include "wirepath.h"
 #include "value.h"
 
+
+class net;
+
 class wire : public base
 {
 public:
@@ -53,6 +56,9 @@ public:
     void clear_distance_from_outport(void) { distance_from_outport = INT_MAX;};
     unsigned int get_distance_from_outport(void) { return distance_from_outport;};
     void set_distance_from_outport(unsigned int dist) { if (dist < distance_from_outport) distance_from_outport = dist;};
+
+    void add_net(class net *net);
+    void remove_net(void);
     
 protected:
     bool dead = false;
@@ -65,5 +71,6 @@ protected:
     int refcount = 0;
     int width = 0;
     std::vector<struct waypoint> *points = NULL;
+    class net *net = NULL; /* nosave */
 };
 

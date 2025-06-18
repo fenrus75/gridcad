@@ -15,6 +15,7 @@
 #include "wirepath.h"
 #include "wire.h"
 #include "port.h"
+#include "net.h"
 #include "model_clock.h"
 
 #include <algorithm>
@@ -608,4 +609,33 @@ std::string wire::get_verilog_name(void)
     s = s + std::to_string(distance_from_outport);
     return s;
     
+}
+
+void wire::add_net(class net *newnet)
+{
+	if (net == newnet)
+		return;
+
+	net = newnet;
+
+	for (auto port : ports)
+		port->add_net(newnet);
+
+	net->add_wire(this);
+}
+
+void wire::remove_net(void)
+{
+	class net *save;
+	if (!net)
+		return;
+	save = net;
+	net = NULL;
+	for (auto port : ports) {
+		port->remove_net();	 
+		save->remove_port(port);
+	}
+
+	save->remove_wire(this);
+	
 }
