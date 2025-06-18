@@ -265,6 +265,8 @@ void port::drawConnector(class canvas * canvas, float X, float Y, int cX, int cY
 			icon = "assets/port_in_open.png";
 		else
 			icon = "assets/port_in_connected.png";
+	} else	if (direction == PORT_Z) {
+		icon = "assets/port_out_z.png";
 	} else {
 		if (value.boolval)
 			icon = "assets/port_out_green.png";
