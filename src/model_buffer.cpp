@@ -54,10 +54,17 @@ void model_buffer::calculate(int ttl)
         return;
     
     result.type = VALUE_TYPE_BOOL;
-    result.boolval = !(ports[0]->value.boolval);
-    result.valid = true;
+    result.boolval = ports[0]->value.boolval;
     
-    update_value_net(&result, 1, ttl - 1);
+    if (ports[1]->value.boolval) {
+        ports[2]->direction = PORT_OUT;
+        result.valid = true;
+        update_value_net(&result, 2, ttl - 1);
+    } else {
+        ports[2]->direction = PORT_Z;
+        result.valid = false;
+    }
+    
 }
 
 
@@ -68,12 +75,13 @@ std::string model_buffer::get_verilog_main(void)
     
     ports[0]->collect_wires(&wiremap0);
     ports[1]->collect_wires(&wiremap1);
+    ports[2]->collect_wires(&wiremap2);
     
     if (wiremap0.size() < 1)
         wiremap0.push_back("1'0");
     
-    for (auto name : wiremap1) {
-        s = "assign "  + name + " = !" + wiremap0[0] + ";\n";
+    for (auto name : wiremap2) {
+        s = "assign "  + name + " = " + wiremap1[0] + "?" + wiremap0[0] + ": 1'bz;\n";
     }
     
     return s;
