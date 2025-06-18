@@ -269,7 +269,7 @@
                         "floatval": 0.0,
                         "intval": 5,
                         "is_clock": false,
-                        "is_error": true,
+                        "is_error": false,
                         "type": 1,
                         "valid": true
                     },
@@ -307,7 +307,7 @@
                                 "floatval": 0.0,
                                 "intval": 5,
                                 "is_clock": false,
-                                "is_error": true,
+                                "is_error": false,
                                 "type": 1,
                                 "valid": true
                             },
@@ -582,7 +582,7 @@
                         "floatval": 0.0,
                         "intval": 5,
                         "is_clock": false,
-                        "is_error": true,
+                        "is_error": false,
                         "type": 1,
                         "valid": true
                     },
@@ -620,7 +620,7 @@
                                 "floatval": 0.0,
                                 "intval": 5,
                                 "is_clock": false,
-                                "is_error": true,
+                                "is_error": false,
                                 "type": 1,
                                 "valid": true
                             },
@@ -659,7 +659,7 @@
                         "floatval": 0.0,
                         "intval": 5,
                         "is_clock": false,
-                        "is_error": true,
+                        "is_error": false,
                         "type": 1,
                         "valid": true
                     },
@@ -697,7 +697,7 @@
                                 "floatval": 0.0,
                                 "intval": 5,
                                 "is_clock": false,
-                                "is_error": true,
+                                "is_error": false,
                                 "type": 1,
                                 "valid": true
                             },
@@ -722,7 +722,7 @@
                         "floatval": 0.0,
                         "intval": 5,
                         "is_clock": false,
-                        "is_error": true,
+                        "is_error": false,
                         "type": 1,
                         "valid": true
                     },
@@ -760,7 +760,7 @@
                                 "floatval": 0.0,
                                 "intval": 5,
                                 "is_clock": false,
-                                "is_error": true,
+                                "is_error": false,
                                 "type": 1,
                                 "valid": true
                             },
@@ -797,7 +797,7 @@
                             "Y1": 16,
                             "Y2": 22,
                             "color": 1,
-                            "distance_from_outport": 0,
+                            "distance_from_outport": 2147483647,
                             "name": "Wire1748969152",
                             "points": [
                                 {
@@ -840,7 +840,7 @@
                 {
                     "X": 3,
                     "Y": 1,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 1,
                     "direction": 1,
                     "distance_from_outport": 0,
@@ -923,7 +923,7 @@
                 {
                     "X": 3,
                     "Y": 1,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 1,
                     "direction": 1,
                     "distance_from_outport": 0,
@@ -1006,7 +1006,7 @@
                 {
                     "X": 3,
                     "Y": 1,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 1,
                     "direction": 1,
                     "distance_from_outport": 0,
@@ -1093,7 +1093,7 @@
                 {
                     "X": 3,
                     "Y": 1,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 1,
                     "direction": 1,
                     "distance_from_outport": 0,
@@ -1176,7 +1176,7 @@
                 {
                     "X": 3,
                     "Y": 1,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 1,
                     "direction": 1,
                     "distance_from_outport": 0,
@@ -1255,7 +1255,7 @@
                 {
                     "X": 3,
                     "Y": 1,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 1,
                     "direction": 1,
                     "distance_from_outport": 0,
@@ -1342,7 +1342,7 @@
                 {
                     "X": 3,
                     "Y": 1,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 1,
                     "direction": 1,
                     "distance_from_outport": 0,
@@ -1425,7 +1425,7 @@
                 {
                     "X": 3,
                     "Y": 1,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 1,
                     "direction": 1,
                     "distance_from_outport": 0,
@@ -1770,7 +1770,7 @@
                         "floatval": 0.0,
                         "intval": 11,
                         "is_clock": false,
-                        "is_error": true,
+                        "is_error": false,
                         "type": 1,
                         "valid": true
                     },
@@ -1808,7 +1808,7 @@
                                 "floatval": 0.0,
                                 "intval": 11,
                                 "is_clock": false,
-                                "is_error": true,
+                                "is_error": false,
                                 "type": 1,
                                 "valid": true
                             },
@@ -2083,7 +2083,7 @@
                         "floatval": 0.0,
                         "intval": 13,
                         "is_clock": false,
-                        "is_error": true,
+                        "is_error": false,
                         "type": 1,
                         "valid": true
                     },
@@ -2121,7 +2121,7 @@
                                 "floatval": 0.0,
                                 "intval": 13,
                                 "is_clock": false,
-                                "is_error": true,
+                                "is_error": false,
                                 "type": 1,
                                 "valid": true
                             },
@@ -2160,7 +2160,7 @@
                         "floatval": 0.0,
                         "intval": 11,
                         "is_clock": false,
-                        "is_error": true,
+                        "is_error": false,
                         "type": 1,
                         "valid": true
                     },
@@ -2198,7 +2198,7 @@
                                 "floatval": 0.0,
                                 "intval": 11,
                                 "is_clock": false,
-                                "is_error": true,
+                                "is_error": false,
                                 "type": 1,
                                 "valid": true
                             },
@@ -2223,7 +2223,7 @@
                         "floatval": 0.0,
                         "intval": 13,
                         "is_clock": false,
-                        "is_error": true,
+                        "is_error": false,
                         "type": 1,
                         "valid": true
                     },
@@ -2261,7 +2261,7 @@
                                 "floatval": 0.0,
                                 "intval": 13,
                                 "is_clock": false,
-                                "is_error": true,
+                                "is_error": false,
                                 "type": 1,
                                 "valid": true
                             },
@@ -2298,7 +2298,7 @@
                             "Y1": 36,
                             "Y2": 29,
                             "color": 2,
-                            "distance_from_outport": 0,
+                            "distance_from_outport": 2147483647,
                             "name": "Wire1748473246",
                             "points": [
                                 {
@@ -2345,7 +2345,7 @@
                 {
                     "X": 3,
                     "Y": 1,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 2,
                     "direction": 1,
                     "distance_from_outport": 0,
@@ -2428,7 +2428,7 @@
                 {
                     "X": 3,
                     "Y": 1,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 2,
                     "direction": 1,
                     "distance_from_outport": 0,
@@ -2511,7 +2511,7 @@
                 {
                     "X": 3,
                     "Y": 1,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 2,
                     "direction": 1,
                     "distance_from_outport": 0,
@@ -2598,7 +2598,7 @@
                 {
                     "X": 3,
                     "Y": 1,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 2,
                     "direction": 1,
                     "distance_from_outport": 0,
@@ -2681,7 +2681,7 @@
                 {
                     "X": 3,
                     "Y": 1,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 2,
                     "direction": 1,
                     "distance_from_outport": 0,
@@ -2760,7 +2760,7 @@
                 {
                     "X": 3,
                     "Y": 1,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 2,
                     "direction": 1,
                     "distance_from_outport": 0,
@@ -2847,7 +2847,7 @@
                 {
                     "X": 3,
                     "Y": 1,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 2,
                     "direction": 1,
                     "distance_from_outport": 0,
@@ -2930,7 +2930,7 @@
                 {
                     "X": 3,
                     "Y": 1,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 2,
                     "direction": 1,
                     "distance_from_outport": 0,
@@ -4470,7 +4470,7 @@
                 {
                     "X": 1,
                     "Y": -1,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 0,
                     "direction": 0,
                     "distance_from_outport": 1,
@@ -4549,7 +4549,7 @@
                 {
                     "X": 1,
                     "Y": 3,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 4,
                     "direction": 1,
                     "distance_from_outport": 0,
@@ -4575,7 +4575,7 @@
                             "Y1": 14,
                             "Y2": 23,
                             "color": 4,
-                            "distance_from_outport": 0,
+                            "distance_from_outport": 2147483647,
                             "name": "Wire1748969147",
                             "points": [
                                 {
@@ -4628,7 +4628,7 @@
                 {
                     "X": 0,
                     "Y": 0,
-                    "bus_width": 0,
+                    "bus_width": 8,
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 1,
@@ -4757,10 +4757,10 @@
                 {
                     "X": 3,
                     "Y": 1,
-                    "bus_width": 0,
+                    "bus_width": 8,
                     "color": 0,
                     "direction": 0,
-                    "distance_from_outport": 2147483648,
+                    "distance_from_outport": 2,
                     "linked_uuid": "",
                     "name": "Aval",
                     "screenX": 31.0,
@@ -4783,7 +4783,7 @@
                             "Y1": 22,
                             "Y2": 22,
                             "color": 1,
-                            "distance_from_outport": 1,
+                            "distance_from_outport": 2147483647,
                             "name": "Wire1748461480",
                             "points": [
                                 {
@@ -4836,10 +4836,10 @@
                 {
                     "X": 3,
                     "Y": 1,
-                    "bus_width": 0,
+                    "bus_width": 8,
                     "color": 0,
                     "direction": 0,
-                    "distance_from_outport": 2147483648,
+                    "distance_from_outport": 2,
                     "linked_uuid": "",
                     "name": "Bval",
                     "screenX": 31.0,
@@ -4862,7 +4862,7 @@
                             "Y1": 29,
                             "Y2": 29,
                             "color": 2,
-                            "distance_from_outport": 1,
+                            "distance_from_outport": 2147483647,
                             "name": "Wire1748473247",
                             "points": [
                                 {
@@ -4915,10 +4915,10 @@
                 {
                     "X": 0,
                     "Y": 0,
-                    "bus_width": 0,
+                    "bus_width": 8,
                     "color": 0,
                     "direction": 2,
-                    "distance_from_outport": 1,
+                    "distance_from_outport": 2147483648,
                     "linked_uuid": "",
                     "name": "Connector",
                     "screenX": 34.0,
@@ -4941,7 +4941,7 @@
                             "Y1": 22,
                             "Y2": 22,
                             "color": 1,
-                            "distance_from_outport": 1,
+                            "distance_from_outport": 2147483647,
                             "name": "Wire1748461480",
                             "points": [
                                 {
@@ -4971,7 +4971,7 @@
                             "Y1": 22,
                             "Y2": 25,
                             "color": 1,
-                            "distance_from_outport": 1,
+                            "distance_from_outport": 2147483647,
                             "name": "Wire1748969151",
                             "points": [
                                 {
@@ -5005,7 +5005,7 @@
                             "Y1": 16,
                             "Y2": 22,
                             "color": 1,
-                            "distance_from_outport": 0,
+                            "distance_from_outport": 2147483647,
                             "name": "Wire1748969152",
                             "points": [
                                 {
@@ -5048,10 +5048,10 @@
                 {
                     "X": 0,
                     "Y": 0,
-                    "bus_width": 0,
+                    "bus_width": 8,
                     "color": 0,
                     "direction": 2,
-                    "distance_from_outport": 1,
+                    "distance_from_outport": 2147483648,
                     "linked_uuid": "",
                     "name": "Connector",
                     "screenX": 34.0,
@@ -5074,7 +5074,7 @@
                             "Y1": 36,
                             "Y2": 29,
                             "color": 2,
-                            "distance_from_outport": 0,
+                            "distance_from_outport": 2147483647,
                             "name": "Wire1748473246",
                             "points": [
                                 {
@@ -5108,7 +5108,7 @@
                             "Y1": 29,
                             "Y2": 29,
                             "color": 2,
-                            "distance_from_outport": 1,
+                            "distance_from_outport": 2147483647,
                             "name": "Wire1748473247",
                             "points": [
                                 {
@@ -5138,7 +5138,7 @@
                             "Y1": 29,
                             "Y2": 26,
                             "color": 2,
-                            "distance_from_outport": 1,
+                            "distance_from_outport": 2147483647,
                             "name": "Wire1748969153",
                             "points": [
                                 {
@@ -5186,7 +5186,7 @@
                 {
                     "X": 1,
                     "Y": 3,
-                    "bus_width": 0,
+                    "bus_width": 8,
                     "color": 0,
                     "direction": 0,
                     "distance_from_outport": 2,
@@ -5285,7 +5285,7 @@
                             "Y1": 14,
                             "Y2": 23,
                             "color": 4,
-                            "distance_from_outport": 0,
+                            "distance_from_outport": 2147483647,
                             "name": "Wire1748969147",
                             "points": [
                                 {
@@ -5450,7 +5450,7 @@
                             "Y1": 22,
                             "Y2": 25,
                             "color": 1,
-                            "distance_from_outport": 1,
+                            "distance_from_outport": 2147483647,
                             "name": "Wire1748969151",
                             "points": [
                                 {
@@ -5509,7 +5509,7 @@
                             "Y1": 29,
                             "Y2": 26,
                             "color": 2,
-                            "distance_from_outport": 1,
+                            "distance_from_outport": 2147483647,
                             "name": "Wire1748969153",
                             "points": [
                                 {
@@ -5553,7 +5553,7 @@
                             {
                                 "X": 3,
                                 "Y": 1,
-                                "bus_width": 0,
+                                "bus_width": 8,
                                 "color": 2,
                                 "direction": 1,
                                 "distance_from_outport": 0,
@@ -5632,7 +5632,7 @@
                             {
                                 "X": 1,
                                 "Y": 3,
-                                "bus_width": 0,
+                                "bus_width": 1,
                                 "color": 4,
                                 "direction": 1,
                                 "distance_from_outport": 0,
@@ -5711,7 +5711,7 @@
                             {
                                 "X": -1,
                                 "Y": 1,
-                                "bus_width": 0,
+                                "bus_width": 8,
                                 "color": 0,
                                 "direction": 0,
                                 "distance_from_outport": 1,
@@ -5790,7 +5790,7 @@
                             {
                                 "X": 1,
                                 "Y": -1,
-                                "bus_width": 0,
+                                "bus_width": 1,
                                 "color": 0,
                                 "direction": 0,
                                 "distance_from_outport": 1,
@@ -5869,7 +5869,7 @@
                             {
                                 "X": 3,
                                 "Y": 1,
-                                "bus_width": 0,
+                                "bus_width": 8,
                                 "color": 1,
                                 "direction": 1,
                                 "distance_from_outport": 0,
@@ -6145,7 +6145,7 @@
                                     "floatval": 0.0,
                                     "intval": 0,
                                     "is_clock": false,
-                                    "is_error": true,
+                                    "is_error": false,
                                     "type": 1,
                                     "valid": true
                                 },
@@ -6183,7 +6183,7 @@
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": false,
-                                            "is_error": true,
+                                            "is_error": false,
                                             "type": 1,
                                             "valid": true
                                         },
@@ -6208,7 +6208,7 @@
                                     "floatval": 0.0,
                                     "intval": 3,
                                     "is_clock": false,
-                                    "is_error": true,
+                                    "is_error": false,
                                     "type": 1,
                                     "valid": true
                                 },
@@ -6246,7 +6246,7 @@
                                             "floatval": 0.0,
                                             "intval": 3,
                                             "is_clock": false,
-                                            "is_error": true,
+                                            "is_error": false,
                                             "type": 1,
                                             "valid": true
                                         },
@@ -6637,7 +6637,7 @@
                                     "floatval": 0.0,
                                     "intval": 0,
                                     "is_clock": false,
-                                    "is_error": true,
+                                    "is_error": false,
                                     "type": 1,
                                     "valid": true
                                 },
@@ -6675,7 +6675,7 @@
                                             "floatval": 0.0,
                                             "intval": 0,
                                             "is_clock": false,
-                                            "is_error": true,
+                                            "is_error": false,
                                             "type": 1,
                                             "valid": true
                                         },
@@ -10940,7 +10940,7 @@
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_clock": false,
-                                                                    "is_error": true,
+                                                                    "is_error": false,
                                                                     "type": 0,
                                                                     "valid": true
                                                                 },
@@ -11276,7 +11276,7 @@
                                                             "floatval": 0.0,
                                                             "intval": 0,
                                                             "is_clock": false,
-                                                            "is_error": true,
+                                                            "is_error": false,
                                                             "type": 0,
                                                             "valid": true
                                                         },
@@ -11296,7 +11296,7 @@
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_clock": false,
-                                                                    "is_error": true,
+                                                                    "is_error": false,
                                                                     "type": 0,
                                                                     "valid": true
                                                                 },
@@ -11619,7 +11619,7 @@
                                                             "floatval": 0.0,
                                                             "intval": 0,
                                                             "is_clock": false,
-                                                            "is_error": true,
+                                                            "is_error": false,
                                                             "type": 0,
                                                             "valid": true
                                                         },
@@ -11639,7 +11639,7 @@
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_clock": false,
-                                                                    "is_error": true,
+                                                                    "is_error": false,
                                                                     "type": 0,
                                                                     "valid": true
                                                                 },
@@ -12169,7 +12169,7 @@
                                                             "floatval": 0.0,
                                                             "intval": 0,
                                                             "is_clock": false,
-                                                            "is_error": true,
+                                                            "is_error": false,
                                                             "type": 0,
                                                             "valid": true
                                                         },
@@ -12189,7 +12189,7 @@
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_clock": false,
-                                                                    "is_error": true,
+                                                                    "is_error": false,
                                                                     "type": 0,
                                                                     "valid": true
                                                                 },
@@ -12209,7 +12209,7 @@
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_clock": false,
-                                                                    "is_error": true,
+                                                                    "is_error": false,
                                                                     "type": 0,
                                                                     "valid": true
                                                                 },
@@ -12229,7 +12229,7 @@
                                                                     "floatval": 0.0,
                                                                     "intval": 0,
                                                                     "is_clock": false,
-                                                                    "is_error": true,
+                                                                    "is_error": false,
                                                                     "type": 0,
                                                                     "valid": true
                                                                 },
@@ -15721,7 +15721,7 @@
                                         {
                                             "X": 2,
                                             "Y": 1,
-                                            "bus_width": 0,
+                                            "bus_width": 1,
                                             "color": 1,
                                             "direction": 1,
                                             "distance_from_outport": 0,
@@ -15776,7 +15776,7 @@
                                         {
                                             "X": 2,
                                             "Y": 2,
-                                            "bus_width": 0,
+                                            "bus_width": 1,
                                             "color": 1,
                                             "direction": 1,
                                             "distance_from_outport": 0,
@@ -15831,7 +15831,7 @@
                                         {
                                             "X": 2,
                                             "Y": 3,
-                                            "bus_width": 0,
+                                            "bus_width": 1,
                                             "color": 1,
                                             "direction": 1,
                                             "distance_from_outport": 0,
@@ -15886,7 +15886,7 @@
                                         {
                                             "X": 2,
                                             "Y": 4,
-                                            "bus_width": 0,
+                                            "bus_width": 1,
                                             "color": 1,
                                             "direction": 1,
                                             "distance_from_outport": 0,
@@ -16010,7 +16010,7 @@
                                         {
                                             "X": 2,
                                             "Y": 1,
-                                            "bus_width": 0,
+                                            "bus_width": 1,
                                             "color": 2,
                                             "direction": 1,
                                             "distance_from_outport": 0,
@@ -16065,7 +16065,7 @@
                                         {
                                             "X": 2,
                                             "Y": 2,
-                                            "bus_width": 0,
+                                            "bus_width": 1,
                                             "color": 2,
                                             "direction": 1,
                                             "distance_from_outport": 0,
@@ -16120,7 +16120,7 @@
                                         {
                                             "X": 2,
                                             "Y": 3,
-                                            "bus_width": 0,
+                                            "bus_width": 1,
                                             "color": 2,
                                             "direction": 1,
                                             "distance_from_outport": 0,
@@ -16175,7 +16175,7 @@
                                         {
                                             "X": 2,
                                             "Y": 4,
-                                            "bus_width": 0,
+                                            "bus_width": 1,
                                             "color": 2,
                                             "direction": 1,
                                             "distance_from_outport": 0,
@@ -16549,7 +16549,7 @@
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
-                                                "is_error": true,
+                                                "is_error": false,
                                                 "type": 1,
                                                 "valid": true
                                             },
@@ -16579,7 +16579,7 @@
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
-                                                        "is_error": true,
+                                                        "is_error": false,
                                                         "type": 1,
                                                         "valid": true
                                                     },
@@ -16604,7 +16604,7 @@
                                         {
                                             "X": -1,
                                             "Y": 1,
-                                            "bus_width": 0,
+                                            "bus_width": 4,
                                             "color": 0,
                                             "direction": 0,
                                             "distance_from_outport": 1,
@@ -16618,7 +16618,7 @@
                                                 "floatval": 0.0,
                                                 "intval": 0,
                                                 "is_clock": false,
-                                                "is_error": true,
+                                                "is_error": false,
                                                 "type": 1,
                                                 "valid": true
                                             },
@@ -16648,7 +16648,7 @@
                                                         "floatval": 0.0,
                                                         "intval": 0,
                                                         "is_clock": false,
-                                                        "is_error": true,
+                                                        "is_error": false,
                                                         "type": 1,
                                                         "valid": true
                                                     },
@@ -16683,7 +16683,7 @@
                                         {
                                             "X": 3,
                                             "Y": 1,
-                                            "bus_width": 0,
+                                            "bus_width": 4,
                                             "color": 1,
                                             "direction": 1,
                                             "distance_from_outport": 0,
@@ -16762,7 +16762,7 @@
                                         {
                                             "X": 3,
                                             "Y": 1,
-                                            "bus_width": 0,
+                                            "bus_width": 4,
                                             "color": 2,
                                             "direction": 1,
                                             "distance_from_outport": 0,
@@ -16981,7 +16981,7 @@
                                     "floatval": 0.0,
                                     "intval": 3,
                                     "is_clock": false,
-                                    "is_error": true,
+                                    "is_error": false,
                                     "type": 1,
                                     "valid": true
                                 },
@@ -17019,7 +17019,7 @@
                                             "floatval": 0.0,
                                             "intval": 3,
                                             "is_clock": false,
-                                            "is_error": true,
+                                            "is_error": false,
                                             "type": 1,
                                             "valid": true
                                         },
@@ -26065,7 +26065,7 @@
                                         {
                                             "X": 2,
                                             "Y": 1,
-                                            "bus_width": 0,
+                                            "bus_width": 1,
                                             "color": 1,
                                             "direction": 1,
                                             "distance_from_outport": 0,
@@ -26120,7 +26120,7 @@
                                         {
                                             "X": 2,
                                             "Y": 2,
-                                            "bus_width": 0,
+                                            "bus_width": 1,
                                             "color": 1,
                                             "direction": 1,
                                             "distance_from_outport": 0,
@@ -26175,7 +26175,7 @@
                                         {
                                             "X": 2,
                                             "Y": 3,
-                                            "bus_width": 0,
+                                            "bus_width": 1,
                                             "color": 1,
                                             "direction": 1,
                                             "distance_from_outport": 0,
@@ -26230,7 +26230,7 @@
                                         {
                                             "X": 2,
                                             "Y": 4,
-                                            "bus_width": 0,
+                                            "bus_width": 1,
                                             "color": 1,
                                             "direction": 1,
                                             "distance_from_outport": 0,
@@ -26354,7 +26354,7 @@
                                         {
                                             "X": 2,
                                             "Y": 1,
-                                            "bus_width": 0,
+                                            "bus_width": 1,
                                             "color": 2,
                                             "direction": 1,
                                             "distance_from_outport": 0,
@@ -26409,7 +26409,7 @@
                                         {
                                             "X": 2,
                                             "Y": 2,
-                                            "bus_width": 0,
+                                            "bus_width": 1,
                                             "color": 2,
                                             "direction": 1,
                                             "distance_from_outport": 0,
@@ -26464,7 +26464,7 @@
                                         {
                                             "X": 2,
                                             "Y": 3,
-                                            "bus_width": 0,
+                                            "bus_width": 1,
                                             "color": 2,
                                             "direction": 1,
                                             "distance_from_outport": 0,
@@ -26519,7 +26519,7 @@
                                         {
                                             "X": 2,
                                             "Y": 4,
-                                            "bus_width": 0,
+                                            "bus_width": 1,
                                             "color": 2,
                                             "direction": 1,
                                             "distance_from_outport": 0,
@@ -26893,7 +26893,7 @@
                                                 "floatval": 0.0,
                                                 "intval": 3,
                                                 "is_clock": false,
-                                                "is_error": true,
+                                                "is_error": false,
                                                 "type": 1,
                                                 "valid": true
                                             },
@@ -26923,7 +26923,7 @@
                                                         "floatval": 0.0,
                                                         "intval": 3,
                                                         "is_clock": false,
-                                                        "is_error": true,
+                                                        "is_error": false,
                                                         "type": 1,
                                                         "valid": true
                                                     },
@@ -26948,7 +26948,7 @@
                                         {
                                             "X": -1,
                                             "Y": 1,
-                                            "bus_width": 0,
+                                            "bus_width": 4,
                                             "color": 0,
                                             "direction": 0,
                                             "distance_from_outport": 1,
@@ -26962,7 +26962,7 @@
                                                 "floatval": 0.0,
                                                 "intval": 3,
                                                 "is_clock": false,
-                                                "is_error": true,
+                                                "is_error": false,
                                                 "type": 1,
                                                 "valid": true
                                             },
@@ -26992,7 +26992,7 @@
                                                         "floatval": 0.0,
                                                         "intval": 3,
                                                         "is_clock": false,
-                                                        "is_error": true,
+                                                        "is_error": false,
                                                         "type": 1,
                                                         "valid": true
                                                     },
@@ -27027,7 +27027,7 @@
                                         {
                                             "X": 3,
                                             "Y": 1,
-                                            "bus_width": 0,
+                                            "bus_width": 4,
                                             "color": 1,
                                             "direction": 1,
                                             "distance_from_outport": 0,
@@ -27106,7 +27106,7 @@
                                         {
                                             "X": 3,
                                             "Y": 1,
-                                            "bus_width": 0,
+                                            "bus_width": 4,
                                             "color": 2,
                                             "direction": 1,
                                             "distance_from_outport": 0,

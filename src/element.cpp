@@ -17,6 +17,7 @@
 #include "port.h"
 #include "contextmenu.h"
 #include "wire.h"
+#include "net.h"
 
 static void callback_delete(class element *element)
 {
@@ -530,4 +531,22 @@ void element::rotate_ports(void)
 	angle -= 360;
     if (angle < 0)
 	angle += 360;
+}
+
+
+void element::remove_nets(void)
+{
+	for (auto port : ports)
+		port->remove_net();
+}
+
+void element::add_nets(void)
+{
+	for (auto port : ports) {
+		if (port->has_net())
+			continue;
+		class net *net = new class net();
+		net->add_port(port);
+		net->validate();
+	}
 }

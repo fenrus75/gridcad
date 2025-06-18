@@ -235,6 +235,9 @@ public:
     std::string get_verilog_modules(std::string verilog_path);
     std::string get_verilog_name(void) { return verilog_name;};
     void create_verilog_names(void);
+
+    void remove_nets(void);
+    void add_nets(void);
     
 protected:
     class contextmenu *menu = NULL;
@@ -336,6 +339,9 @@ public:
     void collect_wires(std::map<std::string, std::string> *wiremap);
     virtual void set_library_origin(std::string origin_lib, std::string origin_elm) {};
     virtual bool is_background(void) { return false; };
+
+    void remove_nets(void);
+    void add_nets(void);
     
 protected:
     class contextmenu *menu = NULL; /* nosave */

@@ -22,6 +22,7 @@ public:
     int value_ttl = 0;
     void add_wire(class wire *wire);
     void update_value(struct value *newvalue, int ttl);
+    void update_value_final(struct value *newvalue, int ttl);
     int direction = PORT_IN;
     bool is_connector = false;
     int color = 0;
@@ -70,6 +71,8 @@ public:
 
     void add_net(class net *net);
     void remove_net(void);
+
+    bool has_net(void);
 
 	
 private:

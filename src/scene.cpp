@@ -215,6 +215,7 @@ void scene::from_json(json &j)
 		element->calculate(100);
 
 	cycle_color();
+	add_nets();
 }
 
 void scene::process_delete_requests(void)
@@ -390,3 +391,17 @@ std::string scene::get_full_name(void)
 		return parental_name + "/" + vname;
 	return parental_name + "/" + name;
 };
+
+
+void scene::remove_nets(void)
+{
+	for (auto elem : elements)
+		elem->remove_nets();
+}
+
+void scene::add_nets(void)
+{
+	for (auto elem : elements)
+		elem->add_nets();
+}
+

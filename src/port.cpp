@@ -158,6 +158,43 @@ void port::update_value(struct value *newvalue, int ttl)
 		
 }
 
+void port::update_value_final(struct value *newvalue, int ttl)
+{
+	unsigned int best_dist = INT_MAX;
+	
+	if (bus_width == 0)
+		for (auto wire:wires) {
+			if (wire->get_width() > bus_width)
+				bus_width = wire->get_width();
+	
+		}
+	
+
+	if (direction == PORT_OUT) {
+		distance_from_outport = 0;
+		for (auto wire:wires)
+			wire->set_distance_from_outport(0);
+	} else {
+		for (auto wire:wires)
+			if (wire->get_distance_from_outport() < best_dist)
+				best_dist = wire->get_distance_from_outport();
+			
+		for (auto wire:wires) {
+			distance_from_outport = best_dist + 1;
+			wire->set_distance_from_outport(best_dist + 1);
+		}
+	}
+		
+
+		
+	value = *newvalue;	
+
+//	notify(ttl -1);
+	if (parent && direction != PORT_OUT)
+		parent->notify(ttl -1);
+		
+}
+
 void port::update_distances(void)
 {
 	unsigned int best_dist = INT_MAX;
@@ -467,7 +504,7 @@ void port::cycle_color(void)
 	value.boolval = !value.boolval;
 	value.intval = ~value.intval;
 	for (auto wire:wires) {
-		wire->update_value(&value, 50);
+		wire->update_value(&value, DEFAULT_TTL);
 	}
 	value.boolval = !value.boolval;
 	value.intval = ~value.intval;
@@ -544,4 +581,12 @@ void port::remove_net(void)
 {
 	for (auto wire : wires)
 		wire->remove_net();
+}
+
+bool port::has_net(void)
+{
+	for (auto wire : wires)
+		if (wire->has_net())
+			return true;
+	return false;
 }

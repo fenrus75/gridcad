@@ -337,6 +337,15 @@ void wire::update_value(struct value *newvalue, int ttl)
     notify(ttl - 1);
 }
 
+void wire::update_value_final(struct value *newvalue, int ttl)
+{
+    if (ttl <= 0)
+        return;
+
+    value = *newvalue;
+    notify(ttl - 1);
+}
+
 void wire::notify(int ttl)
 {
 }

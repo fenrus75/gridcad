@@ -18,6 +18,10 @@ public:
 	void remove_port(class port *port);
 	void remove_wire(class wire *wire);
 
+	void validate(void);
+
+	void set_value(class value *newval, int ttl);
+	void update_value(class value *newval, int ttl);
 protected:
 	std::vector<class wire *> wires;
 	std::vector<class port *> ports;
