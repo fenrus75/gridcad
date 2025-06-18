@@ -30,7 +30,8 @@ protected:
 	std::vector<class wire *> wires;
 	std::vector<class port *> ports;
 
-	struct value value;
-	int color;
+	bool has_z = false;
+	struct value value = {};
+	int color = 0;
 };
 

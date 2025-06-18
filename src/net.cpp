@@ -89,10 +89,14 @@ void net::update_net_distances(void)
 void net::validate(void)
 {
 	int count = 0;
+	int zcount = 0;
 	/* verify there is only one PORT_OUT */
 	for (auto port:ports)
 		if (port->direction == PORT_OUT)
 			count++;
+	for (auto port:ports)
+		if (port->direction == PORT_Z)
+			zcount++;
 	if (count != 1) {
 		printf("NET IS INVALID, %i output ports\n", count);
 		value.is_error = true;
@@ -100,6 +104,10 @@ void net::validate(void)
 	} else {
 		value.is_error = false;
 	}
+	if (zcount > 0)
+		has_z = true;
+	else
+		has_z = false;
 	
 }
 
@@ -120,6 +128,8 @@ void net::update_value(struct value *newvalue, int ttl)
 
 	value = *newvalue;
 	set_value(newvalue, ttl);
+	if (has_z)
+		update_net_distances();
 }
 
 
