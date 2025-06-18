@@ -23,6 +23,7 @@ public:
     void add_wire(class wire *wire);
     void update_value(struct value *newvalue, int ttl);
     void update_value_final(struct value *newvalue, int ttl);
+    void update_value_net(struct value *newvalue, int ttl);
     int direction = PORT_IN;
     bool is_connector = false;
     int color = 0;

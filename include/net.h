@@ -22,10 +22,12 @@ public:
 
 	void set_value(class value *newval, int ttl);
 	void update_value(class value *newval, int ttl);
+	unsigned int netnum;
 protected:
 	std::vector<class wire *> wires;
 	std::vector<class port *> ports;
 
 	struct value value;
+
 };
 

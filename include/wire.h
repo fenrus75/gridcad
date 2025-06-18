@@ -24,6 +24,7 @@ public:
     
     void update_value(struct value *newvalue, int ttl);
     void update_value_final(struct value *newvalue, int ttl);
+    void update_value_net(struct value *newvalue, int ttl);
     virtual void notify(int ttl);
     struct value value = {};
     bool intersect(float targetX, float targetY);

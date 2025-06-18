@@ -215,6 +215,7 @@ void scene::from_json(json &j)
 		element->calculate(100);
 
 	cycle_color();
+	remove_nets();
 	add_nets();
 }
 

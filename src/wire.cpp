@@ -98,7 +98,7 @@ int calc_angle(int x1, int y1, int x2, int y2)
     return 0;
 }
 
-void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y2, int color, int *step, struct value *value, int stepsize = 60)
+void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y2, int color, int *step, struct value *value, int stepsize)
 {
         double dx, dy,d;
         bool thick = false;
@@ -339,11 +339,17 @@ void wire::update_value(struct value *newvalue, int ttl)
 
 void wire::update_value_final(struct value *newvalue, int ttl)
 {
+	printf("update final to %i \n", newvalue->boolval);
+    value = *newvalue;
+    notify(ttl - 1);
+}
+
+void wire::update_value_net(struct value *newvalue, int ttl)
+{
     if (ttl <= 0)
         return;
 
-    value = *newvalue;
-    notify(ttl - 1);
+    net->update_value(newvalue, ttl - 1);
 }
 
 void wire::notify(int ttl)
@@ -593,6 +599,7 @@ void wire::push_wire_color(int _color)
 	if (color == _color)
 		return;
 	color = _color;
+return;
 	for (auto port : ports)
 		port->push_wire_color(color);
 }
@@ -624,6 +631,8 @@ void wire::add_net(class net *newnet)
 {
 	if (net == newnet)
 		return;
+
+	printf("Wire %s adding net %i \n", name.c_str(), newnet->netnum);
 
 	net = newnet;
 

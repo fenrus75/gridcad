@@ -114,7 +114,8 @@ void model_toggle::update_value(struct value *newvalue, int ttl)
     if (ttl <= 1)
       return;
     value = *newvalue;
-    ports[0]->update_value(&value, ttl - 1);
+
+    update_value_net(&value, 0, ttl - 1);
     notify(ttl - 1);
     sprintf(buffer, "%lu", value.intval);
     strvalue = buffer;

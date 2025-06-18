@@ -550,3 +550,10 @@ void element::add_nets(void)
 		net->validate();
 	}
 }
+
+void element::update_value_net(struct value *value, int port, int ttl)
+{
+	add_nets();
+	ports[port]->update_value_net(value, ttl);
+}
+

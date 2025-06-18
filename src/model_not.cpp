@@ -52,7 +52,7 @@ void model_not::calculate(int ttl)
     result.boolval = !(ports[0]->value.boolval);
     result.valid = true;
     
-    ports[1]->update_value(&result, ttl -1);
+    update_value_net(&result, 1, ttl - 1);
 }
 
 

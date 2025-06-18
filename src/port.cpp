@@ -148,6 +148,8 @@ void port::update_value(struct value *newvalue, int ttl)
 	value = *newvalue;	
 	value_ttl = ttl;
 
+	printf("PORT UPDATE VALUE\n");
+
 	for (auto wire:wires) {
 		wire->update_value(newvalue, ttl -1);
 	}
@@ -589,4 +591,11 @@ bool port::has_net(void)
 		if (wire->has_net())
 			return true;
 	return false;
+}
+void port::update_value_net(struct value *newvalue, int ttl)
+{
+	if (wires.size() < 1)
+		return;
+	wires[0]->update_value_net(newvalue, ttl);
+
 }

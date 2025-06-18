@@ -4,8 +4,11 @@
 #include "wire.h"
 #include "port.h"
 
+unsigned int global_netnum = 0;
+
 net::net(void)
 {
+	netnum = global_netnum++;
 }
 
 net::~net(void)
@@ -73,6 +76,7 @@ void net::validate(void)
 	}
 	
 }
+
 void net::set_value(struct value *newval, int ttl)
 {
 	for (auto port:ports) {
@@ -88,5 +92,6 @@ void net::update_value(struct value *newvalue, int ttl)
 	if (memcmp(&value, newvalue, sizeof(struct value)) == 0)
 		return;
 
+	value = *newvalue;
 	set_value(newvalue, ttl);
 }
