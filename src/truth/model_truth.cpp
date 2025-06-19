@@ -413,7 +413,6 @@ void model_truth::handle_event(class canvas *canvas, SDL_Event &event)
 std::string model_truth::get_verilog_main(void)
 {
     std::string s = "";
-    std::vector<std::string> wiremap;
     if (verilog_module_name == "")
 	    verilog_module_name = append_random_bits(verilog_name + "_tt_");
 
@@ -427,32 +426,27 @@ std::string model_truth::get_verilog_main(void)
     bool first = true;
     for (auto port : ports) {
     
-    	port->collect_wires(&wiremap);
-    	if (wiremap.size() == 0)
+    	if (!port->has_net())
     		continue;
 
     	if (!first)
     		s = s + ", ";
 	first = false;
     	s = s + "." + port->get_verilog_name() + "(";
-    	if (port->direction == PORT_OUT) {
+    	if (port->direction == PORT_OUT || port->direction == PORT_Z) {
     		s = s + get_verilog_name() + "___" + port->get_verilog_name();
     	} else {
-		s = s + wiremap[0];
+		s = s + port->get_net_verilog_name();
 	}
     	s = s + ")";
     	
-    	wiremap.clear();
     }
     s = s + ");\n";
 
     for (auto port : ports) {
-    	 if (port->direction != PORT_OUT)
+    	 if (port->direction != PORT_OUT && port->direction != PORT_Z)
     	 	continue;
-    	port->collect_wires(&wiremap);
-    	for (auto w : wiremap) 
-		s = s + "assign " + w + " = " + get_verilog_name() + "___" + port->get_verilog_name() + ";\n";
-	wiremap.clear();
+	s = s + "assign " + port->get_net_verilog_name() + " = " + get_verilog_name() + "___" + port->get_verilog_name() + ";\n";
     } 
     
     

@@ -176,101 +176,35 @@ std::string model_memory::get_verilog_main(void)
 {
     unsigned int addrbits = highest_addr_bit(data.size());
     std::string s = "";
-    std::string datawire = "";
     
-    std::vector<std::string> wiremap;
     if (verilog_module_name == "")
 	    verilog_module_name = append_random_bits(verilog_name + "_tt_");
 	    
-    datawire = append_random_bits(verilog_name + "_datawire_");
-    
-    s += "wire [7:0] "+ datawire + ";\n"; 
-
     s = s + verilog_module_name + " " + get_verilog_name() + "(";
-    bool first = true;
 
-        ports[0]->collect_wires(&wiremap);
-        wiremap.push_back("");
-        if (wiremap.size() != 0) {
-
-    	    if (!first)
-  	        s = s + ", ";
-            first = false;
-    
-            s = s + ".clk(";
-            s = s + wiremap[0];
-            s = s + ")";
+        s = s + ".clk(";
+        s = s + ports[0]->get_net_verilog_name();
+        s = s + "), ";
     	
-            wiremap.clear();
-        }
-
-        ports[1]->collect_wires(&wiremap);
-        wiremap.push_back("");
-        if (wiremap.size() != 0) {
-
-    	    if (!first)
-  	        s = s + ", ";
-            first = false;
-    
-            s = s + ".WrEn(";
-            s = s + wiremap[0];
-            s = s + ")";
+        s = s + ".WrEn(";
+        s = s + ports[1]->get_net_verilog_name();
+        s = s + "),";
     	
-            wiremap.clear();
-        }
 
-
-        ports[2]->collect_wires(&wiremap);
-        wiremap.push_back("");
-        if (wiremap.size() != 0) {
-
-    	    if (!first)
-  	        s = s + ", ";
-            first = false;
-    
-            s = s + ".Addr(";
-            s = s + wiremap[0] + "[" + std::to_string(addrbits) + ":0]";
-            s = s + ")";
+        s = s + ".Addr(";
+        s = s + ports[2]->get_net_verilog_name() + "[" + std::to_string(addrbits) + ":0]";
+        s = s + "),";
     	
-            wiremap.clear();
-        }
-
-
-        ports[3]->collect_wires(&wiremap);
-        wiremap.push_back("");
-        if (wiremap.size() != 0) {
-
-    	    if (!first)
-  	        s = s + ", ";
-            first = false;
-    
-            s = s + ".Di(";
-            s = s + wiremap[0];
-            s = s + ")";
+        s = s + ".Di(";
+        s = s + ports[3]->get_net_verilog_name();
+        s = s + "),";
     	
-            wiremap.clear();
-        }
-        ports[4]->collect_wires(&wiremap);
-        wiremap.push_back("");
-        if (wiremap.size() != 0) {
-
-    	    if (!first)
-  	        s = s + ", ";
-            first = false;
-    
-            s = s + ".Do(";
-            s = s + datawire;
-            s = s + ")";
+        s = s + ".Do(";
+        s = s + ports[4]->get_net_verilog_name();
+        s = s + ")";
     	
-            wiremap.clear();
-        }
 
     s = s + ");\n";
-    ports[4]->collect_wires(&wiremap);
-    for (auto w : wiremap) {
-        s += "assign " + w + " = " + datawire + ";\n";
-    }
-    
     return s;
 }
 

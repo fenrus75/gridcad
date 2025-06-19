@@ -148,3 +148,46 @@ void net::update_color(int _color)
 	for (auto wire:wires) 
 		wire->set_color(_color);
 }
+
+std::string net::get_verilog_name(void)
+{
+	if (verilog_name == "")
+		verilog_name = generate_wire_name();
+		
+	std::replace(verilog_name.begin(), verilog_name.end(), '-', '_');
+	std::replace(verilog_name.begin(), verilog_name.end(), ' ', '_');
+	std::replace(verilog_name.begin(), verilog_name.end(), '+', '_');
+
+	return verilog_name;
+}
+
+int net::get_width(void)
+{
+	int w = 1;
+	for (auto wire : wires) {
+		if (wire->get_width() > w)
+			w = wire->get_width();
+	}
+	for (auto port : ports) {
+		if (port->get_width() > w)
+			w = port->get_width();
+	}
+	return w;
+}
+
+std::string net::get_width_string(void)
+{
+	std::string s = "";
+	int w = get_width();
+	if (w < 2)
+		return "";
+	s = s + "[" + std::to_string(w -1) + ":0]";
+	return s;
+}
+
+
+std::string net::get_verilog_wire_decl(void)
+{
+	std::string s = "wire " + get_width_string() + " " + get_verilog_name() + ";";
+	return s;
+}

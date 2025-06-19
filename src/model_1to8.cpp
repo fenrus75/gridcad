@@ -74,46 +74,16 @@ void model_1to8::calculate(int ttl)
 std::string model_1to8::get_verilog_main(void)
 {
     std::string s = "";
-    std::vector<std::string> wiremap;
-    std::vector<std::string> wiremap_in1;
-    std::vector<std::string> wiremap_in2;
-    std::vector<std::string> wiremap_in3;
-    std::vector<std::string> wiremap_in4;
-    std::vector<std::string> wiremap_in5;
-    std::vector<std::string> wiremap_in6;
-    std::vector<std::string> wiremap_in7;
-    std::vector<std::string> wiremap_in8;
     
-
-    ports[8]->collect_wires(&wiremap);
-    ports[0]->collect_wires(&wiremap_in1);
-    if (wiremap_in1.size() < 1)
-        wiremap_in1.push_back("1'b0");
-    ports[1]->collect_wires(&wiremap_in2);
-    if (wiremap_in2.size() < 1)
-        wiremap_in2.push_back("1'b0");
-    ports[2]->collect_wires(&wiremap_in3);
-    if (wiremap_in3.size() < 1)
-        wiremap_in3.push_back("1'b0");
-    ports[3]->collect_wires(&wiremap_in4);
-    if (wiremap_in4.size() < 1)
-        wiremap_in4.push_back("1'b0");
-    ports[4]->collect_wires(&wiremap_in5);
-    if (wiremap_in5.size() < 1)
-        wiremap_in5.push_back("1'b0");
-    ports[5]->collect_wires(&wiremap_in6);
-    if (wiremap_in6.size() < 1)
-        wiremap_in6.push_back("1'b0");
-    ports[6]->collect_wires(&wiremap_in7);
-    if (wiremap_in7.size() < 1)
-        wiremap_in7.push_back("1'b0");
-    ports[7]->collect_wires(&wiremap_in8);
-    if (wiremap_in8.size() < 1)
-        wiremap_in8.push_back("1'b0");
-    
-    for (auto wr : wiremap) {
-      s = s + "assign " + wr + " = {" + wiremap_in1[0] + ", " + wiremap_in2[0]+ ", " + wiremap_in3[0]+ ", " + wiremap_in4[0] + ", " + wiremap_in5[0] + ", " + wiremap_in6[0]+ ", " + wiremap_in7[0]+ ", " + wiremap_in8[0]+ "};\n";
-    }
+      s = s + "assign " + ports[8]->get_net_verilog_name() + " = {" 
+              + ports[0]->get_net_verilog_name("1'b0") + ", " 
+              + ports[1]->get_net_verilog_name("1'b0") + ", " 
+              + ports[2]->get_net_verilog_name("1'b0") + ", " 
+              + ports[3]->get_net_verilog_name("1'b0") + ", " 
+              + ports[4]->get_net_verilog_name("1'b0") + ", "
+              + ports[5]->get_net_verilog_name("1'b0") + ", " 
+              + ports[6]->get_net_verilog_name("1'b0") + ", " 
+              + ports[7]->get_net_verilog_name("1'b0") + "};\n";
     
     return s;
 }

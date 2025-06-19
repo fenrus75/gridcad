@@ -465,7 +465,6 @@ void model_nest::maybe_regen_ports(void)
 std::string model_nest::get_verilog_main(void)
 {
     std::string s = "";
-    std::vector<std::string> wiremap;
     if (canvas)
 	_scene = canvas->get_scene();
 	
@@ -475,49 +474,37 @@ std::string model_nest::get_verilog_main(void)
     	if (port->direction != PORT_OUT)
     		continue;
     
-    	port->collect_wires(&wiremap);
-    	
     	s += "wire ";
     	if (port->get_width() > 1)
 	    s = s + "[" + std::to_string(port->get_width() -1) + ":0] ";
 	s += get_verilog_name() + "_" + port->name + ";\n";
     	
-    	wiremap.clear();
     }
 
     s = s + _scene->get_verilog_name() + " " + get_verilog_name() + "(";
     bool first = true;
     for (auto port : ports) {
     
-    	port->collect_wires(&wiremap);
-
     	if (!first)
     		s = s + ", ";
 	first = false;
     	s = s + "." + port->get_verilog_name() + "(";
-    	if (port->direction == PORT_OUT) {
+    	if (port->direction == PORT_OUT || port->direction == PORT_Z) {
     		s += get_verilog_name() + "_" + port->name;
     	} else {
-	    	if (wiremap.size() > 0)
-			s = s + wiremap[0];
+	 	if (port->has_net())
+			s = s + port->get_net_verilog_name();
 	}
 		
     	s = s + ")";
     	
-    	wiremap.clear();
     }
     s = s + ");\n";
     for (auto port : ports) {
-    	if (port->direction != PORT_OUT)
+    	if (port->direction != PORT_OUT && port->direction != PORT_Z)
     		continue;
     
-    	port->collect_wires(&wiremap);
-    	
-    	for (auto wire : wiremap) {
-    		s += "assign " +wire + " = " + get_verilog_name() + "_" + port->name + ";\n";
-    	}
-    	
-    	wiremap.clear();
+	s += "assign " +port->get_net_verilog_name() + " = " + get_verilog_name() + "_" + port->name + ";\n";
     }
     
     

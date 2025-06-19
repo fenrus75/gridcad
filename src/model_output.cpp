@@ -162,14 +162,7 @@ void model_output::rotate_ports(void)
 std::string model_output::get_verilog_main(void)
 {
     std::string s = "";
-    std::vector<std::string> wiremap;
-    
-    ports[0]->collect_wires(&wiremap);
-    
-    for (auto wr : wiremap) {
-      s = s + "assign " + get_verilog_name() + " = " + wr + ";\n";
-    }
-    
+    s = s + "assign " + get_verilog_name() + " = " + ports[0]->get_net_verilog_name() + ";\n";
     return s;
 }
 

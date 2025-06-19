@@ -493,10 +493,10 @@ void element::create_verilog_name(int seqno, std::vector<std::string> *existing)
 }
 
 
-void element::collect_wires(std::map<std::string, std::string> *wiremap)
+void element::collect_nets(std::vector<std::string> *netmap)
 {
     for (auto port : ports)
-        port->collect_wires(wiremap);
+        port->collect_nets(netmap);
 }
 
 void element::rotate_ports(void)

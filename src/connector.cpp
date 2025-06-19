@@ -100,30 +100,5 @@ void connector::unsplice(void)
 
 std::string connector::get_verilog_main(void)
 {
-    std::string s = "";
-    std::map<std::string, unsigned int> wiremap;
-    std::string inwire = "";
-    unsigned int best = INT_MAX;
-    
-    ports[0]->collect_wires(&wiremap);
-    
-    for (const auto& pair : wiremap) {
-      if (pair.second < best) {
-        best = pair.second;
-        inwire = pair.first;
-      }
-    }
-
-    if (inwire == "") {
-	printf("FATAL ERROR : NO INWIRE FOUND\n");
-		/* NO INWIRE found */
-	return s;
-    }
-
-    for (const auto& pair : wiremap) {
-      if (pair.first != inwire)
-        s = s + "assign " + pair.first + " = " + inwire + "; // connector\n";
-    }
-    
-    return s;
+  return "";
 }

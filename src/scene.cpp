@@ -317,6 +317,8 @@ std::string scene::get_verilog_main(void)
 {
 	std::string s = "";
 	
+	redo_nets();
+	
 	if (name == "")
 		name = "main_scene";
 	
@@ -350,15 +352,14 @@ std::string scene::get_verilog_main(void)
 	s += ");\n\n";
 	
 	
-	std::map<std::string, std::string> wiremap;
+	std::vector<std::string> netmap;
 	
 	for (auto elem : elements) {
-		elem->collect_wires(&wiremap);
+		elem->collect_nets(&netmap);
 	}
 	
-	for (const auto& pair : wiremap) {
-		s = s +  pair.second + "\n";
-	}
+	for (auto netstr : netmap)
+		s = s + netstr + "\n";
 	
 	s = s + "\n";
 	

@@ -89,21 +89,9 @@ void model_8to1::calculate(int ttl)
 std::string model_8to1::get_verilog_main(void)
 {
     std::string s = "";
-    std::vector<std::string> wiremap;
-    std::vector<std::string> wiremap_in;
-    
 
-    ports[8]->collect_wires(&wiremap_in);
-    if (wiremap_in.size() < 1)
-        wiremap_in.push_back("8'b1");
-
-    for (unsigned int i = 0; i < 4; i++) {
-        ports[i]->collect_wires(&wiremap);
-    
-        for (auto wr : wiremap) {
-          s = s + "assign " + wr + " = " + wiremap_in[0] + "["+std::to_string(i)+"];\n";
-        }
-        wiremap.clear();
+    for (unsigned int i = 0; i < 8 ; i++) {
+        s = s + "assign " + ports[i]->get_net_verilog_name() + " = " + ports[8]->get_net_verilog_name("8'b1") + "["+std::to_string(i)+"];\n";
     }
 
     

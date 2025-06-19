@@ -26,6 +26,14 @@ public:
 
 	void update_color(int color);
 	unsigned int netnum;
+	
+	std::string get_verilog_name(void);
+	
+	int get_width(void);
+	std::string get_width_string(void);
+	
+	std::string get_verilog_wire_decl(void);
+	
 protected:
 	std::vector<class wire *> wires;
 	std::vector<class port *> ports;
@@ -33,5 +41,7 @@ protected:
 	bool has_z = false;
 	struct value value = {};
 	int color = 0;
+	
+	std::string verilog_name = "";
 };
 

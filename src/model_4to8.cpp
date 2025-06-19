@@ -68,22 +68,8 @@ void model_4to8::calculate(int ttl)
 std::string model_4to8::get_verilog_main(void)
 {
     std::string s = "";
-    std::vector<std::string> wiremap;
-    std::vector<std::string> wiremap_in1;
-    std::vector<std::string> wiremap_in2;
-    
 
-    ports[2]->collect_wires(&wiremap);
-    ports[0]->collect_wires(&wiremap_in1);
-    if (wiremap_in1.size() < 1)
-        wiremap_in1.push_back("4'1111");
-    ports[1]->collect_wires(&wiremap_in2);
-    if (wiremap_in2.size() < 1)
-        wiremap_in2.push_back("4'1111");
-    
-    for (auto wr : wiremap) {
-      s = s + "assign " + wr + " = {" + wiremap_in1[0] + ", " + wiremap_in2[0] + "};\n";
-    }
+    s = s + "assign " + ports[2]->get_net_verilog_name()+ " = {" + ports[0]->get_net_verilog_name() + ", " +ports[1]->get_net_verilog_name() + "};\n";
     
     return s;
 }

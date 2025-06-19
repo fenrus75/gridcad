@@ -124,88 +124,28 @@ void model_deflipflop::queued_calculate(int ttl)
 std::string model_deflipflop::get_verilog_main(void)
 {
     std::string s = "";
-    std::vector<std::string> wiremap;
-    std::string Qwire;
     if (verilog_module_name == "")
 	    verilog_module_name = append_random_bits(verilog_name + "_tt_");
 
-    Qwire = append_random_bits(get_verilog_name())+"_qwire";
-    
-    s += "wire " + Qwire + ";\n";
-
     s = s + verilog_module_name + " " + get_verilog_name() + "(";
-    bool first = true;
-
-        ports[0]->collect_wires(&wiremap);
-        wiremap.push_back("");
-        if (wiremap.size() != 0) {
-
-    	    if (!first)
-  	        s = s + ", ";
-            first = false;
     
             s = s + ".D(";
-            s = s + wiremap[0];
-            s = s + ")";
+            s = s + ports[0]->get_net_verilog_name();
+            s = s + "),";
     	
-            wiremap.clear();
-        }
-
-        ports[1]->collect_wires(&wiremap);
-        wiremap.push_back("");
-        if (wiremap.size() != 0) {
-
-    	    if (!first)
-  	        s = s + ", ";
-            first = false;
-    
             s = s + ".clk(";
-            s = s + wiremap[0];
-            s = s + ")";
+            s = s + ports[1]->get_net_verilog_name();
+            s = s + "),";
     	
-            wiremap.clear();
-        }
-
-        ports[2]->collect_wires(&wiremap);
-        wiremap.push_back("");
-        if (wiremap.size() != 0) {
-
-    	    if (!first)
-  	        s = s + ", ";
-            first = false;
-    
             s = s + ".Q(";
-            s = s + Qwire;
-            s = s + ")";
+            s = s + ports[2]->get_net_verilog_name();
+            s = s + "),";
     	
-            wiremap.clear();
-        }
-
-
-        ports[3]->collect_wires(&wiremap);
-        wiremap.push_back("");
-        if (wiremap.size() != 0) {
-
-    	    if (!first)
-  	        s = s + ", ";
-            first = false;
-    
             s = s + ".En(";
-            s = s + wiremap[0];
+            s = s + ports[3]->get_net_verilog_name();
             s = s + ")";
     	
-            wiremap.clear();
-        }
-
     s = s + ");\n";
-    
-    ports[2]->collect_wires(&wiremap);
-    for (auto w : wiremap) {
-            s = s + "assign " + w + " = " + Qwire + ";\n";
-     }
-     wiremap.clear();
-    
-    
     
     return s;
 }

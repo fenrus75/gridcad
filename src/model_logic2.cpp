@@ -56,20 +56,11 @@ void model_logic2::calculate(int ttl)
 std::string model_logic2::get_verilog_main(void)
 {
     std::string s = "";
-    std::vector<std::string> wiremap0, wiremap1, wiremap2;
+    /* no output connected */
+    if (!ports[2]->has_net())
+        return "";  
     
-    ports[0]->collect_wires(&wiremap0);
-    ports[1]->collect_wires(&wiremap1);
-    ports[2]->collect_wires(&wiremap2);
-    
-    if (wiremap1.size() < 1)
-        wiremap1.push_back("1'0");
-    if (wiremap0.size() < 1)
-        wiremap0.push_back("1'0");
-    
-    for (auto name : wiremap2) {
-        s = "assign "  + name + " = " +wiremap0[0] + " " + get_verilog_operand() + " " + wiremap1[0] + ";\n";
-    }
+    s = "assign "  + ports[2]->get_net_verilog_name() + " = " + ports[0]->get_net_verilog_name() + " " + get_verilog_operand() + " " + ports[1]->get_net_verilog_name() + ";\n";
     
     return s;
 }

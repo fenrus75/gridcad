@@ -74,25 +74,9 @@ void model_16to8::calculate(int ttl)
 std::string model_16to8::get_verilog_main(void)
 {
     std::string s = "";
-    std::vector<std::string> wiremap;
-    std::vector<std::string> wiremap_in;
-    
 
-    ports[2]->collect_wires(&wiremap_in);
-    if (wiremap_in.size() < 1)
-        wiremap_in.push_back("1'b0");
-
-    ports[0]->collect_wires(&wiremap);
-    
-    for (auto wr : wiremap) {
-      s = s + "assign " + wr + " = " + wiremap_in[0] + "[" + std::to_string(ports[0]->get_width()-1) + ":0];\n";
-    }
-    wiremap.clear();
-    ports[1]->collect_wires(&wiremap);
-    
-    for (auto wr : wiremap) {
-      s = s + "assign " + wr + " = " + wiremap_in[0] + "[" + std::to_string(ports[2]->get_width()-1) + ":" + std::to_string(ports[1]->get_width())+"];\n";
-    }
+    s = s + "assign " + ports[0]->get_net_verilog_name() + " = " + ports[2]->get_net_verilog_name("8'b0000000000") + "[" + std::to_string(ports[0]->get_width()-1) + ":0];\n";
+    s = s + "assign " + ports[1]->get_net_verilog_name() + " = " + ports[2]->get_net_verilog_name("8'b0000000000") + "[" + std::to_string(ports[2]->get_width()-1) + ":" + std::to_string(ports[1]->get_width())+"];\n";
     
     return s;
 }

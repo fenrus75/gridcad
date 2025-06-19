@@ -528,31 +528,15 @@ void port::reroute_all_wires(void)
 		wire->redo_wires();
 }
 
-void port::collect_wires(std::map<std::string, std::string> *wiremap)
+void port::collect_nets(std::vector<std::string> *netmap)
 {
-	for (auto wire : wires) {
-		if (wiremap->find(wire->name) == wiremap->end()) {
-			(*wiremap)[wire->name] = wire->get_verilog_decl();
-		}
+	std::string s = get_net_verilog_wire_decl();
+	for (auto net : *netmap) {
+		if (net == s)
+			return;
 	}
+	netmap->push_back(s);
 }
-
-void port::collect_wires(std::map<std::string, unsigned int> *wiremap)
-{
-	for (auto wire : wires) {
-		if (wiremap->find(wire->name) == wiremap->end()) {
-			(*wiremap)[wire->get_verilog_name()] = wire->get_distance_from_outport();
-		}
-	}
-}
-
-void port::collect_wires(std::vector<std::string> *wiremap)
-{
-	for (auto wire : wires) {
-		wiremap->push_back(wire->get_verilog_name());
-	}
-}
-
 
 std::string port::get_verilog_name(void)
 {
@@ -613,4 +597,22 @@ void port::check_reverse(void)
 {
 	for (auto wire:wires)
 		wire->check_reverse();
+}
+
+std::string port::get_net_verilog_name(std::string fallback)
+{
+	class net *net;
+	if (wires.size() < 1)
+		return fallback;
+	net = wires[0]->get_net();
+	return net->get_verilog_name();
+}
+
+std::string port::get_net_verilog_wire_decl(void)
+{
+	class net *net;
+	if (wires.size() < 1)
+		return "";
+	net = wires[0]->get_net();
+	return net->get_verilog_wire_decl();
 }

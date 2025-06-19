@@ -60,11 +60,11 @@ public:
     
     void cycle_color(void);
     void reroute_all_wires(void);
-    void collect_wires(std::map<std::string, std::string> *wiremap);
-    void collect_wires(std::vector<std::string> *wiremap);
-    void collect_wires(std::map<std::string, unsigned int> *wiremap);
+    void collect_nets(std::vector<std::string> *netmap);
     
     std::string get_verilog_name(void);
+    std::string get_net_verilog_name(std::string fallback = ""); /* verilog name of the net connected */
+    std::string get_net_verilog_wire_decl(void); /* verilog full wire line of the net connected */
     
     unsigned int get_distance_from_outport(void) { if (direction == PORT_OUT) return 0; else return distance_from_outport;};
     bool update_distances(void);

@@ -337,7 +337,7 @@ public:
     virtual std::string get_verilog_width(void) { return "";};
     virtual std::string get_verilog_main(void) { return "Element " + class_id() + " not implemented\n";};
     virtual std::string get_verilog_modules(std::string verilog_path) { return "";};
-    void collect_wires(std::map<std::string, std::string> *wiremap);
+    void collect_nets(std::vector<std::string> *wiremap);
     virtual void set_library_origin(std::string origin_lib, std::string origin_elm) {};
     virtual bool is_background(void) { return false; };
 

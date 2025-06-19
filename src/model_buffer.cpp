@@ -73,18 +73,8 @@ void model_buffer::calculate(int ttl)
 std::string model_buffer::get_verilog_main(void)
 {
     std::string s = "";
-    std::vector<std::string> wiremap0, wiremap1, wiremap2;
-    
-    ports[0]->collect_wires(&wiremap0);
-    ports[1]->collect_wires(&wiremap1);
-    ports[2]->collect_wires(&wiremap2);
-    
-    if (wiremap0.size() < 1)
-        wiremap0.push_back("1'0");
-    
-    for (auto name : wiremap2) {
-        s = "assign "  + name + " = " + wiremap1[0] + "?" + wiremap0[0] + ": 1'bz;\n";
-    }
+
+    s = "assign "  + ports[2]->get_net_verilog_name() + " = " + ports[1]->get_net_verilog_name() + "?" + ports[0]->get_net_verilog_name() + ": 1'bz;\n";
     
     return s;
 }
