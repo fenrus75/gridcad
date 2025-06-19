@@ -78,5 +78,6 @@ protected:
     int width = 0;
     std::vector<struct waypoint> *points = NULL;
     class net *net = NULL; /* nosave */
+    bool is_reversed = false;
 };
 

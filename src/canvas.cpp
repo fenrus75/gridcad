@@ -29,6 +29,9 @@
 #include "synth.h"
 
 #include <nlohmann/json.hpp>
+
+bool wire_debug_mode = false;
+
 using json = nlohmann::json;
 
 extern void callback_fit_to_screen(class scene *scene);
@@ -493,6 +496,11 @@ bool canvas::handle_event(SDL_Event &event)
 			case SDLK_g:
 				if (!someone_in_editmode) {
 					draw_grid = !draw_grid;
+				}
+				break;
+			case SDLK_n:
+				if (!someone_in_editmode) {
+					wire_debug_mode = !wire_debug_mode;
 				}
 				break;
 			case SDLK_z:

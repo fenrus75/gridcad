@@ -169,6 +169,10 @@ bool port::update_distances(void)
 		distance_from_outport = 0;
 		for (auto wire:wires)
 			changed += wire->set_distance_from_outport(0);
+	} else if (direction == PORT_Z) {
+		distance_from_outport = 1000;
+		for (auto wire:wires)
+			changed += wire->set_distance_from_outport(1000);
 	} else {
 		for (auto wire:wires) {
 			if (wire->get_distance_from_outport() < best_dist) {

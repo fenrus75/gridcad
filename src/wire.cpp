@@ -23,6 +23,7 @@
 #include <sys/time.h>
 #include <map>
 
+extern bool wire_debug_mode ;
 
 wire::wire(int x1, int y1, int x2, int y2, int _color)
 {
@@ -98,7 +99,7 @@ int calc_angle(int x1, int y1, int x2, int y2)
     return 0;
 }
 
-void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y2, int color, int *step, struct value *value, int stepsize)
+void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y2, int color, int *step, struct value *value, int stepsize, class wire *wire)
 {
         double dx, dy,d;
         bool thick = false;
@@ -133,12 +134,14 @@ void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y
 	    totalstep++;
             if ((*step) >= stepsize) {
                 (*step) = 0;
-		if (value->type == VALUE_TYPE_INT) { 
+		if (value->type == VALUE_TYPE_INT || wire_debug_mode) { 
 			const float size = 0.24 * cursormag;
 			const float size2 = 0.20 * cursormag;
 			char buf[128];
 			std::string s;
 			sprintf(buf, "%li", value->intval);
+			if (wire_debug_mode)
+			    sprintf(buf, "%u", wire->get_distance_from_outport());
 			s = buf;
 			canvas->draw_box(x1-size, y1-size, x1+size, y1+size, COLOR_WIRE_MOTION);
 			canvas->draw_box(x1-size2, y1-size2, x1+size2, y1+size2, COLOR_BACKGROUND_MAIN);
@@ -215,7 +218,7 @@ void wire::draw(class canvas *canvas, int _color)
             first = false;
             continue;
         }
-        draw_snake_line(canvas, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, wire_to_color(color), &step, &value, stepsize);
+        draw_snake_line(canvas, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, wire_to_color(color), &step, &value, stepsize, this);
         prevX = point.X;
         prevY = point.Y;
     }
@@ -271,6 +274,7 @@ void wire::route(class scene *scene)
     }
     if (want_reverse) 
             std::reverse(points->begin(), points->end());
+    is_reversed = want_reverse;
     being_routed = false;
     reseat();
 }
@@ -296,9 +300,10 @@ void wire::check_reverse(void)
         if (floorf(ports[0]->screenX) == X1 && floorf(ports[0]->screenY) == Y1 && ports[0]->get_distance_from_outport() < ports[1]->get_distance_from_outport()) 
             want_reverse = true;
     }
-    if (want_reverse)
+    if (want_reverse != is_reversed)
             std::reverse(points->begin(), points->end());
     being_routed = false;
+    is_reversed = want_reverse;
     reseat();
 }
 
@@ -492,6 +497,7 @@ void wire::to_json(json &j)
     j["color"] = color;
     j["width"] = width;
     j["distance_from_outport"] = distance_from_outport;
+    j["is_reversed"] = is_reversed;
     if (points)
         j["points"] = *points;
 }    
@@ -506,6 +512,7 @@ void wire::from_json(json &j)
     Y2 = j["Y2"];
     color = j["color"];
     width = j.value("width", 0);
+    is_reversed = j.value("is_reversed", false);
     distance_from_outport = j.value("distance_from_outport", INT_MAX);
     if (j.contains("points")) {
         points =  new std::vector<struct waypoint>;

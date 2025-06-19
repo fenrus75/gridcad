@@ -64,7 +64,8 @@ void model_buffer::calculate(int ttl)
         ports[2]->direction = PORT_Z;
         result.valid = false;
     }
-    
+
+    ports[2]->update_distances();    
     ports[2]->check_reverse();
 }
 
