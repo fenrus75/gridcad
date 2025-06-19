@@ -56,8 +56,14 @@ void model_one::drawAt(class canvas *canvas, float X, float Y, int type)
 std::string model_one::get_verilog_main(void)
 {
     std::string s = "";
+    unsigned int w = ports[0]->get_net_width();
+    
+    std::string ones = "";
+    
+    while (ones.size() < w) 
+        ones = ones + "1";
 
-    s = "assign "  + ports[0]->get_net_verilog_name() + " = 1'b1;\n";
+    s = "assign "  + ports[0]->get_net_verilog_name() + " = " + std::to_string(w) + "'b" + ones +";\n";
     
     return s;
 }

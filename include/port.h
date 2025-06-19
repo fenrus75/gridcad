@@ -45,6 +45,7 @@ public:
     void remove_wires(void);
     void remove_orphans(void);
     int get_width(void);
+    int get_net_width(void);
     void set_width(int _width) { bus_width = _width;};
     void update_name(std::string newname);
     void link_uuid(std::string _uuid);

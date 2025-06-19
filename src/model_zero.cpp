@@ -82,7 +82,7 @@ bool model_zero::intersect(float _X, float _Y)
 std::string model_zero::get_verilog_main(void)
 {
     std::string s = "";
-    int w = ports[0]->get_width();
+    int w = ports[0]->get_net_width();
     if (w == 0) 
         w = 1;
 

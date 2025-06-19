@@ -624,3 +624,12 @@ std::string port::get_net_verilog_wire_decl(void)
 	net = wires[0]->get_net();
 	return net->get_verilog_wire_decl();
 }
+
+int port::get_net_width(void)
+{
+	class net *net;
+	if (wires.size() < 1)
+		return 0;
+	net = wires[0]->get_net();
+	return net->get_width();
+}
