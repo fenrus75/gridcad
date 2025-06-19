@@ -75,6 +75,7 @@ public:
     void remove_net(void);
 
     bool has_net(void);
+    void check_reverse(void);
 
 	
 private:

@@ -33,6 +33,7 @@ public:
     void remove(void);
     void remove_if_orphan(void);
     void fill_grid(class wiregrid* grid);
+    void check_reverse(void);
     
     class wire *split(void);
     

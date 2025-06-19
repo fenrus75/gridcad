@@ -604,3 +604,9 @@ void port::update_value_net(struct value *newvalue, int ttl)
 	wires[0]->update_value_net(newvalue, ttl);
 
 }
+
+void port::check_reverse(void)
+{
+	for (auto wire:wires)
+		wire->check_reverse();
+}

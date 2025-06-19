@@ -65,6 +65,7 @@ void model_buffer::calculate(int ttl)
         result.valid = false;
     }
     
+    ports[2]->check_reverse();
 }
 
 

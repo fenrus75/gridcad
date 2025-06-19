@@ -83,6 +83,9 @@ void net::update_net_distances(void)
 		for (auto wire : wires)
 			changed |= wire->update_distances();
 	}
+	
+	for (auto wire: wires)
+		wire->check_reverse();
 }
 
 
@@ -128,8 +131,7 @@ void net::update_value(struct value *newvalue, int ttl)
 
 	value = *newvalue;
 	set_value(newvalue, ttl);
-	if (has_z)
-		update_net_distances();
+	update_net_distances();
 }
 
 
