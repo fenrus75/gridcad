@@ -348,8 +348,9 @@ void model_nest::regen_ports(void)
 		delete _port;
 	}
 	
-	sizeX = std::max(west.size() + 2U, std::max(east.size() + 2, 4UL));	
-	sizeY = std::max(north.size() + 2U, std::max(south.size() + 2, 4UL));
+	sizeY = std::max(west.size() + 2U, std::max(east.size() + 2, 4UL));	
+	sizeX = std::max(north.size() + 2U, std::max(south.size() + 2, 4UL));
+	printf("sX sY is %i %i \n", sizeX, sizeY);
 	
 	std::sort(north.begin(), north.end(), compare_north);
 	std::sort(south.begin(), south.end(), compare_south);
@@ -367,7 +368,7 @@ void model_nest::regen_ports(void)
 	offset = (sizeY - south.size())/2;
 	for (unsigned int i = 0; i < south.size(); i++) {
 		south[i]->X = i + 1;
-		south[i]->Y = sizeX;
+		south[i]->Y = sizeY;
 	}
 	
 	offset = (sizeX - west.size())/2;

@@ -29,7 +29,7 @@ model_zero::model_zero(float _X, float _Y)  : element(1, 1, "")
 
     ports.clear();
 
-    add_port(1, 0, "ZERO", PORT_OUT, 1);    
+    add_port(1, 0, "ZERO", PORT_OUT, 0);    
 
 
     for (auto port : ports) {
@@ -60,6 +60,9 @@ void model_zero::drawAt(class canvas *canvas, float X, float Y, int type)
 void model_zero::fill_grid(class wiregrid *grid)
 {
     grid->block_point(X, Y);
+    for (auto port: ports) {
+        grid->block_point(X + port->X, Y + port->Y);
+    }
     grid->add_soft_cost(X+1, Y - 1, 0.2);
     grid->add_soft_cost(X+1, Y + 1, 0.2);
     grid->add_soft_cost(X, Y - 1, 0.6);
@@ -79,8 +82,11 @@ bool model_zero::intersect(float _X, float _Y)
 std::string model_zero::get_verilog_main(void)
 {
     std::string s = "";
+    int w = ports[0]->get_width();
+    if (w == 0) 
+        w = 1;
 
-    s = "assign "  + ports[0]->get_net_verilog_name() + " = 1'b0;\n";
+    s = "assign "  + ports[0]->get_net_verilog_name() + " = " + std::to_string(w) +"'b0;\n";
     
     return s;
 }

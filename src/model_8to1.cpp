@@ -91,7 +91,8 @@ std::string model_8to1::get_verilog_main(void)
     std::string s = "";
 
     for (unsigned int i = 0; i < 8 ; i++) {
-        s = s + "assign " + ports[i]->get_net_verilog_name() + " = " + ports[8]->get_net_verilog_name("8'b1") + "["+std::to_string(i)+"];\n";
+        if (ports[i]->has_net())
+                s = s + "assign " + ports[i]->get_net_verilog_name() + " = " + ports[8]->get_net_verilog_name("8'b1") + "["+std::to_string(i)+"];\n";
     }
 
     

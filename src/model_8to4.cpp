@@ -77,7 +77,9 @@ std::string model_8to4::get_verilog_main(void)
     std::string s = "";
 
 
-    s = s + "assign " + ports[0]->get_net_verilog_name() + " = " + ports[2]->get_net_verilog_name() + "[" + std::to_string(ports[0]->get_width()-1) + ":0];\n";
-    s = s + "assign " + ports[1]->get_net_verilog_name() + " = " + ports[2]->get_net_verilog_name() + "[" + std::to_string(ports[2]->get_width()-1) + ":" + std::to_string(ports[1]->get_width())+"];\n";
+    if (ports[0]->has_net())
+        s = s + "assign " + ports[0]->get_net_verilog_name() + " = " + ports[2]->get_net_verilog_name() + "[" + std::to_string(ports[0]->get_width()-1) + ":0];\n";
+    if (ports[1]->has_net())
+        s = s + "assign " + ports[1]->get_net_verilog_name() + " = " + ports[2]->get_net_verilog_name() + "[" + std::to_string(ports[2]->get_width()-1) + ":" + std::to_string(ports[1]->get_width())+"];\n";
     return s;
 }
