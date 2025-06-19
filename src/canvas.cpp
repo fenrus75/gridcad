@@ -344,6 +344,7 @@ bool canvas::handle_event(SDL_Event &event)
 	
 
 	if (event.type == EVENT_AUTOCLOCK && event.user.data1 == current_scene) {
+		take_undo_snapshot(current_scene);
 		callback_autoclock(current_scene);
 	}
 
