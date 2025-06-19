@@ -287,6 +287,9 @@ void wire::check_reverse(void)
     being_routed = true;
     bool want_reverse = false;
     reseat();
+    
+    if (!points)
+        return;
 
     for (auto port : ports) {
         if (floorf(port->screenX) == X1 && floorf(port->screenY) == Y1 && port->direction == PORT_OUT) {
@@ -303,7 +306,7 @@ void wire::check_reverse(void)
         if (floorf(ports[0]->screenX) == X1 && floorf(ports[0]->screenY) == Y1 && ports[0]->get_distance_from_outport() < ports[1]->get_distance_from_outport()) 
             want_reverse = true;
     }
-    if (want_reverse != is_reversed)
+    if (want_reverse != is_reversed && points->size()>1)
             std::reverse(points->begin(), points->end());
     being_routed = false;
     is_reversed = want_reverse;
@@ -694,7 +697,7 @@ void wire::remove_net(void)
 	}
 
 	save->remove_wire(this);
-	delete save;
+//	delete save;
 	
 }
 

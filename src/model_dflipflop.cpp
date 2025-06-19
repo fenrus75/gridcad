@@ -150,6 +150,7 @@ std::string model_dflipflop::get_verilog_main(void)
         s = s + ports[3]->get_net_verilog_name();
         s = s + ")";
 
+    s = s + ");\n";
     return s;
 }
 
