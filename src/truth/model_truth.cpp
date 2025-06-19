@@ -416,12 +416,6 @@ std::string model_truth::get_verilog_main(void)
     if (verilog_module_name == "")
 	    verilog_module_name = append_random_bits(verilog_name + "_tt_");
 
-    for (auto port : ports) {
-    	 if (port->direction != PORT_OUT)
-    	 	continue;
-	s += "wire " + get_verilog_name() + "___" + port->get_verilog_name() + ";\n";
-    } 
-
     s = s + verilog_module_name + " " + get_verilog_name() + "(";
     bool first = true;
     for (auto port : ports) {
@@ -433,24 +427,12 @@ std::string model_truth::get_verilog_main(void)
     		s = s + ", ";
 	first = false;
     	s = s + "." + port->get_verilog_name() + "(";
-    	if (port->direction == PORT_OUT || port->direction == PORT_Z) {
-    		s = s + get_verilog_name() + "___" + port->get_verilog_name();
-    	} else {
-		s = s + port->get_net_verilog_name();
-	}
+	s = s + port->get_net_verilog_name();
     	s = s + ")";
     	
     }
     s = s + ");\n";
 
-    for (auto port : ports) {
-    	 if (port->direction != PORT_OUT && port->direction != PORT_Z)
-    	 	continue;
-	s = s + "assign " + port->get_net_verilog_name() + " = " + get_verilog_name() + "___" + port->get_verilog_name() + ";\n";
-    } 
-    
-    
-    
     return s;
 }
 
