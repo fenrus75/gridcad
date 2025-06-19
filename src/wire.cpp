@@ -363,7 +363,7 @@ void wire::update_value(struct value *newvalue, int ttl)
         return;
     }
     value = *newvalue;
-    if (ttl < 50) {
+    if (ttl < 10) {
         printf("wire ttl exceeded %i \n", ttl);
         newvalue->is_error = true;
     }
