@@ -72,7 +72,7 @@ std::string model_1to4::get_verilog_main(void)
 {
     std::string s = "";
 
-    s = s + "assign " + ports[4]->get_net_verilog_name() + " = {" + ports[0]->get_net_verilog_name() + ", " + ports[1]->get_net_verilog_name() + ", " + ports[2]->get_net_verilog_name() + ", " + ports[3]->get_net_verilog_name() + "};\n";
+    s = s + "assign " + ports[4]->get_net_verilog_name() + " = {" + ports[0]->get_net_verilog_name("1'b0") + ", " + ports[1]->get_net_verilog_name("1'b0") + ", " + ports[2]->get_net_verilog_name("1'b0") + ", " + ports[3]->get_net_verilog_name("1'b0") + "};\n";
 
     return s;
 }

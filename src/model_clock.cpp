@@ -179,6 +179,9 @@ std::string model_clock::get_verilog_main(void)
 {
     std::string s = "";
     
+    if (!ports[0]->has_net())
+      return "";
+    
     s = s + "assign " + ports[0]->get_net_verilog_name() + " = " + get_verilog_name() + ";\n";
     
     return s;

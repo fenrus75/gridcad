@@ -161,8 +161,10 @@ void model_output::rotate_ports(void)
 
 std::string model_output::get_verilog_main(void)
 {
+    std::string p = "";
     std::string s = "";
-    s = s + "assign " + get_verilog_name() + " = " + ports[0]->get_net_verilog_name() + ";\n";
+    p = std::to_string(ports[0]->get_width()) + "'b0";
+    s = s + "assign " + get_verilog_name() + " = " + ports[0]->get_net_verilog_name(p) + ";\n";
     return s;
 }
 
