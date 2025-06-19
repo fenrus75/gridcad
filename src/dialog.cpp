@@ -127,5 +127,22 @@ void dialog::handle_event(class canvas *canvas, SDL_Event &event)
                         currentX = canvas->scr_to_X(event.motion.x);
                         currentY = canvas->scr_to_Y(event.motion.y);
                         break;
-	}	
+		case SDL_KEYDOWN:
+			switch (event.key.keysym.sym) {
+			case SDLK_RETURN:
+			        if (!has_ok_button)
+			            break;
+                        	SDL_Event ev = {};
+
+                                ev.type = EVENT_CLOSE_DIALOG;
+                        	ev.user.code = 0;
+                        	ev.user.data1 = canvas->get_scene();
+	
+                        	SDL_PushEvent(&ev);                            
+                                break;
+			}
+			break;
+                }
+                        
 }
+
