@@ -11,7 +11,7 @@
                 {
                     "X": 3,
                     "Y": 1,
-                    "bus_width": 4,
+                    "bus_width": 8,
                     "color": 2,
                     "direction": 1,
                     "distance_from_outport": 2147483647,
@@ -90,7 +90,7 @@
                 {
                     "X": 1,
                     "Y": 3,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 4,
                     "direction": 1,
                     "distance_from_outport": 2147483647,
@@ -169,7 +169,7 @@
                 {
                     "X": -1,
                     "Y": 1,
-                    "bus_width": 0,
+                    "bus_width": 8,
                     "color": 0,
                     "direction": 0,
                     "distance_from_outport": 1,
@@ -248,7 +248,7 @@
                 {
                     "X": 1,
                     "Y": -1,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 0,
                     "direction": 0,
                     "distance_from_outport": 1,
@@ -327,7 +327,7 @@
                 {
                     "X": 3,
                     "Y": 1,
-                    "bus_width": 4,
+                    "bus_width": 8,
                     "color": 1,
                     "direction": 1,
                     "distance_from_outport": 2147483647,
