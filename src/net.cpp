@@ -102,10 +102,15 @@ void net::validate(void)
 			zcount++;
 	if (count != 1) {
 		printf("NET IS INVALID, %i output ports\n", count);
-		value.is_error = true;
-		update_value(&value, 100);
+		if (!value.is_error) {
+			value.is_error = true;
+			set_value(&value, DEFAULT_TTL);
+		}
 	} else {
-		value.is_error = false;
+		if (value.is_error) {
+			value.is_error = false;
+			set_value(&value, DEFAULT_TTL);
+		}
 	}
 	if (zcount > 0)
 		has_z = true;
@@ -190,4 +195,13 @@ std::string net::get_verilog_wire_decl(void)
 {
 	std::string s = "wire " + get_width_string() + " " + get_verilog_name() + ";";
 	return s;
+}
+
+bool net::is_empty(void)
+{
+	if (ports.size() > 0)
+		return false;
+	if (wires.size() > 0)
+		return false;
+	return true;
 }

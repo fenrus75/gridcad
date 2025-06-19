@@ -13,6 +13,7 @@
 #include "gridcad.h"
 #include "model_buffer.h"
 #include "port.h"
+#include "net.h"
 
 model_buffer::model_buffer(float _X, float _Y)  : element(_X, _Y, "")
 {
@@ -67,6 +68,9 @@ void model_buffer::calculate(int ttl)
 
     ports[2]->update_distances();    
     ports[2]->check_reverse();
+    class net *net = ports[2]->get_net();
+    if (net)
+        net->validate();
 }
 
 

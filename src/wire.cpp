@@ -697,7 +697,8 @@ void wire::remove_net(void)
 	}
 
 	save->remove_wire(this);
-//	delete save;
+	if (save->is_empty())
+        	delete save;
 	
 }
 

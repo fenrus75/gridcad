@@ -34,6 +34,8 @@ public:
 	
 	std::string get_verilog_wire_decl(void);
 	
+	bool is_empty(void);
+	
 protected:
 	std::vector<class wire *> wires;
 	std::vector<class port *> ports;

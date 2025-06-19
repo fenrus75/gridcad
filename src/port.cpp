@@ -585,6 +585,14 @@ bool port::has_net(void)
 			return true;
 	return false;
 }
+
+class net * port::get_net(void)
+{
+	for (auto wire : wires)
+		if (wire->has_net())
+			return wire->get_net();
+	return NULL;
+}
 void port::update_value_net(struct value *newvalue, int ttl)
 {
 	if (wires.size() < 1)
