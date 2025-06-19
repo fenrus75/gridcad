@@ -65,6 +65,8 @@ public:
     void remove_net(void);
     bool has_net(void) { return net != NULL;};
     class net *get_net(void) { return net ; };
+    void set_is_z(bool z) { is_z  = z; };
+    bool get_is_z(void) { return is_z; };
     
 protected:
     bool dead = false;
@@ -79,5 +81,6 @@ protected:
     std::vector<struct waypoint> *points = NULL;
     class net *net = NULL; /* nosave */
     bool is_reversed = false;
+    bool is_z = false; /* nosave -- net recalculates this */
 };
 

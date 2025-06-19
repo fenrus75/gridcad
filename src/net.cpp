@@ -112,6 +112,13 @@ void net::validate(void)
 	else
 		has_z = false;
 	
+	if (has_z && count == 0) {
+		for (auto wire:wires)
+			wire->set_is_z(true);
+	} else {
+		for (auto wire:wires)
+			wire->set_is_z(false);
+	}
 }
 
 void net::set_value(struct value *newval, int ttl)

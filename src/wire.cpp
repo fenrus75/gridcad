@@ -134,12 +134,15 @@ void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y
 	    totalstep++;
             if ((*step) >= stepsize) {
                 (*step) = 0;
-		if (value->type == VALUE_TYPE_INT || wire_debug_mode) { 
+		if (value->type == VALUE_TYPE_INT || wire_debug_mode || wire->get_is_z()) { 
 			const float size = 0.24 * cursormag;
 			const float size2 = 0.20 * cursormag;
 			char buf[128];
 			std::string s;
 			sprintf(buf, "%li", value->intval);
+			
+			if (wire->get_is_z())
+			    sprintf(buf, "%c", 'Z');
 			if (wire_debug_mode)
 			    sprintf(buf, "%u", wire->get_distance_from_outport());
 			s = buf;
