@@ -470,17 +470,6 @@ std::string model_nest::get_verilog_main(void)
 	
     _scene->create_verilog_names();
 
-    for (auto port : ports) {
-    	if (port->direction != PORT_OUT)
-    		continue;
-    
-    	s += "wire ";
-    	if (port->get_width() > 1)
-	    s = s + "[" + std::to_string(port->get_width() -1) + ":0] ";
-	s += get_verilog_name() + "_" + port->name + ";\n";
-    	
-    }
-
     s = s + _scene->get_verilog_name() + " " + get_verilog_name() + "(";
     bool first = true;
     for (auto port : ports) {
@@ -489,25 +478,12 @@ std::string model_nest::get_verilog_main(void)
     		s = s + ", ";
 	first = false;
     	s = s + "." + port->get_verilog_name() + "(";
-    	if (port->direction == PORT_OUT || port->direction == PORT_Z) {
-    		s += get_verilog_name() + "_" + port->name;
-    	} else {
-	 	if (port->has_net())
-			s = s + port->get_net_verilog_name();
-	}
-		
+	s = s + port->get_net_verilog_name();
     	s = s + ")";
     	
     }
     s = s + ");\n";
-    for (auto port : ports) {
-    	if (port->direction != PORT_OUT && port->direction != PORT_Z)
-    		continue;
-    
-	s += "assign " +port->get_net_verilog_name() + " = " + get_verilog_name() + "_" + port->name + ";\n";
-    }
-    
-    
+
     return s;
 }
 
