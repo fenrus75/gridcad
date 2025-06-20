@@ -56,7 +56,7 @@ model_nest::model_nest(float _X, float _Y) : element(_X,_Y, "SubScreen")
 	sizeY = 4;
 	X = floorf(_X);
 	Y = floorf(_Y);    
-	printf("New scene %s %s\n", name.c_str(), get_full_name().c_str());
+//	printf("New scene %s %s\n", name.c_str(), get_full_name().c_str());
 	_scene = new class scene(name, get_full_name());
 	menu->add_item("Edit name", callback_editname);
 	menu->add_item("Reset to library version", callback_reset);

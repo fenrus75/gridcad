@@ -140,7 +140,7 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 		
 		for (auto elem:	current_scene->elements) {
 			if (elem->intersect(x, y) && !elem->is_port(x,y)) {
-				printf("Start drag: %5.2f %5.2f \n", x, y);
+//				printf("Start drag: %5.2f %5.2f \n", x, y);
 				if (dragging == NULL || dragging->is_background())
 					dragging = elem;
 			}
