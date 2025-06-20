@@ -134,19 +134,19 @@ void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y
         
         
         while (distsq(x1,y1,x2,y2) > (1/10.0)*(1/10.0)) {
-            float cursormag;
             
-            cursormag = 2.5 - canvas->distance_from_mouse(x1,y1)/2;
-            if (cursormag < 1)
-                cursormag = 1;
-	    if (cursormag > 2)
-		cursormag = 2;
             
             (*step)++;
 	    totalstep++;
             if ((*step) >= stepsize) {
                 (*step) = 0;
 		if (value->type == VALUE_TYPE_INT || wire_debug_mode || wire->get_is_z()) { 
+                       float cursormag;
+                        cursormag = 2.5 - canvas->distance_from_mouse(x1,y1)/2;
+                        if (cursormag < 1)
+                            cursormag = 1;
+                        if (cursormag > 2)
+                	    cursormag = 2;
 			const float size = 0.24 * cursormag;
 			const float size2 = 0.20 * cursormag;
 			char buf[128];
