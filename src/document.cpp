@@ -171,9 +171,9 @@ void document::run(void)
 		canvas->draw();
 
 	while (!leave) {
-//		ret = SDL_WaitEventTimeout(&event, 1);
 		run_queued_calculations();
-		ret = SDL_PollEvent(&event);
+		ret = SDL_WaitEventTimeout(&event, 1);
+//		ret = SDL_PollEvent(&event);
 
 		if (event.type == SDL_QUIT)
 			leave = true;
@@ -226,7 +226,7 @@ void document::run(void)
 
 			}
 		} else {
-//			SDL_sleep(1);
+//			SDL_Delay(1);
 		 }
 
 		if (leave)
