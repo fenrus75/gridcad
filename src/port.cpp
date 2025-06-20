@@ -30,6 +30,7 @@ void port::add_menu(void)
 	if (direction == PORT_OUT) {
 		if (menu)
 			delete menu;
+
 		menu = new class port_contextmenu(this);	
 		menu->add_item(wire_color_name(0), 0, callback_set_color);
 		menu->add_item(wire_color_name(1), 1, callback_set_color);

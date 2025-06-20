@@ -27,8 +27,6 @@ model_zero::model_zero(float _X, float _Y)  : element(1, 1, "")
     value.boolval = false;
     value.valid = true;
 
-    ports.clear();
-
     add_port(1, 0, "ZERO", PORT_OUT, 0);    
 
 
@@ -37,7 +35,6 @@ model_zero::model_zero(float _X, float _Y)  : element(1, 1, "")
     }
 
 }
-
 model_zero::~model_zero(void)
 {
 }
@@ -55,28 +52,6 @@ void model_zero::drawAt(class canvas *canvas, float X, float Y, int type)
         if (type != DRAW_NORMAL)
             port->drawAt(canvas, X, Y, type);
     }
-}
-
-void model_zero::fill_grid(class wiregrid *grid)
-{
-    grid->block_point(X, Y);
-    for (auto port: ports) {
-        grid->block_point(X + port->X, Y + port->Y);
-    }
-    grid->add_soft_cost(X+1, Y - 1, 0.2);
-    grid->add_soft_cost(X+1, Y + 1, 0.2);
-    grid->add_soft_cost(X, Y - 1, 0.6);
-    grid->add_soft_cost(X, Y + 1, 0.6);
-    grid->add_soft_cost(X-1, Y - 1, 0.3);
-    grid->add_soft_cost(X-1, Y,    0.3);
-    grid->add_soft_cost(X-1, Y + 1, 0.3);
-}
-
-bool model_zero::intersect(float _X, float _Y)
-{
-    if (_X >= X  && _Y >= Y  && _X < X + 1 && _Y < Y + sizeY)
-        return true;
-    return false;
 }
 
 std::string model_zero::get_verilog_main(void)

@@ -14,22 +14,23 @@
 #include "model_one.h"
 #include "port.h"
 
-model_one::model_one(float _X, float _Y)  : model_zero(_X, _Y)
+model_one::model_one(float _X, float _Y)  : element(_X, _Y, "")
 {
     struct value value = {};
+    sizeX = 1;
+    sizeY = 1;    
+    X = floorf(_X);
+    Y = floorf(_Y);
+
     
     memset(&value, 0, sizeof(struct value));
     value.boolval = true;
     value.valid = true;
-    sizeX = 1;
-    sizeY = 1;
 
-    ports.clear();
+    add_port(1, 0, "ONE", PORT_OUT, 0);    
 
-    add_port(1, 0, "ONE", PORT_OUT, 1);    
 
     for (auto port : ports) {
-        update_value_net(&value, 0, DEFAULT_TTL);
         port->update_value_final(&value, DEFAULT_TTL);
     }
 }

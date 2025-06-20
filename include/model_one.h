@@ -4,7 +4,7 @@
 
 #include "model_zero.h"
 
-class model_one : public model_zero
+class model_one : public element
 {
 public:
     model_one(float X, float Y);
