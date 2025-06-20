@@ -113,6 +113,9 @@ void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y
             canvas->draw_thick_line(x1, y1, x2, y2, color);
         else
             canvas->draw_line(x1, y1, x2, y2, color);
+
+        if (!canvas->canvas_has_focus())
+           return;
         
         dx = x2-x1;
         dy = y2-y1;
@@ -214,6 +217,8 @@ void wire::draw(class canvas *canvas, int _color)
         prevY = point.Y;
     }
     first =true;
+    
+    /* only draw the snake line on windows that have the focus -- it's resource intensive */
     for (auto point: *points) {
         if (first) {
             prevX = point.X;

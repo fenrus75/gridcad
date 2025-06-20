@@ -858,6 +858,12 @@ bool canvas::handle_event(SDL_Event &event)
 				SDL_HideWindow(window);
 				leave = true;
 				break;
+			case SDL_WINDOWEVENT_FOCUS_GAINED:
+				has_focus = true;
+				break;
+			case SDL_WINDOWEVENT_FOCUS_LOST:
+				has_focus = false;
+				break;
 			}
 			break;
 		}

@@ -104,6 +104,7 @@ public:
     void draw_text(std::string text, float X, float Y, float W, float H);
     void draw_text_left(std::string text, float X, float Y, float W, float H);
     void unhide(void);
+    bool canvas_has_focus(void) { return has_focus; };
 
 protected:
     float offsetX = 0.0;
@@ -115,6 +116,7 @@ protected:
     TTF_Font *font = NULL;
     std::map<std::string, SDL_Texture *> texture_cache;
     std::map<std::string, SDL_Texture *> text_cache;
+    bool has_focus = true;
 };
 
 /* gui canvas to draw on */
