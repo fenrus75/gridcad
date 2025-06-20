@@ -110,11 +110,10 @@ int calc_angle(int x1, int y1, int x2, int y2)
 
 void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y2, int color, int *step, struct value *value, int stepsize, class wire *wire)
 {
-        double dx, dy,d, deltad, currentd;
+        double dx, dy,d, deltad, currentd, bigstep;
         bool thick = false;
         int ang = calc_angle(roundf(x1),roundf(y1),roundf(x2),roundf(y2));
 	int totalstep = 0;
-	int stepsleft = 0;
         
         if (value->type == VALUE_TYPE_INT)
             thick = true;
@@ -134,15 +133,17 @@ void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y
         dy = dy/d/12.0;
         
         deltad = sqrt(dx * dx + dy * dy);
-        currentd = 0;
+        currentd = d;
+        
+        bigstep = deltad * stepsize;
         
         
-        while (currentd < d) {
+        while (currentd > 0) {
             (*step)++;
 	    totalstep++;
-	    currentd += deltad;
+	    currentd -= deltad;
             if ((*step) >= stepsize) {
-                (*step) = 0;
+                (*step) -= stepsize;
 		if (value->type == VALUE_TYPE_INT || wire_debug_mode || wire->get_is_z()) { 
                        float cursormag;
                         cursormag = 2.5 - canvas->distance_from_mouse(x1,y1)/2;
@@ -185,6 +186,12 @@ void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y
 		            r = 0.22;
 	                canvas->draw_circle2(x1, y1, r, COLOR_WIRE_MOTION, value_color(value));
 		}
+                if (currentd > bigstep) {
+                    x1 += (stepsize - 2) * dx;
+                    y1 += (stepsize - 2) * dy;
+                    *step += (stepsize - 2);
+                    currentd -= (stepsize - 2) * deltad;
+                }
             }
             x1 += dx;
             y1 += dy;
