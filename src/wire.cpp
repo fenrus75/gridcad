@@ -110,7 +110,7 @@ int calc_angle(int x1, int y1, int x2, int y2)
 
 void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y2, int color, int *step, struct value *value, int stepsize, class wire *wire)
 {
-        double dx, dy,d, deltad, currentd, bigstep;
+        float dx, dy,d, deltad, currentd, bigstep;
         bool thick = false;
         int ang = calc_angle(roundf(x1),roundf(y1),roundf(x2),roundf(y2));
 	int totalstep = 0;
@@ -448,7 +448,7 @@ bool wire::intersect(float targetX, float targetY)
             prevY = point.Y + 0.5;
             continue;
         }
-        double dx, dy,d;
+        float dx, dy,d;
         float x1,y1,x2,y2;
         x1 = prevX;
         y1 = prevY;
