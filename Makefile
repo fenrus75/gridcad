@@ -16,17 +16,17 @@ OBJS := $(PROJECT) src/net.o src/synth.o src/dialog.o src/buttonbar.o src/main.o
 PNG := pngs.o
 
 gridcad: $(OBJS) $(PNG) include/gridcad.h Makefile Makefile.deps
-	g++ -pthread $(CFLAGS) -O1 -Wall -march=native $(OBJS) $(PNG) $(LTO) $(SAN) -o gridcad -lSDL2_image -lSDL2_gfx -lSDL2_ttf -lSDL2
+	g++ -pthread $(CFLAGS) -O3 -Wall -march=native $(OBJS) $(PNG) $(LTO) $(SAN) -o gridcad -lSDL2_image -lSDL2_gfx -lSDL2_ttf -lSDL2
 	
 	
 wiretest: $(OBJS) include/gridcad.h Makefile test/wiretest.o
-	g++ $(CFLAGS) -O1 -Wall -march=native lib/wirepath.o test/wiretest.o $(LTO) -g -o wiretest -lSDL2_image -lSDL2_gfx -lSDL2_ttf -lSDL2 
+	g++ $(CFLAGS) -O3 -Wall -march=native lib/wirepath.o test/wiretest.o $(LTO) -g -o wiretest -lSDL2_image -lSDL2_gfx -lSDL2_ttf -lSDL2 
 	
 .cpp.o:
-	g++ $(CXXFLAGS) -fvisibility=hidden -Iinclude/ -O1 -Wall -march=native -flto -g $(SAN) -std=c++20  -c $< -o $@
+	g++ $(CXXFLAGS) -fvisibility=hidden -Iinclude/ -O3 -Wall -march=native -flto -g $(SAN) -std=c++20  -c $< -o $@
 	
 pngs.o: pngs.cpp
-	g++ $(CXXFLAGS) -O1 pngs.cpp -c -o pngs.o
+	g++ $(CXXFLAGS) -O3 pngs.cpp -c -o pngs.o
 
 pngs.cpp: $(wildcard assets/*.png)  $(wildcard assets/*/*png) $(wildcard library/*/*png) png2header.py 
 	python3 png2header.py assets/*png assets/*/*png library/*/*png > pngs.cpp

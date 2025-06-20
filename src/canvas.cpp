@@ -874,6 +874,8 @@ bool canvas::handle_event(SDL_Event &event)
 
 void canvas::draw(void)
 {
+	if (!window_shown)
+		return;
 	/* first, draw the lighter gray background */
 	
 	SDL_SetRenderDrawColor(renderer, R(COLOR_BACKGROUND_GRID),
@@ -1018,8 +1020,7 @@ void canvas::draw(void)
 	if (dialogbox)
 		dialogbox->draw(this);
 
-	if (window_shown)
-		SDL_RenderPresent(renderer);
+	SDL_RenderPresent(renderer);
 }
 
 static float scale = -1;
