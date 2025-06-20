@@ -74,6 +74,15 @@ float dist(float x1, float y1, float x2, float y2)
         return d;
 }
 
+float distsq(float x1, float y1, float x2, float y2)
+{
+        float dx, dy,d;
+        dx = x2-x1;
+        dy = y2-y1;
+        d = dx*dx + dy*dy;
+        return d;
+}
+
 int calc_angle(int x1, int y1, int x2, int y2)
 {
     int dx, dy;
@@ -124,7 +133,7 @@ void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y
         dy = dy/d/12.0;
         
         
-        while (dist(x1,y1,x2,y2) > 1/10.0) {
+        while (distsq(x1,y1,x2,y2) > (1/10.0)*(1/10.0)) {
             float cursormag;
             
             cursormag = 2.5 - canvas->distance_from_mouse(x1,y1)/2;

@@ -31,6 +31,7 @@
 #include <nlohmann/json.hpp>
 
 bool wire_debug_mode = false;
+bool show_fps = false;
 
 using json = nlohmann::json;
 
@@ -492,6 +493,11 @@ bool canvas::handle_event(SDL_Event &event)
 							continue;
 						elem->rotate_ports();
 					}
+				}
+				break;
+			case SDLK_f:
+				if (!someone_in_editmode) {
+					show_fps = !show_fps;
 				}
 				break;
 			case SDLK_g:
@@ -997,6 +1003,8 @@ void canvas::draw(void)
 	}
 
 	SDL_RenderSetClipRect(renderer, NULL);
+	if (fps > 0)
+		button_bar->set_fps(fps);
 	button_bar->draw_at(this, button_rect.w, button_rect.h);
 	
 	if (tooltip_eligable) {

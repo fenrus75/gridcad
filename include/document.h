@@ -17,7 +17,9 @@ public:
 
 private:
 	std::string name = "";
-	struct timeval previous_draw = {};
+	struct timeval previous_slow_draw = {};  /* allows for throttled framerate draws of non-focus windows*/
+	struct timeval previous_fast_draw = {};  /* foreground/max framerate */
+	unsigned int fast_draw_counter = 0;
 	
 };
 

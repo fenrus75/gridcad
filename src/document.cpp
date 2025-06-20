@@ -34,6 +34,7 @@ static std::vector<class basecanvas *> canvases;
 
 extern void fill_png_maps(void);
 extern void set_timer(void);
+extern bool show_fps;
 
 
 float tv_delta_msec(struct timeval *tv1, struct timeval *tv2)
@@ -44,6 +45,18 @@ float tv_delta_msec(struct timeval *tv1, struct timeval *tv2)
 	d = d * 1000;
 	d += tv2->tv_usec/ 1000.0;
 	d -= tv1->tv_usec/ 1000.0;
+	
+	return d;
+}
+
+float tv_delta_usec(struct timeval *tv1, struct timeval *tv2)
+{
+	double d;
+	
+	d = tv2->tv_sec - tv1->tv_sec;
+	d = d * 1000000;
+	d += tv2->tv_usec;
+	d -= tv1->tv_usec;
 	
 	return d;
 }
@@ -240,12 +253,24 @@ void document::run(void)
 				if (canvas->canvas_has_focus()) {
 					canvas->draw();
 				} else {
-					if (tv_delta_msec(&previous_draw, &now) > 60)
+					if (tv_delta_msec(&previous_slow_draw, &now) > 60)
 						canvas->draw();
 				}
 			}
-			if (tv_delta_msec(&previous_draw, &now) > 60) {
-				previous_draw = now;
+			if (tv_delta_msec(&previous_slow_draw, &now) > 60) {
+				previous_slow_draw = now;
+			}
+			fast_draw_counter++;
+			if (fast_draw_counter >= 60) {
+				double fps = tv_delta_usec(&previous_fast_draw, &now) / fast_draw_counter;
+				fps = fps / 1000000.0; 
+				fps = 1.0 / fps;
+				if (!show_fps)
+					fps = -1.0;
+				for (auto c : canvases)
+					c->set_fps(fps);
+				previous_fast_draw = now;
+				fast_draw_counter = 0;
 			}
 		}
 	}

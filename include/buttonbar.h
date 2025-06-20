@@ -16,11 +16,13 @@ public:
     void add_button(std::string text, std::string icon, int event);
     
     std::string current_tooltip(unsigned int X, unsigned int Y);
+    void set_fps(float _fps) { fps = _fps; };
 protected:
     class canvas *canvas = NULL;
     unsigned int width = 0;
     unsigned int mouseX = 0;
     unsigned int mouseY = 0;
+    float fps = -1.0;
     
     std::vector<class barbutton *>buttons;
 };

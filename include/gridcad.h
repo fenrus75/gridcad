@@ -105,6 +105,7 @@ public:
     void draw_text_left(std::string text, float X, float Y, float W, float H);
     void unhide(void);
     bool canvas_has_focus(void) { return has_focus; };
+    void set_fps(float _fps) { fps = _fps;};
 
 protected:
     float offsetX = 0.0;
@@ -117,6 +118,7 @@ protected:
     std::map<std::string, SDL_Texture *> texture_cache;
     std::map<std::string, SDL_Texture *> text_cache;
     bool has_focus = true;
+    float fps = -1.0;
 };
 
 /* gui canvas to draw on */
