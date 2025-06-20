@@ -17,6 +17,7 @@ public:
 
 private:
 	std::string name = "";
+	struct timeval previous_draw = {};
 	
 };
 

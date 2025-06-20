@@ -23,7 +23,7 @@
 #include <fstream>
 #include <string>
 #include <regex>
-
+#include <sys/time.h>
 #include <unistd.h>
 
 #include <nlohmann/json.hpp>
@@ -34,6 +34,19 @@ static std::vector<class basecanvas *> canvases;
 
 extern void fill_png_maps(void);
 extern void set_timer(void);
+
+
+float tv_delta_msec(struct timeval *tv1, struct timeval *tv2)
+{
+	double d;
+	
+	d = tv2->tv_sec - tv1->tv_sec;
+	d = d * 1000;
+	d += tv2->tv_usec/ 1000.0;
+	d -= tv1->tv_usec/ 1000.0;
+	
+	return d;
+}
 
 
 static bool sdl_initialized = false;
@@ -221,8 +234,19 @@ void document::run(void)
 
 		run_queued_calculations();
 		if (!ret && !leave) {
-			for (auto canvas: canvases)
-				canvas->draw();
+			struct timeval now;
+			gettimeofday(&now, NULL);
+			for (auto canvas: canvases) {
+				if (canvas->canvas_has_focus()) {
+					canvas->draw();
+				} else {
+					if (tv_delta_msec(&previous_draw, &now) > 60)
+						canvas->draw();
+				}
+			}
+			if (tv_delta_msec(&previous_draw, &now) > 60) {
+				previous_draw = now;
+			}
 		}
 	}
 
