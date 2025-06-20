@@ -98,9 +98,13 @@ void model_nest::drawAt(class canvas *canvas, float X, float Y, int type)
 		}
 	}
 
-	name_edit->drawAt(canvas, X, Y + sizeY, sizeX);
+	if (title_on_top)
+		name_edit->drawAt(canvas, X, Y -1, sizeX);
+	else
+		name_edit->drawAt(canvas, X, Y + sizeY, sizeX);
 
 	for (auto port: ports) {
+	        port->draw_wires(canvas);	
         	port->drawAt(canvas, X, Y, type);
 	}
 
@@ -268,6 +272,8 @@ void model_nest::regen_ports(void)
 	east.clear();
 	west.clear();
 	
+	title_on_top = false;
+	
 	/* refresh the scene from the canvas -- undo can have replaced it */
 	if (canvas)
 		_scene = canvas->get_scene();
@@ -350,12 +356,14 @@ void model_nest::regen_ports(void)
 	
 	sizeY = std::max(west.size() + 2U, std::max(east.size() + 2, 4UL));	
 	sizeX = std::max(north.size() + 2U, std::max(south.size() + 2, 4UL));
-	printf("sX sY is %i %i \n", sizeX, sizeY);
 	
 	std::sort(north.begin(), north.end(), compare_north);
 	std::sort(south.begin(), south.end(), compare_south);
 	std::sort(east.begin(), east.end(), compare_east);
 	std::sort(west.begin(), west.end(), compare_west);
+	
+	if (north.size() == 0 && south.size() > 0)
+		title_on_top = true;
 	
 	/* center */
 	unsigned int offset = (sizeY - north.size())/2;

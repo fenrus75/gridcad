@@ -70,6 +70,7 @@ scene::scene(std::string _name, std::string _parent)
 
 scene::~scene(void)
 {
+	remove_nets();
 	for (auto elem: elements) {
 		remove_from_calculate_queue(elem); 
 		delete elem;
@@ -399,6 +400,8 @@ void scene::remove_nets(void)
 {
 	for (auto elem : elements)
 		elem->remove_nets();
+	for (auto elem : elements)
+		elem->free_nets_memory();
 }
 
 void scene::add_nets(void)

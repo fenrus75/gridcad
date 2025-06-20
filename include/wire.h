@@ -20,6 +20,7 @@ public:
     
     void get_ref(void);
     void add_port(class port *port);
+    void del_port(class port *port);
     void reseat(void);
     
     void update_value_final(struct value *newvalue, int ttl);

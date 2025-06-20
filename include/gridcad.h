@@ -342,6 +342,7 @@ public:
     virtual bool is_background(void) { return false; };
 
     void remove_nets(void);
+    void free_nets_memory(void);
     void add_nets(void);
 
     void update_value_net(struct value *value, int port, int ttl);
@@ -368,6 +369,8 @@ protected:
     float mouseX = -100, mouseY = -100; /* nosave */
     
     std::vector<class port *> ports;
+    std::vector<class net *> my_nets; /* nets allocated by this element */
+    std::vector<class wire *> my_wires; /* wires allocated by this element */
     
 };
 

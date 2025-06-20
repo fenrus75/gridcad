@@ -244,6 +244,8 @@ void wire::route(class scene *scene)
     if (points)
         delete points;
         
+    printf("Routing wire\n");
+        
     class wiregrid * grid = new wiregrid(scene->sizeX, scene->sizeY);
 
     grid->is_clock = value.is_clock;
@@ -263,10 +265,8 @@ void wire::route(class scene *scene)
     for (auto port : ports) {
         if (floorf(port->screenX) == X1 && floorf(port->screenY) == Y1 && port->direction == PORT_OUT) {
 	    want_reverse = true;
-            printf("reverse out\n");
         }
         if (floorf(port->screenX) == X2 && floorf(port->screenY) == Y2 && port->direction == PORT_IN) {
-            printf("reverse in\n");
 	    want_reverse = true;
         }
     }
@@ -294,10 +294,8 @@ void wire::check_reverse(void)
     for (auto port : ports) {
         if (floorf(port->screenX) == X1 && floorf(port->screenY) == Y1 && port->direction == PORT_OUT) {
 	    want_reverse = true;
-            printf("reverse out\n");
         }
         if (floorf(port->screenX) == X2 && floorf(port->screenY) == Y2 && port->direction == PORT_IN) {
-            printf("reverse in\n");
 	    want_reverse = true;
         }
     }
@@ -330,6 +328,16 @@ void wire::add_port(class port *port)
     }
 }
 
+void wire::del_port(class port *port)
+{
+    for (unsigned int i = 0; i< ports.size(); i++) {
+        auto _port = ports[i];
+        if (port == _port) {
+            ports.erase(ports.begin() + i);
+            return;
+        }
+    }
+}
 void wire::reseat(void)
 {
     if (ports.size() > 0) {
@@ -697,9 +705,6 @@ void wire::remove_net(void)
 	}
 
 	save->remove_wire(this);
-	if (save->is_empty())
-        	delete save;
-	
 }
 
 bool wire::update_distances(void)

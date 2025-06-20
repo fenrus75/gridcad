@@ -49,4 +49,5 @@ private:
     std::string icon = "";
     std::string icon_selected = "";
     class name *name_edit = NULL;
+    bool title_on_top = false;
 };

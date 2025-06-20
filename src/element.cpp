@@ -57,8 +57,10 @@ element::element(int _sizeX, int _sizeY, std::string _name, std::string _parent)
 
 element::~element()
 {
-//    printf("Destructor for element %s\n", name.c_str());
+    printf("Destructor for element %s\n", name.c_str());
+    remove_nets();
     for (auto port : ports) {
+//        port->remove_wires();
         delete port;
     }
     ports.clear();
@@ -550,6 +552,7 @@ void element::add_nets(void)
 		net->add_port(port);
 		net->validate();
 		net->update_net_distances();
+		my_nets.push_back(net);
 	}
 }
 
@@ -559,3 +562,10 @@ void element::update_value_net(struct value *value, int port, int ttl)
 	ports[port]->update_value_net(value, ttl);
 }
 
+void element::free_nets_memory(void)
+{
+    for (auto n : my_nets) {
+        delete n;
+    }
+    my_nets.clear();
+}

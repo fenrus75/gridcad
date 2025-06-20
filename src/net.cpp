@@ -101,7 +101,7 @@ void net::validate(void)
 		if (port->direction == PORT_Z)
 			zcount++;
 	if (count != 1) {
-		printf("NET IS INVALID, %i output ports\n", count);
+//		printf("NET IS INVALID, %i output ports\n", count);
 		if (!value.is_error && count > 1) {
 			value.is_error = true;
 			set_value(&value, DEFAULT_TTL);

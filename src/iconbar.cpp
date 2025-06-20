@@ -63,6 +63,7 @@ iconbar::~iconbar(void)
      for (auto one : icons) {
         delete one;
      }
+     delete menu;
 }
 
 void iconbar::resize(SDL_Rect _rect)
@@ -433,6 +434,8 @@ void iconbar::create_menu(void)
         libtab->set_element("library", &library[li]);
     }
 
+    if (menu)
+     delete menu;
     menu = new icon_contextmenu(this);
     for (auto ib : icons) {
        menu->add_item(ib->get_name(), ib, callback_ib);

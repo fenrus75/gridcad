@@ -28,6 +28,8 @@ void callback_set_color(class port *port, int color)
 void port::add_menu(void)
 {
 	if (direction == PORT_OUT) {
+		if (menu)
+			delete menu;
 		menu = new class port_contextmenu(this);	
 		menu->add_item(wire_color_name(0), 0, callback_set_color);
 		menu->add_item(wire_color_name(1), 1, callback_set_color);
@@ -52,15 +54,18 @@ port::port(std::string _name, int _direction, int _bus_width)
 
 port::~port()
 {
+//	printf("port destructor\n");
 	if (menu) {
 		delete menu;
 		menu = NULL;
 	}
 	while (wires.size() > 0) {
 		class wire *wire = wires[0];
+		wire->del_port(this);
 		remove_wire(wire);
-		if (wire->is_empty())
+		if (wire->is_empty()) {
 			delete wire;
+		} 
 	}
 }
 
@@ -399,6 +404,8 @@ void port::remove_wires(void)
 	while (wires.size() > 0) {
 		auto wire = wires[0];
 		wire->remove();
+		if (wire->is_empty())
+			delete wire;
 	}
 	wires.clear();
 }
