@@ -34,7 +34,7 @@ public:
     virtual ~icon(void);
     
     virtual class element *create_element(void);
-    void draw (SDL_Renderer *renderer, float X1, float Y1, float width, float height);
+    void draw (SDL_Renderer *renderer, float X1, float Y1, float width, float height, class basecanvas *canvas);
     void set_active(void) { active = true; };
     void set_inactive(void) { active = false; };
     void assign_library_element(struct library_block block);
@@ -43,6 +43,7 @@ private:
     bool active  = false;
     std::string class_id = "";
     std::string tooltip = "";
+    std::string overlay = "";
     struct library_block lib = {}; 
     SDL_Renderer *_renderer = NULL;
     SDL_Texture *texture = NULL;
@@ -51,7 +52,7 @@ private:
 
 class oneiconbar {
 public:
-    oneiconbar(SDL_Renderer *_renderer, SDL_Rect _rect, std::string name);
+    oneiconbar(SDL_Renderer *_renderer, SDL_Rect _rect, std::string name, class basecanvas *canvas);
     virtual ~oneiconbar(void);
     
     void resize(SDL_Rect _rect);
@@ -71,13 +72,14 @@ private:
     SDL_Rect rect = {};
     std::vector<std::vector<class icon *>> icons;
     SDL_Renderer *renderer = NULL;
+    class basecanvas *canvas = NULL;
     std::string name;
 
 };
 
 class iconbar {
 public:
-    iconbar(SDL_Renderer *_renderer, SDL_Rect _rect);
+    iconbar(SDL_Renderer *_renderer, SDL_Rect _rect, class basecanvas *canvas);
     virtual ~iconbar(void);
     
     void resize(SDL_Rect _rect);
@@ -101,6 +103,7 @@ private:
     std::map<std::string, class oneiconbar*> libtabs;
     class icon_contextmenu *menu = NULL;
     SDL_Texture *dropdown = NULL;
+    class basecanvas *canvas = NULL;
 };
 
 

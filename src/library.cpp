@@ -67,6 +67,13 @@ void populate_library(std::string directory)
                 block.tooltip += line;
             }
 
+            std::ifstream input_overlay(path + ".overlay");
+            line = "";
+            
+            while (std::getline(input_overlay, line)) {
+                block.overlay += line;
+            }
+
             library.push_back(block);
         }
     }

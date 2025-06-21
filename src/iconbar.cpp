@@ -24,10 +24,11 @@ void callback_ib(class iconbar *bar, class oneiconbar *choice)
     bar->set(choice);
 }
 
-iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect)
+iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect, class basecanvas *_canvas)
 {
     renderer = _renderer;
     rect = _rect;
+    canvas = _canvas;
     
     create_menu();    
 }
@@ -149,11 +150,12 @@ void icon::assign_library_element(struct library_block block)
   lib = block;
   texture = IMG_LoadTextureFromMem(_renderer, lib.icon.c_str() );
   tooltip = block.tooltip;
+  overlay = block.overlay;
 };
 
 
 /* X and Y are our box to draw in -- we'll draw centered to that */
-void icon::draw(SDL_Renderer *renderer, float X, float Y, float width, float height)
+void icon::draw(SDL_Renderer *renderer, float X, float Y, float width, float height, class basecanvas *canvas)
 {
        SDL_Rect rect;
        const int color = COLOR_WIRE_SOLID;
@@ -189,6 +191,16 @@ void icon::draw(SDL_Renderer *renderer, float X, float Y, float width, float hei
        if (active)                              
         	SDL_RenderFillRect(renderer, &rect);
        SDL_RenderCopy(renderer, texture, NULL, &rect);
+       
+       if (overlay != "") {
+            float newX, newY, newW, newH;
+            
+            newX = canvas->scr_to_X(X);
+            newY = canvas->scr_to_Y(Y + height/2);
+            newW = canvas->scale_to_X(width);
+            newH = canvas->scale_to_Y(height/2);
+            canvas->draw_text(overlay, newX, newY, newW, newH);
+       }
 }
 
 class element * icon::create_element(void)
@@ -211,7 +223,7 @@ class element *icon::library_element(void)
      return element;
 }
 
-oneiconbar::oneiconbar(SDL_Renderer *_renderer, SDL_Rect _rect, std::string _name)
+oneiconbar::oneiconbar(SDL_Renderer *_renderer, SDL_Rect _rect, std::string _name, class basecanvas *_canvas)
 {
    renderer = _renderer;
    rect = _rect;
@@ -221,6 +233,7 @@ oneiconbar::oneiconbar(SDL_Renderer *_renderer, SDL_Rect _rect, std::string _nam
     icons[1].resize(15);
     
     name = _name;
+    canvas = _canvas;
 }
 
 oneiconbar::~oneiconbar(void)
@@ -260,7 +273,7 @@ void oneiconbar::draw(void)
 			       Alpha(color));
         	SDL_RenderFillRect(renderer, &box);
                 if (icons[x][y])
-                   icons[x][y]->draw(renderer, rect.x + (0.6 + 2.5 * x) * SCALEX + OFFSETX, rect.y + (0.6 + 2.5 * y) * SCALEY + OFFSETY, 1.8 * SCALEX, 1.8 * SCALEY);
+                   icons[x][y]->draw(renderer, rect.x + (0.6 + 2.5 * x) * SCALEX + OFFSETX, rect.y + (0.6 + 2.5 * y) * SCALEY + OFFSETY, 1.8 * SCALEX, 1.8 * SCALEY, canvas);
                 
                 
         }    
@@ -381,7 +394,7 @@ void iconbar::create_menu(void)
     icons.clear();
     libtabs.clear();
     
-    init_icon = new class oneiconbar(renderer, rect, "Logic");
+    init_icon = new class oneiconbar(renderer, rect, "Logic", canvas);
 
     init_icon->set_element("model_zero:", "assets/zero.png", "constant zero value");
     init_icon->set_element("model_one:", "assets/one.png", "constant one value");
@@ -405,7 +418,7 @@ void iconbar::create_menu(void)
 
     icons.push_back(init_icon);
     current_icons = init_icon;    
-    init_icon = new class oneiconbar(renderer, rect, "Bus converters");    
+    init_icon = new class oneiconbar(renderer, rect, "Bus converters", canvas);    
     init_icon->set_element("model_4to1:", "assets/4to1.png", "Bus to 4 bits split");
     init_icon->set_element("model_1to4:", "assets/1to4.png", "4 bits to Bus concentrator");
     init_icon->set_element("model_8to1:", "assets/8to1.png", "Bus to 8 bits split");
@@ -416,7 +429,7 @@ void iconbar::create_menu(void)
     init_icon->set_element("model_8to16:", "assets/8to16.png", "2 bus8 to bus16 concentrator");
     icons.push_back(init_icon);
 
-    init_icon = new class oneiconbar(renderer, rect, "Memory");
+    init_icon = new class oneiconbar(renderer, rect, "Memory", canvas);
     init_icon->set_element("model_memory:", "assets/memory.png", "8 Bit Memory");
     init_icon->insert_blank();
     init_icon->set_element("model_clock:", "assets/clock_on.png", "Clock");
@@ -426,7 +439,7 @@ void iconbar::create_menu(void)
 
     for (li = 0; li < library.size(); li++) {
         if (libtabs.find(library[li].collection) == libtabs.end()) {
-            libtab = new class oneiconbar(renderer, rect, library[li].collection );
+            libtab = new class oneiconbar(renderer, rect, library[li].collection, canvas);
             libtabs[library[li].collection] = libtab;
             icons.push_back(libtab);
         }
