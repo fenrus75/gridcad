@@ -10017,10 +10017,10 @@
             "angle": 0,
             "class_id": "model_nest:",
             "from_library_collection": "library/mux",
-            "from_library_element": "or8",
-            "icon": "library/mux/or8.json.png",
-            "icon_selected": "library/mux/or8.json.selected.png",
-            "name": "or8",
+            "from_library_element": "OR8",
+            "icon": "library/logic8/OR8.json.png",
+            "icon_selected": "library/logic8/OR8.json.selected.png",
+            "name": "OR8",
             "parental_name": "/main/SubScreen/MUX8",
             "ports": [
                 {
@@ -16859,15 +16859,15 @@
                     }
                 ],
                 "name": "SubScreen",
-                "parental_name": "/main/SubScreen/MUX8/or8",
+                "parental_name": "/main/SubScreen/MUX8/OR8",
                 "sizeX": 200.0,
                 "sizeY": 200.0,
-                "verilog_name": "_main_SubScreen_MUX8_or8_or8_b5b91611_a4ed_"
+                "verilog_name": "_main_SubScreen_MUX8_OR8_OR8_b5b91611_a4ed_"
             },
             "sizeX": 4,
             "sizeY": 4,
             "uuid": "6856eb95-94f33372-5e50-3d3a-2083-7d87c7fc12c2",
-            "verilog_name": "or8"
+            "verilog_name": "OR8"
         }
     ],
     "name": "MUX8",
