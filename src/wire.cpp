@@ -596,7 +596,7 @@ class wire *json_wire_factory(json &jwire)
 
 static void grid_line(class wiregrid *grid, float x1, float y1, float x2, float y2, bool is_clock)
 {
-        double dx, dy,d;
+        float dx, dy,d;
 	float self_cost = 2.25;
 	if (is_clock && grid->is_clock)
 		self_cost = -0.05; /* we don't mind clocks routing over clocks */
