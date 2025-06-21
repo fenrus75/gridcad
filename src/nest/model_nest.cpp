@@ -366,29 +366,29 @@ void model_nest::regen_ports(void)
 		title_on_top = true;
 	
 	/* center */
-	unsigned int offset = (sizeY - north.size())/2;
+	unsigned int offset = (sizeX - north.size())/2;
 	
 	for (unsigned int i = 0; i < north.size(); i++) {
 		north[i]->X = i + offset;
 		north[i]->Y = -1;
 	}
 	
-	offset = (sizeY - south.size())/2;
+	offset = (sizeX - south.size())/2;
 	for (unsigned int i = 0; i < south.size(); i++) {
-		south[i]->X = i + 1;
+		south[i]->X = i + offset;
 		south[i]->Y = sizeY;
 	}
 	
-	offset = (sizeX - west.size())/2;
+	offset = (sizeY - west.size())/2;
 	for (unsigned int i = 0; i < west.size(); i++) {
 		west[i]->X = -1;
-		west[i]->Y = i + 1;
+		west[i]->Y = i + offset;
 	}
 	
-	offset = (sizeX - east.size())/2;
+	offset = (sizeY - east.size())/2;
 	for (unsigned int i = 0; i < east.size(); i++) {
 		east[i]->X = sizeX;
-		east[i]->Y = i + 1;
+		east[i]->Y = i + offset;
 	}
 
 	
@@ -599,4 +599,8 @@ void model_nest::save_to_library(std::string library_path)
 
 	outputtt << "Custom library element for a '" + name + "'";
 	outputtt.close();
+	std::ofstream outputol(library_path + "/" + name + ".json.overlay",  std::ios::binary);
+
+	outputol << name;
+	outputol.close();
 }
