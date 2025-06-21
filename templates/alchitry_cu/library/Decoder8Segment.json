@@ -38,6 +38,7 @@
                             "Y2": 16,
                             "color": 0,
                             "distance_from_outport": 0,
+                            "is_reversed": false,
                             "name": "Wire-684f597c-a2d75cfa-55ee-3687-",
                             "points": [
                                 {
@@ -93,6 +94,7 @@
                             "Y2": 17,
                             "color": 0,
                             "distance_from_outport": 0,
+                            "is_reversed": false,
                             "name": "Wire-684f597e-83152ea1-1680-4377-",
                             "points": [
                                 {
@@ -148,6 +150,7 @@
                             "Y2": 18,
                             "color": 0,
                             "distance_from_outport": 0,
+                            "is_reversed": false,
                             "name": "Wire-684f5981-b461ae22-8efb-1c1a-",
                             "points": [
                                 {
@@ -203,6 +206,7 @@
                             "Y2": 19,
                             "color": 0,
                             "distance_from_outport": 0,
+                            "is_reversed": false,
                             "name": "Wire-684f5983-0f880d32-9956-7efe-",
                             "points": [
                                 {
@@ -258,6 +262,7 @@
                             "Y2": 20,
                             "color": 0,
                             "distance_from_outport": 0,
+                            "is_reversed": false,
                             "name": "Wire-684f5986-067829ad-ef77-3702-",
                             "points": [
                                 {
@@ -313,6 +318,7 @@
                             "Y2": 21,
                             "color": 0,
                             "distance_from_outport": 0,
+                            "is_reversed": false,
                             "name": "Wire-684f5988-aeeff8f1-8753-2ec3-",
                             "points": [
                                 {
@@ -368,6 +374,7 @@
                             "Y2": 22,
                             "color": 0,
                             "distance_from_outport": 0,
+                            "is_reversed": false,
                             "name": "Wire-684f598a-cdbfa440-fe82-9b7d-",
                             "points": [
                                 {
@@ -423,6 +430,7 @@
                             "Y2": 23,
                             "color": 0,
                             "distance_from_outport": 0,
+                            "is_reversed": false,
                             "name": "Wire-684f598d-5f03f679-38b8-f8a1-",
                             "points": [
                                 {
@@ -465,7 +473,7 @@
                         "floatval": 0.0,
                         "intval": 3,
                         "is_clock": false,
-                        "is_error": true,
+                        "is_error": false,
                         "type": 1,
                         "valid": true
                     },
@@ -478,6 +486,7 @@
                             "Y2": 20,
                             "color": 0,
                             "distance_from_outport": 0,
+                            "is_reversed": true,
                             "name": "Wire-684f2e79-1416f958-1461-c070-",
                             "points": [
                                 {
@@ -495,7 +504,7 @@
                                 "floatval": 0.0,
                                 "intval": 3,
                                 "is_clock": false,
-                                "is_error": true,
+                                "is_error": false,
                                 "type": 1,
                                 "valid": true
                             },
@@ -547,6 +556,7 @@
                             "Y2": 16,
                             "color": 0,
                             "distance_from_outport": 0,
+                            "is_reversed": true,
                             "name": "Wire-684f596f-aaa62393-7c61-a895-",
                             "points": [
                                 {
@@ -602,6 +612,7 @@
                             "Y2": 17,
                             "color": 0,
                             "distance_from_outport": 0,
+                            "is_reversed": true,
                             "name": "Wire-684f5971-00e9df2c-4159-f267-",
                             "points": [
                                 {
@@ -630,7 +641,7 @@
                 {
                     "X": 2,
                     "Y": 3,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 0,
                     "direction": 1,
                     "distance_from_outport": 0,
@@ -657,6 +668,7 @@
                             "Y2": 18,
                             "color": 0,
                             "distance_from_outport": 0,
+                            "is_reversed": true,
                             "name": "Wire-684f5973-a33b1b9d-2f12-2a44-",
                             "points": [
                                 {
@@ -685,7 +697,7 @@
                 {
                     "X": 2,
                     "Y": 4,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 0,
                     "direction": 1,
                     "distance_from_outport": 0,
@@ -712,6 +724,7 @@
                             "Y2": 19,
                             "color": 0,
                             "distance_from_outport": 0,
+                            "is_reversed": true,
                             "name": "Wire-684f5975-5e0a7976-d4df-61ef-",
                             "points": [
                                 {
@@ -767,6 +780,7 @@
                             "Y2": 18,
                             "color": 0,
                             "distance_from_outport": 0,
+                            "is_reversed": false,
                             "name": "Wire-684f2e7c-a70d7f7e-2e9a-0083-",
                             "points": [
                                 {
@@ -809,7 +823,7 @@
                 {
                     "X": 3,
                     "Y": 1,
-                    "bus_width": 0,
+                    "bus_width": 4,
                     "color": 0,
                     "direction": 1,
                     "distance_from_outport": 0,
@@ -836,6 +850,7 @@
                             "Y2": 18,
                             "color": 0,
                             "distance_from_outport": 0,
+                            "is_reversed": false,
                             "name": "Wire-684f2e7c-a70d7f7e-2e9a-0083-",
                             "points": [
                                 {
@@ -888,7 +903,7 @@
                 {
                     "X": -1,
                     "Y": 1,
-                    "bus_width": 0,
+                    "bus_width": 8,
                     "color": 0,
                     "direction": 0,
                     "distance_from_outport": 1,
@@ -902,7 +917,7 @@
                         "floatval": 0.0,
                         "intval": 3,
                         "is_clock": false,
-                        "is_error": true,
+                        "is_error": false,
                         "type": 1,
                         "valid": true
                     },
@@ -915,6 +930,7 @@
                             "Y2": 20,
                             "color": 0,
                             "distance_from_outport": 0,
+                            "is_reversed": true,
                             "name": "Wire-684f2e79-1416f958-1461-c070-",
                             "points": [
                                 {
@@ -932,7 +948,7 @@
                                 "floatval": 0.0,
                                 "intval": 3,
                                 "is_clock": false,
-                                "is_error": true,
+                                "is_error": false,
                                 "type": 1,
                                 "valid": true
                             },
@@ -961,7 +977,7 @@
             "Y": 15.0,
             "angle": 0,
             "class_id": "model_truth:",
-            "flip_input_ports": true,
+            "flip_input_ports": false,
             "flip_output_ports": false,
             "inputs": 4,
             "name": "Truth Table",
@@ -990,7 +1006,7 @@
                     "direction": 0,
                     "distance_from_outport": 1,
                     "linked_uuid": "",
-                    "name": "i1",
+                    "name": "i8",
                     "screenX": 33.0,
                     "screenY": 16.0,
                     "value": {
@@ -1003,7 +1019,7 @@
                         "type": 0,
                         "valid": true
                     },
-                    "verilog_name": "i1",
+                    "verilog_name": "i8",
                     "wires": [
                         {
                             "X1": 28,
@@ -1012,6 +1028,7 @@
                             "Y2": 16,
                             "color": 0,
                             "distance_from_outport": 0,
+                            "is_reversed": true,
                             "name": "Wire-684f596f-aaa62393-7c61-a895-",
                             "points": [
                                 {
@@ -1045,7 +1062,7 @@
                     "direction": 0,
                     "distance_from_outport": 1,
                     "linked_uuid": "",
-                    "name": "i2",
+                    "name": "i4",
                     "screenX": 33.0,
                     "screenY": 17.0,
                     "value": {
@@ -1058,7 +1075,7 @@
                         "type": 0,
                         "valid": true
                     },
-                    "verilog_name": "i2",
+                    "verilog_name": "i4",
                     "wires": [
                         {
                             "X1": 28,
@@ -1067,6 +1084,7 @@
                             "Y2": 17,
                             "color": 0,
                             "distance_from_outport": 0,
+                            "is_reversed": true,
                             "name": "Wire-684f5971-00e9df2c-4159-f267-",
                             "points": [
                                 {
@@ -1100,7 +1118,7 @@
                     "direction": 0,
                     "distance_from_outport": 1,
                     "linked_uuid": "",
-                    "name": "i4",
+                    "name": "i2",
                     "screenX": 33.0,
                     "screenY": 18.0,
                     "value": {
@@ -1113,7 +1131,7 @@
                         "type": 0,
                         "valid": true
                     },
-                    "verilog_name": "i4",
+                    "verilog_name": "i2",
                     "wires": [
                         {
                             "X1": 28,
@@ -1122,6 +1140,7 @@
                             "Y2": 18,
                             "color": 0,
                             "distance_from_outport": 0,
+                            "is_reversed": true,
                             "name": "Wire-684f5973-a33b1b9d-2f12-2a44-",
                             "points": [
                                 {
@@ -1155,7 +1174,7 @@
                     "direction": 0,
                     "distance_from_outport": 1,
                     "linked_uuid": "",
-                    "name": "i8",
+                    "name": "i1",
                     "screenX": 33.0,
                     "screenY": 19.0,
                     "value": {
@@ -1168,7 +1187,7 @@
                         "type": 0,
                         "valid": true
                     },
-                    "verilog_name": "i8",
+                    "verilog_name": "i1",
                     "wires": [
                         {
                             "X1": 28,
@@ -1177,6 +1196,7 @@
                             "Y2": 19,
                             "color": 0,
                             "distance_from_outport": 0,
+                            "is_reversed": true,
                             "name": "Wire-684f5975-5e0a7976-d4df-61ef-",
                             "points": [
                                 {
@@ -1205,7 +1225,7 @@
                 {
                     "X": 4,
                     "Y": 1,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 0,
                     "direction": 1,
                     "distance_from_outport": 0,
@@ -1232,6 +1252,7 @@
                             "Y2": 16,
                             "color": 0,
                             "distance_from_outport": 0,
+                            "is_reversed": false,
                             "name": "Wire-684f597c-a2d75cfa-55ee-3687-",
                             "points": [
                                 {
@@ -1260,7 +1281,7 @@
                 {
                     "X": 4,
                     "Y": 2,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 0,
                     "direction": 1,
                     "distance_from_outport": 0,
@@ -1287,6 +1308,7 @@
                             "Y2": 17,
                             "color": 0,
                             "distance_from_outport": 0,
+                            "is_reversed": false,
                             "name": "Wire-684f597e-83152ea1-1680-4377-",
                             "points": [
                                 {
@@ -1315,7 +1337,7 @@
                 {
                     "X": 4,
                     "Y": 3,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 0,
                     "direction": 1,
                     "distance_from_outport": 0,
@@ -1342,6 +1364,7 @@
                             "Y2": 18,
                             "color": 0,
                             "distance_from_outport": 0,
+                            "is_reversed": false,
                             "name": "Wire-684f5981-b461ae22-8efb-1c1a-",
                             "points": [
                                 {
@@ -1370,7 +1393,7 @@
                 {
                     "X": 4,
                     "Y": 4,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 0,
                     "direction": 1,
                     "distance_from_outport": 0,
@@ -1397,6 +1420,7 @@
                             "Y2": 19,
                             "color": 0,
                             "distance_from_outport": 0,
+                            "is_reversed": false,
                             "name": "Wire-684f5983-0f880d32-9956-7efe-",
                             "points": [
                                 {
@@ -1425,7 +1449,7 @@
                 {
                     "X": 4,
                     "Y": 5,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 0,
                     "direction": 1,
                     "distance_from_outport": 0,
@@ -1452,6 +1476,7 @@
                             "Y2": 20,
                             "color": 0,
                             "distance_from_outport": 0,
+                            "is_reversed": false,
                             "name": "Wire-684f5986-067829ad-ef77-3702-",
                             "points": [
                                 {
@@ -1480,7 +1505,7 @@
                 {
                     "X": 4,
                     "Y": 6,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 0,
                     "direction": 1,
                     "distance_from_outport": 0,
@@ -1507,6 +1532,7 @@
                             "Y2": 21,
                             "color": 0,
                             "distance_from_outport": 0,
+                            "is_reversed": false,
                             "name": "Wire-684f5988-aeeff8f1-8753-2ec3-",
                             "points": [
                                 {
@@ -1535,7 +1561,7 @@
                 {
                     "X": 4,
                     "Y": 7,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 0,
                     "direction": 1,
                     "distance_from_outport": 0,
@@ -1562,6 +1588,7 @@
                             "Y2": 22,
                             "color": 0,
                             "distance_from_outport": 0,
+                            "is_reversed": false,
                             "name": "Wire-684f598a-cdbfa440-fe82-9b7d-",
                             "points": [
                                 {
@@ -1590,7 +1617,7 @@
                 {
                     "X": 4,
                     "Y": 8,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 0,
                     "direction": 1,
                     "distance_from_outport": 0,
@@ -1617,6 +1644,7 @@
                             "Y2": 23,
                             "color": 0,
                             "distance_from_outport": 0,
+                            "is_reversed": false,
                             "name": "Wire-684f598d-5f03f679-38b8-f8a1-",
                             "points": [
                                 {
