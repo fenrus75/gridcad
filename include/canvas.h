@@ -3,11 +3,14 @@
 
 
 
-struct autocomplete_element {
-    class element *from, *to;
-    class port *from_port, *to_port;
+class autocomplete_element {
+public:
+    autocomplete_element(void) {};
+    ~autocomplete_element(void) {};
+    class element *from = NULL, *to = NULL;
+    class port *from_port = NULL, *to_port = NULL;
     
-    class wire *tempwire;
+    class wire *tempwire = NULL;
 };
 
 /* gui canvas to draw on */
@@ -38,6 +41,8 @@ public:
     
     void set_dialog(class dialog *D) { dialogbox = D;};
     void set_project_name(std::string _projectname) { projectname = _projectname;};
+    
+    void zap_autocomplete(void);
          
 protected:
     bool draw_grid = false;
@@ -74,4 +79,6 @@ protected:
     float DPI = 96;    
     
     bool show_toolchain = false;
+    
+    std::vector<struct autocomplete_element *> autocomplete;
 };

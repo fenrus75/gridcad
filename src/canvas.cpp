@@ -405,6 +405,8 @@ bool canvas::handle_event(SDL_Event &event)
 			break;
 
 		case SDL_KEYDOWN:
+			if (event.key.keysym.sym != SDLK_TAB)
+				zap_autocomplete();
 			if ((event.key.keysym.mod & (KMOD_LSHIFT)))
 				shift_down = true;
 			else
@@ -590,6 +592,7 @@ bool canvas::handle_event(SDL_Event &event)
 				shift_down = false;
 			break;
 		case SDL_MOUSEBUTTONDOWN:
+			zap_autocomplete();
 			if (active_menu && !dialogbox) {
 				float x, y;
 				x = scr_to_X(event.motion.x);
@@ -1198,4 +1201,12 @@ float canvas::screen_width(void)
 	float W = scr_to_X(Wpixels);
 	
 	return W;
+}
+
+void canvas::zap_autocomplete(void)
+{
+	for (auto a : autocomplete) {
+		delete a;
+	}
+	autocomplete.clear();
 }
