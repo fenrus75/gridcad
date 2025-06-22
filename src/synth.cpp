@@ -31,7 +31,7 @@ std::string synth::log2string(char *str)
     if (phase == 1) {
         if (strstr(str, "Time spent:"))
             phase = 2;
-        if (str[0] >= '0' && str[0] <= '9') {
+        if (str[0] >= '0' && str[0] <= '9' && false) {
             /* new main line -- delete all non-main lines from the history */
                 bool retry = true;
                 while (retry) {
