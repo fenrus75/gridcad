@@ -12,7 +12,7 @@ public:
     virtual std::string class_id(void) { return "model_datascope:";};
 
 
-    void drawAt(class canvas *canvas, float X, float Y, int type) override;
+    void drawAt(class basecanvas *canvas, float X, float Y, int type) override;
     virtual void to_json(json &j) override;
     virtual void from_json(json &j) override;
 

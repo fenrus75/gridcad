@@ -1,6 +1,7 @@
 #pragma once
 
 #include "gridcad.h"
+#include "element.h"
 #include "name.h"
 
 class truthcanvas;
@@ -13,7 +14,7 @@ public:
     virtual std::string class_id(void) { return "model_truth:";};
 
 
-    void drawAt(class canvas *canvas, float X, float Y, int type) override;
+    void drawAt(class basecanvas *canvas, float X, float Y, int type) override;
     bool mouse_select(float X, float Y) override;
     virtual void to_json(json &j) override;
     virtual void from_json(json &j) override;
@@ -32,7 +33,7 @@ public:
     void del_input(void);
     void calculate(int ttl) override;
     void names_to_ports(void);
-    void handle_event(class canvas *canvas, SDL_Event &event) override;
+    void handle_event(class basecanvas *canvas, SDL_Event &event) override;
     bool in_edit_mode(void) override { return name_edit->get_edit_mode() && single && selected;};    
     void enter_edit_mode(void) override { name_edit->set_edit_mode(true); selected = true; single = true;};
     std::string get_verilog_main(void) override;

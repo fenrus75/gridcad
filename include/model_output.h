@@ -13,10 +13,10 @@ public:
     virtual std::string class_id(void) { return "model_output:";};
 
 
-    void drawAt(class canvas *canvas, float X, float Y, int type) override;
+    void drawAt(class basecanvas *canvas, float X, float Y, int type) override;
     virtual void to_json(json &j) override;
     virtual void from_json(json &j) override;
-    void handle_event(class canvas *canvas, SDL_Event &event) override;
+    void handle_event(class basecanvas *canvas, SDL_Event &event) override;
     struct value get_value(void);
     
     bool in_edit_mode(void) override { return name_edit->get_edit_mode() && single && selected;};

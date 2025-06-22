@@ -13,11 +13,11 @@ public:
     virtual std::string class_id(void) { return "model_toggle:";};
 
 
-    void drawAt(class canvas *canvas, float X, float Y, int type) override;
+    void drawAt(class basecanvas *canvas, float X, float Y, int type) override;
     bool mouse_select(float X, float Y) override;
     void to_json(json &j) override;
     void from_json(json &j) override;
-    void handle_event(class canvas *canvas, SDL_Event &event) override;
+    void handle_event(class basecanvas *canvas, SDL_Event &event) override;
     void update_value(struct value *value, int ttl);
     class port *get_clk_port(void) override { if (ports[0]->name == "clk") return ports[0]; return NULL;};  
     

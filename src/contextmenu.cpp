@@ -1,4 +1,5 @@
 #include "gridcad.h"
+#include "canvas.h"
 #include "contextmenu.h"
 
 #include <algorithm>

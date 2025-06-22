@@ -11,6 +11,7 @@
  */
 
 #include "gridcad.h"
+#include "element.h"
 #include "model_output.h"
 #include "port.h"
 #include "contextmenu.h"
@@ -69,7 +70,7 @@ model_output::~model_output(void)
     delete name_edit;
 }
 
-void model_output::drawAt(class canvas *canvas, float X, float Y, int type)
+void model_output::drawAt(class basecanvas *canvas, float X, float Y, int type)
 {
     if (!selected)
       name_edit->set_edit_mode(false);
@@ -117,7 +118,7 @@ void model_output::from_json(json &j)
      value = j.value("value", value);
 }
 
-void model_output::handle_event(class canvas *canvas, SDL_Event &event)
+void model_output::handle_event(class basecanvas *canvas, SDL_Event &event)
 {
     if (!selected || !single)
         return;

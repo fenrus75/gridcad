@@ -40,7 +40,7 @@ model_one::~model_one(void)
 {
 }
 
-void model_one::drawAt(class canvas *canvas, float X, float Y, int type)
+void model_one::drawAt(class basecanvas *canvas, float X, float Y, int type)
 {
     if (selected) {
         canvas->draw_image("assets/one_base.png", X, Y, sizeX, sizeY, Alpha(type));

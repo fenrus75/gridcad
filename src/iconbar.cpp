@@ -11,6 +11,7 @@
  */
 
 #include "gridcad.h"
+#include "element.h"
 #include "iconbar.h"
 #include "model_nest.h"
 #include "contextmenu.h"

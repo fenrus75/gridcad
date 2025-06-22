@@ -11,6 +11,7 @@
  */
 
 #include "gridcad.h"
+#include "element.h"
 
 #include "model_toggle.h"
 #include "model_not.h"

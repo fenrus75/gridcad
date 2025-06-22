@@ -11,6 +11,7 @@
  */
 
 #include "gridcad.h"
+#include "element.h"
 #include "model_datascope.h"
 #include "port.h"
 
@@ -50,7 +51,7 @@ model_datascope::~model_datascope(void)
 {
 }
 
-void model_datascope::drawAt(class canvas *canvas, float X, float Y, int type)
+void model_datascope::drawAt(class basecanvas *canvas, float X, float Y, int type)
 {
     if (selected) {
         canvas->draw_image("assets/datascope_selected.png", X, Y, sizeX, sizeY, Alpha(type));

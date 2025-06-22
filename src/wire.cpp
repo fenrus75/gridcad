@@ -12,6 +12,8 @@
 
 
 #include "gridcad.h"
+#include "canvas.h"
+#include "scene.h"
 #include "wirepath.h"
 #include "wire.h"
 #include "port.h"
@@ -108,7 +110,7 @@ int calc_angle(int x1, int y1, int x2, int y2)
     return 0;
 }
 
-void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y2, int color, int *step, struct value *value, int stepsize, class wire *wire)
+void draw_snake_line(class basecanvas *canvas, float x1, float y1, float x2, float y2, int color, int *step, struct value *value, int stepsize, class wire *wire)
 {
         float dx, dy,d, deltad, currentd, bigstep;
         bool thick = false;
@@ -201,7 +203,7 @@ void draw_snake_line(class canvas *canvas, float x1, float y1, float x2, float y
     
 }
 
-void wire::draw(class canvas *canvas, int _color)
+void wire::draw(class basecanvas *canvas, int _color)
 {
     int prevX, prevY;
     bool first = true;

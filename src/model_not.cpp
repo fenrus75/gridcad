@@ -11,6 +11,7 @@
  */
 
 #include "gridcad.h"
+#include "element.h"
 #include "model_not.h"
 #include "port.h"
 
@@ -29,7 +30,7 @@ model_not::~model_not(void)
 {
 }
 
-void model_not::drawAt(class canvas *canvas, float X, float Y, int type)
+void model_not::drawAt(class basecanvas *canvas, float X, float Y, int type)
 {
     if (selected)
         canvas->draw_image_rotated("assets/inverter_selected.png", X, Y, sizeX, sizeY, Alpha(type), angle);

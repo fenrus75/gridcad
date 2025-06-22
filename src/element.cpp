@@ -14,6 +14,9 @@
 #include <math.h>
 
 #include "gridcad.h"
+#include "canvas.h"
+#include "scene.h"
+#include "element.h"
 #include "port.h"
 #include "contextmenu.h"
 #include "wire.h"
@@ -73,7 +76,7 @@ void element::place(int _X, int _Y)
 }
 
 
-void element::drawAt(class canvas *canvas, float X, float Y, int type)
+void element::drawAt(class basecanvas *canvas, float X, float Y, int type)
 {
     assert (type <= DRAW_ORIGIN);
     
@@ -87,7 +90,7 @@ void element::drawAt(class canvas *canvas, float X, float Y, int type)
 }
 
 
-void element::draw(class canvas *canvas, int type)
+void element::draw(class basecanvas *canvas, int type)
 {
     switch (type) {
         case DRAW_NORMAL:
@@ -109,7 +112,7 @@ void element::draw(class canvas *canvas, int type)
     }
 }
 
-void element::draw_phase2(class canvas *canvas, int type)
+void element::draw_phase2(class basecanvas *canvas, int type)
 {
     switch (type) {
         case DRAW_NORMAL:
@@ -133,7 +136,7 @@ void element::start_drag(float _X, float _Y)
     Y_in_drag = _Y - Y;
 }
 
-void element::update_drag(class canvas *canvas, class scene *scene, float _X, float _Y)
+void element::update_drag(class basecanvas *canvas, class scene *scene, float _X, float _Y)
 {
     if (fabsf(_X - X) > 1 || fabsf(_Y - Y) > 1)
         over_drag_threshold = true;
@@ -153,7 +156,7 @@ void element::update_drag(class canvas *canvas, class scene *scene, float _X, fl
     }
 }
 
-bool element::stop_drag(class canvas *canvas)
+bool element::stop_drag(class basecanvas *canvas)
 {
     bool no_move = false;
     /* we did not move at all */
@@ -412,7 +415,7 @@ static float dist(float X1, float Y1, float X2, float Y2)
 }
 
 
-void element::hover_ports(canvas *canvas)
+void element::hover_ports(class basecanvas *canvas)
 {
 	for (auto port:ports) {
      		int dx = 0, dy = 0;
@@ -428,7 +431,7 @@ void element::hover_ports(canvas *canvas)
      	}
 }
 
-void element::handle_event(class canvas *thiscanvas, SDL_Event &event)
+void element::handle_event(class basecanvas *thiscanvas, SDL_Event &event)
 {
     switch (event.type) {
 	case SDL_MOUSEMOTION:

@@ -19,6 +19,9 @@
 
 
 #include "gridcad.h"
+#include "canvas.h"
+#include "scene.h"
+#include "element.h"
 #include "connector.h"
 #include "wire.h"
 #include "port.h"

@@ -12,14 +12,14 @@ public:
     virtual std::string class_id(void) { return "model_nest:";};
 
 
-    void drawAt(class canvas *canvas, float X, float Y, int type) override;
+    void drawAt(class basecanvas *canvas, float X, float Y, int type) override;
     bool mouse_select(float X, float Y) override;
 
     void to_json(json &j) override;
     void from_json(json &j) override;
 
     void calculate(int ttl) override;
-    void handle_event(class canvas *canvas, SDL_Event&) override;
+    void handle_event(class basecanvas *canvas, SDL_Event&) override;
     bool in_edit_mode(void) override { return name_edit->get_edit_mode() && single && selected;};    
     void regen_ports(void);
     

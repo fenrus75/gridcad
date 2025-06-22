@@ -11,6 +11,7 @@
  */
 
 #include "gridcad.h"
+#include "element.h"
 #include "model_toggle.h"
 #include "port.h"
 #include "contextmenu.h"
@@ -63,7 +64,7 @@ model_toggle::~model_toggle(void)
   delete value_edit;
 }
 
-void model_toggle::drawAt(class canvas *canvas, float X, float Y, int type)
+void model_toggle::drawAt(class basecanvas *canvas, float X, float Y, int type)
 {
     std::string icon = "";
     
@@ -158,7 +159,7 @@ void model_toggle::from_json(json &j)
 }
 
 
-void model_toggle::handle_event(class canvas *canvas, SDL_Event &event)
+void model_toggle::handle_event(class basecanvas *canvas, SDL_Event &event)
 {
     if (value_edit->get_edit_mode()) {
       char buffer[128];

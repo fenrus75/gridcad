@@ -11,6 +11,9 @@
  */
 
 #include "gridcad.h"
+#include "canvas.h"
+#include "scene.h"
+#include "element.h"
 
 #include "model_nest.h"
 #include "model_toggle.h"
@@ -76,7 +79,7 @@ model_nest::~model_nest(void)
 }
 
 
-void model_nest::drawAt(class canvas *canvas, float X, float Y, int type)
+void model_nest::drawAt(class basecanvas *canvas, float X, float Y, int type)
 {
 	maybe_regen_ports();
         if (!selected)
@@ -166,7 +169,7 @@ bool model_nest::mouse_select(float _X, float _Y)
 }
 
 
-void model_nest::handle_event(class canvas *thiscanvas, SDL_Event &event)
+void model_nest::handle_event(class basecanvas *thiscanvas, SDL_Event &event)
 {
     switch (event.type) {
 	case SDL_MOUSEMOTION:

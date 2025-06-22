@@ -11,6 +11,8 @@
  */
 
 #include "gridcad.h"
+#include "element.h"
+
 #include "model_delayline.h"
 #include "port.h"
 
@@ -29,7 +31,7 @@ model_delayline::~model_delayline(void)
 {
 }
 
-void model_delayline::drawAt(class canvas *canvas, float X, float Y, int type)
+void model_delayline::drawAt(class basecanvas *canvas, float X, float Y, int type)
 {
     if (selected)
         canvas->draw_image_rotated("assets/delayline_selected.png", X, Y, sizeX, sizeY, Alpha(type), angle);

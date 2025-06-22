@@ -11,6 +11,7 @@
  */
 
 #include "gridcad.h"
+#include "element.h"
 #include "model_8to16.h"
 #include "port.h"
 
@@ -32,7 +33,7 @@ model_8to16::~model_8to16(void)
 {
 }
 
-void model_8to16::drawAt(class canvas *canvas, float X, float Y, int type)
+void model_8to16::drawAt(class basecanvas *canvas, float X, float Y, int type)
 {
     int alpha = Alpha(type);
 

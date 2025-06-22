@@ -15,6 +15,8 @@
 #include "model_clock.h"
 #include "model_nest.h"
 #include "library.h"
+#include "canvas.h"
+#include "scene.h"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>

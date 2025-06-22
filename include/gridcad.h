@@ -56,6 +56,7 @@ struct value;
 class contextmenu;
 class buttonbar;
 class dialog;
+class scene;
 
 class base
 {
@@ -106,6 +107,8 @@ public:
     void unhide(void);
     bool canvas_has_focus(void) { return has_focus; };
     void set_fps(float _fps) { fps = _fps;};
+    virtual float distance_from_mouse(float X, float Y) { return 0; };
+    virtual class scene* get_scene(void) { return NULL; };
 
 protected:
     float offsetX = 0.0;
@@ -121,262 +124,12 @@ protected:
     float fps = -1.0;
 };
 
-/* gui canvas to draw on */
-class canvas : public basecanvas
-{
-public:
-    canvas (class scene *_scene, struct capabilities *cap = NULL);
-    virtual ~canvas(void);
-    
-    void draw(void) override;
-    
-    class scene *get_scene(void) { return current_scene; };
-    class scene *swap_scene(class scene *scene);
-    bool handle_event(SDL_Event &event) override;
-    
-
-    void to_json(json& j);
-    class scene *get_undo(void);
-    void take_undo_snapshot(class scene *scene);
-    void from_json_to_floating(json &j);
-    
-    void update_window_title(void);
-    float distance_from_mouse(float X, float Y);
-
-    void clear_floating(void);
-    
-    float screen_width(void);
-    
-    void set_dialog(class dialog *D) { dialogbox = D;};
-    void set_project_name(std::string _projectname) { projectname = _projectname;};
-         
-protected:
-    bool draw_grid = false;
-    bool window_shown = true;
-    class scene *current_scene = NULL;
-    SDL_Rect main_area_rect, ui_area_rect, button_rect;
-    class element *dragging = NULL;
-    std::vector<class element *> floating;
-    class port *dragging_port = NULL;
-    class wire *dragging_wire = NULL, *hover_wire = NULL;
-    class iconbar *icon_bar = NULL;
-    class icon *active_icon = NULL;
-    class buttonbar *button_bar = NULL;
-    class contextmenu *active_menu = NULL;
-    class dialog *dialogbox = NULL;
-    bool left_mouse_down = false;
-    float mouseX = 0.0, mouseY = 0.0;
-    uint64_t mouse_timestamp = 0; /* SDL_GetTicks64 time of when the mouse last moved */
-    float click_start_X = 0.0, click_start_Y = 0.0;
-    int middle_X = 0, middle_Y = 0;
-    bool shift_down = false; /* not saved in json */
-    std::vector<std::string> undo_list;
-    bool in_area_select = false;
-    float area_select_X1 = 0.0, area_select_Y1 = 0.0;
-    SDL_Texture *area_select_texture = NULL;
-    bool tooltip_eligable = false;
-    std::string projectname = "";
-    
-    
-    bool handle_event_iconarea(SDL_Event &event);
-    bool handle_event_drawingarea(SDL_Event &event);
-    void draw_tooltip(float X, float Y, std::string tooltip);
-    bool fittoscreen = false;
-    float DPI = 96;    
-    
-    bool show_toolchain = false;
-};
-
-/* logical representation of a (sub)circuit */
-class scene : public base
-{
-public:
-    scene(std::string name, std::string parent = "");
-    virtual ~scene(void);
-    
-    virtual std::string class_id(void) { return "scene:";};
-
-    float sizeX = 200, sizeY = 200;
-    
-    void add_element(class element *element);
-    void remove_element(class element *element);
-    
-    bool can_place_element(float x, float y, int w, int h, class element *myself = NULL);
-
-    class port * is_port(float X, float Y); /* X and Y are global positions */
-    class wire *is_wire(float X, float Y);
-    
-    void fill_grid(class wiregrid* grid);
-    
-    void deselect_all(void);
-    class element *selected_element(void);
-    
-    void to_json(json& j);
-    void selection_to_json(json& j);
-    void from_json(json& j);
-    void process_delete_requests(void);
-    void delete_selection(void);
-
-    /* needs to become protected */
-    std::vector<class element *> elements;
-    void rewire_section(int x1, int y1, int w, int h);
-    void rewire_section(class element *element);
-    void remove_orphans(void);
-
-    unsigned int selected_count(void);
-    
-    std::string get_name(void) { return name; };
-    std::string get_full_name(void);
-    void set_parental_name(std::string name) { parental_name = name;};
-    void update_name(std::string _name) { name = _name;};
-    void update_vname(std::string _name) { vname = _name;};
-    uint64_t get_generation_count(void) { return generation_count; };
-    class contextmenu *get_menu(void) { return menu; };
-    void cycle_color(void);
-    void reroute_all_wires(void);
-    
-    std::string get_verilog_main(void);
-    std::string get_verilog_modules(std::string verilog_path);
-    std::string get_verilog_name(void) { return verilog_name;};
-    void create_verilog_names(void);
-
-    void remove_nets(void);
-    void add_nets(void);
-    void redo_nets(void);
-    
-protected:
-    class contextmenu *menu = NULL;
-    std::string name = "";
-    std::string vname = ""; /* nosave */
-    std::string parental_name = "";    
-    std::string verilog_name = "";
-    uint64_t generation_count = 0;
-};
 
 
 #define DRAW_NORMAL 0
 #define DRAW_GHOST 1
 #define DRAW_DND 2
 #define DRAW_ORIGIN 3
-
-
-class element : public base
-{
-public:    
-    element(int sizeX, int sizeY, std::string _name, std::string _parent = "");
-    virtual ~element(void);
-
-    virtual std::string class_id(void) { return "element:";};
-    
-    void place(int X, int Y);
-    
-    virtual void drawAt(class canvas *canvas, float X, float Y, int type);
-    virtual void draw_early(class canvas *canvas, int type) {};
-    virtual void draw(class canvas *canvas, int type);
-    virtual void draw_phase2(class canvas *canvas, int type);
-    
-    void start_drag(float X, float Y);
-    virtual void update_drag(class canvas *canvas, class scene *scene,  float X, float Y);
-    bool stop_drag(class canvas *canva);
-    
-    virtual bool intersect(float X, float Y);
-    virtual bool intersect_full(float X, float Y);  /* includes the ports */
-    virtual bool intersect_float(float X, float Y);  /* includes the ports */
-    
-    const std::string  get_name(void) { return name; };
-    const std::string  get_full_name(void) { return parental_name + "/" + name; };
-    
-    void add_port(int X, int Y, const char *name, int direction = 0, int _width = 0);
-    virtual void fill_grid(class wiregrid* grid);
-    
-    class port * is_port(float X, float Y); /* X and Y are global positions */
-    
-    float get_X(void) { return X; };
-    float get_Y(void) { return Y; };
-    float get_width(void) { return sizeX; };
-    float get_height(void) { return sizeY; };
-    
-    void update_value(class port *port, struct value *value, int ttl);
-    virtual void notify(int ttl);
-    virtual void calculate(int ttl);
-    virtual void queued_calculate(int ttl) {};
-    virtual bool mouse_select(float X, float Y); /* scene absolute */
-    bool has_moved(void) { return over_drag_threshold;};
-    class wire *is_wire(float X, float Y);
-    
-    void reseat(void);
-    virtual void to_json(json& j);
-    virtual void from_json(json& j);
-    void select(void) { selected = true; single = false; reseat();};
-    void select_single(void) { selected = true; single = true; reseat();};
-    void deselect(void) { selected = false; single = false;};
-    bool is_selected(void) { return selected;};
-    virtual bool want_deleted(void);
-    void delete_if_selected(void);
-    void remove_orphans(void);
-    
-    virtual bool in_edit_mode(void) { return false; };
-    
-    virtual void handle_event(class canvas *canvas, SDL_Event &event);
-    
-    std::string get_uuid(void) { return uuid;};
-    void reset_uuid(void);
-    void delete_element(void);
-    
-    virtual void rotate_ports(void);
-    void update_name(std::string _name) { name = _name;};
-    virtual void update_parental_name(std::string _name) { parental_name = _name;};
-    std::string get_parental_name(void) { return parental_name;};
-    void hover_ports(canvas *canvas);
-    virtual class port *get_clk_port(void) { return nullptr;};
-    void connect_clk(class port *clk);
-    virtual void enter_edit_mode(void) {};
-    
-    class contextmenu *get_menu(void) { return menu;};
-    
-    void cycle_color(void);
-    void reroute_all_wires(void);
-    virtual void create_verilog_name(int seqno, std::vector<std::string> *existing);
-    virtual std::string get_verilog_name(void) { return verilog_name;};
-    virtual std::string get_verilog_width(void) { return "";};
-    virtual std::string get_verilog_main(void) { return "Element " + class_id() + " not implemented\n";};
-    virtual std::string get_verilog_modules(std::string verilog_path) { return "";};
-    void collect_nets(std::vector<std::string> *wiremap);
-    virtual void set_library_origin(std::string origin_lib, std::string origin_elm) {};
-    virtual bool is_background(void) { return false; };
-
-    void remove_nets(void);
-    void free_nets_memory(void);
-    void add_nets(void);
-
-    void update_value_net(struct value *value, int port, int ttl);
-    
-protected:
-    class contextmenu *menu = NULL; /* nosave */
-    std::string uuid = "";
-    std::string name = "";
-    std::string parental_name = "";    
-    std::string verilog_name = "";
-    int sizeX = 1;
-    int sizeY = 1;
-    int angle = 0;
-    bool over_drag_threshold = false;  /* has a drag-and-drop been far enough to avoid spurious drags */
-    bool want_delete = false; /* not saved to disk */
-    
-    
-    float X = 0, Y = 0;
-    float Xghost = 0, Yghost = 0;
-    float Xdnd = 0, Ydnd = 0;
-    float X_in_drag = 0, Y_in_drag = 0;
-    bool selected = false; /* not saved to disk */
-    bool single = false; /* only selected item in the scene - not saved to disk */
-    float mouseX = -100, mouseY = -100; /* nosave */
-    
-    std::vector<class port *> ports;
-    std::vector<class net *> my_nets; /* nets allocated by this element */
-    std::vector<class wire *> my_wires; /* wires allocated by this element */
-    
-};
 
 
 

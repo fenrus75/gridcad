@@ -13,6 +13,8 @@
 #include <stdio.h>
 
 #include "gridcad.h"
+#include "scene.h"
+#include "element.h"
 #include "wire.h"
 #include "contextmenu.h"
 

@@ -11,6 +11,7 @@
  */
 
 #include "gridcad.h"
+#include "element.h"
 #include "wire.h"
 #include "port.h"
 #include "net.h"
@@ -234,7 +235,7 @@ void port::update_value_final(struct value *newvalue, int ttl)
 		
 }
 
-void port::drawAt(class canvas * canvas, float _X, float _Y, int type)
+void port::drawAt(class basecanvas * canvas, float _X, float _Y, int type)
 {
 //        if (type != DRAW_GHOST && type != DRAW_DND)
 	draw_wires(canvas);
@@ -245,7 +246,7 @@ void port::drawAt(class canvas * canvas, float _X, float _Y, int type)
 	}
 }
 
-void port::drawAt2(class canvas * canvas, float _X, float _Y, int type)
+void port::drawAt2(class basecanvas * canvas, float _X, float _Y, int type)
 {
 	if (direction == PORT_IN) {
 		drawConnector(canvas, _X, _Y, X, Y, COLOR_ELEMENT_CONNECTOR + type);
@@ -254,20 +255,20 @@ void port::drawAt2(class canvas * canvas, float _X, float _Y, int type)
 	}
 }
 
-void port::draw_wires(class canvas * canvas)
+void port::draw_wires(class basecanvas * canvas)
 {
 	for (auto wire : wires) {
         	wire->draw(canvas);
 	}
 }
 
-void port::draw(class canvas *canvas, int color)
+void port::draw(class basecanvas *canvas, int color)
 {
 	drawAt(canvas, screenX, screenY, color);
 }
 
 
-void port::drawConnector(class canvas * canvas, float X, float Y, int cX, int cY, int type)
+void port::drawConnector(class basecanvas * canvas, float X, float Y, int cX, int cY, int type)
 {
 	std::string icon = "";
 	if (direction == PORT_IN) {
@@ -298,7 +299,7 @@ void port::drawConnector(class canvas * canvas, float X, float Y, int cX, int cY
 	}
 }
 
-void port::stop_drag(class canvas *canvas)
+void port::stop_drag(class basecanvas *canvas)
 {
     update_distances();
 

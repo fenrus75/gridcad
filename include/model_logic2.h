@@ -1,6 +1,7 @@
 #pragma once
 
 #include "gridcad.h"
+#include "element.h"
 #include "port.h"
 
 class model_logic2 : public element
@@ -10,7 +11,7 @@ public:
     virtual ~model_logic2(void);
     virtual std::string class_id(void) { return "model_logic2:";};
     
-    void drawAt(class canvas *canvas, float X, float Y, int type) override;
+    void drawAt(class basecanvas *canvas, float X, float Y, int type) override;
     
     void calculate(int ttl) override;
     

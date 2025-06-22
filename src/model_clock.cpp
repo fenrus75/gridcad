@@ -11,6 +11,7 @@
  */
 
 #include "gridcad.h"
+#include "element.h"
 #include "model_clock.h"
 #include "port.h"
 
@@ -107,7 +108,7 @@ model_clock::~model_clock(void)
 {
 }
 
-void model_clock::drawAt(class canvas *canvas, float X, float Y, int type)
+void model_clock::drawAt(class basecanvas *canvas, float X, float Y, int type)
 {
 
     if (selected) {
@@ -142,7 +143,7 @@ void model_clock::from_json(json &j)
      element::from_json(j);
 }
 
-void model_clock::handle_event(class canvas *canvas, SDL_Event &event)
+void model_clock::handle_event(class basecanvas *canvas, SDL_Event &event)
 {
     if (event.type == SDL_timer_event) {
 	    update_value_net(&global_clock, 0, DEFAULT_TTL);

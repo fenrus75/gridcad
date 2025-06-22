@@ -11,6 +11,7 @@
  */
 
 #include "gridcad.h"
+#include "element.h"
 #include "model_buffer.h"
 #include "port.h"
 #include "net.h"
@@ -31,7 +32,7 @@ model_buffer::~model_buffer(void)
 {
 }
 
-void model_buffer::drawAt(class canvas *canvas, float X, float Y, int type)
+void model_buffer::drawAt(class basecanvas *canvas, float X, float Y, int type)
 {
     if (selected)
         canvas->draw_image_rotated("assets/buffer_selected.png", X, Y, sizeX, sizeY, Alpha(type), angle);

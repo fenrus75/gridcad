@@ -15,7 +15,7 @@ public:
     virtual std::string class_id(void) { return "wire:";};
     
     void move_target(int x2, int y2);
-    void draw(class canvas *, int color = COLOR_WIRE_SOLID);
+    void draw(class basecanvas *, int color = COLOR_WIRE_SOLID);
     void route(class scene *);
     
     void get_ref(void);

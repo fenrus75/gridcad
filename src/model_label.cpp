@@ -11,6 +11,7 @@
  */
 
 #include "gridcad.h"
+#include "element.h"
 #include "model_label.h"
 #include "port.h"
 #include "contextmenu.h"
@@ -43,7 +44,7 @@ model_label::~model_label(void)
     delete name_edit;
 }
 
-void model_label::drawAt_early(class canvas *canvas, float X, float Y, int type)
+void model_label::drawAt_early(class basecanvas *canvas, float X, float Y, int type)
 {
     int col = color % 2;
     if (!selected)
@@ -83,7 +84,7 @@ void model_label::from_json(json &j)
      bottomlabel = j.value("bottomlabel", true);
 }
 
-void model_label::handle_event(class canvas *canvas, SDL_Event &event)
+void model_label::handle_event(class basecanvas *canvas, SDL_Event &event)
 {
     if (!selected || !single)
         return;
@@ -123,7 +124,7 @@ void model_label::handle_event(class canvas *canvas, SDL_Event &event)
 }
 
 
-void model_label::draw_early(class canvas *canvas, int type)
+void model_label::draw_early(class basecanvas *canvas, int type)
 {
     switch (type) {
         case DRAW_NORMAL:
@@ -141,7 +142,7 @@ void model_label::draw_early(class canvas *canvas, int type)
     }
 }
 
-void model_label::update_drag(class canvas *canvas, class scene *scene, float _X, float _Y)
+void model_label::update_drag(class basecanvas *canvas, class scene *scene, float _X, float _Y)
 {
     Xdnd = _X - X_in_drag;
     Ydnd = _Y - Y_in_drag;

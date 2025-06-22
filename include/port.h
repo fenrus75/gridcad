@@ -28,11 +28,11 @@ public:
     bool is_connector = false;
     int color = 0;
     
-    void draw(class canvas *canvas, int color);
-    void draw_wires(class canvas *canva);
-    void drawAt(class canvas *canvas, float X, float Y, int color);
-    void drawAt2(class canvas *canvas, float X, float Y, int color);
-    void stop_drag(class canvas *canva);
+    void draw(class basecanvas *canvas, int color);
+    void draw_wires(class basecanvas *canva);
+    void drawAt(class basecanvas *canvas, float X, float Y, int color);
+    void drawAt2(class basecanvas *canvas, float X, float Y, int color);
+    void stop_drag(class basecanvas *canva);
     virtual void notify(int ttl);
     class wire *is_wire(float X, float Y);
     void fill_grid(class wiregrid *grid);
@@ -83,7 +83,7 @@ public:
 private:
     class port_contextmenu *menu = NULL;
     int bus_width = 0;
-    void drawConnector(class canvas *canvas, float X, float Y, int cX, int cY, int type);    
+    void drawConnector(class basecanvas *canvas, float X, float Y, int cX, int cY, int type);    
     std::vector<class wire*> wires;
     std::string linked_uuid = "";
     class element *linked_element = NULL;

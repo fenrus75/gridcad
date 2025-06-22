@@ -11,6 +11,7 @@
  */
 
 #include "gridcad.h"
+#include "element.h"
 #include "model_memory.h"
 #include "port.h"
 #include "contextmenu.h"
@@ -76,7 +77,7 @@ model_memory::~model_memory(void)
         delete name_edit;
 }
 
-void model_memory::drawAt(class canvas *canvas, float X, float Y, int type)
+void model_memory::drawAt(class basecanvas *canvas, float X, float Y, int type)
 {
     if (!selected)
       name_edit->set_edit_mode(false);
@@ -111,7 +112,7 @@ void model_memory::from_json(json &j)
      data = j.value("data", data);
 }
 
-void model_memory::handle_event(class canvas *canvas, SDL_Event &event)
+void model_memory::handle_event(class basecanvas *canvas, SDL_Event &event)
 {
     element::handle_event(canvas, event);
     

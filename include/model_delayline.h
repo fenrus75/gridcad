@@ -10,7 +10,7 @@ public:
     virtual ~model_delayline(void);
     virtual std::string class_id(void) { return "model_delayline:";};
     
-    void drawAt(class canvas *canvas, float X, float Y, int type) override;
+    void drawAt(class basecanvas *canvas, float X, float Y, int type) override;
     
     void calculate(int ttl) override;
     void queued_calculate(int ttl) override;

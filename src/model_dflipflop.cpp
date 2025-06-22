@@ -11,6 +11,7 @@
  */
 
 #include "gridcad.h"
+#include "element.h"
 #include "model_dflipflop.h"
 #include "port.h"
 #include "contextmenu.h"
@@ -40,7 +41,7 @@ model_dflipflop::~model_dflipflop(void)
         delete name_edit;
 }
 
-void model_dflipflop::drawAt(class canvas *canvas, float X, float Y, int type)
+void model_dflipflop::drawAt(class basecanvas *canvas, float X, float Y, int type)
 {
     if (!selected)
       name_edit->set_edit_mode(false);
@@ -72,7 +73,7 @@ void model_dflipflop::from_json(json &j)
      previous_clock = j.value("previous_clock", previous_clock);
 }
 
-void model_dflipflop::handle_event(class canvas *canvas, SDL_Event &event)
+void model_dflipflop::handle_event(class basecanvas *canvas, SDL_Event &event)
 {
     if (!selected || !single)
         return;

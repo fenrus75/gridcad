@@ -1,5 +1,5 @@
 #include "gridcad.h"
-
+#include "element.h"
 #include "value.h"
 
 static std::vector<class element *> queue0, queue1;

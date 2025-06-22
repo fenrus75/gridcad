@@ -11,6 +11,7 @@
  */
 
 #include "gridcad.h"
+#include "element.h"
 #include "model_truth.h"
 #include "port.h"
 #include "truthcanvas.h"
@@ -72,7 +73,7 @@ model_truth::~model_truth(void)
 	delete canvas;
 }
 
-void model_truth::drawAt(class canvas * canvas, float X, float Y, int type)
+void model_truth::drawAt(class basecanvas * canvas, float X, float Y, int type)
 {
         if (!selected)
            name_edit->set_edit_mode(false);
@@ -385,7 +386,7 @@ void model_truth::names_to_ports(void)
 	}
 }
 
-void model_truth::handle_event(class canvas *canvas, SDL_Event &event)
+void model_truth::handle_event(class basecanvas *canvas, SDL_Event &event)
 {
     element::handle_event(canvas, event);
     switch (event.type) {

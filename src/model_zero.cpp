@@ -39,7 +39,7 @@ model_zero::~model_zero(void)
 {
 }
 
-void model_zero::drawAt(class canvas *canvas, float X, float Y, int type)
+void model_zero::drawAt(class basecanvas *canvas, float X, float Y, int type)
 {
     if (selected) {
         canvas->draw_image_rotated("assets/zero_base.png", X, Y, sizeX, sizeY, Alpha(type), angle);

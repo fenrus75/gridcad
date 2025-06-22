@@ -33,7 +33,7 @@ model_logic2::~model_logic2(void)
 {
 }
 
-void model_logic2::drawAt(class canvas *canvas, float X, float Y, int type)
+void model_logic2::drawAt(class basecanvas *canvas, float X, float Y, int type)
 {
     int alpha = Alpha(type);
 

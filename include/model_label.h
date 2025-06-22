@@ -14,11 +14,11 @@ public:
     virtual void to_json(json &j) override;
     virtual void from_json(json &j) override;
 
-    void handle_event(class canvas *canvas, SDL_Event &event) override;
-    void draw_early(class canvas *canvas, int type) override;
-    void draw(class canvas *canvas, int type) override {};
-    void drawAt(canvas*, float, float, int) override {};
-    void update_drag(class canvas *canvas, class scene *scene,  float X, float Y) override;
+    void handle_event(class basecanvas *canvas, SDL_Event &event) override;
+    void draw_early(class basecanvas *canvas, int type) override;
+    void draw(class basecanvas *canvas, int type) override {};
+    void drawAt(class basecanvas*, float, float, int) override {};
+    void update_drag(class basecanvas *canvas, class scene *scene,  float X, float Y) override;
     void fill_grid(class wiregrid* grid) override {};
 
     
@@ -32,7 +32,7 @@ public:
     bool is_background(void) override {return true;};
 private:
     class name *name_edit = NULL;
-    void drawAt_early(canvas*, float, float, int);
+    void drawAt_early(class basecanvas*, float, float, int);
     int color = 0;
     bool bottomlabel = true;
 };

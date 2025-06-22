@@ -40,7 +40,7 @@ connector::~connector(void)
 {
 }
 
-void connector::drawAt(class canvas *canvas, float X, float Y, int type)
+void connector::drawAt(class basecanvas *canvas, float X, float Y, int type)
 {
     std::string icon = "";
     for (auto port: ports) 
@@ -59,7 +59,7 @@ void connector::drawAt(class canvas *canvas, float X, float Y, int type)
 
 }
 
-void connector::draw_phase2(class canvas *canvas, int type)
+void connector::draw_phase2(class basecanvas *canvas, int type)
 {
     std::string icon = "";
         

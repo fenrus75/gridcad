@@ -1,7 +1,7 @@
 #pragma once
 
 #include "gridcad.h"
-
+#include "canvas.h"
 #include "widget.h"
 
 class truthcanvas : public basecanvas
