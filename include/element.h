@@ -92,6 +92,8 @@ public:
     void add_nets(void);
 
     void update_value_net(struct value *value, int port, int ttl);
+    int has_port(class port *port); /* true if this element has this port */
+    class port * port_at(unsigned int i) { if (i < ports.size()) return ports[i]; else return NULL; };
     
 protected:
     class contextmenu *menu = NULL; /* nosave */

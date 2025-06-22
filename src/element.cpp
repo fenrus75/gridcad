@@ -570,3 +570,11 @@ void element::free_nets_memory(void)
     }
     my_nets.clear();
 }
+
+int element::has_port(class port *p)
+{
+    for (unsigned int i = 0; i < ports.size(); i++)
+        if (ports[i] == p)
+            return i;
+    return -100;
+}

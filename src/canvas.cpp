@@ -32,6 +32,7 @@
 #include "synth.h"
 
 #include <nlohmann/json.hpp>
+#include <sys/time.h>
 
 bool wire_debug_mode = false;
 bool show_fps = false;
@@ -102,6 +103,7 @@ canvas::canvas(class scene *_scene, struct capabilities *cap)
 canvas::~canvas(void)
 {
 	printf("Canvas destructor\n");
+	zap_autocomplete();
 	unregister_canvas(this);
 	SDL_DestroyRenderer(renderer);
 	renderer = NULL;
@@ -500,6 +502,13 @@ bool canvas::handle_event(SDL_Event &event)
 					}
 				}
 				break;
+			case SDLK_TAB:
+				if (!someone_in_editmode) {
+					if (autocomplete.size() > 0)
+						take_undo_snapshot(current_scene);
+					apply_autocomplete();
+				}
+				break;
 			case SDLK_f:
 				if (!someone_in_editmode) {
 					show_fps = !show_fps;
@@ -686,6 +695,7 @@ bool canvas::handle_event(SDL_Event &event)
 						printf("Connection made\n");
 
 						current_scene->redo_nets();
+						create_autocomplete_from_wire(dragging_port, port2);
 					}
 				} 
 				dragging = NULL;
@@ -1032,6 +1042,8 @@ void canvas::draw(void)
 		}
 	}
 	
+	draw_autocomplete();
+	
 	if (active_menu) {
 		SDL_RenderSetClipRect(renderer, NULL);
 		active_menu->draw_at(this);
@@ -1206,7 +1218,130 @@ float canvas::screen_width(void)
 void canvas::zap_autocomplete(void)
 {
 	for (auto a : autocomplete) {
+		if (a->tempwire)
+			delete a->tempwire;
 		delete a;
 	}
 	autocomplete.clear();
+}
+
+static std::string alpha_begin(std::string input)
+{
+	std::string s;
+	
+	for (unsigned i = 0; i < input.size(); i++)
+	{
+		if (input[i] >= '0' || input[i] <= '1')
+			break;
+		s = s + input[i];
+	}
+	return s;
+}
+static std::string numeric_end(std::string input)
+{
+	std::string s;
+	
+	for (unsigned i = 0; i < input.size(); i++)
+	{
+		if (input[i] >= '0' || input[i] <= '1')
+			s = s + input[i];
+		else 
+			s = "";
+	}
+	return s;
+}
+
+void canvas::draw_autocomplete(void)
+{
+	for (auto autoc : autocomplete) 
+		if (autoc->tempwire) {
+			autoc->tempwire->draw(this, COLOR_ELEMENT_GHOST);
+		}
+}
+
+void canvas::create_autocomplete_from_wire(class port *first, class port *second)
+{
+	class element *frome, *toe;
+	int from_port_index = -100;
+	int to_port_index = -100;
+	
+	zap_autocomplete();
+	
+
+	for (auto elem : current_scene->elements) {
+		if (elem->has_port(first) >= 0) {
+			from_port_index = elem->has_port(first);
+			frome = elem;
+		}
+		if (elem->has_port(second) >= 0) {
+			to_port_index = elem->has_port(second);
+			toe = elem;
+		}
+	}
+	
+	if (from_port_index < 0 || to_port_index < 0)
+		return;
+		
+	from_port_index++;
+	to_port_index++;
+	
+	while (true) {
+		class port *candidate_from, *candidate_to;
+		
+		candidate_from = frome->port_at(from_port_index);
+		if (!candidate_from)
+			break;
+		candidate_to = toe->port_at(to_port_index);
+		if (!candidate_to)
+			break;
+		
+		if (alpha_begin(first->name) != alpha_begin(candidate_from->name))
+			break;
+		if (alpha_begin(second->name) != alpha_begin(candidate_to->name))
+			break;
+			
+		if (numeric_end(candidate_to->name) != numeric_end(candidate_from->name))
+			break;
+		
+		if (candidate_to->direction != second->direction)
+			break;
+		if (candidate_from->direction != first->direction)
+			break;
+			
+
+		class autocomplete_element *autoc = new class autocomplete_element();
+		autoc->from = frome;
+		autoc->to = toe;
+		autoc->from_port = candidate_from;
+		autoc->to_port = candidate_to;
+		
+		if (candidate_to->direction == PORT_IN)
+			autoc->tempwire = new class wire(autoc->to_port->screenX, autoc->to_port->screenY, autoc->from_port->screenX, autoc->from_port->screenY, 0);
+		else
+			autoc->tempwire = new class wire(autoc->from_port->screenX, autoc->from_port->screenY, autoc->to_port->screenX, autoc->to_port->screenY, 0);
+		autocomplete.push_back(autoc);
+		
+		from_port_index++;
+		to_port_index++;
+	};
+	
+	
+	
+}
+
+void canvas::apply_autocomplete(void)
+{
+	for (auto autoc : autocomplete) {
+		class wire *wire = autoc->tempwire;
+		autoc->tempwire = NULL;
+		
+		wire->add_port(autoc->from_port);
+		wire->add_port(autoc->to_port);
+		wire->clear_route();
+		autoc->from_port->add_wire(wire);
+		autoc->to_port->add_wire(wire);
+		
+	}
+	
+	zap_autocomplete();
 }

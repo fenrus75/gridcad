@@ -42,7 +42,6 @@ public:
     void set_dialog(class dialog *D) { dialogbox = D;};
     void set_project_name(std::string _projectname) { projectname = _projectname;};
     
-    void zap_autocomplete(void);
          
 protected:
     bool draw_grid = false;
@@ -79,6 +78,11 @@ protected:
     float DPI = 96;    
     
     bool show_toolchain = false;
+    
+    void zap_autocomplete(void);
+    void create_autocomplete_from_wire(class port *port1, class port *port2);
+    void draw_autocomplete(void);
+    void apply_autocomplete(void);
     
     std::vector<struct autocomplete_element *> autocomplete;
 };

@@ -118,7 +118,7 @@ void draw_snake_line(class basecanvas *canvas, float x1, float y1, float x2, flo
         
         if (value->type == VALUE_TYPE_INT)
             thick = true;
-
+        
         if (thick)         
             canvas->draw_thick_line(x1, y1, x2, y2, color);
         else
@@ -214,9 +214,10 @@ void wire::draw(class basecanvas *canvas, int _color)
     if (!points)
         route(canvas->get_scene());
 
-    if (!points)
+    if (!points) {
         return;
-        
+    }
+    
     stepsize = 60;
     if (selected)
         stepsize = 20;
@@ -246,7 +247,10 @@ void wire::draw(class basecanvas *canvas, int _color)
             first = false;
             continue;
         }
-        draw_snake_line(canvas, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, wire_to_color(color), &step, &value, stepsize, this);
+        if (_color != COLOR_ELEMENT_GHOST)
+            draw_snake_line(canvas, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, wire_to_color(color), &step, &value, stepsize, this);
+        else
+            draw_snake_line(canvas, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, COLOR_ELEMENT_GHOST, &step, &value, stepsize, this);
         prevX = point.X;
         prevY = point.Y;
     }
@@ -258,6 +262,13 @@ void wire::move_target(int X, int Y)
         return;
     X2 = X;
     Y2 = Y;
+    if (points)
+        delete points;
+    points = NULL;
+}
+
+void wire::clear_route(void)
+{
     if (points)
         delete points;
     points = NULL;

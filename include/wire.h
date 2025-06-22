@@ -35,6 +35,7 @@ public:
     void remove_if_orphan(void);
     void fill_grid(class wiregrid* grid);
     void check_reverse(void);
+    void clear_route(void);
     
     class wire *split(void);
     
