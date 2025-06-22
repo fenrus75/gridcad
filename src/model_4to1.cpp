@@ -25,10 +25,10 @@ model_4to1::model_4to1(float _X, float _Y)  : element(_X, _Y, "")
     sizeX=2;
     sizeY=6;
     
-    add_port(sizeX, 1, "Bit0", PORT_OUT);
-    add_port(sizeX, 2, "Bit1", PORT_OUT);
-    add_port(sizeX, 3, "Bit2", PORT_OUT);
-    add_port(sizeX, 4, "Bit3", PORT_OUT);
+    add_port(sizeX, 1, "Bit0", PORT_OUT, 1);
+    add_port(sizeX, 2, "Bit1", PORT_OUT, 1);
+    add_port(sizeX, 3, "Bit2", PORT_OUT, 1);
+    add_port(sizeX, 4, "Bit3", PORT_OUT, 1);
     add_port(-1, 3, "0-3", PORT_IN, 4);
 }
 

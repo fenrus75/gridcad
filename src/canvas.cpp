@@ -519,6 +519,7 @@ bool canvas::handle_event(SDL_Event &event)
 						dragging_wire = NULL;
 						dragging_port = NULL;
 					}
+					
 				}
 				break;
 			case SDLK_f:
@@ -700,6 +701,7 @@ bool canvas::handle_event(SDL_Event &event)
 					
 					if (dragging_port != port2) {
 						take_undo_snapshot(current_scene);
+						zap_autocomplete();
 						dragging_port->add_wire(dragging_wire);
 						port2->add_wire(dragging_wire);
 						dragging_wire->reseat();
@@ -1280,6 +1282,8 @@ void canvas::create_autocomplete_from_wire(class port *first, class port *second
 	
 	zap_autocomplete();
 	
+	printf("Creating multiwire autocomplete\n");	
+	
 
 	for (auto elem : current_scene->elements) {
 		if (elem->has_port(first) >= 0) {
@@ -1292,8 +1296,10 @@ void canvas::create_autocomplete_from_wire(class port *first, class port *second
 		}
 	}
 	
-	if (from_port_index < 0 || to_port_index < 0)
+	if (from_port_index < 0 || to_port_index < 0) {
+		printf("Couldn't find both ports\n");
 		return;
+	}
 		
 	from_port_index++;
 	to_port_index++;
@@ -1338,12 +1344,14 @@ void canvas::create_autocomplete_from_wire(class port *first, class port *second
 		to_port_index++;
 	};
 	
+	printf("Creating autocomplete of size %lu\n", autocomplete.size());
 	
 	
 }
 
 void canvas::apply_autocomplete(void)
 {
+	class port *p1 = NULL, *p2 = NULL;
 	for (auto autoc : autocomplete) {
 		class wire *wire = autoc->tempwire;
 		autoc->tempwire = NULL;
@@ -1353,10 +1361,19 @@ void canvas::apply_autocomplete(void)
 		wire->clear_route();
 		autoc->from_port->add_wire(wire);
 		autoc->to_port->add_wire(wire);
+		p1 = autoc->from_port;
+		p2 = autoc->to_port;
 		
 	}
 	
-	zap_autocomplete();
+	
+	if (autocomplete.size() == 1) {
+		zap_autocomplete();
+		create_autocomplete_from_wire(p1, p2);
+	} else {
+		zap_autocomplete();
+	}
+
 }
 
 static bool direction_compatible(class port *one, class port *two)
