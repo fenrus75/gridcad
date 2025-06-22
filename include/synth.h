@@ -15,4 +15,5 @@ public:
 protected:
     FILE *pipe = NULL;
     std::string log2string(char *str);
+    std::string frequency_line = "";
 };

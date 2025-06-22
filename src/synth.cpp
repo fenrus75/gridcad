@@ -131,6 +131,9 @@ void synth::handle_event(class basecanvas *canvas, SDL_Event &event)
         std::string s;
         str = (char *)event.user.data2;
         s = log2string(str);
+        
+        if (s.starts_with("Info: Max frequency for clock "))
+            frequency_line = s;
         if (s != "") {
             char c = 0xd;
             if (s[0] == c)
@@ -143,6 +146,8 @@ void synth::handle_event(class basecanvas *canvas, SDL_Event &event)
             content.erase(content.begin());
     }
     if (event.type == EVENT_SYNTH_DONE) {
+        if (frequency_line != "")
+            content.push_back(frequency_line);
         enable_ok_button();
     }
     
