@@ -18,7 +18,9 @@ public:
     void draw_early(class basecanvas *canvas, int type) override;
     void draw(class basecanvas *canvas, int type) override {};
     void drawAt(class basecanvas*, float, float, int) override {};
+    void start_drag(float X, float Y) override;
     void update_drag(class basecanvas *canvas, class scene *scene,  float X, float Y) override;
+    bool stop_drag(class basecanvas *canva) override;
     void fill_grid(class wiregrid* grid) override {};
 
     
@@ -35,5 +37,6 @@ private:
     void drawAt_early(class basecanvas*, float, float, int);
     int color = 0;
     bool bottomlabel = true;
+    bool drag_is_resize = false;
 };
 

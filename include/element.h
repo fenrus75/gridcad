@@ -17,9 +17,9 @@ public:
     virtual void draw(class basecanvas *canvas, int type);
     virtual void draw_phase2(class basecanvas *canvas, int type);
     
-    void start_drag(float X, float Y);
+    virtual void start_drag(float X, float Y);
     virtual void update_drag(class basecanvas *canvas, class scene *scene,  float X, float Y);
-    bool stop_drag(class basecanvas *canva);
+    virtual bool stop_drag(class basecanvas *canva);
     
     virtual bool intersect(float X, float Y);
     virtual bool intersect_full(float X, float Y);  /* includes the ports */

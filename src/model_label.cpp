@@ -142,16 +142,43 @@ void model_label::draw_early(class basecanvas *canvas, int type)
     }
 }
 
+void model_label::start_drag(float X, float Y)
+{
+    element::start_drag(X, Y);
+    drag_is_resize = false;
+    if (X_in_drag < sizeX && X_in_drag > (sizeX * 3.0/4.0) && Y_in_drag < sizeY && Y_in_drag > (sizeY * 3.0/4.0))
+        drag_is_resize = true;
+}
+
 void model_label::update_drag(class basecanvas *canvas, class scene *scene, float _X, float _Y)
 {
-    Xdnd = _X - X_in_drag;
-    Ydnd = _Y - Y_in_drag;
+    if (!drag_is_resize) {
+        Xdnd = _X - X_in_drag;
+        Ydnd = _Y - Y_in_drag;
     
-    float _Xghost, _Yghost;
-    _Xghost = floorf(_X - X_in_drag + 0.25);
-    _Yghost = floorf(_Y - Y_in_drag + 0.25);
-    Xghost = _Xghost;
-    Yghost = _Yghost;
+        float _Xghost, _Yghost;
+        _Xghost = floorf(_X - X_in_drag + 0.25);
+        _Yghost = floorf(_Y - Y_in_drag + 0.25);
+        Xghost = _Xghost;
+        Yghost = _Yghost;
+    } else {
+        float newSX, newSY;
+        newSX = _X - X + 1;
+        newSY = _Y - Y + 1;
+        if (newSX < 2) 
+            newSX = 2;
+        if (newSY < 2)
+            newSY = 2;
+        sizeX = floorf(newSX + 0.25);
+        sizeY = floorf(newSY + 0.25);
+    }
+}
+
+bool model_label::stop_drag(class basecanvas *canva)
+{
+    if (!drag_is_resize)
+        return element::stop_drag(canva);
+    return false;
 }
 
 
