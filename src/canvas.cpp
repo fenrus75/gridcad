@@ -44,6 +44,11 @@ extern void callback_autoclock(class scene *scene);
 
 static std::string clipboard;
 
+static float distsq(float X1, float Y1, float X2, float Y2)
+{
+	return (X1-X2)*(X1-X2) + (Y1-Y2)*(Y1-Y2);
+}
+
 canvas::canvas(class scene *_scene, struct capabilities *cap)
 {
 	std::string s;
@@ -196,6 +201,8 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 			if (dragging_port) {
 				dragging_port->screenX = x;
 				dragging_port->screenY = y;
+				
+				best_port_to_autocomplete(dragging_port);
 
 				dragging_wire =
 					new wire(floorf(x),
@@ -507,6 +514,11 @@ bool canvas::handle_event(SDL_Event &event)
 					if (autocomplete.size() > 0)
 						take_undo_snapshot(current_scene);
 					apply_autocomplete();
+					if (dragging_wire) {
+						delete dragging_wire;
+						dragging_wire = NULL;
+						dragging_port = NULL;
+					}
 				}
 				break;
 			case SDLK_f:
@@ -526,6 +538,7 @@ bool canvas::handle_event(SDL_Event &event)
 				break;
 			case SDLK_z:
 				if (event.key.keysym.mod & KMOD_LCTRL) {
+					zap_autocomplete();
 					printf("UNDO\n");
 					class scene *oldscene;
 					oldscene = swap_scene(get_undo());
@@ -1344,4 +1357,77 @@ void canvas::apply_autocomplete(void)
 	}
 	
 	zap_autocomplete();
+}
+
+static bool direction_compatible(class port *one, class port *two)
+{
+	if (one->direction == PORT_IN && two->direction == PORT_IN)
+		return false;
+	if (one->direction == PORT_OUT && two->direction == PORT_OUT)
+		return false;
+		
+		
+	return true;
+}
+
+static bool width_compatible(class port *one, class port *two)
+{
+	if (one->get_width() == two->get_width())
+		return true;
+	if (one->get_width() == 0)
+		return true;
+	if (two->get_width() == 0)
+		return true;
+		
+	return false;
+}
+
+void canvas::best_port_to_autocomplete(class port *origin)
+{
+	class port *target = NULL;
+	class element *targete = NULL;
+	class element *sourcee = NULL;
+	double target_dist = 500*500*1000;
+	
+	zap_autocomplete();
+	
+	for (auto elem : current_scene->elements) {
+		unsigned int i = 0;
+		class port *p = NULL;
+		do {
+			p = elem->port_at(i);
+			i++;
+			if (p == origin)
+				sourcee = elem;
+			if (!p)
+				break;
+			if (p->has_wires())
+				continue;
+			if (!direction_compatible(origin, p))
+				continue;
+			if (!width_compatible(origin, p))
+				continue;
+				
+			if (distsq(origin->screenX, origin->screenY, p->screenX, p->screenY) < target_dist) {
+				target_dist = distsq(origin->screenX, origin->screenY, p->screenX, p->screenY);
+				target = p;
+				targete = elem;
+			}
+			
+		} while (p);
+	}
+	if (target == NULL || sourcee == NULL || targete == NULL)
+		return;
+	class autocomplete_element *autoc = new class autocomplete_element();
+	autoc->from = sourcee;
+	autoc->to = targete;
+	autoc->from_port = origin;
+	autoc->to_port = target;
+	if (target->direction == PORT_IN)
+		autoc->tempwire = new class wire(autoc->to_port->screenX, autoc->to_port->screenY, autoc->from_port->screenX, autoc->from_port->screenY, 0);
+	else
+		autoc->tempwire = new class wire(autoc->from_port->screenX, autoc->from_port->screenY, autoc->to_port->screenX, autoc->to_port->screenY, 0);
+	autocomplete.push_back(autoc);
+
+	
 }

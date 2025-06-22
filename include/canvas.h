@@ -83,6 +83,7 @@ protected:
     void create_autocomplete_from_wire(class port *port1, class port *port2);
     void draw_autocomplete(void);
     void apply_autocomplete(void);
+    void best_port_to_autocomplete(class port *origin);
     
     std::vector<struct autocomplete_element *> autocomplete;
 };
