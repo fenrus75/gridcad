@@ -315,7 +315,7 @@ void model_nest::regen_ports(void)
 	 */
 	for (auto elem : _scene->elements) {
 		bool found = false;
-		if (elem->class_id() != "model_toggle:" && elem->class_id() != "model_output:") {
+		if (elem->class_id() != "model_toggle:" && elem->class_id() != "model_output:" && elem->class_id() != "model_clock:") {
 			continue;
 		}
 			
