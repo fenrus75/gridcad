@@ -25,6 +25,7 @@ model_one::model_one(float _X, float _Y)  : element(_X, _Y, "")
     
     memset(&value, 0, sizeof(struct value));
     value.boolval = true;
+    value.intval = ~0;
     value.valid = true;
 
     add_port(1, 0, "ONE", PORT_OUT, 0);    
