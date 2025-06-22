@@ -1,10 +1,9 @@
 #include "gridcad.h"
-#include "canvas.h"
 #include "buttonbar.h"
 
 
 
-buttonbar::buttonbar(class canvas *_canvas, unsigned int _width)
+buttonbar::buttonbar(class basecanvas *_canvas, unsigned int _width)
 {
     canvas = _canvas;
     width = _width - 5;
@@ -57,7 +56,7 @@ void buttonbar::add_button(std::string text, std::string icon, int _event)
 }
 
 
-void buttonbar::draw_at(class canvas *canvas, int W, int H)
+void buttonbar::draw_at(class basecanvas *canvas, int W, int H)
 {
     float w, h;
     unsigned int buttonindex;
@@ -100,7 +99,7 @@ std::string buttonbar::current_tooltip(unsigned int x, unsigned int y)
 }
 
 
-barbutton::barbutton(std::string _text, std::string _icon, int _event, class canvas *_canvas)
+barbutton::barbutton(std::string _text, std::string _icon, int _event, class basecanvas *_canvas)
 {
     text = _text;
     icon = _icon;
@@ -113,7 +112,7 @@ barbutton::~barbutton(void)
 }
 
 
-void barbutton::draw_at(class canvas *canvas, float X, float Y, float W, float H, bool hover)
+void barbutton::draw_at(class basecanvas *canvas, float X, float Y, float W, float H, bool hover)
 {	
     if (!active && hover) 
         canvas->draw_image("assets/lightgray.png", X,Y,W,H);

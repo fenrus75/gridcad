@@ -14,7 +14,6 @@
 #include <math.h>
 
 #include "gridcad.h"
-#include "canvas.h"
 #include "scene.h"
 #include "element.h"
 #include "port.h"

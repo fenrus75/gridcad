@@ -119,7 +119,7 @@ synth::~synth(void)
 {
 }
 
-void synth::handle_event(class canvas *canvas, SDL_Event &event)
+void synth::handle_event(class basecanvas *canvas, SDL_Event &event)
 {
     dialog::handle_event(canvas, event);
     

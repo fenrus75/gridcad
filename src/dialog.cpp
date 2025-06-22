@@ -1,5 +1,4 @@
 #include "gridcad.h"
-#include "canvas.h"
 #include "dialog.h"
 #include "contextmenu.h"
 
@@ -106,7 +105,7 @@ void dialog::draw(class basecanvas *canvas)
 
 }
 
-void dialog::handle_event(class canvas *canvas, SDL_Event &event)
+void dialog::handle_event(class basecanvas *canvas, SDL_Event &event)
 {
 	switch (event.type) {
 		case SDL_MOUSEBUTTONDOWN:

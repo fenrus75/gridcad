@@ -12,7 +12,6 @@
 
 
 #include "gridcad.h"
-#include "canvas.h"
 #include "scene.h"
 #include "wirepath.h"
 #include "wire.h"

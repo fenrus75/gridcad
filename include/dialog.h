@@ -11,7 +11,7 @@ public:
     virtual ~dialog(void);
     
     void draw(class basecanvas *canvas);
-    virtual void handle_event(class canvas *canvas, SDL_Event &event);
+    virtual void handle_event(class basecanvas *canvas, SDL_Event &event);
     
     void update_screen_size(int _screenX, int _screenY) { screenX = _screenX; screenY = _screenY; };
     

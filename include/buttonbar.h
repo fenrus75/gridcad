@@ -7,10 +7,10 @@ class barbutton;
 class buttonbar
 {
 public:
-    buttonbar(class canvas *canvas, unsigned int width);
+    buttonbar(class basecanvas *canvas, unsigned int width);
     ~buttonbar(void);
     
-    void draw_at(class canvas *canvas, int W, int H);    
+    void draw_at(class basecanvas *canvas, int W, int H);    
     void handle_event(SDL_Event &event);
     
     void add_button(std::string text, std::string icon, int event);
@@ -18,7 +18,7 @@ public:
     std::string current_tooltip(unsigned int X, unsigned int Y);
     void set_fps(float _fps) { fps = _fps; };
 protected:
-    class canvas *canvas = NULL;
+    class basecanvas *canvas = NULL;
     unsigned int width = 0;
     unsigned int mouseX = 0;
     unsigned int mouseY = 0;
@@ -31,10 +31,10 @@ protected:
 class barbutton
 {
 public:
-    barbutton(std::string text, std::string icon, int event, class canvas *canvas);
+    barbutton(std::string text, std::string icon, int event, class basecanvas *canvas);
     ~barbutton(void);
 
-    void draw_at(class canvas *canvas, float X, float Y, float  W, float H, bool hover = false);    
+    void draw_at(class basecanvas *canvas, float X, float Y, float  W, float H, bool hover = false);    
     
     void activate(void);
     void deactivate(void) {active = false; };
@@ -42,7 +42,7 @@ public:
 
 protected:
 
-    class canvas *canvas = NULL;    
+    class basecanvas *canvas = NULL;    
     std::string text = "";
     std::string icon = "";
     int eventnr = 0;
