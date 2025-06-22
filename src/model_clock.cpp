@@ -98,7 +98,7 @@ model_clock::model_clock(float _X, float _Y)  : element(1, 1, "clk")
     
     global_clock.valid = true;
     
-    add_port(1, sizeY, "clk", PORT_OUT);    
+    add_port(1, sizeY, "clk", PORT_OUT, 1);    
     menu->add_item("Stop clock", callback_stop_clock);
     menu->add_item("Start clock", callback_start_clock);
     menu->add_item("Single clock", callback_single_clock);
