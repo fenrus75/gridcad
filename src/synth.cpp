@@ -56,46 +56,49 @@ std::string synth::log2string(char *str)
 static void *polling_thread(void * data)
 {
         FILE *pipe = (FILE *)data;
-        ssize_t ret;
-        size_t size;
-        char * line = NULL;
+        std::string current_line = "";
+        
 
         while (pipe) {
-            line = NULL;
-            ret = getline(&line, &size, pipe);
-
-        
-        
+            int ret;
+            char c;
+            ret = fgetc(pipe);
+            
             if (ret < 0) {
                 pclose(pipe);
                 pipe = NULL;
                 break;
-            } else {
-                if (line) {
-                	SDL_Event ev = {};
-                	ev.type = EVENT_SYNTH_DATA;
-                	ev.user.code = 0;
-                	ev.user.data2 = line;
+            };
+            c = ret;
+            
+            if (c == '\n' || c == 0xd) {
+                    char *line = strdup(current_line.c_str());
+                    SDL_Event ev = {};
+                    ev.type = EVENT_SYNTH_DATA;
+                    ev.user.code = 0;
+                    ev.user.data2 = line;
 	
-                	SDL_PushEvent(&ev);
-                }
-                
+                    SDL_PushEvent(&ev);
+                    current_line = "";
+                    if (c == 0xd)
+                        current_line = c;
+            } else {
+                current_line = current_line + c;
             }
+                
         }        
 
 
-     {
-                	SDL_Event ev = {};
-                	ev.type = EVENT_SYNTH_DONE;
-                	ev.user.code = 0;
+        SDL_Event ev = {};
+        ev.type = EVENT_SYNTH_DONE;
+        ev.user.code = 0;
 	
-                	SDL_PushEvent(&ev);
-     }
+        SDL_PushEvent(&ev);
     
-    if (pipe)
-        pclose(pipe);
-    pipe = NULL;
-    return NULL;
+        if (pipe)
+            pclose(pipe);
+        pipe = NULL;
+        return NULL;
 }
 
 synth::synth(int screenX, int screenY, std::string projectname, std::string make_target) : dialog::dialog(screenX, screenY, "THIS IS THE MINIMUM WIDTH OF THE DIALOG BOX")
@@ -128,8 +131,13 @@ void synth::handle_event(class basecanvas *canvas, SDL_Event &event)
         std::string s;
         str = (char *)event.user.data2;
         s = log2string(str);
-        if (s != "")
-            content.push_back(s);
+        if (s != "") {
+            char c = 0xd;
+            if (s[0] == c)
+                content[content.size() - 1] = s;
+            else
+                content.push_back(s);
+        }
         free(str);
         while (content.size() > 10)
             content.erase(content.begin());
