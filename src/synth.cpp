@@ -102,7 +102,7 @@ synth::synth(int screenX, int screenY, std::string projectname, std::string make
 {
     std::string command;
     
-    command = "make -C " + projectname + "/verilog " + make_target;
+    command = "make -C " + projectname + "/verilog " + make_target + " 2>&1";
     pipe = popen(command.c_str(), "r");
 
     phase = 0;
