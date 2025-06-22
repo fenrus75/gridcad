@@ -1411,7 +1411,8 @@ void canvas::best_port_to_autocomplete(class port *origin)
 	for (auto elem : current_scene->elements) {
 		unsigned int i = 0;
 		class port *p = NULL;
-		do {
+		do {	
+			float dist;
 			p = elem->port_at(i);
 			i++;
 			if (p == origin)
@@ -1425,8 +1426,14 @@ void canvas::best_port_to_autocomplete(class port *origin)
 			if (!width_compatible(origin, p))
 				continue;
 				
-			if (distsq(origin->screenX, origin->screenY, p->screenX, p->screenY) < target_dist) {
-				target_dist = distsq(origin->screenX, origin->screenY, p->screenX, p->screenY);
+			dist = distsq(origin->screenX, origin->screenY, p->screenX, p->screenY);
+			
+			/* 50% discount of the ports have the same name */
+			if (origin->name == p->name)
+				dist = dist/2;
+
+			if (dist < target_dist) {
+				target_dist = dist;
 				target = p;
 				targete = elem;
 			}
