@@ -2,6 +2,14 @@
 #include "gridcad.h"
 
 
+
+struct autocomplete_element {
+    class element *from, *to;
+    class port *from_port, *to_port;
+    
+    class wire *tempwire;
+};
+
 /* gui canvas to draw on */
 class canvas : public basecanvas
 {
@@ -26,7 +34,7 @@ public:
 
     void clear_floating(void);
     
-    float screen_width(void);
+    float screen_width(void) override;
     
     void set_dialog(class dialog *D) { dialogbox = D;};
     void set_project_name(std::string _projectname) { projectname = _projectname;};

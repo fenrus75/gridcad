@@ -109,6 +109,7 @@ public:
     void set_fps(float _fps) { fps = _fps;};
     virtual float distance_from_mouse(float X, float Y) { return 0; };
     virtual class scene* get_scene(void) { return NULL; };
+    virtual float screen_width(void) { return 0; };
 
 protected:
     float offsetX = 0.0;

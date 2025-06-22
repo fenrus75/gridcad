@@ -1,5 +1,4 @@
 #include "gridcad.h"
-#include "canvas.h"
 #include "contextmenu.h"
 
 #include <algorithm>
@@ -377,9 +376,7 @@ void icon_contextmenu::draw_at(class basecanvas *canvas)
 	sX = currentX;
 	sY = currentY;
 	
-	class canvas *can = (class canvas *) canvas;
-	
-	sW = can->screen_width();
+	sW = canvas->screen_width();
 
 	
 	if (sX + maxX > sW)
