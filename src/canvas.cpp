@@ -41,6 +41,7 @@ using json = nlohmann::json;
 
 extern void callback_fit_to_screen(class scene *scene);
 extern void callback_autoclock(class scene *scene);
+extern void callback_reroute(class scene *scene);
 
 static std::string clipboard;
 
@@ -95,6 +96,7 @@ canvas::canvas(class scene *_scene, struct capabilities *cap)
 	button_bar->add_button("Save design to file", "assets/save_icon.png", EVENT_SAVE);
 	button_bar->add_button("Fit to screen", "assets/icon_fit_to_screen.png", EVENT_ZOOM_TO_FIT);
 	button_bar->add_button("Wire all clock signals", "assets/autoclock.png", EVENT_AUTOCLOCK);
+	button_bar->add_button("Redo all wiring", "assets/icon_rewire.png", EVENT_REWIRE);
 	if (show_toolchain) {
 		button_bar->add_button("Compile verilog", "assets/icon_compile_verilog.png", EVENT_RUN_VERILOG);
 		button_bar->add_button("Upload to FPGA", "assets/icon_program_fpga.png", EVENT_PROGRAM_FPGA);
@@ -359,6 +361,12 @@ bool canvas::handle_event(SDL_Event &event)
 	if (event.type == EVENT_AUTOCLOCK && event.user.data1 == current_scene) {
 		take_undo_snapshot(current_scene);
 		callback_autoclock(current_scene);
+	}
+
+
+	if (event.type == EVENT_REWIRE && event.user.data1 == current_scene) {
+		take_undo_snapshot(current_scene);
+		callback_reroute(current_scene);
 	}
 
 	if (event.type == EVENT_RUN_VERILOG && event.user.data1 == current_scene) {

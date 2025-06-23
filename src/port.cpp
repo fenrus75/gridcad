@@ -18,6 +18,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <sys/time.h>
 
 void callback_set_color(class port *port, int color)
 {
@@ -238,6 +239,11 @@ void port::update_value_final(struct value *newvalue, int ttl)
 void port::drawAt(class basecanvas * canvas, float _X, float _Y, int type)
 {
 //        if (type != DRAW_GHOST && type != DRAW_DND)
+
+	if (name == "clk" && wires.size() == 0 && direction == PORT_IN)
+		distress = true;
+	else
+		distress = false;
 	draw_wires(canvas);
 	if (direction == PORT_IN) {
 		drawConnector(canvas, _X, _Y, X, Y, COLOR_ELEMENT_CONNECTOR + type);
@@ -266,6 +272,35 @@ void port::draw(class basecanvas *canvas, int color)
 {
 	drawAt(canvas, screenX, screenY, color);
 }
+
+void port::drawDistress(class basecanvas *canvas, float X, float Y)
+{
+	double radius = 1.0;
+	struct timeval tv;
+	double sin45 = 0.707;
+	
+	X = X + 0.5;
+	Y = Y + 0.5;
+	
+	gettimeofday(&tv, NULL);
+	
+	if (tv.tv_usec > 500000)
+		tv.tv_usec = 1000000 - tv.tv_usec;
+	
+	radius = 0.1 + 0.5 * (tv.tv_usec / 500000.0);
+	
+	canvas->draw_line(X, Y - radius, X + radius * sin45, Y - radius * sin45, COLOR_VALUE_RED);
+	canvas->draw_line(X + radius * sin45, Y - radius * sin45, X + radius, Y, COLOR_VALUE_RED);
+	canvas->draw_line(X + radius, Y, X + radius * sin45, Y + radius * sin45, COLOR_VALUE_RED);
+	canvas->draw_line(X + radius * sin45, Y + radius * sin45, X, Y + radius, COLOR_VALUE_RED);
+
+	canvas->draw_line(X, Y - radius, X - radius * sin45, Y - radius * sin45, COLOR_VALUE_RED);
+	canvas->draw_line(X - radius * sin45, Y - radius * sin45, X - radius, Y, COLOR_VALUE_RED);
+	canvas->draw_line(X - radius, Y, X - radius * sin45, Y + radius * sin45, COLOR_VALUE_RED);
+	canvas->draw_line(X - radius * sin45, Y + radius * sin45, X, Y + radius, COLOR_VALUE_RED);
+	
+}
+
 
 
 void port::drawConnector(class basecanvas * canvas, float X, float Y, int cX, int cY, int type)
@@ -297,6 +332,8 @@ void port::drawConnector(class basecanvas * canvas, float X, float Y, int cX, in
 		std::string s = buf;
 	        canvas->draw_text(s, cX + X, cY + Y + 0.15, 1, 0.55);
 	}
+	if (distress)
+		drawDistress(canvas, X + cX, Y + cY);
 }
 
 void port::stop_drag(class basecanvas *canvas)
@@ -369,6 +406,7 @@ void port::to_json(json &j)
 	
 	j["wires"] = json::array();
 	j["distance_from_outport"] = distance_from_outport;
+	j["distress"] = distress;
 	for (i = 0; i < wires.size(); i++) {
 		json p;
 		wires[i]->to_json(p);
@@ -390,6 +428,7 @@ void port::from_json(json &j)
 	linked_uuid = j.value("linked_uuid", "");
 	verilog_name = j.value("verilog_name", name);
 	color = j.value("color", 0);
+	distress = j.value("distress", false);
 	distance_from_outport = j.value("distance_from_outport", INT_MAX);
 	for (i = 0; i < j["wires"].size(); i++) {
 		class wire *wire;

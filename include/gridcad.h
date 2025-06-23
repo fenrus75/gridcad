@@ -173,6 +173,7 @@ extern unsigned int SDL_timer_event;
 #define EVENT_SYNTH_DATA (SDL_timer_event + 11)
 #define EVENT_SYNTH_DONE (SDL_timer_event + 12)
 #define EVENT_PROGRAM_FPGA (SDL_timer_event + 13)
+#define EVENT_REWIRE (SDL_timer_event + 14)
 
 extern void callback_editname(class element *element);
 extern SDL_Texture *IMG_LoadTextureFromMem(SDL_Renderer *renderer, const char *filename);

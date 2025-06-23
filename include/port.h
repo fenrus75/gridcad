@@ -32,6 +32,7 @@ public:
     void draw_wires(class basecanvas *canva);
     void drawAt(class basecanvas *canvas, float X, float Y, int color);
     void drawAt2(class basecanvas *canvas, float X, float Y, int color);
+    void drawDistress(class basecanvas *canvas, float X, float Y);
     void stop_drag(class basecanvas *canva);
     virtual void notify(int ttl);
     class wire *is_wire(float X, float Y);
@@ -89,4 +90,5 @@ private:
     class element *linked_element = NULL;
     std::string verilog_name = "";
     unsigned int distance_from_outport = INT_MAX;
+    bool distress = false;
 };
