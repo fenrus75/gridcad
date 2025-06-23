@@ -1407,6 +1407,19 @@ void canvas::best_port_to_autocomplete(class port *origin)
 	double target_dist = 500*500*1000;
 	
 	zap_autocomplete();
+
+	for (auto elem : current_scene->elements) {
+		unsigned int i = 0;
+		class port *p = NULL;
+		do {
+			p = elem->port_at(i);
+			if (!p)
+				break;
+			i++;
+			if (p == origin)
+				sourcee = elem;
+		} while(p);
+	}
 	
 	for (auto elem : current_scene->elements) {
 		unsigned int i = 0;
@@ -1414,16 +1427,19 @@ void canvas::best_port_to_autocomplete(class port *origin)
 		do {	
 			float dist;
 			p = elem->port_at(i);
+			if (!p)
+				break;
 			i++;
 			if (p == origin)
 				sourcee = elem;
-			if (!p)
-				break;
 			if (p->has_wires())
 				continue;
 			if (!direction_compatible(origin, p))
 				continue;
 			if (!width_compatible(origin, p))
+				continue;
+				
+			if (sourcee == elem)
 				continue;
 				
 			dist = distsq(origin->screenX, origin->screenY, p->screenX, p->screenY);
