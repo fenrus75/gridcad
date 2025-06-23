@@ -18,6 +18,7 @@
 #include "model_nest.h"
 #include "model_toggle.h"
 #include "model_output.h"
+#include "model_clock.h"
 #include "port.h"
 #include "library.h"
 #include "contextmenu.h"
@@ -123,8 +124,11 @@ void model_nest::calculate(int ttl)
 	for (auto port: ports) {
 		if (port->direction == PORT_IN) {
 			class model_toggle *tog;
-			tog = (class model_toggle *)port->get_linked_element();
-			if (tog) {
+			class element *elmt;
+			elmt = port->get_linked_element();
+			tog = (class model_toggle *) elmt;
+
+			if (tog && elmt->class_id() == "model_toggle:") {
 				tog->update_value(&(port->value), ttl-1);
 				port->set_width(tog->get_width());
 			}
