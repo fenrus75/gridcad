@@ -63,6 +63,7 @@ public:
     void cycle_color(void);
     void reroute_all_wires(void);
     void collect_nets(std::vector<std::string> *netmap);
+    void validate(void);
     
     std::string get_verilog_name(void);
     std::string get_net_verilog_name(std::string fallback = ""); /* verilog name of the net connected */

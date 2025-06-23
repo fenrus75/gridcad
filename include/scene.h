@@ -57,6 +57,7 @@ public:
     void remove_nets(void);
     void add_nets(void);
     void redo_nets(void);
+    void validate_ports(void);
     
 protected:
     class contextmenu *menu = NULL;

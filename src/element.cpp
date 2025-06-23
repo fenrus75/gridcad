@@ -578,3 +578,9 @@ int element::has_port(class port *p)
             return i;
     return -100;
 }
+
+void element::validate_ports(void)
+{
+    for (auto port : ports)
+        port->validate();
+}

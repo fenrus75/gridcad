@@ -57,6 +57,11 @@ void callback_reroute(class scene *scene)
 	scene->reroute_all_wires();
 }
 
+void callback_validate(class scene *scene)
+{
+	scene->validate_ports();
+}
+
 scene::scene(std::string _name, std::string _parent)
 {
 	sizeX = 200;
@@ -68,6 +73,7 @@ scene::scene(std::string _name, std::string _parent)
 	menu->add_item("Select All", callback_select_all);
 	menu->add_item("Connect clocks", callback_autoclock);
 	menu->add_item("Reroute wires", callback_reroute);
+	menu->add_item("Validate routing", callback_validate);
 }
 
 scene::~scene(void)
@@ -416,4 +422,10 @@ void scene::redo_nets(void)
 {
 	remove_nets();
 	add_nets();
+}
+
+void scene::validate_ports(void)
+{
+	for (auto elem : elements)
+		elem->validate_ports();
 }

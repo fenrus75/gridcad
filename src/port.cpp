@@ -240,10 +240,6 @@ void port::drawAt(class basecanvas * canvas, float _X, float _Y, int type)
 {
 //        if (type != DRAW_GHOST && type != DRAW_DND)
 
-	if (name == "clk" && wires.size() == 0 && direction == PORT_IN)
-		distress = true;
-	else
-		distress = false;
 	draw_wires(canvas);
 	if (direction == PORT_IN) {
 		drawConnector(canvas, _X, _Y, X, Y, COLOR_ELEMENT_CONNECTOR + type);
@@ -680,4 +676,22 @@ int port::get_net_width(void)
 		return 0;
 	net = wires[0]->get_net();
 	return net->get_width();
+}
+
+void port::validate(void)
+{
+	printf("Validaitng port %s\n", name.c_str());
+	distress = false;
+	if (name == "clk" && wires.size() == 0 && direction == PORT_IN)
+		distress = true;
+		
+	if (wires.size() < 1)
+		return;
+
+	class net *net = wires[0]->get_net();
+	if (net) {
+		int nw = net->get_width();
+		if (bus_width > 0 && nw != bus_width)
+			distress = true;
+	}
 }
