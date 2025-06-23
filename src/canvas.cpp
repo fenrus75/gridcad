@@ -1284,7 +1284,7 @@ void canvas::draw_autocomplete(void)
 
 void canvas::create_autocomplete_from_wire(class port *first, class port *second)
 {
-	class element *frome, *toe;
+	class element *frome = NULL, *toe = NULL;
 	int from_port_index = -100;
 	int to_port_index = -100;
 	
