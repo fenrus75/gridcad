@@ -133,7 +133,8 @@ void projcanvas::draw(void)
 
 
 
-	draw_image("assets/label2.png", PROJECT_X - 0.5, 2.5, PROJECT_WIDTH + 1, calc_project_height(projects.size()) + 5.5);
+	for (unsigned T = 0; T < (1 + projects.size()/PER_COLUMN) ; T++)
+		draw_image("assets/label2.png", PROJECT_X - 0.5 + T * (PROJECT_WIDTH+1), 2.5, PROJECT_WIDTH + 1, calc_project_height(projects.size()) + 5.5);
 	draw_text_left("Existing projects", PROJECT_X,3,15,1);
 	for (unsigned int T = 0; T < projects.size(); T++) {
 		if (T == active_project)
