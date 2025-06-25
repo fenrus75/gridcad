@@ -7,7 +7,7 @@
 class document
 {
 public:
-	document(std::string name);
+	document(std::string name, bool library_mode = false);
 	~document(void);
 	
 	void save_verilog(std::string path, std::string filename);
@@ -20,6 +20,8 @@ private:
 	struct timeval previous_slow_draw = {};  /* allows for throttled framerate draws of non-focus windows*/
 	struct timeval previous_fast_draw = {};  /* foreground/max framerate */
 	unsigned int fast_draw_counter = 0;
+	
+	bool library_mode = false;
 	
 };
 

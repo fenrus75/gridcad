@@ -11,9 +11,10 @@ extern void fill_png_maps(void);
 
 
 
-projcanvas::projcanvas(void)
+projcanvas::projcanvas(bool _library_mode)
 {
         std::string s;
+        library_mode = _library_mode;
 	s = "GridCad Welcome Screen";;
 	
 	init_SDL();
@@ -32,7 +33,10 @@ projcanvas::projcanvas(void)
 	templates.push_back("<None>");
 	template_descriptions["<None>"] = "Blank Canvas";
 
-	crawl_filesystem();
+	if (library_mode)
+		crawl_library();
+	else
+		crawl_filesystem();
 }
 
 projcanvas::~projcanvas(void)
@@ -50,6 +54,25 @@ projcanvas::~projcanvas(void)
 #define PROJECT_X (TEMPLATE_X + TEMPLATE_WIDTH + 2)
 #define PROJECT_Y 4.5
 #define PROJECT_WIDTH 18
+#define PER_COLUMN 16
+static float calc_project_X(int index)
+{
+	int column = index / PER_COLUMN;
+	return PROJECT_X + (column * (PROJECT_WIDTH + 1));
+}
+
+static float calc_project_Y(int index)
+{
+	return PROJECT_Y + 0.2 + RADIO_HEIGHT * (index % PER_COLUMN);
+}
+
+static float calc_project_height(int index)
+{
+	if (index < PER_COLUMN)
+		return index *  RADIO_HEIGHT;
+	else
+		return PER_COLUMN * RADIO_HEIGHT;
+}
 
 void projcanvas::draw(void)
 {
@@ -110,26 +133,26 @@ void projcanvas::draw(void)
 
 
 
-	draw_image("assets/label2.png", PROJECT_X - 0.5, 2.5, PROJECT_WIDTH + 1, RADIO_HEIGHT * projects.size() + 6.5);
+	draw_image("assets/label2.png", PROJECT_X - 0.5, 2.5, PROJECT_WIDTH + 1, calc_project_height(projects.size()) + 5.5);
 	draw_text_left("Existing projects", PROJECT_X,3,15,1);
 	for (unsigned int T = 0; T < projects.size(); T++) {
 		if (T == active_project)
-			draw_image("assets/radiobox_selected.png", PROJECT_X - 0.2, PROJECT_Y + RADIO_HEIGHT * T, PROJECT_WIDTH, RADIO_HEIGHT - 0.1);
+			draw_image("assets/radiobox_selected.png", calc_project_X(T) - 0.2, calc_project_Y(T) - 0.2, PROJECT_WIDTH, RADIO_HEIGHT - 0.1);
 		else {
-			if (currentX >= PROJECT_X && currentX <= PROJECT_X + PROJECT_WIDTH && currentY > PROJECT_Y + RADIO_HEIGHT * T && currentY <= PROJECT_Y + RADIO_HEIGHT * (T+1))
-				draw_image("assets/radiobox_hover.png", PROJECT_X - 0.2, PROJECT_Y + RADIO_HEIGHT * T, PROJECT_WIDTH, RADIO_HEIGHT - 0.1);
+			if (currentX >= calc_project_X(T) && currentX <= calc_project_X(T) + PROJECT_WIDTH && currentY > calc_project_Y(T)-0.2 && currentY <= calc_project_Y(T) +  RADIO_HEIGHT)
+				draw_image("assets/radiobox_hover.png", calc_project_X(T) - 0.2, calc_project_Y(T) - 0.2, PROJECT_WIDTH, RADIO_HEIGHT - 0.1);
 			else
-				draw_image("assets/radiobox.png", PROJECT_X - 0.2, PROJECT_Y + RADIO_HEIGHT * T, PROJECT_WIDTH, RADIO_HEIGHT - 0.1);
+				draw_image("assets/radiobox.png", calc_project_X(T) - 0.2, calc_project_Y(T) - 0.2 , PROJECT_WIDTH, RADIO_HEIGHT - 0.1);
 		}
 			
-		draw_text_left(projects[T], PROJECT_X, PROJECT_Y + 0.2 + RADIO_HEIGHT * T, PROJECT_WIDTH - 1, 1);
+		draw_text_left(projects[T], calc_project_X(T), calc_project_Y(T), PROJECT_WIDTH - 1, 1);
 	}
 
-	if (currentX >= PROJECT_X + 4 && currentX <= PROJECT_X + PROJECT_WIDTH && currentY >= PROJECT_Y + RADIO_HEIGHT * (projects.size() + 1) && currentY <= PROJECT_Y + RADIO_HEIGHT * (projects.size() + 2))
-		draw_image("assets/buttonbox_hover.png", PROJECT_X + 4, PROJECT_Y + RADIO_HEIGHT * (projects.size() + 1), PROJECT_WIDTH - 4.2, RADIO_HEIGHT - 0.1);	
+	if (currentX >= PROJECT_X + 4 && currentX <= PROJECT_X + PROJECT_WIDTH && currentY >= PROJECT_Y + calc_project_height(projects.size()) + RADIO_HEIGHT && currentY <= PROJECT_Y + calc_project_height(projects.size()) + 2 * RADIO_HEIGHT)
+		draw_image("assets/buttonbox_hover.png", PROJECT_X + 4, PROJECT_Y + calc_project_height(projects.size()) + RADIO_HEIGHT, PROJECT_WIDTH - 4.2, RADIO_HEIGHT - 0.1);	
 	else
-		draw_image("assets/buttonbox.png", PROJECT_X + 4, PROJECT_Y + RADIO_HEIGHT * (projects.size() + 1), PROJECT_WIDTH - 4.2, RADIO_HEIGHT - 0.1);	
-	draw_text("Open project " + projects[active_project], PROJECT_X + 4, PROJECT_Y + RADIO_HEIGHT * (projects.size() + 1)+0.2, PROJECT_WIDTH - 4, 1);
+		draw_image("assets/buttonbox.png", PROJECT_X + 4, PROJECT_Y + calc_project_height(projects.size()) + RADIO_HEIGHT, PROJECT_WIDTH - 4.2, RADIO_HEIGHT - 0.1);	
+	draw_text("Open project " + projects[active_project], PROJECT_X + 4, PROJECT_Y + calc_project_height(projects.size()) + RADIO_HEIGHT + 0.2, PROJECT_WIDTH - 4, 1);
 	
 	SDL_RenderPresent(renderer);
 	
@@ -168,19 +191,25 @@ bool projcanvas::handle_event(SDL_Event &event)
 				}
                         }
 
-                        if (x >= PROJECT_X && x < PROJECT_X + PROJECT_WIDTH && y > PROJECT_Y) {
+                        if (x >= PROJECT_X && y > PROJECT_Y) {
+                        	unsigned int tX = floor((x - PROJECT_X) / (PROJECT_WIDTH + 1));
                         	unsigned int tY = floor((y - PROJECT_Y) / RADIO_HEIGHT);
+                        	unsigned int index;
+                        	
+                        	index = tY + tX * PER_COLUMN;
+                        	printf("index is %i \n", index);
                         	
                         	
-                        	if (tY == active_project && time(NULL) - previous_click < 3) {
+                        	if (index == active_project && time(NULL) - previous_click < 3) {
                         		/* double click */
 					name = projects[active_project];
 					return true;
                         	}
-                        	if (tY >= 0 && tY < projects.size())
-                        		active_project = tY;
+                        	if (index >= 0 && index < projects.size())
+                        		active_project = index;
 
-				if (tY == projects.size()+1 && x >= PROJECT_X + 4) {
+				/* click on the button */
+				if (((tY == projects.size()+1) || (tY > PER_COLUMN+1))  && x >= PROJECT_X + 4) {
 					name = projects[active_project];
 					return true;;
 				}
@@ -277,6 +306,24 @@ void projcanvas::crawl_filesystem(void)
      		active_project = i;
      }
 
+}
+
+void projcanvas::crawl_library(void)
+{
+    const std::filesystem::path libpath{"library/"};
+    for (auto const &dir_entry : std::filesystem::recursive_directory_iterator{libpath}) {
+        std::string path = dir_entry.path().filename();
+        if (!path.ends_with(".json"))
+        	continue;
+        	
+	if (path.starts_with("testbench_"))
+		continue;
+		
+	projects.push_back(dir_entry.path());
+        	
+	printf("Library %s\n", path.c_str());
+    }
+    
 }
 
 void projcanvas::create_project_from_template(std::string name, std::string templ)

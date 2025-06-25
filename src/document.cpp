@@ -77,13 +77,16 @@ void init_SDL(void)
 }
 
 extern std::string current_project;
-document::document(std::string _name)
+document::document(std::string _name, bool _library_mode)
 {
 	class canvas *_canvas;
 	class scene *_scene;
 	float d1,d2,d3;
 	
 	struct capabilities cap = {};
+	
+	
+	library_mode = _library_mode;
 	
 	init_SDL();
 	
@@ -95,7 +98,7 @@ document::document(std::string _name)
 	
 	current_project = name;
 	
-	if (std::filesystem::exists(name + "/verilog/Makefile"))
+	if (std::filesystem::exists(name + "/verilog/Makefile") && !library_mode)
 		cap.has_full_workflow = true;
 
 	
@@ -129,6 +132,8 @@ document::document(std::string _name)
 
 void document::save_verilog(std::string path, std::string filename)
 {
+	if (library_mode)
+		return;
 	printf("Saving as %s\n", filename.c_str());
 	std::ofstream output(filename);
 	class scene *_scene;
@@ -165,9 +170,11 @@ document::~document(void)
 
 	std::filesystem::create_directory(name);
 
-	save_json();	
-	std::filesystem::create_directory(name + "/verilog");
-	save_verilog(name + "/verilog", name + "/verilog//main.v");
+	save_json();
+	if (!library_mode) {	
+		std::filesystem::create_directory(name + "/verilog");
+		save_verilog(name + "/verilog", name + "/verilog//main.v");
+	}
 	delete _canvas;
 
 	TTF_Quit();

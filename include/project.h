@@ -9,7 +9,7 @@
 class projcanvas : public basecanvas
 {
 public:
-    projcanvas(void);
+    projcanvas(bool library_mode = false);
     virtual ~projcanvas(void);
     
 
@@ -35,6 +35,8 @@ protected:
     class name *newname = NULL;
     
     void crawl_filesystem(void);
+    void crawl_library(void);
     void create_project_from_template(std::string name, std::string templ);
     time_t previous_click = 0;
+    bool library_mode = false;
 };

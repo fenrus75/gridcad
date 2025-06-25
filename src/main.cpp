@@ -42,6 +42,7 @@ int main(int argc, char **argv)
 {	
 	std::string name = "default";
 	class document *document;
+	bool library_mode = false;
 
 	stack_t stack = {};
 	struct sigaction segv = {};
@@ -59,6 +60,17 @@ int main(int argc, char **argv)
 	
 	if (argc > 1) {
 		name = argv[1];
+		
+		if (name == "--library") {
+			printf("Library mode \n");
+			library_mode = true;
+			class projcanvas *proj = new projcanvas(library_mode);
+		
+			proj->run();
+			name = proj->get_name();
+		
+			delete proj;
+		}
 	} else {
 		class projcanvas *proj = new projcanvas();
 		
