@@ -19,7 +19,7 @@ public:
     
     void run(void);
     
-    std::string get_name(void) {return name;};
+    std::string get_name(void) {if (!library_mode) return name; return library_test_bench();};
 
 protected:
     std::string name = "default";
@@ -37,6 +37,7 @@ protected:
     void crawl_filesystem(void);
     void crawl_library(void);
     void create_project_from_template(std::string name, std::string templ);
+    std::string library_test_bench(void);
     time_t previous_click = 0;
     bool library_mode = false;
 };

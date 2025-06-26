@@ -118,7 +118,8 @@ document::document(std::string _name, bool _library_mode)
 	register_new_canvas(_canvas);
 	
 	filename = name;
-	filename = filename + "/scene.json";
+	if (!library_mode)
+		filename = filename + "/scene.json";
 	
 	if (access(filename.c_str(), R_OK) == 0) {
 		json j;

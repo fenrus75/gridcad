@@ -2,6 +2,9 @@
 #include "project.h"
 #include "name.h"
 #include "document.h"
+#include "scene.h"
+#include "element.h"
+#include "model_nest.h"
 
 #include <fstream>
 #include <string>
@@ -26,6 +29,10 @@ projcanvas::projcanvas(bool _library_mode)
 	
 	scaleX = 25;
 	scaleY = 25;
+	
+	if (library_mode) {
+		name = "library/";
+	}
 
 	newname	= new class name(&name);
 	newname->set_edit_mode(true);
@@ -72,6 +79,60 @@ static float calc_project_height(int index)
 		return index *  RADIO_HEIGHT;
 	else
 		return PER_COLUMN * RADIO_HEIGHT;
+}
+
+extern std::string current_project;
+/* this turns a selected library element into a testbench_<foo>.json name,
+   and if it does not exist, it will pre-create a testbench with the library element already
+   in it */
+std::string projcanvas::library_test_bench(void)
+{
+	const std::filesystem::path fullpath(name);
+	std::string path = fullpath.parent_path();
+	std::string elem = fullpath.filename();
+	std::string benchname;
+	
+	benchname = path + "/testbench_" + elem;
+	std::string libname = path + "/" + elem;
+	
+	printf("Bench name is %s\n", benchname.c_str());
+	
+	if (!std::filesystem::exists(benchname)) {
+		class scene *scene;
+		/* create */
+		scene = new class scene(elem, "");
+	        class model_nest *element;
+     
+	        element = new model_nest(10, 10);
+	        printf("libname is %s \n", libname.c_str());
+
+	        std::string logic = "";
+	        std::ifstream input(libname);
+                std::string line = "";
+            
+                while (std::getline(input, line)) {
+                    logic += line;
+                }
+	        element->load_scene_from_json(logic);
+	        
+	        element->update_name(path + "/" + elem);
+                element->set_icon(libname + ".png", libname + ".selected.png");
+		element->set_library_origin(path, libname);
+		scene->add_element(element);
+		
+		current_project="ABABABAABABABBABAA";
+
+		json j;
+	        scene->to_json(j);
+	        std::ofstream output(benchname);
+	        output << j.dump(4);
+	        output.close();		
+	        delete scene;
+	        current_project = "";
+	}
+	
+	printf("returning\n");
+	return benchname;
 }
 
 void projcanvas::draw(void)

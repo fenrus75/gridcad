@@ -84,12 +84,14 @@ int main(int argc, char **argv)
 	
 	populate_library("library/");
 
-	name = "projects/" + name;
+	if (!library_mode) {	
+		name = "projects/" + name;
+	}
 	
 	/* project based library */
 	populate_library(name + "/library");
 
-	document = new class document(name);
+	document = new class document(name, library_mode);
 
 	document->run();
 	

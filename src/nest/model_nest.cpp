@@ -577,37 +577,48 @@ void model_nest::save_to_library(std::string library_path)
 	json j;
 
 	_scene->to_json(j);
+	
+	std::string outputfile = library_path + "/" + name + ".json";
+	
+	printf("Outputfile is %s\n", outputfile.c_str());
 
-	std::ofstream output(library_path + "/" + name + ".json");
+	std::ofstream output(outputfile);
 
 	output << j.dump(4);
 	output.close();
-	/* write an icon */
-	const unsigned char *pixels = NULL;
-	unsigned int size;
-	srand(time(NULL));
-	while (pixels == NULL) {
-		int i = rand() % 64;
-		sprintf(buf, "assets/random/icon%i.png", i);
-		icon = buf;
-		if (datamap.find(icon) == datamap.end())
-			continue;
-		pixels = datamap[icon];
-		size = sizemap[icon];
+	if (!std::filesystem::exists(library_path + "/" + name + ".json.png")) {
+		/* write an icon */
+		const unsigned char *pixels = NULL;
+		unsigned int size;
+		srand(time(NULL));
+		while (pixels == NULL) {
+			int i = rand() % 64;
+			sprintf(buf, "assets/random/icon%i.png", i);
+			icon = buf;
+			if (datamap.find(icon) == datamap.end())
+				continue;
+			pixels = datamap[icon];
+			size = sizemap[icon];
+		}
+		
+		std::ofstream outputpng(library_path + "/" + name + ".json.png",  std::ios::binary);
+
+		outputpng.write((const char *)pixels, size);
+		outputpng.close();
 	}
 
-	std::ofstream outputpng(library_path + "/" + name + ".json.png",  std::ios::binary);
-
-	outputpng.write((const char *)pixels, size);
-	outputpng.close();
-
 	/* write a tooltip */	
-	std::ofstream outputtt(library_path + "/" + name + ".json.tooltip",  std::ios::binary);
+	if (!std::filesystem::exists(library_path + "/" + name + ".json.tooltip")) {
+		std::ofstream outputtt(library_path + "/" + name + ".json.tooltip",  std::ios::binary);
 
-	outputtt << "Custom library element for a '" + name + "'";
-	outputtt.close();
-	std::ofstream outputol(library_path + "/" + name + ".json.overlay",  std::ios::binary);
+		outputtt << "Custom library element for a '" + name + "'";
+		outputtt.close();
+	}
+		if (!std::filesystem::exists(library_path + "/" + name + ".json.overlay")) {
 
-	outputol << name;
-	outputol.close();
+		std::ofstream outputol(library_path + "/" + name + ".json.overlay",  std::ios::binary);
+
+		outputol << name;
+		outputol.close();
+	}
 }
