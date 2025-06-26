@@ -151,7 +151,10 @@ void document::save_json(void)
 	class scene *_scene =  _canvas->get_scene();
 	std::string filename;
 	
-	filename = name + "/scene.json";
+	if (!library_mode)
+		filename = name + "/scene.json";
+	else
+		filename = name;
 	
 	printf("Saving to %s \n", filename.c_str());
 
@@ -169,7 +172,8 @@ document::~document(void)
 {
 	class canvas *_canvas = (class canvas *)canvases[0];
 
-	std::filesystem::create_directory(name);
+	if (!library_mode)
+		std::filesystem::create_directory(name);
 
 	save_json();
 	if (!library_mode) {	
@@ -213,7 +217,11 @@ void document::run(void)
 			}
 			if (event.type == EVENT_SAVE_TO_LIBRARY) {
 				class model_nest *nest = (class model_nest *)event.user.data1;
-				nest->save_to_library(name + "/library");
+				if (library_mode) 
+					nest->save_to_library("");
+				else {
+					nest->save_to_library(name + "/library");
+				}
 				clear_library();
 				populate_library("library/");
 				populate_library(name + "/library");

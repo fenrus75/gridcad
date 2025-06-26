@@ -36,11 +36,16 @@ void populate_library(std::string directory)
     
     for (auto const &dir_entry : std::filesystem::recursive_directory_iterator{libpath}) {
         std::string path = dir_entry.path();
+        std::string filename = dir_entry.path().filename();
         
+        if (filename.starts_with("testbench_"))
+            continue;
         if (!dir_entry.is_regular_file())
             continue;
             
 //        printf("PATH is %s\n", path.c_str());
+
+        
         
         if (path.ends_with(".json")) {
             struct library_block block;

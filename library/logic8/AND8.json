@@ -15,6 +15,7 @@
                     "color": 4,
                     "direction": 1,
                     "distance_from_outport": 0,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "A8",
                     "screenX": 4.0,
@@ -95,6 +96,7 @@
                     "color": 1,
                     "direction": 1,
                     "distance_from_outport": 0,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "B8",
                     "screenX": 4.0,
@@ -175,6 +177,7 @@
                     "color": 0,
                     "direction": 0,
                     "distance_from_outport": 1,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "AB",
                     "screenX": 57.0,
@@ -251,10 +254,11 @@
                 {
                     "X": 2,
                     "Y": 1,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 4,
                     "direction": 1,
                     "distance_from_outport": 0,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Bit0",
                     "screenX": 11.0,
@@ -300,7 +304,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         }
                     ]
                 },
@@ -311,6 +315,7 @@
                     "color": 4,
                     "direction": 1,
                     "distance_from_outport": 0,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Bit1",
                     "screenX": 11.0,
@@ -367,6 +372,7 @@
                     "color": 4,
                     "direction": 1,
                     "distance_from_outport": 0,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Bit2",
                     "screenX": 11.0,
@@ -423,6 +429,7 @@
                     "color": 4,
                     "direction": 1,
                     "distance_from_outport": 0,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Bit3",
                     "screenX": 11.0,
@@ -479,6 +486,7 @@
                     "color": 4,
                     "direction": 1,
                     "distance_from_outport": 0,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Bit4",
                     "screenX": 11.0,
@@ -531,10 +539,11 @@
                 {
                     "X": 2,
                     "Y": 6,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 4,
                     "direction": 1,
                     "distance_from_outport": 0,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Bit5",
                     "screenX": 11.0,
@@ -580,17 +589,18 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         }
                     ]
                 },
                 {
                     "X": 2,
                     "Y": 7,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 4,
                     "direction": 1,
                     "distance_from_outport": 0,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Bit6",
                     "screenX": 11.0,
@@ -636,17 +646,18 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         }
                     ]
                 },
                 {
                     "X": 2,
                     "Y": 8,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 4,
                     "direction": 1,
                     "distance_from_outport": 0,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Bit7",
                     "screenX": 11.0,
@@ -692,7 +703,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         }
                     ]
                 },
@@ -703,6 +714,7 @@
                     "color": 0,
                     "direction": 0,
                     "distance_from_outport": 1,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "0-7",
                     "screenX": 8.0,
@@ -769,10 +781,11 @@
                 {
                     "X": 2,
                     "Y": 1,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 1,
                     "direction": 1,
                     "distance_from_outport": 0,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Bit0",
                     "screenX": 10.0,
@@ -818,17 +831,18 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         }
                     ]
                 },
                 {
                     "X": 2,
                     "Y": 2,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 1,
                     "direction": 1,
                     "distance_from_outport": 0,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Bit1",
                     "screenX": 10.0,
@@ -874,17 +888,18 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         }
                     ]
                 },
                 {
                     "X": 2,
                     "Y": 3,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 1,
                     "direction": 1,
                     "distance_from_outport": 0,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Bit2",
                     "screenX": 10.0,
@@ -930,17 +945,18 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         }
                     ]
                 },
                 {
                     "X": 2,
                     "Y": 4,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 1,
                     "direction": 1,
                     "distance_from_outport": 0,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Bit3",
                     "screenX": 10.0,
@@ -986,17 +1002,18 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         }
                     ]
                 },
                 {
                     "X": 2,
                     "Y": 5,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 1,
                     "direction": 1,
                     "distance_from_outport": 0,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Bit4",
                     "screenX": 10.0,
@@ -1042,17 +1059,18 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         }
                     ]
                 },
                 {
                     "X": 2,
                     "Y": 6,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 1,
                     "direction": 1,
                     "distance_from_outport": 0,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Bit5",
                     "screenX": 10.0,
@@ -1098,17 +1116,18 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         }
                     ]
                 },
                 {
                     "X": 2,
                     "Y": 7,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 1,
                     "direction": 1,
                     "distance_from_outport": 0,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Bit6",
                     "screenX": 10.0,
@@ -1154,17 +1173,18 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         }
                     ]
                 },
                 {
                     "X": 2,
                     "Y": 8,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 1,
                     "direction": 1,
                     "distance_from_outport": 0,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Bit7",
                     "screenX": 10.0,
@@ -1210,7 +1230,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         }
                     ]
                 },
@@ -1221,6 +1241,7 @@
                     "color": 0,
                     "direction": 0,
                     "distance_from_outport": 1,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "0-7",
                     "screenX": 7.0,
@@ -1291,6 +1312,7 @@
                     "color": 0,
                     "direction": 0,
                     "distance_from_outport": 1,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Bit0",
                     "screenX": 51.0,
@@ -1308,26 +1330,26 @@
                     "verilog_name": "",
                     "wires": [
                         {
-                            "X1": 39,
-                            "X2": 51,
-                            "Y1": 7,
-                            "Y2": 18,
+                            "X1": 51,
+                            "X2": 39,
+                            "Y1": 18,
+                            "Y2": 7,
                             "color": 0,
                             "distance_from_outport": 0,
-                            "is_reversed": true,
+                            "is_reversed": false,
                             "name": "Wire-6856f480-9db94edb-f81d-fbc5-",
                             "points": [
                                 {
-                                    "X": 51,
-                                    "Y": 18
+                                    "X": 39,
+                                    "Y": 7
                                 },
                                 {
                                     "X": 40,
                                     "Y": 7
                                 },
                                 {
-                                    "X": 39,
-                                    "Y": 7
+                                    "X": 51,
+                                    "Y": 18
                                 }
                             ],
                             "value": {
@@ -1351,6 +1373,7 @@
                     "color": 0,
                     "direction": 0,
                     "distance_from_outport": 1,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Bit1",
                     "screenX": 51.0,
@@ -1368,26 +1391,26 @@
                     "verilog_name": "",
                     "wires": [
                         {
-                            "X1": 39,
-                            "X2": 51,
-                            "Y1": 11,
-                            "Y2": 19,
+                            "X1": 51,
+                            "X2": 39,
+                            "Y1": 19,
+                            "Y2": 11,
                             "color": 0,
                             "distance_from_outport": 0,
-                            "is_reversed": true,
+                            "is_reversed": false,
                             "name": "Wire-6856f483-611f18f3-dfef-f78a-",
                             "points": [
                                 {
-                                    "X": 51,
-                                    "Y": 19
+                                    "X": 39,
+                                    "Y": 11
                                 },
                                 {
                                     "X": 43,
                                     "Y": 11
                                 },
                                 {
-                                    "X": 39,
-                                    "Y": 11
+                                    "X": 51,
+                                    "Y": 19
                                 }
                             ],
                             "value": {
@@ -1411,6 +1434,7 @@
                     "color": 0,
                     "direction": 0,
                     "distance_from_outport": 1,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Bit2",
                     "screenX": 51.0,
@@ -1428,26 +1452,26 @@
                     "verilog_name": "",
                     "wires": [
                         {
-                            "X1": 39,
-                            "X2": 51,
-                            "Y1": 15,
-                            "Y2": 20,
+                            "X1": 51,
+                            "X2": 39,
+                            "Y1": 20,
+                            "Y2": 15,
                             "color": 0,
                             "distance_from_outport": 0,
-                            "is_reversed": true,
+                            "is_reversed": false,
                             "name": "Wire-6856f486-5f6dff38-1e8a-2930-",
                             "points": [
                                 {
-                                    "X": 51,
-                                    "Y": 20
+                                    "X": 39,
+                                    "Y": 15
                                 },
                                 {
                                     "X": 46,
                                     "Y": 15
                                 },
                                 {
-                                    "X": 39,
-                                    "Y": 15
+                                    "X": 51,
+                                    "Y": 20
                                 }
                             ],
                             "value": {
@@ -1471,6 +1495,7 @@
                     "color": 0,
                     "direction": 0,
                     "distance_from_outport": 1,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Bit3",
                     "screenX": 51.0,
@@ -1488,26 +1513,26 @@
                     "verilog_name": "",
                     "wires": [
                         {
-                            "X1": 39,
-                            "X2": 51,
-                            "Y1": 19,
-                            "Y2": 21,
+                            "X1": 51,
+                            "X2": 39,
+                            "Y1": 21,
+                            "Y2": 19,
                             "color": 0,
                             "distance_from_outport": 0,
-                            "is_reversed": true,
+                            "is_reversed": false,
                             "name": "Wire-6856f489-fb1bfc02-ced7-7cdf-",
                             "points": [
                                 {
-                                    "X": 51,
-                                    "Y": 21
+                                    "X": 39,
+                                    "Y": 19
                                 },
                                 {
                                     "X": 49,
                                     "Y": 19
                                 },
                                 {
-                                    "X": 39,
-                                    "Y": 19
+                                    "X": 51,
+                                    "Y": 21
                                 }
                             ],
                             "value": {
@@ -1531,6 +1556,7 @@
                     "color": 0,
                     "direction": 0,
                     "distance_from_outport": 1,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Bit4",
                     "screenX": 51.0,
@@ -1548,26 +1574,26 @@
                     "verilog_name": "",
                     "wires": [
                         {
-                            "X1": 39,
-                            "X2": 51,
-                            "Y1": 23,
-                            "Y2": 22,
+                            "X1": 51,
+                            "X2": 39,
+                            "Y1": 22,
+                            "Y2": 23,
                             "color": 0,
                             "distance_from_outport": 0,
-                            "is_reversed": true,
+                            "is_reversed": false,
                             "name": "Wire-6856f48c-d4c5cb44-e7da-f92a-",
                             "points": [
                                 {
-                                    "X": 51,
-                                    "Y": 22
+                                    "X": 39,
+                                    "Y": 23
                                 },
                                 {
                                     "X": 50,
                                     "Y": 23
                                 },
                                 {
-                                    "X": 39,
-                                    "Y": 23
+                                    "X": 51,
+                                    "Y": 22
                                 }
                             ],
                             "value": {
@@ -1591,6 +1617,7 @@
                     "color": 0,
                     "direction": 0,
                     "distance_from_outport": 1,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Bit5",
                     "screenX": 51.0,
@@ -1608,26 +1635,26 @@
                     "verilog_name": "",
                     "wires": [
                         {
-                            "X1": 39,
-                            "X2": 51,
-                            "Y1": 27,
-                            "Y2": 23,
+                            "X1": 51,
+                            "X2": 39,
+                            "Y1": 23,
+                            "Y2": 27,
                             "color": 0,
                             "distance_from_outport": 0,
-                            "is_reversed": true,
+                            "is_reversed": false,
                             "name": "Wire-6856f48f-ac2cec23-8267-5282-",
                             "points": [
                                 {
-                                    "X": 51,
-                                    "Y": 23
+                                    "X": 39,
+                                    "Y": 27
                                 },
                                 {
                                     "X": 47,
                                     "Y": 27
                                 },
                                 {
-                                    "X": 39,
-                                    "Y": 27
+                                    "X": 51,
+                                    "Y": 23
                                 }
                             ],
                             "value": {
@@ -1651,6 +1678,7 @@
                     "color": 0,
                     "direction": 0,
                     "distance_from_outport": 1,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Bit6",
                     "screenX": 51.0,
@@ -1668,26 +1696,26 @@
                     "verilog_name": "",
                     "wires": [
                         {
-                            "X1": 39,
-                            "X2": 51,
-                            "Y1": 31,
-                            "Y2": 24,
+                            "X1": 51,
+                            "X2": 39,
+                            "Y1": 24,
+                            "Y2": 31,
                             "color": 0,
                             "distance_from_outport": 0,
-                            "is_reversed": true,
+                            "is_reversed": false,
                             "name": "Wire-6856f492-b73ac94b-cc5c-f013-",
                             "points": [
                                 {
-                                    "X": 51,
-                                    "Y": 24
+                                    "X": 39,
+                                    "Y": 31
                                 },
                                 {
                                     "X": 44,
                                     "Y": 31
                                 },
                                 {
-                                    "X": 39,
-                                    "Y": 31
+                                    "X": 51,
+                                    "Y": 24
                                 }
                             ],
                             "value": {
@@ -1711,6 +1739,7 @@
                     "color": 0,
                     "direction": 0,
                     "distance_from_outport": 1,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Bit7",
                     "screenX": 51.0,
@@ -1728,26 +1757,26 @@
                     "verilog_name": "",
                     "wires": [
                         {
-                            "X1": 39,
-                            "X2": 51,
-                            "Y1": 35,
-                            "Y2": 25,
+                            "X1": 51,
+                            "X2": 39,
+                            "Y1": 25,
+                            "Y2": 35,
                             "color": 0,
                             "distance_from_outport": 0,
-                            "is_reversed": true,
+                            "is_reversed": false,
                             "name": "Wire-6856f495-2d13cf6c-f401-8e7b-",
                             "points": [
                                 {
-                                    "X": 51,
-                                    "Y": 25
+                                    "X": 39,
+                                    "Y": 35
                                 },
                                 {
                                     "X": 41,
                                     "Y": 35
                                 },
                                 {
-                                    "X": 39,
-                                    "Y": 35
+                                    "X": 51,
+                                    "Y": 25
                                 }
                             ],
                             "value": {
@@ -1771,6 +1800,7 @@
                     "color": 0,
                     "direction": 1,
                     "distance_from_outport": 0,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "0-7",
                     "screenX": 54.0,
@@ -1837,10 +1867,11 @@
                 {
                     "X": 0,
                     "Y": 0,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 1,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Connector",
                     "screenX": 13.0,
@@ -1886,7 +1917,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         },
                         {
                             "X1": 13,
@@ -1917,7 +1948,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         }
                     ]
                 }
@@ -1938,10 +1969,11 @@
                 {
                     "X": 0,
                     "Y": 0,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 1,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Connector",
                     "screenX": 14.0,
@@ -1987,7 +2019,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         },
                         {
                             "X1": 14,
@@ -2018,7 +2050,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         }
                     ]
                 }
@@ -2043,10 +2075,11 @@
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 2,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Connector",
-                    "screenX": 14.714284896850586,
-                    "screenY": 30.59693717956543,
+                    "screenX": 14.0,
+                    "screenY": 30.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -2088,7 +2121,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         },
                         {
                             "X1": 14,
@@ -2117,7 +2150,7 @@
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -2144,10 +2177,11 @@
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 2,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Connector",
-                    "screenX": 13.566326141357422,
-                    "screenY": 34.54591751098633,
+                    "screenX": 13.0,
+                    "screenY": 34.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -2189,7 +2223,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         },
                         {
                             "X1": 13,
@@ -2218,7 +2252,7 @@
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -2241,10 +2275,11 @@
                 {
                     "X": 0,
                     "Y": 0,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 1,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Connector",
                     "screenX": 15.0,
@@ -2290,7 +2325,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         },
                         {
                             "X1": 15,
@@ -2321,7 +2356,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         }
                     ]
                 }
@@ -2346,10 +2381,11 @@
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 2,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Connector",
-                    "screenX": 15.678569793701172,
-                    "screenY": 26.556121826171875,
+                    "screenX": 15.0,
+                    "screenY": 26.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -2391,7 +2427,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         },
                         {
                             "X1": 15,
@@ -2420,7 +2456,7 @@
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -2447,10 +2483,11 @@
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 2,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Connector",
-                    "screenX": 16.68877410888672,
-                    "screenY": 22.56122398376465,
+                    "screenX": 16.0,
+                    "screenY": 22.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -2521,7 +2558,7 @@
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -2548,6 +2585,7 @@
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 1,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Connector",
                     "screenX": 16.0,
@@ -2649,10 +2687,11 @@
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 2,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Connector",
-                    "screenX": 17.607141494750977,
-                    "screenY": 18.566326141357422,
+                    "screenX": 17.0,
+                    "screenY": 18.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -2723,7 +2762,7 @@
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -2750,6 +2789,7 @@
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 1,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Connector",
                     "screenX": 17.0,
@@ -2851,10 +2891,11 @@
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 2,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Connector",
-                    "screenX": 18.525508880615234,
-                    "screenY": 14.61734676361084,
+                    "screenX": 18.0,
+                    "screenY": 14.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": true,
@@ -2919,13 +2960,13 @@
                             ],
                             "value": {
                                 "arrayval": 0,
-                                "boolval": false,
+                                "boolval": true,
                                 "floatval": 0.0,
                                 "intval": 0,
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -2952,6 +2993,7 @@
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 1,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Connector",
                     "screenX": 18.0,
@@ -3053,10 +3095,11 @@
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 2,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Connector",
-                    "screenX": 19.62755012512207,
-                    "screenY": 10.576530456542969,
+                    "screenX": 19.0,
+                    "screenY": 10.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": true,
@@ -3121,13 +3164,13 @@
                             ],
                             "value": {
                                 "arrayval": 0,
-                                "boolval": false,
+                                "boolval": true,
                                 "floatval": 0.0,
                                 "intval": 0,
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -3154,6 +3197,7 @@
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 1,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Connector",
                     "screenX": 19.0,
@@ -3255,10 +3299,11 @@
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 1,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Connector",
-                    "screenX": 20.683671951293945,
-                    "screenY": 7.4540815353393555,
+                    "screenX": 20.0,
+                    "screenY": 7.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": true,
@@ -3300,7 +3345,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         },
                         {
                             "X1": 20,
@@ -3331,13 +3376,13 @@
                             ],
                             "value": {
                                 "arrayval": 0,
-                                "boolval": false,
+                                "boolval": true,
                                 "floatval": 0.0,
                                 "intval": 0,
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -3364,10 +3409,11 @@
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 4,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Connector",
-                    "screenX": 21.78571319580078,
-                    "screenY": 8.464284896850586,
+                    "screenX": 21.0,
+                    "screenY": 8.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -3438,7 +3484,7 @@
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -3465,6 +3511,7 @@
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 1,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Connector",
                     "screenX": 21.0,
@@ -3510,7 +3557,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         },
                         {
                             "X1": 21,
@@ -3562,10 +3609,11 @@
                 {
                     "X": 0,
                     "Y": 0,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 1,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Connector",
                     "screenX": 22.0,
@@ -3611,7 +3659,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         },
                         {
                             "X1": 22,
@@ -3642,7 +3690,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         }
                     ]
                 }
@@ -3667,10 +3715,11 @@
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 2,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Connector",
-                    "screenX": 22.428569793701172,
-                    "screenY": 12.36734676361084,
+                    "screenX": 22.0,
+                    "screenY": 12.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -3712,7 +3761,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         },
                         {
                             "X1": 22,
@@ -3741,7 +3790,7 @@
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -3764,10 +3813,11 @@
                 {
                     "X": 0,
                     "Y": 0,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 1,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Connector",
                     "screenX": 23.0,
@@ -3813,7 +3863,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         },
                         {
                             "X1": 23,
@@ -3844,7 +3894,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         }
                     ]
                 }
@@ -3869,10 +3919,11 @@
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 2,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Connector",
-                    "screenX": 23.43877410888672,
-                    "screenY": 16.637754440307617,
+                    "screenX": 23.0,
+                    "screenY": 16.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -3914,7 +3965,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         },
                         {
                             "X1": 23,
@@ -3943,7 +3994,7 @@
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -3966,10 +4017,11 @@
                 {
                     "X": 0,
                     "Y": 0,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 1,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Connector",
                     "screenX": 24.0,
@@ -4015,7 +4067,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         },
                         {
                             "X1": 24,
@@ -4046,7 +4098,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         }
                     ]
                 }
@@ -4071,10 +4123,11 @@
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 2,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Connector",
-                    "screenX": 24.586732864379883,
-                    "screenY": 20.448978424072266,
+                    "screenX": 24.0,
+                    "screenY": 20.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": true,
@@ -4116,7 +4169,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         },
                         {
                             "X1": 24,
@@ -4139,13 +4192,13 @@
                             ],
                             "value": {
                                 "arrayval": 0,
-                                "boolval": false,
+                                "boolval": true,
                                 "floatval": 0.0,
                                 "intval": 0,
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -4168,10 +4221,11 @@
                 {
                     "X": 0,
                     "Y": 0,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 1,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Connector",
                     "screenX": 25.0,
@@ -4217,7 +4271,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         },
                         {
                             "X1": 25,
@@ -4248,7 +4302,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         }
                     ]
                 }
@@ -4273,10 +4327,11 @@
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 2,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Connector",
-                    "screenX": 25.82653045654297,
-                    "screenY": 24.53571319580078,
+                    "screenX": 25.0,
+                    "screenY": 24.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": true,
@@ -4318,7 +4373,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         },
                         {
                             "X1": 25,
@@ -4341,13 +4396,13 @@
                             ],
                             "value": {
                                 "arrayval": 0,
-                                "boolval": false,
+                                "boolval": true,
                                 "floatval": 0.0,
                                 "intval": 0,
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -4370,10 +4425,11 @@
                 {
                     "X": 0,
                     "Y": 0,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 1,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Connector",
                     "screenX": 26.0,
@@ -4419,7 +4475,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         },
                         {
                             "X1": 26,
@@ -4450,7 +4506,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         }
                     ]
                 }
@@ -4475,10 +4531,11 @@
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 2,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Connector",
-                    "screenX": 26.790815353393555,
-                    "screenY": 28.530611038208008,
+                    "screenX": 26.0,
+                    "screenY": 28.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -4520,7 +4577,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         },
                         {
                             "X1": 26,
@@ -4549,7 +4606,7 @@
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -4572,10 +4629,11 @@
                 {
                     "X": 0,
                     "Y": 0,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 1,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Connector",
                     "screenX": 27.0,
@@ -4621,7 +4679,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         },
                         {
                             "X1": 27,
@@ -4652,7 +4710,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         }
                     ]
                 }
@@ -4677,10 +4735,11 @@
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 2,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Connector",
-                    "screenX": 27.525508880615234,
-                    "screenY": 32.57142639160156,
+                    "screenX": 27.0,
+                    "screenY": 32.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -4722,7 +4781,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         },
                         {
                             "X1": 27,
@@ -4751,7 +4810,7 @@
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -4774,10 +4833,11 @@
                 {
                     "X": 0,
                     "Y": 0,
-                    "bus_width": 0,
+                    "bus_width": 1,
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 1,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Connector",
                     "screenX": 28.0,
@@ -4823,7 +4883,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         },
                         {
                             "X1": 28,
@@ -4854,7 +4914,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         }
                     ]
                 }
@@ -4879,10 +4939,11 @@
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 2,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Connector",
-                    "screenX": 28.62755012512207,
-                    "screenY": 36.42856979370117,
+                    "screenX": 28.0,
+                    "screenY": 36.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -4924,7 +4985,7 @@
                                 "type": 0,
                                 "valid": true
                             },
-                            "width": 0
+                            "width": 1
                         },
                         {
                             "X1": 28,
@@ -4953,7 +5014,7 @@
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -4980,6 +5041,7 @@
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 2,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Connector",
                     "screenX": 21.0,
@@ -5081,10 +5143,11 @@
                     "color": 0,
                     "direction": 2,
                     "distance_from_outport": 3,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Connector",
-                    "screenX": 21.510202407836914,
-                    "screenY": 11.448979377746582,
+                    "screenX": 21.0,
+                    "screenY": 11.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -5173,7 +5236,7 @@
             "angle": 0,
             "class_id": "model_and:",
             "name": "",
-            "parental_name": "/main/or8/AND8",
+            "parental_name": "/SubScreen/SubScreen",
             "ports": [
                 {
                     "X": -1,
@@ -5182,6 +5245,7 @@
                     "color": 0,
                     "direction": 0,
                     "distance_from_outport": 3,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "In1",
                     "screenX": 34.0,
@@ -5194,7 +5258,7 @@
                         "is_clock": false,
                         "is_error": false,
                         "type": 0,
-                        "valid": false
+                        "valid": true
                     },
                     "verilog_name": "",
                     "wires": [
@@ -5225,7 +5289,7 @@
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -5238,6 +5302,7 @@
                     "color": 0,
                     "direction": 0,
                     "distance_from_outport": 3,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "In2",
                     "screenX": 34.0,
@@ -5250,7 +5315,7 @@
                         "is_clock": false,
                         "is_error": false,
                         "type": 0,
-                        "valid": false
+                        "valid": true
                     },
                     "verilog_name": "",
                     "wires": [
@@ -5281,7 +5346,7 @@
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -5294,10 +5359,11 @@
                     "color": 0,
                     "direction": 1,
                     "distance_from_outport": 0,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Out",
-                    "screenX": 39.32653045654297,
-                    "screenY": 31.4234676361084,
+                    "screenX": 39.0,
+                    "screenY": 31.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -5311,26 +5377,26 @@
                     "verilog_name": "",
                     "wires": [
                         {
-                            "X1": 39,
-                            "X2": 51,
-                            "Y1": 31,
-                            "Y2": 24,
+                            "X1": 51,
+                            "X2": 39,
+                            "Y1": 24,
+                            "Y2": 31,
                             "color": 0,
                             "distance_from_outport": 0,
-                            "is_reversed": true,
+                            "is_reversed": false,
                             "name": "Wire-6856f492-b73ac94b-cc5c-f013-",
                             "points": [
                                 {
-                                    "X": 51,
-                                    "Y": 24
+                                    "X": 39,
+                                    "Y": 31
                                 },
                                 {
                                     "X": 44,
                                     "Y": 31
                                 },
                                 {
-                                    "X": 39,
-                                    "Y": 31
+                                    "X": 51,
+                                    "Y": 24
                                 }
                             ],
                             "value": {
@@ -5359,7 +5425,7 @@
             "angle": 0,
             "class_id": "model_and:",
             "name": "",
-            "parental_name": "/main/or8/AND8",
+            "parental_name": "/SubScreen/SubScreen",
             "ports": [
                 {
                     "X": -1,
@@ -5368,6 +5434,7 @@
                     "color": 0,
                     "direction": 0,
                     "distance_from_outport": 3,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "In1",
                     "screenX": 34.0,
@@ -5380,7 +5447,7 @@
                         "is_clock": false,
                         "is_error": false,
                         "type": 0,
-                        "valid": false
+                        "valid": true
                     },
                     "verilog_name": "",
                     "wires": [
@@ -5411,7 +5478,7 @@
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -5424,6 +5491,7 @@
                     "color": 0,
                     "direction": 0,
                     "distance_from_outport": 3,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "In2",
                     "screenX": 34.0,
@@ -5436,7 +5504,7 @@
                         "is_clock": false,
                         "is_error": false,
                         "type": 0,
-                        "valid": false
+                        "valid": true
                     },
                     "verilog_name": "",
                     "wires": [
@@ -5467,7 +5535,7 @@
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -5480,10 +5548,11 @@
                     "color": 0,
                     "direction": 1,
                     "distance_from_outport": 0,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Out",
-                    "screenX": 39.556121826171875,
-                    "screenY": 35.46428298950195,
+                    "screenX": 39.0,
+                    "screenY": 35.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -5497,26 +5566,26 @@
                     "verilog_name": "",
                     "wires": [
                         {
-                            "X1": 39,
-                            "X2": 51,
-                            "Y1": 35,
-                            "Y2": 25,
+                            "X1": 51,
+                            "X2": 39,
+                            "Y1": 25,
+                            "Y2": 35,
                             "color": 0,
                             "distance_from_outport": 0,
-                            "is_reversed": true,
+                            "is_reversed": false,
                             "name": "Wire-6856f495-2d13cf6c-f401-8e7b-",
                             "points": [
                                 {
-                                    "X": 51,
-                                    "Y": 25
+                                    "X": 39,
+                                    "Y": 35
                                 },
                                 {
                                     "X": 41,
                                     "Y": 35
                                 },
                                 {
-                                    "X": 39,
-                                    "Y": 35
+                                    "X": 51,
+                                    "Y": 25
                                 }
                             ],
                             "value": {
@@ -5545,7 +5614,7 @@
             "angle": 0,
             "class_id": "model_and:",
             "name": "",
-            "parental_name": "/main/or8/AND8",
+            "parental_name": "/SubScreen/SubScreen",
             "ports": [
                 {
                     "X": -1,
@@ -5554,6 +5623,7 @@
                     "color": 0,
                     "direction": 0,
                     "distance_from_outport": 3,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "In1",
                     "screenX": 34.0,
@@ -5566,7 +5636,7 @@
                         "is_clock": false,
                         "is_error": false,
                         "type": 0,
-                        "valid": false
+                        "valid": true
                     },
                     "verilog_name": "",
                     "wires": [
@@ -5597,7 +5667,7 @@
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -5610,6 +5680,7 @@
                     "color": 0,
                     "direction": 0,
                     "distance_from_outport": 3,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "In2",
                     "screenX": 34.0,
@@ -5622,7 +5693,7 @@
                         "is_clock": false,
                         "is_error": false,
                         "type": 0,
-                        "valid": false
+                        "valid": true
                     },
                     "verilog_name": "",
                     "wires": [
@@ -5653,7 +5724,7 @@
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -5666,10 +5737,11 @@
                     "color": 0,
                     "direction": 1,
                     "distance_from_outport": 0,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Out",
-                    "screenX": 39.96938705444336,
-                    "screenY": 27.428569793701172,
+                    "screenX": 39.0,
+                    "screenY": 27.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -5683,26 +5755,26 @@
                     "verilog_name": "",
                     "wires": [
                         {
-                            "X1": 39,
-                            "X2": 51,
-                            "Y1": 27,
-                            "Y2": 23,
+                            "X1": 51,
+                            "X2": 39,
+                            "Y1": 23,
+                            "Y2": 27,
                             "color": 0,
                             "distance_from_outport": 0,
-                            "is_reversed": true,
+                            "is_reversed": false,
                             "name": "Wire-6856f48f-ac2cec23-8267-5282-",
                             "points": [
                                 {
-                                    "X": 51,
-                                    "Y": 23
+                                    "X": 39,
+                                    "Y": 27
                                 },
                                 {
                                     "X": 47,
                                     "Y": 27
                                 },
                                 {
-                                    "X": 39,
-                                    "Y": 27
+                                    "X": 51,
+                                    "Y": 23
                                 }
                             ],
                             "value": {
@@ -5731,7 +5803,7 @@
             "angle": 0,
             "class_id": "model_and:",
             "name": "",
-            "parental_name": "/main/or8/AND8",
+            "parental_name": "/SubScreen/SubScreen",
             "ports": [
                 {
                     "X": -1,
@@ -5740,6 +5812,7 @@
                     "color": 0,
                     "direction": 0,
                     "distance_from_outport": 3,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "In1",
                     "screenX": 34.0,
@@ -5752,7 +5825,7 @@
                         "is_clock": false,
                         "is_error": false,
                         "type": 0,
-                        "valid": false
+                        "valid": true
                     },
                     "verilog_name": "",
                     "wires": [
@@ -5783,7 +5856,7 @@
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -5796,19 +5869,20 @@
                     "color": 0,
                     "direction": 0,
                     "distance_from_outport": 3,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "In2",
                     "screenX": 34.0,
                     "screenY": 24.0,
                     "value": {
                         "arrayval": 0,
-                        "boolval": false,
+                        "boolval": true,
                         "floatval": 0.0,
                         "intval": 0,
                         "is_clock": false,
                         "is_error": false,
                         "type": 0,
-                        "valid": false
+                        "valid": true
                     },
                     "verilog_name": "",
                     "wires": [
@@ -5833,13 +5907,13 @@
                             ],
                             "value": {
                                 "arrayval": 0,
-                                "boolval": false,
+                                "boolval": true,
                                 "floatval": 0.0,
                                 "intval": 0,
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -5852,10 +5926,11 @@
                     "color": 0,
                     "direction": 1,
                     "distance_from_outport": 0,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Out",
-                    "screenX": 39.51020431518555,
-                    "screenY": 23.295917510986328,
+                    "screenX": 39.0,
+                    "screenY": 23.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -5869,26 +5944,26 @@
                     "verilog_name": "",
                     "wires": [
                         {
-                            "X1": 39,
-                            "X2": 51,
-                            "Y1": 23,
-                            "Y2": 22,
+                            "X1": 51,
+                            "X2": 39,
+                            "Y1": 22,
+                            "Y2": 23,
                             "color": 0,
                             "distance_from_outport": 0,
-                            "is_reversed": true,
+                            "is_reversed": false,
                             "name": "Wire-6856f48c-d4c5cb44-e7da-f92a-",
                             "points": [
                                 {
-                                    "X": 51,
-                                    "Y": 22
+                                    "X": 39,
+                                    "Y": 23
                                 },
                                 {
                                     "X": 50,
                                     "Y": 23
                                 },
                                 {
-                                    "X": 39,
-                                    "Y": 23
+                                    "X": 51,
+                                    "Y": 22
                                 }
                             ],
                             "value": {
@@ -5917,7 +5992,7 @@
             "angle": 0,
             "class_id": "model_and:",
             "name": "",
-            "parental_name": "/main/or8/AND8",
+            "parental_name": "/SubScreen/SubScreen",
             "ports": [
                 {
                     "X": -1,
@@ -5926,6 +6001,7 @@
                     "color": 0,
                     "direction": 0,
                     "distance_from_outport": 3,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "In1",
                     "screenX": 34.0,
@@ -5938,7 +6014,7 @@
                         "is_clock": false,
                         "is_error": false,
                         "type": 0,
-                        "valid": false
+                        "valid": true
                     },
                     "verilog_name": "",
                     "wires": [
@@ -5969,7 +6045,7 @@
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -5982,19 +6058,20 @@
                     "color": 0,
                     "direction": 0,
                     "distance_from_outport": 3,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "In2",
                     "screenX": 34.0,
                     "screenY": 20.0,
                     "value": {
                         "arrayval": 0,
-                        "boolval": false,
+                        "boolval": true,
                         "floatval": 0.0,
                         "intval": 0,
                         "is_clock": false,
                         "is_error": false,
                         "type": 0,
-                        "valid": false
+                        "valid": true
                     },
                     "verilog_name": "",
                     "wires": [
@@ -6019,13 +6096,13 @@
                             ],
                             "value": {
                                 "arrayval": 0,
-                                "boolval": false,
+                                "boolval": true,
                                 "floatval": 0.0,
                                 "intval": 0,
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -6038,10 +6115,11 @@
                     "color": 0,
                     "direction": 1,
                     "distance_from_outport": 0,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Out",
-                    "screenX": 39.46428298950195,
-                    "screenY": 19.3010196685791,
+                    "screenX": 39.0,
+                    "screenY": 19.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -6055,26 +6133,26 @@
                     "verilog_name": "",
                     "wires": [
                         {
-                            "X1": 39,
-                            "X2": 51,
-                            "Y1": 19,
-                            "Y2": 21,
+                            "X1": 51,
+                            "X2": 39,
+                            "Y1": 21,
+                            "Y2": 19,
                             "color": 0,
                             "distance_from_outport": 0,
-                            "is_reversed": true,
+                            "is_reversed": false,
                             "name": "Wire-6856f489-fb1bfc02-ced7-7cdf-",
                             "points": [
                                 {
-                                    "X": 51,
-                                    "Y": 21
+                                    "X": 39,
+                                    "Y": 19
                                 },
                                 {
                                     "X": 49,
                                     "Y": 19
                                 },
                                 {
-                                    "X": 39,
-                                    "Y": 19
+                                    "X": 51,
+                                    "Y": 21
                                 }
                             ],
                             "value": {
@@ -6103,7 +6181,7 @@
             "angle": 0,
             "class_id": "model_and:",
             "name": "",
-            "parental_name": "/main/or8/AND8",
+            "parental_name": "/SubScreen/SubScreen",
             "ports": [
                 {
                     "X": -1,
@@ -6112,19 +6190,20 @@
                     "color": 0,
                     "direction": 0,
                     "distance_from_outport": 3,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "In1",
                     "screenX": 34.0,
                     "screenY": 14.0,
                     "value": {
                         "arrayval": 0,
-                        "boolval": false,
+                        "boolval": true,
                         "floatval": 0.0,
                         "intval": 0,
                         "is_clock": false,
                         "is_error": false,
                         "type": 0,
-                        "valid": false
+                        "valid": true
                     },
                     "verilog_name": "",
                     "wires": [
@@ -6149,13 +6228,13 @@
                             ],
                             "value": {
                                 "arrayval": 0,
-                                "boolval": false,
+                                "boolval": true,
                                 "floatval": 0.0,
                                 "intval": 0,
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -6168,6 +6247,7 @@
                     "color": 0,
                     "direction": 0,
                     "distance_from_outport": 3,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "In2",
                     "screenX": 34.0,
@@ -6180,7 +6260,7 @@
                         "is_clock": false,
                         "is_error": false,
                         "type": 0,
-                        "valid": false
+                        "valid": true
                     },
                     "verilog_name": "",
                     "wires": [
@@ -6211,7 +6291,7 @@
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -6224,10 +6304,11 @@
                     "color": 0,
                     "direction": 1,
                     "distance_from_outport": 0,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Out",
-                    "screenX": 39.556121826171875,
-                    "screenY": 15.489795684814453,
+                    "screenX": 39.0,
+                    "screenY": 15.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -6241,26 +6322,26 @@
                     "verilog_name": "",
                     "wires": [
                         {
-                            "X1": 39,
-                            "X2": 51,
-                            "Y1": 15,
-                            "Y2": 20,
+                            "X1": 51,
+                            "X2": 39,
+                            "Y1": 20,
+                            "Y2": 15,
                             "color": 0,
                             "distance_from_outport": 0,
-                            "is_reversed": true,
+                            "is_reversed": false,
                             "name": "Wire-6856f486-5f6dff38-1e8a-2930-",
                             "points": [
                                 {
-                                    "X": 51,
-                                    "Y": 20
+                                    "X": 39,
+                                    "Y": 15
                                 },
                                 {
                                     "X": 46,
                                     "Y": 15
                                 },
                                 {
-                                    "X": 39,
-                                    "Y": 15
+                                    "X": 51,
+                                    "Y": 20
                                 }
                             ],
                             "value": {
@@ -6289,7 +6370,7 @@
             "angle": 0,
             "class_id": "model_and:",
             "name": "",
-            "parental_name": "/main/or8/AND8",
+            "parental_name": "/SubScreen/SubScreen",
             "ports": [
                 {
                     "X": -1,
@@ -6298,19 +6379,20 @@
                     "color": 0,
                     "direction": 0,
                     "distance_from_outport": 3,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "In1",
                     "screenX": 34.0,
                     "screenY": 10.0,
                     "value": {
                         "arrayval": 0,
-                        "boolval": false,
+                        "boolval": true,
                         "floatval": 0.0,
                         "intval": 0,
                         "is_clock": false,
                         "is_error": false,
                         "type": 0,
-                        "valid": false
+                        "valid": true
                     },
                     "verilog_name": "",
                     "wires": [
@@ -6335,13 +6417,13 @@
                             ],
                             "value": {
                                 "arrayval": 0,
-                                "boolval": false,
+                                "boolval": true,
                                 "floatval": 0.0,
                                 "intval": 0,
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -6354,6 +6436,7 @@
                     "color": 0,
                     "direction": 0,
                     "distance_from_outport": 3,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "In2",
                     "screenX": 34.0,
@@ -6366,7 +6449,7 @@
                         "is_clock": false,
                         "is_error": false,
                         "type": 0,
-                        "valid": false
+                        "valid": true
                     },
                     "verilog_name": "",
                     "wires": [
@@ -6397,7 +6480,7 @@
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -6410,10 +6493,11 @@
                     "color": 0,
                     "direction": 1,
                     "distance_from_outport": 0,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Out",
-                    "screenX": 39.51020431518555,
-                    "screenY": 11.494897842407227,
+                    "screenX": 39.0,
+                    "screenY": 11.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -6427,26 +6511,26 @@
                     "verilog_name": "",
                     "wires": [
                         {
-                            "X1": 39,
-                            "X2": 51,
-                            "Y1": 11,
-                            "Y2": 19,
+                            "X1": 51,
+                            "X2": 39,
+                            "Y1": 19,
+                            "Y2": 11,
                             "color": 0,
                             "distance_from_outport": 0,
-                            "is_reversed": true,
+                            "is_reversed": false,
                             "name": "Wire-6856f483-611f18f3-dfef-f78a-",
                             "points": [
                                 {
-                                    "X": 51,
-                                    "Y": 19
+                                    "X": 39,
+                                    "Y": 11
                                 },
                                 {
                                     "X": 43,
                                     "Y": 11
                                 },
                                 {
-                                    "X": 39,
-                                    "Y": 11
+                                    "X": 51,
+                                    "Y": 19
                                 }
                             ],
                             "value": {
@@ -6475,7 +6559,7 @@
             "angle": 0,
             "class_id": "model_and:",
             "name": "",
-            "parental_name": "/main/or8/AND8",
+            "parental_name": "/SubScreen/SubScreen",
             "ports": [
                 {
                     "X": -1,
@@ -6484,19 +6568,20 @@
                     "color": 0,
                     "direction": 0,
                     "distance_from_outport": 2,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "In1",
                     "screenX": 34.0,
                     "screenY": 6.0,
                     "value": {
                         "arrayval": 0,
-                        "boolval": false,
+                        "boolval": true,
                         "floatval": 0.0,
                         "intval": 0,
                         "is_clock": false,
                         "is_error": false,
                         "type": 0,
-                        "valid": false
+                        "valid": true
                     },
                     "verilog_name": "",
                     "wires": [
@@ -6529,13 +6614,13 @@
                             ],
                             "value": {
                                 "arrayval": 0,
-                                "boolval": false,
+                                "boolval": true,
                                 "floatval": 0.0,
                                 "intval": 0,
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -6548,6 +6633,7 @@
                     "color": 0,
                     "direction": 0,
                     "distance_from_outport": 5,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "In2",
                     "screenX": 34.0,
@@ -6560,7 +6646,7 @@
                         "is_clock": false,
                         "is_error": false,
                         "type": 0,
-                        "valid": false
+                        "valid": true
                     },
                     "verilog_name": "",
                     "wires": [
@@ -6591,7 +6677,7 @@
                                 "is_clock": false,
                                 "is_error": false,
                                 "type": 0,
-                                "valid": false
+                                "valid": true
                             },
                             "width": 1
                         }
@@ -6604,10 +6690,11 @@
                     "color": 0,
                     "direction": 1,
                     "distance_from_outport": 0,
+                    "distress": false,
                     "linked_uuid": "",
                     "name": "Out",
-                    "screenX": 39.556121826171875,
-                    "screenY": 7.362244606018066,
+                    "screenX": 39.0,
+                    "screenY": 7.0,
                     "value": {
                         "arrayval": 0,
                         "boolval": false,
@@ -6621,26 +6708,26 @@
                     "verilog_name": "",
                     "wires": [
                         {
-                            "X1": 39,
-                            "X2": 51,
-                            "Y1": 7,
-                            "Y2": 18,
+                            "X1": 51,
+                            "X2": 39,
+                            "Y1": 18,
+                            "Y2": 7,
                             "color": 0,
                             "distance_from_outport": 0,
-                            "is_reversed": true,
+                            "is_reversed": false,
                             "name": "Wire-6856f480-9db94edb-f81d-fbc5-",
                             "points": [
                                 {
-                                    "X": 51,
-                                    "Y": 18
+                                    "X": 39,
+                                    "Y": 7
                                 },
                                 {
                                     "X": 40,
                                     "Y": 7
                                 },
                                 {
-                                    "X": 39,
-                                    "Y": 7
+                                    "X": 51,
+                                    "Y": 18
                                 }
                             ],
                             "value": {
@@ -6664,9 +6751,9 @@
             "verilog_name": "model_and_46"
         }
     ],
-    "name": "AND8",
-    "parental_name": "/main/or8",
+    "name": "library/logic8/AND8.json",
+    "parental_name": "/main/library/logic8/AND8.json",
     "sizeX": 200.0,
     "sizeY": 200.0,
-    "verilog_name": "_main_or8_AND8_b04859b3_da31_"
+    "verilog_name": ""
 }

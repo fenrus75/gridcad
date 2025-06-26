@@ -569,7 +569,10 @@ void model_nest::save_to_library(std::string library_path)
 {
 	char buf[65];
 	std::string icon;
-	std::filesystem::create_directory(library_path);
+	printf("Library path is %s\n", library_path.c_str());
+	
+	if (library_path != "")
+		std::filesystem::create_directory(library_path);
 	
 	if (canvas)
 		_scene =  canvas->get_scene();
@@ -578,7 +581,14 @@ void model_nest::save_to_library(std::string library_path)
 
 	_scene->to_json(j);
 	
-	std::string outputfile = library_path + "/" + name + ".json";
+	std::string outputfile = "";
+	if (library_path != "")
+		outputfile = library_path + "/" + name;
+	else
+		outputfile = name;
+		
+	if (!outputfile.ends_with(".json"))
+		outputfile = outputfile +  ".json";
 	
 	printf("Outputfile is %s\n", outputfile.c_str());
 
