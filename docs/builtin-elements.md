@@ -52,7 +52,7 @@ This element has two bit inputs and a single bit output, and will output the log
 
 Input
 =====
-<img src="../assets/toggle.png" width=128>
+<img src="../assets/toggle_on.png" width=128>
 This element has a single bit or multi-bit output and represents an external input to the design. During simulation,
 one can enter a value into this element. During verilog synthesis of the top level of the design, these inputs
 represent input IOs of the FPGA. For nested design elements, the Input elements inside the nested design will
@@ -61,7 +61,7 @@ of the Input element in the nested design.
 
 Output
 ======
-![Output](../assets/output.png)
+<img src="../assets/output_off.png" width=128>
 This element has a single bit or multi-bit input and represents an external output from the design. During simulation,
 the value of this element will be displayed. During verilog synthesis of the top level of the design, these outputs
 represent output IOs of the FPGA. For nested design elements, the Output elements inside the nested design will
@@ -70,31 +70,31 @@ of the Output element in the nested design.
 
 Nested scene
 ============
-![Nested scene](../assets/model_nest.png)
+<img src="../assets/nest/icon.png" width=128>
 A nested scene provides a whole new canvas for you to design in, and the inputs and outputs in that design
 will form the input and output ports of the Nested scene element.
 
 Truth table
 ===========
-![Truth table](../assets/truth_table.png)
+<img src="../assets/model_truth/truthtable_icon.png" width=128>
 This element has a configurable number of input and output (single bit) ports, and will let you
 describe a full truth table. Truth tables support "don't care" inputs and outputs.
 
 D-FlipFlop
 ==========
-![D-FlipFlop](../assets/dff.png)
+<img src="../assets/dflipflop.png" width=128>
 A D-FlipFlop provides a (single bit) memory element. Every rising clock, the value of the input (D) port
 will be stored in the flip flop. The output (Q) port will be the value of the flip flop. 
 
 DE-FlipFLop
 ===========
-![DE-FlipFlop](../assets/model_deflipflop.png)
+<img src="../assets/deflipflop.png" width=128>
 A DE-FlipFlop provides a (single bit) memory element. Every rising clock, when the Enable input has the value '1', the value of the input (D) port
 will be stored in the flip flop, while if the Enable input has the value '0', the existing value will be retained. The output (Q) port will be the value of the flip flop.
 
 Clock
 =====
-![Clock](../assets/model_clock.png)
+<img src="../assets/clock_on.png" width=128>
 The clock element provides a single bit clock signal, used for the various memory-type elements.
 Note that clock signals are global in that all clocks will run at the same rate and phase.
 To easily wire up all clock pins in a scene use the ![Autoclock](../assets/icon_autoclock.png) menu option.
@@ -102,9 +102,30 @@ To easily wire up all clock pins in a scene use the ![Autoclock](../assets/icon_
 
 Display
 =======
-![Display](../assets/model_display.png)
+<img src="../assets/datascope.png" width=128>
 The display element will show the value of the input port, but is otherwise a passive element
 and will not change behavior of the design. The Display element is a virtual element in that it will not synthesize into 
 any verilog output.
 
+Bus width converters/splitters/joiners
+--------------------------------------
+
+1:4
+1:8
+4:8
+8:16
+4:1
+8:1
+8:4
+16:8
+
+
+
+Memory
+------
+
+Memory
+======
+<img src="../assets/memory.png" width=128>
+The Memory element is a single port, SRAM style memory. The data output represents the content of memory at the given address (at the previous clock cycle), and the data input represents the content to be stored at the given address. The WriteEnable port decides if a write operation should be performed.
 
