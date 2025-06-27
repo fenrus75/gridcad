@@ -5,7 +5,7 @@ Built in elements
 
 One
 ===
-![One](../assets/one.png){:height="36px" width="36px"}.
+![One](../assets/one.png){: height=36p width=36 }.
 
 This element has a variable width output, and puts the value of "true" or "all ones" one the bus.
 
