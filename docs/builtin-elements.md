@@ -97,7 +97,7 @@ Clock
 <img src="../assets/clock_on.png" width=128>
 The clock element provides a single bit clock signal, used for the various memory-type elements.
 Note that clock signals are global in that all clocks will run at the same rate and phase.
-To easily wire up all clock pins in a scene use the <img src="../assets/icon_autoclock.png" width=128> autoclock menu option.
+To easily wire up all clock pins in a scene use the <img src="../assets/autoclock.png" width=128> autoclock menu option.
 
 
 Display
