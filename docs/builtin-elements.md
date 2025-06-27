@@ -20,39 +20,39 @@ This element has a single bit input and output, and will invert the input signal
 
 Buffer
 ======
-<img src="../assets/model_buffer.png" width=128>
+<img src="../assets/buffer.png" width=128>
 This element has a single bit data input, a single bit enable input and will either output the input bit (when enable is '1') or a 'Z' tristate value,
 when enable is '0'. Note that there should be at most 1 non-Z buffer driving a bus at any point in time.
 
 And
 ===
-![And](../assets/and.png)
+<img src="../assets/andgate.png" width=128>
 This element has two bit inputs and a single bit output, and will output the logical AND of the two inputs.
 
 Or
 ===
-![Or](../assets/or.png)
+<img src="../assets/orgate.png" width=128>
 This element has two bit inputs and a single bit output, and will output the logical OR of the two inputs.  
 
 XOR
 ===
-![Xor](../assets/xor.png)
+<img src="../assets/xorgate.png" width=128>
 This element has two bit inputs and a single bit output, and will output the logical XOR of the two inputs.
 
 Nand
 ===
-![Nand](../assets/nand.png)
+<img src="../assets/nandgate.png" width=128>
 This element has two bit inputs and a single bit output, and will output the logical NAND of the two inputs.    
 
 Nor
 ===
-![Nor](../assets/nor.png)
+<img src="../assets/norgate.png" width=128>
 This element has two bit inputs and a single bit output, and will output the logical NOR of the two inputs. 
 
 
 Input
 =====
-![Input](../assets/input.png)
+<img src="../assets/toggle.png" width=128>
 This element has a single bit or multi-bit output and represents an external input to the design. During simulation,
 one can enter a value into this element. During verilog synthesis of the top level of the design, these inputs
 represent input IOs of the FPGA. For nested design elements, the Input elements inside the nested design will
