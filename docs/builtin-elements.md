@@ -70,7 +70,7 @@ of the Output element in the nested design.
 
 Nested scene
 ============
-<img src="../assets/nest/icon.png" width=128>
+<img src="../assets/nest/nest_icon.png" width=128>
 A nested scene provides a whole new canvas for you to design in, and the inputs and outputs in that design
 will form the input and output ports of the Nested scene element.
 
@@ -97,7 +97,7 @@ Clock
 <img src="../assets/clock_on.png" width=128>
 The clock element provides a single bit clock signal, used for the various memory-type elements.
 Note that clock signals are global in that all clocks will run at the same rate and phase.
-To easily wire up all clock pins in a scene use the ![Autoclock](../assets/icon_autoclock.png) menu option.
+To easily wire up all clock pins in a scene use the <img src="../assets/icon_autoclock.png" width=128> autoclock menu option.
 
 
 Display
