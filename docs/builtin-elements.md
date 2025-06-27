@@ -10,17 +10,17 @@ This element has a variable width output, and puts the value of "true" or "all o
 
 Zero
 ====
-![Zero](../assets/zero.png)
+<img src="../assets/zero.png" width=128>
 This element has a variable width output, and puts the value of "false" or "all zeros" one the bus.
 
 Not
 ===
-![Not](../assets/not.png)
+<img src="../assets/inverter.png" width=128>
 This element has a single bit input and output, and will invert the input signal to the output.
 
 Buffer
 ======
-![Buffer](../assets/buffer.png)
+<img src="../assets/model_buffer.png" width=128>
 This element has a single bit data input, a single bit enable input and will either output the input bit (when enable is '1') or a 'Z' tristate value,
 when enable is '0'. Note that there should be at most 1 non-Z buffer driving a bus at any point in time.
 
