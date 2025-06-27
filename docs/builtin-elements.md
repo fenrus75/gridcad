@@ -97,7 +97,7 @@ Clock
 <img src="../assets/clock_on.png" width=128>
 The clock element provides a single bit clock signal, used for the various memory-type elements.
 Note that clock signals are global in that all clocks will run at the same rate and phase.
-To easily wire up all clock pins in a scene use the <img src="../assets/autoclock.png" width=128> autoclock menu option.
+To easily wire up all clock pins in a scene use the <img src="../assets/autoclock.png" width=64> autoclock menu option.
 
 
 Display
@@ -109,15 +109,14 @@ any verilog output.
 
 Bus width converters/splitters/joiners
 --------------------------------------
-
-1:4
-1:8
-4:8
-8:16
-4:1
-8:1
-8:4
-16:8
+<img src="../assets/1to4.png" width=128>
+<img src="../assets/1to8.png" width=128>
+<img src="../assets/4to8.png" width=128>
+<img src="../assets/8to16.png" width=128>
+<img src="../assets/4to1.png" width=128>
+<img src="../assets/8to1.png" width=128>
+<img src="../assets/8to4.png" width=128>
+<img src="../assets/16to8.png" width=128>
 
 
 
