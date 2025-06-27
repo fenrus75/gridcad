@@ -109,14 +109,14 @@ any verilog output.
 
 Bus width converters/splitters/joiners
 --------------------------------------
-<img src="../assets/1to4.png" width=128>
-<img src="../assets/1to8.png" width=128>
-<img src="../assets/4to8.png" width=128>
-<img src="../assets/8to16.png" width=128>
-<img src="../assets/4to1.png" width=128>
-<img src="../assets/8to1.png" width=128>
-<img src="../assets/8to4.png" width=128>
-<img src="../assets/16to8.png" width=128>
+<img src="../assets/1to4.png" width=64>
+<img src="../assets/1to8.png" width=64>
+<img src="../assets/4to8.png" width=64>
+<img src="../assets/8to16.png" width=64>
+<img src="../assets/4to1.png" width=64>
+<img src="../assets/8to1.png" width=64>
+<img src="../assets/8to4.png" width=6>
+<img src="../assets/16to8.png" width=64>
 
 
 

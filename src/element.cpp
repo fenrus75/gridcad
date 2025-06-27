@@ -566,6 +566,7 @@ void element::update_value_net(struct value *value, int port, int ttl)
 
 void element::free_nets_memory(void)
 {
+    remove_nets();
     for (auto n : my_nets) {
         delete n;
     }
