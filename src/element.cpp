@@ -65,6 +65,7 @@ element::~element()
         delete port;
     }
     ports.clear();
+    free_nets_memory();
     delete menu;
 }
 
