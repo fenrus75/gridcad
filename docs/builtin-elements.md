@@ -5,7 +5,7 @@ Built in elements
 
 One
 ===
-![One](../assets/one.png)
+![[<img src="..assets/one.png" width="250"/>](../assets/one.png)
 This element has a variable width output, and puts the value of "true" or "all ones" one the bus.
 
 Zero
