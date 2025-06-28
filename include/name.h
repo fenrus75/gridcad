@@ -19,6 +19,8 @@ public:
     bool get_edit_mode(void) { return edit_mode;};
     void want_numbers_only(void) { numbers_only = true; };
     void allow_spaces(void) { spaces = true; };
+    
+    void update_string_pointer(std::string *value);
 
 
 

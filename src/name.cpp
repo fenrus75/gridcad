@@ -217,3 +217,8 @@ void name::backspace(void)
 }
 
 
+
+void name::update_string_pointer(std::string *ptr)
+{
+    value = ptr;
+}

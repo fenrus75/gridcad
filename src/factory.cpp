@@ -42,6 +42,7 @@
 #include "model_label.h"
 #include "model_buffer.h"
 #include "connector.h"
+#include "sequencer.h"
 
 #define ELEMENT(x)  if (classid == #x":") return new x(0, 0);
 class element *element_from_class_id(std::string classid)
@@ -78,6 +79,7 @@ class element *element_from_class_id(std::string classid)
     ELEMENT(model_clock);
     ELEMENT(model_label);
     ELEMENT(model_buffer);
+    ELEMENT(sequencer);
     
     
     printf("Unknown class_id: %s\n", classid.c_str());
