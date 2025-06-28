@@ -11,9 +11,9 @@ seqcanvas::seqcanvas(class sequencer *_element) : basecanvas()
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
 	windowID = SDL_GetWindowID(window);
-	
+
 	editors.reserve(4096);
-	
+
 	seq_to_data();
 
 	unhide();
@@ -32,66 +32,66 @@ seqcanvas::~seqcanvas(void)
 
 void seqcanvas::draw(void)
 {
-    SDL_SetRenderDrawColor(renderer, R(COLOR_BACKGROUND_GRID),
-			       G(COLOR_BACKGROUND_GRID),
-			       B(COLOR_BACKGROUND_GRID),
-			       Alpha(COLOR_BACKGROUND_GRID));
-			       
-    SDL_RenderClear(renderer);
-    
-    draw_image("assets/model_truth/minus.png", 3,0,1,1);
-    draw_image("assets/model_truth/plus.png", 5,0,1,1);
-    
-    for (unsigned int i = 0; i < editors.size(); i++) {
-    	if (i == seq->current_value)
-	    	draw_image("assets/lightgray.png", 1, 1+i,3,1);
-    	draw_text_left("Time " + std::to_string(i), 1, 1 + i, 3.5,1);
-    	if (i == cursor)
-	    	draw_image("assets/lightgray.png", 4, 1+i,5,1);
-    	auto e = editors[i];
-    	e->drawAt(this, 4, 1 + i, 5, 1);
-    }
-    
-      
-    SDL_RenderPresent(renderer);
+	SDL_SetRenderDrawColor(renderer, R(COLOR_BACKGROUND_GRID),
+			G(COLOR_BACKGROUND_GRID),
+			B(COLOR_BACKGROUND_GRID),
+			Alpha(COLOR_BACKGROUND_GRID));
+
+	SDL_RenderClear(renderer);
+
+	draw_image("assets/model_truth/minus.png", 3,0,1,1);
+	draw_image("assets/model_truth/plus.png", 5,0,1,1);
+
+	for (unsigned int i = 0; i < editors.size(); i++) {
+		if (i == seq->current_value)
+			draw_image("assets/lightgray.png", 1, 1+i,3,1);
+		draw_text_left("Time " + std::to_string(i), 1, 1 + i, 3.5,1);
+		if (i == cursor)
+			draw_image("assets/lightgray.png", 4, 1+i,5,1);
+		auto e = editors[i];
+		e->drawAt(this, 4, 1 + i, 5, 1);
+	}
+
+
+	SDL_RenderPresent(renderer);
 }
 
 bool seqcanvas::handle_event(SDL_Event &event)
 {
 	switch (event.type) {
 		case SDL_KEYDOWN:
-	         switch (event.key.keysym.sym) {
-		 case SDLK_UP:
-		 	if (cursor > 0)
-				make_active(cursor - 1);
-	               break;
-		 case SDLK_DOWN:
-		 	make_active(cursor + 1);
-	               break;
-	        }
-	        break;
-	case SDL_MOUSEBUTTONDOWN:
-		float x, y;
-		x = scr_to_X(event.motion.x);
-		y = scr_to_Y(event.motion.y);
-		if (x >= 3 && x <= 4 && y >= 0 && y <= 1)
-			delete_row();
-		if (x >= 5 && x <= 6 && y >= 0 && y <= 1)
-			add_row();
-			
-		if (y >= 1)
-			make_active(y - 1);
-		break;
-	case SDL_WINDOWEVENT:
-		if (event.window.event == SDL_WINDOWEVENT_CLOSE) {  /* user clicked the 'x' */
-			SDL_HideWindow(window); /* TODO: THis leaks like a sieve */
-		}
-		break;
+			switch (event.key.keysym.sym) {
+				case SDLK_UP:
+					if (cursor > 0)
+						make_active(cursor - 1);
+					break;
+				case SDLK_DOWN:
+					make_active(cursor + 1);
+					break;
+			}
+			break;
+		case SDL_MOUSEBUTTONDOWN:
+			float x, y;
+			x = scr_to_X(event.motion.x);
+			y = scr_to_Y(event.motion.y);
+			if (x >= 3 && x <= 4 && y >= 0 && y <= 1)
+				delete_row();
+			if (x >= 5 && x <= 6 && y >= 0 && y <= 1)
+				add_row();
+
+			if (y >= 1)
+				make_active(y - 1);
+			break;
+		case SDL_WINDOWEVENT:
+			if (event.window.event == SDL_WINDOWEVENT_CLOSE) {  /* user clicked the 'x' */
+				SDL_HideWindow(window); /* TODO: THis leaks like a sieve */
+			}
+			break;
 	};
-	
+
 	if (cursor < editors.size())
 		editors[cursor]->handle_event(event);
-    
+
 	data_to_seq();
 	return false;
 }
@@ -110,15 +110,15 @@ void seqcanvas::seq_to_data(void)
 		delete edit;
 		editors.pop_back();
 	}
-	
+
 	for (unsigned int i = 0; i < seq->values.size(); i++) {
 		data[i] = std::to_string(seq->values[i].intval);
 	}
-	
-		for (unsigned int i = 0; i < editors.size(); i++) {
-			auto e = editors[i];
-			e->update_string_pointer(&data[i]);
-		}
+
+	for (unsigned int i = 0; i < editors.size(); i++) {
+		auto e = editors[i];
+		e->update_string_pointer(&data[i]);
+	}
 }
 
 void seqcanvas::data_to_seq(void)
@@ -139,32 +139,32 @@ void seqcanvas::data_to_seq(void)
 
 void seqcanvas::add_row(void)
 {
-		data.push_back("0");
-		printf("Adding one %lu \n", data.size());
-		class name *edit;
-		unsigned i = data.size() - 1;
-		edit = new class name(&data[i]);
-		editors.push_back(edit);
-		printf("Added one %lu  %s\n", editors.size(), data[i].c_str());
-		
-		for (unsigned int i = 0; i < editors.size(); i++) {
-			auto e = editors[i];
-			e->update_string_pointer(&data[i]);
-			e->want_numbers_only();
-		}
+	data.push_back("0");
+	printf("Adding one %lu \n", data.size());
+	class name *edit;
+	unsigned i = data.size() - 1;
+	edit = new class name(&data[i]);
+	editors.push_back(edit);
+	printf("Added one %lu  %s\n", editors.size(), data[i].c_str());
+
+	for (unsigned int i = 0; i < editors.size(); i++) {
+		auto e = editors[i];
+		e->update_string_pointer(&data[i]);
+		e->want_numbers_only();
+	}
 }
 
 void seqcanvas::delete_row(void)
 {
-		data.pop_back();
-		class name *edit;
-		edit = editors[editors.size() - 1];
-		delete edit;
-		editors.pop_back();
-		for (unsigned int i = 0; i < editors.size(); i++) {
-			auto e = editors[i];
-			e->update_string_pointer(&data[i]);
-		}
+	data.pop_back();
+	class name *edit;
+	edit = editors[editors.size() - 1];
+	delete edit;
+	editors.pop_back();
+	for (unsigned int i = 0; i < editors.size(); i++) {
+		auto e = editors[i];
+		e->update_string_pointer(&data[i]);
+	}
 }
 
 
@@ -177,5 +177,5 @@ void seqcanvas::make_active(unsigned int i)
 		auto e = editors[p];
 		e->set_edit_mode(p == cursor);
 	}
-	
+
 }

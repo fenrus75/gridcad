@@ -30,7 +30,7 @@ sequencer::sequencer(int X, int Y) : element(X, Y, "Sequencer")
 	menu->add_item("Edit name", callback_editname);
 	menu->add_item("Reset position", callback_reset_sequencer);
 	menu->add_item("Toggle 'stop on error'", callback_stop_error);
-        name_edit = new class name(&name);
+	name_edit = new class name(&name);
 }
 
 sequencer::~sequencer(void)
@@ -79,18 +79,18 @@ void sequencer::handle_event(class basecanvas *canvas, SDL_Event &event)
 void sequencer::drawAt(class basecanvas *canvas, float X, float Y, int type)
 {
 	if (selected) {
-        	canvas->draw_image("assets/sequencer_selected.png", X, Y, sizeX, sizeY, Alpha(type));
+		canvas->draw_image("assets/sequencer_selected.png", X, Y, sizeX, sizeY, Alpha(type));
 	} else {	
 		if (is_error)
-		        canvas->draw_image("assets/sequencer_error.png", X, Y, sizeX, sizeY, Alpha(type));
+			canvas->draw_image("assets/sequencer_error.png", X, Y, sizeX, sizeY, Alpha(type));
 		else
-		        canvas->draw_image("assets/sequencer.png", X, Y, sizeX, sizeY, Alpha(type));
+			canvas->draw_image("assets/sequencer.png", X, Y, sizeX, sizeY, Alpha(type));
 	}
-	
+
 	if (values.size() > 0) {
 		canvas->draw_text(std::to_string(values[current_value].intval), X+1, Y+1, 1,1);
 	}
-    
+
 	name_edit->drawAt(canvas,X, Y - 1, sizeX);
 
 	hover_ports(canvas);
@@ -109,7 +109,7 @@ bool sequencer::mouse_select(float _X, float _Y)
 		previous_click = click;
 		return false;
 	}	
-	
+
 	if (!canvas) {
 		printf("Spawning a new window\n");
 		canvas = new class seqcanvas(this);
@@ -123,30 +123,30 @@ bool sequencer::mouse_select(float _X, float _Y)
 
 void sequencer::calculate(int ttl)
 {
-     struct value newclock;
-     newclock = ports[0]->value;
-     
-     check_input();
-     
-     if (newclock.boolval == current_clock)
-       return;
-       
-     if (newclock.boolval) { /* rising edge */
-     	  current_value++;
-     	  if (current_value >= values.size())
-     	  	current_value = 0;
-	  queue_calculate(this); /* schedule calculations for the propagation */
-     } else {
-     	/* falling edge */
-     	if (is_error && stop_clock_on_error) {
-		SDL_Event ev = {};
-		ev.type = EVENT_STOP_CLOCK;
-		ev.user.code = 0;
-		SDL_PushEvent(&ev);
-     	}
-     };
-     
-     current_clock = newclock.boolval;
+	struct value newclock;
+	newclock = ports[0]->value;
+
+	check_input();
+
+	if (newclock.boolval == current_clock)
+		return;
+
+	if (newclock.boolval) { /* rising edge */
+		current_value++;
+		if (current_value >= values.size())
+			current_value = 0;
+		queue_calculate(this); /* schedule calculations for the propagation */
+	} else {
+		/* falling edge */
+		if (is_error && stop_clock_on_error) {
+			SDL_Event ev = {};
+			ev.type = EVENT_STOP_CLOCK;
+			ev.user.code = 0;
+			SDL_PushEvent(&ev);
+		}
+	};
+
+	current_clock = newclock.boolval;
 }
 
 void sequencer::queued_calculate(int ttl)
@@ -156,7 +156,7 @@ void sequencer::queued_calculate(int ttl)
 	if (ports[1]->get_net_width() > 1)
 		values[current_value].type = VALUE_TYPE_INT;
 	update_value_net(&values[current_value], 1, ttl - 1);	
-	
+
 	check_input();
 }
 
