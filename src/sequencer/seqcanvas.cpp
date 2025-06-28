@@ -43,6 +43,8 @@ void seqcanvas::draw(void)
     draw_image("assets/model_truth/plus.png", 5,0,1,1);
     
     for (unsigned int i = 0; i < editors.size(); i++) {
+    	if (i == seq->current_value)
+	    	draw_image("assets/lightgray.png", 1, 1+i,3,1);
     	draw_text_left("Time " + std::to_string(i), 1, 1 + i, 3.5,1);
     	if (i == cursor)
 	    	draw_image("assets/lightgray.png", 4, 1+i,5,1);

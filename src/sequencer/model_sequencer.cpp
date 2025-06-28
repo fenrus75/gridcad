@@ -3,6 +3,12 @@
 #include "sequencer.h"
 #include "port.h"
 
+void callback_reset_sequencer(class element *elmnt)
+{
+	class sequencer * seq = (class sequencer *)elmnt;
+	seq->reset_pointer();
+}
+
 sequencer::sequencer(int X, int Y) : element(X, Y, "Sequencer")
 {
 	sizeX = 3;
@@ -12,6 +18,7 @@ sequencer::sequencer(int X, int Y) : element(X, Y, "Sequencer")
 	add_port(sizeX, 1, "Out", PORT_OUT);
 
 	menu->add_item("Edit name", callback_editname);
+	menu->add_item("Reset position", callback_reset_sequencer);
         name_edit = new class name(&name);
 }
 
@@ -59,6 +66,10 @@ void sequencer::drawAt(class basecanvas *canvas, float X, float Y, int type)
         	canvas->draw_image("assets/sequencer_selected.png", X, Y, sizeX, sizeY, Alpha(type));
 	} else {	
 	        canvas->draw_image("assets/sequencer.png", X, Y, sizeX, sizeY, Alpha(type));
+	}
+	
+	if (values.size() > 0) {
+		canvas->draw_text(std::to_string(values[current_value].intval), X+1, Y+1, 1,1);
 	}
     
 	name_edit->drawAt(canvas,X, Y - 1, sizeX);

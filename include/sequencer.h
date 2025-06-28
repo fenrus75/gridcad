@@ -22,6 +22,7 @@ public:
 	bool mouse_select(float X, float Y) override;
 	void calculate(int ttl) override;
 	void queued_calculate(int ttl) override;
+	void reset_pointer(void) { current_value = 0; };
 
 
 protected:
