@@ -125,9 +125,14 @@ void seqcanvas::data_to_seq(void)
 {
 	seq->values.resize(data.size());
 	for (unsigned int i = 0; i < seq->values.size(); i++) {
+		int v;
+		if (data[i] != "")
+			v = std::stoi(data[i]);
+		else 
+			v = 0;
 		seq->values[i].valid = true;
-		seq->values[i].intval = std::stoi(data[i]);
-		seq->values[i].boolval = std::stoi(data[i]);
+		seq->values[i].intval = v;
+		seq->values[i].boolval = v > 0;
 	}
 }
 

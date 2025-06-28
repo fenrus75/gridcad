@@ -28,6 +28,7 @@ public:
 protected:
 	void add_value_row(void);
 	void remove_value_row(void);
+	void check_input(void);
 
 	std::vector<struct value> values;
 	unsigned int current_value = 0;
@@ -35,6 +36,7 @@ protected:
 	class name *name_edit = NULL;
 	time_t previous_click = 0;
 	class seqcanvas *canvas = NULL;
+	bool is_error = false;
 	
 	friend class seqcanvas;
 };

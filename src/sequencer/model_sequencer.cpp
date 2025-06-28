@@ -7,6 +7,7 @@ void callback_reset_sequencer(class element *elmnt)
 {
 	class sequencer * seq = (class sequencer *)elmnt;
 	seq->reset_pointer();
+	queue_calculate(seq);
 }
 
 sequencer::sequencer(int X, int Y) : element(X, Y, "Sequencer")
@@ -16,6 +17,7 @@ sequencer::sequencer(int X, int Y) : element(X, Y, "Sequencer")
 
 	add_port(1, sizeY, "clk", PORT_IN, 1);
 	add_port(sizeX, 1, "Out", PORT_OUT);
+	add_port(-1, 1, "In", PORT_IN);
 
 	menu->add_item("Edit name", callback_editname);
 	menu->add_item("Reset position", callback_reset_sequencer);
@@ -45,6 +47,7 @@ void sequencer::to_json(json &j)
 	j["values"] = values;
 	j["current_value"] = current_value;
 	j["current_clock"] = current_clock;
+	j["is_error"] = is_error;
 }
 
 void sequencer::from_json(json &j)
@@ -53,6 +56,7 @@ void sequencer::from_json(json &j)
 	values = j["values"];
 	current_value = j.value("current_value", 0);
 	current_clock = j.value("current_clock", false);
+	is_error = j.value("is_error", false);
 }
 
 void sequencer::handle_event(class basecanvas *canvas, SDL_Event &event)
@@ -65,7 +69,10 @@ void sequencer::drawAt(class basecanvas *canvas, float X, float Y, int type)
 	if (selected) {
         	canvas->draw_image("assets/sequencer_selected.png", X, Y, sizeX, sizeY, Alpha(type));
 	} else {	
-	        canvas->draw_image("assets/sequencer.png", X, Y, sizeX, sizeY, Alpha(type));
+		if (is_error)
+		        canvas->draw_image("assets/sequencer_error.png", X, Y, sizeX, sizeY, Alpha(type));
+		else
+		        canvas->draw_image("assets/sequencer.png", X, Y, sizeX, sizeY, Alpha(type));
 	}
 	
 	if (values.size() > 0) {
@@ -107,6 +114,8 @@ void sequencer::calculate(int ttl)
      struct value newclock;
      newclock = ports[0]->value;
      
+     check_input();
+     
      if (newclock.boolval == current_clock)
        return;
        
@@ -124,9 +133,26 @@ void sequencer::queued_calculate(int ttl)
 {
 	if (values.size() <= current_value)
 		return;
-	printf("Current value %i \n", current_value);
-	printf("sizeof values %lu\n", values.size());
 	if (ports[1]->get_net_width() > 1)
 		values[current_value].type = VALUE_TYPE_INT;
 	update_value_net(&values[current_value], 1, ttl - 1);	
+	
+	check_input();
+}
+
+void sequencer::check_input(void)
+{
+	if (values.size() <= current_value)
+		return;
+	if (ports[2]->has_net()) {
+		is_error = false;
+		if (ports[2]->get_net_width() > 1) {
+			if (ports[2]->value.intval != values[current_value].intval) 
+				is_error = true;
+		} else {
+			if (ports[2]->value.boolval != values[current_value].boolval) 
+				is_error = true;
+		}
+	}
+
 }
