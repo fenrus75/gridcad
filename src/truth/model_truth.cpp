@@ -27,15 +27,15 @@ model_truth::model_truth(float _X, float _Y):element(1, 1, "Truth Table")
 	sizeY = 4;
 	X = floorf(_X);
 	Y = floorf(_Y);
-	
+
 	inputs = 2;
 	outputs = 1;
-	
+
 	add_port(-1, 1, "In0", PORT_IN);
 	add_port(-1, 2, "In1", PORT_IN);
-	
+
 	add_port(sizeX, 1, "Out1", PORT_OUT);
-	
+
 	values.resize((1 << inputs)); /* row 0 is the title bar/names */
 	for (i = 0; i < values.size(); i++) {
 		values[i].resize(inputs + outputs);
@@ -49,9 +49,9 @@ model_truth::model_truth(float _X, float _Y):element(1, 1, "Truth Table")
 			values[i][inputs + j] = '0';
 		}
 	}
-		
-	
-		
+
+
+
 	names.resize(inputs + outputs);
 	for (i = 0; i < inputs; i++) {
 		char buf[128];
@@ -75,8 +75,8 @@ model_truth::~model_truth(void)
 
 void model_truth::drawAt(class basecanvas * canvas, float X, float Y, int type)
 {
-        if (!selected)
-           name_edit->set_edit_mode(false);
+	if (!selected)
+		name_edit->set_edit_mode(false);
 	if (selected) {
 		canvas->draw_image("assets/model_truth/truthtable_selected.png", X, Y, sizeX, sizeY, Alpha(type));
 	} else {
@@ -113,7 +113,7 @@ bool model_truth::mouse_select(float _X, float _Y)
 		previous_click = click;
 		return false;
 	}	
-	
+
 	if (!canvas) {
 		printf("Spawning a new window\n");
 		canvas = new class truthcanvas(this);
@@ -146,34 +146,34 @@ void model_truth::from_json(json & j)
 	outputs = j["outputs"];
 	flip_input_ports = j.value("flip_input_ports", false);
 	flip_output_ports = j.value("flip_output_ports", false);
-		
+
 }
 
 void model_truth::add_output(void)
 {
 	unsigned int y;
 	char buf[128];
-	
+
 	for (y = 0; y < values.size(); y++)
 		values[y].push_back('0');
 	outputs++;
 	sprintf(buf, "Out%i", outputs -1);
 	names.push_back(buf);
-	
+
 	add_port(sizeX, outputs, buf, PORT_OUT, 1);
-	
+
 	sizeY = std::max(outputs + 2, std::max(inputs + 2, 4U));
-	
+
 }
 
 void model_truth::del_output(void)
 {
 	unsigned int y;
 	class port *port;
-	
+
 	if (outputs <= 1)
 		return;
-	
+
 	for (y = 0; y < values.size(); y++)
 		values[y].pop_back();
 	outputs--;
@@ -183,7 +183,7 @@ void model_truth::del_output(void)
 	ports.pop_back();
 	port->remove_wires();
 	delete port;	
-	
+
 }
 
 static bool compare_line(std::vector<char> A, std::vector<char> B)
@@ -195,7 +195,7 @@ static bool compare_line(std::vector<char> A, std::vector<char> B)
 		if (A[x] > B[x])
 			return false;
 	}
-	
+
 	return false;
 }
 
@@ -206,7 +206,7 @@ static bool same_inputs(std::vector<char> A, std::vector<char> B, unsigned int i
 		if (A[x] != B[x])
 			return false;
 	}
-	
+
 	return true;
 }
 
@@ -216,13 +216,13 @@ void model_truth::add_input(void)
 	unsigned int y;
 	char buf[128];
 	class port *_port;
-	
+
 	printf("Adding input\n");
 
 	std::vector<std::vector<char>> values2;	
-	
+
 	values2 = values;
-	
+
 	sprintf(buf, "In%i", inputs);
 	names.insert(names.begin() + inputs , buf);
 	for (y = 0; y < values.size(); y++) {
@@ -231,17 +231,17 @@ void model_truth::add_input(void)
 	}
 	values.insert(values.end(), values2.begin(), values2.end());
 	inputs++;
-	
+
 	std::sort(values.begin(), values.end(), compare_line);
 
 	_port = new port(buf, PORT_IN, 1);
-        _port->X = -1;
-        _port->Y = inputs;
-        _port->parent = this;
-        ports.insert(ports.begin() + inputs - 1, _port);
+	_port->X = -1;
+	_port->Y = inputs;
+	_port->parent = this;
+	ports.insert(ports.begin() + inputs - 1, _port);
 
 	sizeY = std::max(outputs + 2, std::max(inputs + 2, 4U));
-	
+
 }
 
 void model_truth::del_input(void)
@@ -249,18 +249,18 @@ void model_truth::del_input(void)
 	unsigned int y;
 	char buf[128];
 	class port *port;
-	
+
 	sprintf(buf, "In%i", inputs);
 	names.erase(names.begin() + inputs-1);
 	for (y = 0; y < values.size(); y++) {
 		values[y].erase(values[y].begin() + inputs -1);
 	}
-	
+
 	port = ports[inputs - 1];
 	ports.erase(ports.begin() + inputs - 1);
 	port->remove_wires();
 	delete port;	
-	
+
 	inputs--;
 
 	/* we go backwards to avoid O(N^2) operations */	
@@ -269,34 +269,34 @@ void model_truth::del_input(void)
 			values.erase(values.begin() + y);
 		}
 	}
-	
-	
+
+
 }
 
 static int hdist(std::vector<char> A, std::vector<char> B)
 {
 	unsigned int x;
 	int dist = 0;
-	
+
 	for (x = 0; x < A.size(); x++) {
 		if (A[x]=='0' &&  B[x]=='1')
 			dist++;
 		if (A[x]=='1' &&  B[x]=='0')
 			dist++;
 	}
-	
+
 	return dist;
 }
 static int hdist_strict(std::vector<char> A, std::vector<char> B)
 {
 	unsigned int x;
 	int dist = 0;
-	
+
 	for (x = 0; x < A.size(); x++) {
 		if (A[x] !=  B[x])
 			dist++;
 	}
-	
+
 	return dist;
 }
 
@@ -304,11 +304,11 @@ static int hdist_strict(std::vector<char> A, std::vector<char> B)
 void model_truth::turn_to_X(unsigned int X, unsigned int Y)
 {
 	unsigned int y;
-	
+
 	if (values[Y][X] == 'X')
 		return;
 
-	
+
 	values[Y][X] = 'X';
 
 	/* at this point there is another line that has a hamming distance of 0 -- which we need to delete */
@@ -324,10 +324,10 @@ void model_truth::turn_to_X(unsigned int X, unsigned int Y)
 void model_truth::turn_from_X(unsigned int X, unsigned int Y)
 {
 	std::vector<char> line;
-	
+
 	if (values[Y][X] != 'X')
 		return;
-	
+
 	values[Y][X] = '0';
 	line = values[Y];
 	line[X] = '1';
@@ -339,10 +339,10 @@ void model_truth::calculate(int ttl)
 {
 	std::vector<char> inp;
 	unsigned int x, y;
-	
+
 	if (ttl < 1)
 		return;
-		
+
 	inp.resize(inputs);
 	for (x = 0; x < inputs; x++) {
 		if (ports[x]->value.boolval)
@@ -350,20 +350,20 @@ void model_truth::calculate(int ttl)
 		else
 			inp[x] = '0';
 	}
-	
+
 	for (y = 0; y < values.size(); y++) {
 		if (hdist(inp, values[y]) == 0) {
 			for (x = 0; x < outputs; x++) {
 				struct value value = {};
 				value.valid = true;
 				value.boolval = values[y][inputs + x] == '1';
-//				ports[inputs + x]->value.boolval = values[y][inputs + x] == '1';
+				//				ports[inputs + x]->value.boolval = values[y][inputs + x] == '1';
 				//ports[inputs + x]->value.valid = true;
-//				ports[inputs + x]->notify(ttl - 1);
+				//				ports[inputs + x]->notify(ttl - 1);
 				update_value_net(&value, inputs + x, ttl - 1);
 			}
 		}
-		
+
 	}
 }
 
@@ -371,7 +371,7 @@ void model_truth::calculate(int ttl)
 void model_truth::names_to_ports(void)
 {
 	unsigned int x;
-	
+
 	for (x = 0; x < inputs; x++) {
 		if (!flip_input_ports)
 			ports[x]->update_name(names[x]);
@@ -388,80 +388,80 @@ void model_truth::names_to_ports(void)
 
 void model_truth::handle_event(class basecanvas *canvas, SDL_Event &event)
 {
-    element::handle_event(canvas, event);
-    switch (event.type) {
-	case SDL_MOUSEMOTION:
-		mouseX = canvas->scr_to_X(event.motion.x); 
-	        mouseY = canvas->scr_to_Y(event.motion.y);
+	element::handle_event(canvas, event);
+	switch (event.type) {
+		case SDL_MOUSEMOTION:
+			mouseX = canvas->scr_to_X(event.motion.x); 
+			mouseY = canvas->scr_to_Y(event.motion.y);
 
-		break;
-    }
-    if (!selected || !single)
-        return;
-    switch (event.type) {
-	case SDL_KEYDOWN:        
-        	switch (event.key.keysym.sym) {
-                case SDLK_RETURN:
-                    name_edit->toggle_edit_mode();
-                    break;
-                }
-                break;
-        }
-    name_edit->handle_event(event);
+			break;
+	}
+	if (!selected || !single)
+		return;
+	switch (event.type) {
+		case SDL_KEYDOWN:        
+			switch (event.key.keysym.sym) {
+				case SDLK_RETURN:
+					name_edit->toggle_edit_mode();
+					break;
+			}
+			break;
+	}
+	name_edit->handle_event(event);
 }
 
 
 std::string model_truth::get_verilog_main(void)
 {
-    std::string s = "";
-    if (verilog_module_name == "")
-	    verilog_module_name = append_random_bits(verilog_name + "_tt_");
+	std::string s = "";
+	if (verilog_module_name == "")
+		verilog_module_name = append_random_bits(verilog_name + "_tt_");
 
-    s = s + verilog_module_name + " " + get_verilog_name() + "(";
-    bool first = true;
-    for (auto port : ports) {
-    
-    	if (!port->has_net())
-    		continue;
+	s = s + verilog_module_name + " " + get_verilog_name() + "(";
+	bool first = true;
+	for (auto port : ports) {
 
-    	if (!first)
-    		s = s + ", ";
-	first = false;
-    	s = s + "." + port->get_verilog_name() + "(";
-	s = s + port->get_net_verilog_name();
-    	s = s + ")";
-    	
-    }
-    s = s + ");\n";
+		if (!port->has_net())
+			continue;
 
-    return s;
+		if (!first)
+			s = s + ", ";
+		first = false;
+		s = s + "." + port->get_verilog_name() + "(";
+		s = s + port->get_net_verilog_name();
+		s = s + ")";
+
+	}
+	s = s + ");\n";
+
+	return s;
 }
 
 /* TODO -- rather than a pure basic SOP, run espresso on this and make it more minimal */
 std::string model_truth::get_verilog_modules(std::string path)
 {
 	std::string s = "";
-	
+
 	s = s + "module " + verilog_module_name + "\n (";
 	bool first = true;
 	for (auto port : ports) {
-    
-	    	if (!first)
-	    		s = s + ", ";
+
+		if (!first)
+			s = s + ", ";
 		first = false;
 		if (port->direction == PORT_IN)
 			s = s + "input ";
 		if (port->direction == PORT_OUT)
 			s = s + "output ";
-	    	s = s +port->get_verilog_name();
-    	
+		s = s +port->get_verilog_name();
+
 	}
 	s = s + ");\n\n";
-	
+
 	for (unsigned int i = inputs; i < names.size(); i++) {
 		first = true;
 		s = s +"assign " + names[i] + " = ";
-		
+
 		for (unsigned int Y = 0; Y < values.size(); Y++) {
 			if (values[Y][i] == '1') {
 				if (!first) 
@@ -483,20 +483,20 @@ std::string model_truth::get_verilog_modules(std::string path)
 						s = s + "(!" + names[x] + ")";
 					}
 				}
-				
+
 				s = s + ")";
 			}
 		}
-		
+
 		if (first) 
 			s = s + "1'b0";
-		
+
 		s = s + ";\n";
 	}
-	
+
 	s = s + "endmodule\n";
-	
-	
+
+
 	return s;
 }
 
@@ -510,8 +510,8 @@ std::string model_truth::get_verilog_name(void)
 		std::replace(verilog_name.begin(), verilog_name.end(), '+', '_');
 		verilog_name = append_random_bits(verilog_name + "_");
 	}
-	
-	
+
+
 	return verilog_name;
 }
 

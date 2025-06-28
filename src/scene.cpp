@@ -33,7 +33,7 @@ void callback_fit_to_screen(class scene *scene)
 	ev.type = EVENT_ZOOM_TO_FIT;
 	ev.user.code = 0;
 	ev.user.data1 = scene;
-	
+
 	SDL_PushEvent(&ev);
 }
 
@@ -92,13 +92,13 @@ void scene::add_element(class element * element)
 {
 	elements.push_back(element);
 	rewire_section(element->get_X(), element->get_Y(), element->get_width(), element->get_height());
-        generation_count++;
+	generation_count++;
 	element->update_parental_name(get_full_name());
 	printf("Element parnetal name is %s   name is %s parent is %s \n", element->get_parental_name().c_str(), name.c_str(), parental_name.c_str());
 }
 
 bool scene::can_place_element(float x, float y, int w, int h,
-			      class element * myself)
+		class element * myself)
 {
 	for (auto const elem:elements) {
 		int _x, _y;
@@ -167,7 +167,7 @@ void scene::remove_element(class element *element)
 			return;
 		}
 	}
-        generation_count++;
+	generation_count++;
 }
 
 void scene::to_json(json &j)
@@ -179,7 +179,7 @@ void scene::to_json(json &j)
 	j["name"] = name;
 	j["parental_name"] = parental_name;
 	j["verilog_name"] = verilog_name;
-	
+
 	for (i = 0; i < elements.size(); i++) {
 		json p;
 		elements[i]->to_json(p);
@@ -192,11 +192,11 @@ void scene::selection_to_json(json &j)
 	unsigned int i;
 	unsigned int q = 0;
 	j["elements"] = json::array();
-	
+
 	name = j.value("name", "");
 	parental_name = j.value("parental_name", "");
 	verilog_name = j.value("verilog_name", "");
-	
+
 	for (i = 0; i < elements.size(); i++) {
 		if (elements[i]->is_selected()) {
 			json p;
@@ -230,22 +230,22 @@ void scene::from_json(json &j)
 void scene::process_delete_requests(void)
 {
 	std::vector<class element *> todo;
-	
+
 	for (auto elem : elements) {
 		if (elem->want_deleted())
 			todo.push_back(elem);
 	}
-	
+
 	for (auto elem : todo) {
 		remove_element(elem);
-	        generation_count++;
+		generation_count++;
 	}
 }
 
 void scene::delete_selection(void)
 {
 	for (auto elem : elements)
-	        if (!elem->in_edit_mode())
+		if (!elem->in_edit_mode())
 			elem->delete_if_selected();
 }
 
@@ -282,7 +282,7 @@ unsigned int scene::selected_count(void)
 	for (auto elem : elements)
 		if (elem->is_selected()) 
 			count++;
-			
+
 	return count;
 }
 
@@ -307,14 +307,14 @@ void scene::create_verilog_names(void)
 		if (vname != "")
 			verilog_name = parental_name + "_" + vname;
 		verilog_name = append_random_bits(verilog_name + "_");
-		
+
 		if (parental_name == "" && name == "main")
 			verilog_name = "main";
 	}
 	std::replace(verilog_name.begin(), verilog_name.end(), '-', '_');
 	std::replace(verilog_name.begin(), verilog_name.end(), '+', '_');
 	std::replace(verilog_name.begin(), verilog_name.end(), '/', '_');
-	
+
 	std::vector<std::string> existing;
 	for (unsigned int i = 0; i < elements.size(); i++) {
 		auto elem = elements[i];
@@ -325,16 +325,16 @@ void scene::create_verilog_names(void)
 std::string scene::get_verilog_main(void)
 {
 	std::string s = "";
-	
+
 	redo_nets();
-	
+
 	if (name == "")
 		name = "main_scene";
-	
+
 	create_verilog_names();
-	
+
 	s = "module " + verilog_name + "\n";
-	
+
 	s += "(";
 	/* in */
 	bool first = true;
@@ -359,29 +359,29 @@ std::string scene::get_verilog_main(void)
 		}
 	}	
 	s += ");\n\n";
-	
-	
+
+
 	std::vector<std::string> netmap;
-	
+
 	for (auto elem : elements) {
 		elem->collect_nets(&netmap);
 	}
-	
+
 	for (auto netstr : netmap)
 		s = s + netstr + "\n";
-	
+
 	s = s + "\n";
-	
+
 	for (auto elem : elements) {
 		s = s + elem->get_verilog_main();
 	}	
-	
-	
-	
-	s += "endmodule\n\n";
-	
 
-	
+
+
+	s += "endmodule\n\n";
+
+
+
 	return s;
 }
 
@@ -389,11 +389,11 @@ std::string scene::get_verilog_main(void)
 std::string scene::get_verilog_modules(std::string verilog_path)
 {
 	std::string s = "";
-	
+
 	for (auto elem : elements) {
 		s = s + elem->get_verilog_modules(verilog_path);
 	}	
-	
+
 	return s;
 }
 std::string scene::get_full_name(void) 

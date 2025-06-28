@@ -25,7 +25,7 @@ basecanvas::basecanvas(void)
 
 basecanvas::~basecanvas(void)
 {
-//	printf("basecanvas destructor\n");
+	//	printf("basecanvas destructor\n");
 	if (font)
 		TTF_CloseFont(font);
 	font = NULL;
@@ -94,7 +94,7 @@ void basecanvas::draw_box(float X1, float Y1, float X2, float Y2, int color, int
 	rect.y = y1;
 	rect.w = x2 - x1;
 	rect.h = y2 - y1;
-	
+
 	if (alpha < 0)
 		alpha = Alpha(color);
 
@@ -107,13 +107,13 @@ void basecanvas::draw_line(float X1, float Y1, float X2, float Y2, int color)
 	/* TODO: clip boxes that are fully outside of the visible window */
 
 	thickLineRGBA(renderer, X_to_scr(X1), Y_to_scr(Y1), X_to_scr(X2),
-		      Y_to_scr(Y2), 0.2 * scaleX, R(color), G(color), B(color),
-		      Alpha(color));
+			Y_to_scr(Y2), 0.2 * scaleX, R(color), G(color), B(color),
+			Alpha(color));
 	if (Alpha(color) > 250) {
 		filledCircleRGBA(renderer, X_to_scr(X1), Y_to_scr(Y1), 0.1 * scaleX, R(color), G(color),
-			 B(color), Alpha(color));
+				B(color), Alpha(color));
 		filledCircleRGBA(renderer, X_to_scr(X2), Y_to_scr(Y2), 0.1 * scaleX, R(color), G(color),
-			 B(color), Alpha(color));
+				B(color), Alpha(color));
 	}
 }
 
@@ -122,13 +122,13 @@ void basecanvas::draw_thick_line(float X1, float Y1, float X2, float Y2, int col
 	/* TODO: clip boxes that are fully outside of the visible window */
 
 	thickLineRGBA(renderer, X_to_scr(X1), Y_to_scr(Y1), X_to_scr(X2),
-		      Y_to_scr(Y2), 0.3 * scaleX, R(color), G(color), B(color),
-		      Alpha(color));
+			Y_to_scr(Y2), 0.3 * scaleX, R(color), G(color), B(color),
+			Alpha(color));
 	if (Alpha(color) > 250) {
 		filledCircleRGBA(renderer, X_to_scr(X1), Y_to_scr(Y1), 0.15 * scaleX, R(color), G(color),
-			 B(color), Alpha(color));
+				B(color), Alpha(color));
 		filledCircleRGBA(renderer, X_to_scr(X2), Y_to_scr(Y2), 0.15 * scaleX, R(color), G(color),
-			 B(color), Alpha(color));
+				B(color), Alpha(color));
 	}
 }
 void basecanvas::draw_shadow_Line(float X1, float Y1, float X2, float Y2, int color)
@@ -136,8 +136,8 @@ void basecanvas::draw_shadow_Line(float X1, float Y1, float X2, float Y2, int co
 	/* TODO: clip boxes that are fully outside of the visible window */
 
 	thickLineRGBA(renderer, X_to_scr(X1), Y_to_scr(Y1), X_to_scr(X2),
-		      Y_to_scr(Y2), 0.25 * scaleX, 0, 0, 0, 
-		      64);
+			Y_to_scr(Y2), 0.25 * scaleX, 0, 0, 0, 
+			64);
 }
 
 void basecanvas::draw_circle(float X, float Y, float _R, int color, int color2)
@@ -150,10 +150,10 @@ void basecanvas::draw_circle(float X, float Y, float _R, int color, int color2)
 	/* TODO: clip boxes that are fully outside of the visible window */
 
 	filledCircleRGBA(renderer, x1, y1, _R * scaleX, R(color), G(color),
-			 B(color), Alpha(color));
+			B(color), Alpha(color));
 	color = color2;
 	filledCircleRGBA(renderer, x1, y1, (_R / 2) * scaleX, R(color),
-			 G(color), B(color), Alpha(color));
+			G(color), B(color), Alpha(color));
 
 }
 void basecanvas::draw_circle2(float X, float Y, float _R, int color, int color2)
@@ -166,27 +166,27 @@ void basecanvas::draw_circle2(float X, float Y, float _R, int color, int color2)
 	/* TODO: clip boxes that are fully outside of the visible window */
 
 	filledCircleRGBA(renderer, x1, y1, _R * scaleX, R(color), G(color),
-			 B(color), Alpha(color));
+			B(color), Alpha(color));
 	color = color2;
 	filledCircleRGBA(renderer, x1, y1, (_R / 1.4) * scaleX, R(color),
-			 G(color), B(color), Alpha(color));
+			G(color), B(color), Alpha(color));
 
 }
 
 SDL_Texture *IMG_LoadTextureFromMem(SDL_Renderer *renderer, const char *filename)
 {
 	std::string s;
-	
+
 	s = filename;
 	if (datamap.find(s) == datamap.end()) {
 		printf("PNGMAP miss for '%s'\n", filename);
 		return IMG_LoadTexture(renderer, filename);
 	}
-	
+
 	SDL_RWops* ops;
-	
+
 	ops = SDL_RWFromConstMem(datamap[filename], sizemap[filename]);
-	
+
 	return IMG_LoadTexture_RW(renderer, ops, 1);
 }
 
@@ -205,60 +205,60 @@ void basecanvas::draw_image(SDL_Texture *image, float X, float Y, float W, float
 	SDL_Rect rect;
 	SDL_Point size;
 	float w, h;
-	
+
 	if (!image) {
-//		printf("Attempting to draw a null texture\n");
+		//		printf("Attempting to draw a null texture\n");
 		return;
 	}
 
-	
+
 	SDL_QueryTexture(image, NULL, NULL, &size.x, &size.y);
 
 	if (keep_aspect) { 
-	h = H;
-	w = 1.0 * size.x / size.y * h;
-	if (w > W) {
-		w = W;
-		h = 1.0 * size.y / size.x * w;
-	}
+		h = H;
+		w = 1.0 * size.x / size.y * h;
+		if (w > W) {
+			w = W;
+			h = 1.0 * size.y / size.x * w;
+		}
 	} else {
 		w = W;
 		h = H;
- 	}
+	}
 	rect.x = X_to_scr(X) + (W-w)/2 * scaleX;
 	rect.y = Y_to_scr(Y) + (H-h)/2 * scaleY;
 	rect.w = w * scaleX;
 	rect.h = h * scaleY;
-		
 
-	
+
+
 	SDL_SetTextureAlphaMod(image, alpha);
-	
+
 	SDL_RenderCopy(renderer, image, NULL, &rect);
 }
 
 void basecanvas::draw_image_fragment(SDL_Texture *image, float X, float Y, float W, float H, int fromX, int fromY, int w, int h, int angle) 
 {
 	SDL_Rect rect, src;
-	
+
 	if (!image) {
 		return;
 	}
 
-	
+
 	rect.x = X_to_scr(X);
 	rect.y = Y_to_scr(Y);
 	rect.w = W * scaleX;
 	rect.h = H * scaleY;
-	
+
 	src.x = fromX;
 	src.y = fromY;
 	src.w = w;
 	src.h = h;
-		
+
 	SDL_SetTextureAlphaMod(image, 255);
-	
-//	SDL_RenderCopy(renderer, image, &src, &rect);
+
+	//	SDL_RenderCopy(renderer, image, &src, &rect);
 	SDL_RenderCopyEx(renderer, image, &src, &rect, angle, NULL, SDL_FLIP_NONE);
 }
 
@@ -266,18 +266,18 @@ void basecanvas::draw_image_rotated(SDL_Texture *image, float X, float Y, float 
 {
 	SDL_Rect rect;
 	SDL_Point size;
-	
+
 	if (!image) {
-//		printf("Attempting to draw a null texture\n");
+		//		printf("Attempting to draw a null texture\n");
 		return;
 	}
 
-	
+
 	SDL_QueryTexture(image, NULL, NULL, &size.x, &size.y);
 
 	/* if we rotate something that isn't square, the "top left" point afterwards is no longer at (0,0)
 	   Adjust to move it back to 0,0 by half-of-the-shape-difference
-         */
+	   */
 	if ((angle == 90 || angle == 270)) { X -= (H-W)/2; Y -= (W-H)/2; };
 	rect.x = X_to_scr(X);
 	rect.y = Y_to_scr(Y);
@@ -289,18 +289,18 @@ void basecanvas::draw_image_rotated(SDL_Texture *image, float X, float Y, float 
 	}
 
 	SDL_SetTextureAlphaMod(image, alpha);
-	
+
 	SDL_RenderCopyEx(renderer, image, NULL, &rect, angle, NULL, SDL_FLIP_NONE);
 }
 
 void basecanvas::draw_image(std::string filename, float X, float Y, float W, float H, int alpha, bool keep_aspect) 
 {
 	SDL_Texture *image;
-	
+
 	if (texture_cache.find(filename) != texture_cache.end()) {
 		image = texture_cache[filename];
 	} else {
-//		printf("image cache miss %s\n", filename.c_str());
+		//		printf("image cache miss %s\n", filename.c_str());
 		image = load_image(filename);
 		if (!image) {
 			printf("Failure to load %s\n", filename.c_str());
@@ -313,7 +313,7 @@ void basecanvas::draw_image(std::string filename, float X, float Y, float W, flo
 void basecanvas::draw_image_rotated(std::string filename, float X, float Y, float W, float H, int alpha, int angle) 
 {
 	SDL_Texture *image;
-	
+
 	if (texture_cache.find(filename) != texture_cache.end()) {
 		image = texture_cache[filename];
 	} else {
@@ -329,11 +329,11 @@ void basecanvas::draw_image_rotated(std::string filename, float X, float Y, floa
 void basecanvas::draw_image_fragment(std::string filename, float X, float Y, float W, float H, int fromX, int fromY, int w, int h, int angle)  
 {
 	SDL_Texture *image;
-	
+
 	if (texture_cache.find(filename) != texture_cache.end()) {
 		image = texture_cache[filename];
 	} else {
-//		printf("image cache miss %s\n", filename.c_str());
+		//		printf("image cache miss %s\n", filename.c_str());
 		image = load_image(filename);
 		if (!image) {
 			printf("Failure to load %s\n", filename.c_str());
@@ -349,9 +349,9 @@ SDL_Texture *basecanvas::text_to_texture(const char *text)
 	const SDL_Color white = {255, 255, 255, 255};
 	SDL_Texture *tx;
 	SDL_Surface *surface;
-	
-//	printf("Text miss: %s\n", text);
-		
+
+	//	printf("Text miss: %s\n", text);
+
 	if (!font)
 		font = TTF_OpenFont("fonts/Roboto-Medium-webfont.ttf", 28);
 
@@ -375,38 +375,38 @@ void basecanvas::draw_text(std::string text, float X, float Y, float W, float H)
 	SDL_Texture *texture;
 	double w,h;
 	SDL_Point size;
-	
+
 	texture = text_to_texture(text);
 	SDL_QueryTexture(texture, NULL, NULL, &size.x, &size.y);
-		
+
 	h = H;
 	w = 1.0 * size.x / size.y * h;
 	if (w > W) {
 		w = W;
 		h = 1.0 * size.y / size.x * w;
 	}
-		
+
 	draw_image(texture, X + (W - w)/2, Y + (H - h)/2, w, h); 
-//	SDL_DestroyTexture(texture);
+	//	SDL_DestroyTexture(texture);
 }
 void basecanvas::draw_text_left(std::string text, float X, float Y, float W, float H)
 {
 	SDL_Texture *texture;
 	double w,h;
 	SDL_Point size;
-	
+
 	texture = text_to_texture(text);
 	SDL_QueryTexture(texture, NULL, NULL, &size.x, &size.y);
-		
+
 	h = H;
 	w = 1.0 * size.x / size.y * h;
 	if (w > W) {
 		w = W;
 		h = 1.0 * size.y / size.x * w;
 	}
-		
+
 	draw_image(texture, X, Y + (H - h), w, h); 
-//	SDL_DestroyTexture(texture);
+	//	SDL_DestroyTexture(texture);
 }
 
 SDL_Texture *basecanvas::text_to_texture(std::string text)
@@ -421,7 +421,7 @@ SDL_Texture *basecanvas::text_to_texture(std::string text)
 		}
 		text_cache[text] = image;
 	}
-	
+
 	return image;
 }
 

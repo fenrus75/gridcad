@@ -42,24 +42,24 @@ extern bool show_fps;
 float tv_delta_msec(struct timeval *tv1, struct timeval *tv2)
 {
 	double d;
-	
+
 	d = tv2->tv_sec - tv1->tv_sec;
 	d = d * 1000;
 	d += tv2->tv_usec/ 1000.0;
 	d -= tv1->tv_usec/ 1000.0;
-	
+
 	return d;
 }
 
 float tv_delta_usec(struct timeval *tv1, struct timeval *tv2)
 {
 	double d;
-	
+
 	d = tv2->tv_sec - tv1->tv_sec;
 	d = d * 1000000;
 	d += tv2->tv_usec;
 	d -= tv1->tv_usec;
-	
+
 	return d;
 }
 
@@ -72,7 +72,7 @@ void init_SDL(void)
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
 	TTF_Init();
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2");
-	
+
 	sdl_initialized = true;
 }
 
@@ -82,45 +82,45 @@ document::document(std::string _name, bool _library_mode)
 	class canvas *_canvas;
 	class scene *_scene;
 	float d1,d2,d3;
-	
+
 	struct capabilities cap = {};
-	
-	
+
+
 	library_mode = _library_mode;
-	
+
 	init_SDL();
-	
+
 	std::string filename;
-	
+
 	fill_png_maps();
 
 	name = _name;
-	
+
 	current_project = name;
-	
+
 	if (std::filesystem::exists(name + "/verilog/Makefile") && !library_mode)
 		cap.has_full_workflow = true;
 
-	
+
 	SDL_GetDisplayDPI(0, &d1, &d2, &d3);
 	printf("DPI %5.2f %5.2f %5.2f\n", d1, d2, d3);
-	
+
 	SDL_timer_event = SDL_RegisterEvents(16);
-	
+
 	set_timer();
 
 	_scene = new scene("main");
 
 	_canvas = new canvas(_scene, &cap);
-	
+
 	_canvas->set_project_name(name);
 
 	register_new_canvas(_canvas);
-	
+
 	filename = name;
 	if (!library_mode)
 		filename = filename + "/scene.json";
-	
+
 	if (access(filename.c_str(), R_OK) == 0) {
 		json j;
 		std::ifstream input(filename.c_str());
@@ -140,7 +140,7 @@ void document::save_verilog(std::string path, std::string filename)
 	class scene *_scene;
 	class canvas *_canvas = (class canvas *)canvases[0];
 	_scene = _canvas->get_scene();
-	
+
 	output << _scene->get_verilog_main() << "\n" << _scene->get_verilog_modules(path);
 	output.close();
 }
@@ -150,12 +150,12 @@ void document::save_json(void)
 	class canvas *_canvas = (class canvas *)canvases[0];
 	class scene *_scene =  _canvas->get_scene();
 	std::string filename;
-	
+
 	if (!library_mode)
 		filename = name + "/scene.json";
 	else
 		filename = name;
-	
+
 	printf("Saving to %s \n", filename.c_str());
 
 	json j;
@@ -200,7 +200,7 @@ void document::run(void)
 	while (!leave) {
 		run_queued_calculations();
 		ret = SDL_WaitEventTimeout(&event, 1);
-//		ret = SDL_PollEvent(&event);
+		//		ret = SDL_PollEvent(&event);
 
 		if (event.type == SDL_QUIT)
 			leave = true;
@@ -225,12 +225,12 @@ void document::run(void)
 				clear_library();
 				populate_library("library/");
 				populate_library(name + "/library");
-				
+
 				SDL_Event ev = {};
 
 				ev.type = EVENT_RELOAD_ICONBAR;
-			        ev.user.code = 0;
-			        SDL_PushEvent(&ev);				
+				ev.user.code = 0;
+				SDL_PushEvent(&ev);				
 			}
 			if (event.type == EVENT_SAVE || event.type == EVENT_RUN_VERILOG) {
 				save_json();
@@ -257,8 +257,8 @@ void document::run(void)
 
 			}
 		} else {
-//			SDL_Delay(1);
-		 }
+			//			SDL_Delay(1);
+		}
 
 		if (leave)
 			printf("Want to quit\n");
@@ -315,7 +315,7 @@ void unregister_canvas(class basecanvas *canvas)
 
 /* +0 == timer
    +1 == fit-to-screen
- */
+   */
 unsigned int SDL_timer_event = 0;
 
 std::string current_project = "";
