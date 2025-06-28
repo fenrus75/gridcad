@@ -36,12 +36,16 @@ void sequencer::to_json(json &j)
 {
 	element::to_json(j);
 	j["values"] = values;
+	j["current_value"] = current_value;
+	j["current_clock"] = current_clock;
 }
 
 void sequencer::from_json(json &j)
 {
 	element::from_json(j);
 	values = j["values"];
+	current_value = j.value("current_value", 0);
+	current_clock = j.value("current_clock", false);
 }
 
 void sequencer::handle_event(class basecanvas *canvas, SDL_Event &event)
@@ -85,4 +89,33 @@ bool sequencer::mouse_select(float _X, float _Y)
 	}
 	previous_click = click;
 	return false;
+}
+
+void sequencer::calculate(int ttl)
+{
+     struct value newclock;
+     newclock = ports[0]->value;
+     
+     if (newclock.boolval == current_clock)
+       return;
+       
+     if (newclock.boolval) { /* rising edge */
+     	  current_value++;
+     	  if (current_value >= values.size())
+     	  	current_value = 0;
+	  queue_calculate(this); /* schedule calculations for the propagation */
+     };
+     
+     current_clock = newclock.boolval;
+}
+
+void sequencer::queued_calculate(int ttl)
+{
+	if (values.size() <= current_value)
+		return;
+	printf("Current value %i \n", current_value);
+	printf("sizeof values %lu\n", values.size());
+	if (ports[1]->get_net_width() > 1)
+		values[current_value].type = VALUE_TYPE_INT;
+	update_value_net(&values[current_value], 1, ttl - 1);	
 }

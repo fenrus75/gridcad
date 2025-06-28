@@ -90,6 +90,7 @@ bool seqcanvas::handle_event(SDL_Event &event)
 	if (cursor < editors.size())
 		editors[cursor]->handle_event(event);
     
+	data_to_seq();
 	return false;
 }
 
@@ -116,6 +117,16 @@ void seqcanvas::seq_to_data(void)
 			auto e = editors[i];
 			e->update_string_pointer(&data[i]);
 		}
+}
+
+void seqcanvas::data_to_seq(void)
+{
+	seq->values.resize(data.size());
+	for (unsigned int i = 0; i < seq->values.size(); i++) {
+		seq->values[i].valid = true;
+		seq->values[i].intval = std::stoi(data[i]);
+		seq->values[i].boolval = std::stoi(data[i]);
+	}
 }
 
 

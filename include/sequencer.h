@@ -20,7 +20,8 @@ public:
 	bool in_edit_mode(void) override { return name_edit->get_edit_mode() && single && selected;};    
 	void drawAt(class basecanvas *canvas, float X, float Y, int type) override;
 	bool mouse_select(float X, float Y) override;
-
+	void calculate(int ttl) override;
+	void queued_calculate(int ttl) override;
 
 
 protected:
@@ -28,7 +29,8 @@ protected:
 	void remove_value_row(void);
 
 	std::vector<struct value> values;
-	unsigned int current_value;
+	unsigned int current_value = 0;
+	bool current_clock = false;
 	class name *name_edit = NULL;
 	time_t previous_click = 0;
 	class seqcanvas *canvas = NULL;
