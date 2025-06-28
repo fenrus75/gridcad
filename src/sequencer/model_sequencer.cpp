@@ -72,6 +72,7 @@ void sequencer::from_json(json &j)
 
 void sequencer::handle_event(class basecanvas *canvas, SDL_Event &event)
 {
+	element::handle_event(canvas, event);
 }
 
 
