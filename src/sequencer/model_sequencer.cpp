@@ -10,6 +10,14 @@ void callback_reset_sequencer(class element *elmnt)
 	queue_calculate(seq);
 }
 
+void callback_stop_error(class element *elmnt)
+{
+	class sequencer * seq = (class sequencer *)elmnt;
+	seq->toggle_stop_error();
+	queue_calculate(seq);
+}
+
+
 sequencer::sequencer(int X, int Y) : element(X, Y, "Sequencer")
 {
 	sizeX = 3;
@@ -21,6 +29,7 @@ sequencer::sequencer(int X, int Y) : element(X, Y, "Sequencer")
 
 	menu->add_item("Edit name", callback_editname);
 	menu->add_item("Reset position", callback_reset_sequencer);
+	menu->add_item("Toggle 'stop on error'", callback_stop_error);
         name_edit = new class name(&name);
 }
 
@@ -48,6 +57,7 @@ void sequencer::to_json(json &j)
 	j["current_value"] = current_value;
 	j["current_clock"] = current_clock;
 	j["is_error"] = is_error;
+	j["stop_clock_on_error"] = stop_clock_on_error;
 }
 
 void sequencer::from_json(json &j)
@@ -57,6 +67,7 @@ void sequencer::from_json(json &j)
 	current_value = j.value("current_value", 0);
 	current_clock = j.value("current_clock", false);
 	is_error = j.value("is_error", false);
+	stop_clock_on_error = j.value("stop_clock_on_error", false);
 }
 
 void sequencer::handle_event(class basecanvas *canvas, SDL_Event &event)
@@ -124,6 +135,14 @@ void sequencer::calculate(int ttl)
      	  if (current_value >= values.size())
      	  	current_value = 0;
 	  queue_calculate(this); /* schedule calculations for the propagation */
+     } else {
+     	/* falling edge */
+     	if (is_error && stop_clock_on_error) {
+		SDL_Event ev = {};
+		ev.type = EVENT_STOP_CLOCK;
+		ev.user.code = 0;
+		SDL_PushEvent(&ev);
+     	}
      };
      
      current_clock = newclock.boolval;
