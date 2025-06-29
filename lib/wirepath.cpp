@@ -229,7 +229,7 @@ std::vector<struct waypoint> *  wiregrid::walk_back(void)
     vec = new std::vector<struct waypoint>;
     struct waypoint wp;
     
-    if (abort_all_walks) {
+    if (abort_all_walks || !found_solution) {
         wp.X = targetX;
         wp.Y = targetY;
         vec->push_back(wp);
@@ -295,7 +295,7 @@ void wiregrid::visit(struct point *p)
     if (is_clock)
         EFFECTIVE_COST = COST2;
     if (p->x == targetX && p->y == targetY) {
-        printf("Found the solution at distance %5.2f at rc %i\n", p->distance_from_start, recursecount);
+//        printf("Found the solution at distance %5.2f at rc %i\n", p->distance_from_start, recursecount);
 //        debug_display();
         found_solution = true;
         best_path = p->distance_from_start;       
@@ -317,30 +317,28 @@ void wiregrid::visit(struct point *p)
             
         if (grid[newY][newX].blocked)
             continue;
-        if (grid[newY][newX].queued)
-            continue;
             
         newdist = p->distance_from_start + p->extra_score + EFFECTIVE_COST[i];
-        if (newX == targetX && newY == targetY)
-            printf("SOLUTION best path is %5.2f  newdist is %5.2f   target %5.2f  t hd %5.2f\n", best_path, newdist, grid[newY][newX].distance_from_start, grid[newY][newX].hamdist);
+//        if (newX == targetX && newY == targetY)
+//            printf("SOLUTION best path is %5.2f  newdist is %5.2f   target %5.2f  t hd %5.2f\n", best_path, newdist, grid[newY][newX].distance_from_start, grid[newY][newX].hamdist);
             
  
  
          if (p->dirX != -DX[i] || p->dirY != -DY[i]) {
              if (is_clock)
-                 newdist += 0.2;
-             newdist += 0.2;
+                 newdist += 0.3;
+             newdist += 0.1;
          }
 //        printf("Looking at %i %i for newdist %5.2f\n", newX,newY, newdist);
         
-        if (newdist + grid[newY][newX].hamdist > best_path)
+        if (newdist + grid[newY][newX].hamdist > best_path + 1)
              continue;
 
         if (grid[newY][newX].distance_from_start > newdist) {
             grid[newY][newX].distance_from_start = newdist;
             grid[newY][newX].dirX = -DX[i];
             grid[newY][newX].dirY = -DY[i];
-           /* if (!grid[newY][newX].visited)*/ {
+            if (!grid[newY][newX].queued) {
                 queue.push(&grid[newY][newX]);
                 grid[newY][newX].queued = true;
             }
