@@ -1,19 +1,26 @@
 #pragma once
 
+#include <queue>
 #include <vector>
 #include <nlohmann/json.hpp>
 /* approximationm == slightly above actual sqrt(2) to favor non-diagnals */
 #define SQRT2 1.45
 
 struct point {
+    int x;
+    int y;
     bool valid;
     bool blocked;
     bool part_of_wire;
     bool visited;
-    double distance;
+    double distance_from_start;
+    double hamdist;
     
     int dirX, dirY; /* direction we xame from to get best cost to get here */
     int dir_to_goal;
+    
+    bool on_path = false;
+    bool queued = false;
     
     double extra_score;
 };
@@ -22,6 +29,12 @@ struct waypoint {
     int X, Y;
 };
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE_WITH_DEFAULT(waypoint, X, Y);
+
+struct CompareTask {
+    bool operator()(const struct point * t1, const struct point * t2) {
+        return t1->distance_from_start + t1->hamdist > t2->distance_from_start + t2->hamdist;
+    }
+};
 
 class wiregrid {
 public:
@@ -50,9 +63,13 @@ private:
     int originX = 0, originY = 0;
     int targetX = 0, targetY = 0;
     
+
     double cost_estimate(int x, int y);
-    
+    void update_destination(int tX, int tY);
     std::vector<struct waypoint> *  walk_back(void);
     
-    bool one_path_walk(double cost_so_far, int x, int y, int dx, int dy, int recurse, bool is_clock = false);
+    void visit(struct point *p);
+    
+    std::priority_queue<struct point *, std::vector<struct point *>, CompareTask> queue;
+    
 };

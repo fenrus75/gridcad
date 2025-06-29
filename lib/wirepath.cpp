@@ -15,6 +15,10 @@
 
 #include <stdio.h>
 #include <assert.h>
+#include <math.h>
+
+static int recursecount = 0;
+static bool abort_all_walks = false;
 
 wiregrid::wiregrid(int _width, int _height)
 {
@@ -43,6 +47,22 @@ wiregrid::~wiregrid()
 void wiregrid::debug_display(int _X, int _Y)
 {
     int x,y;
+    int hqx = -1, hqy = -1;
+    
+    if (queue.size() > 0) {
+        struct point *p = queue.top();
+        hqx = p->x;
+        hqy = p->y;
+#if 0
+        std::priority_queue<struct point *, std::vector<struct point *>, CompareTask> queue2;        
+        queue2 = queue;
+        while (queue2.size() > 0) {
+            p = queue2.top();
+            queue2.pop();
+            printf("queue slot %i %i  at cost %5.2f\n", p->x, p->y, p->distance_from_start + p->hamdist);
+        }
+#endif 
+    }
     
     for (y = 0; y < height; y++) {
         for (x = 0; x < width; x++) {
@@ -55,15 +75,11 @@ void wiregrid::debug_display(int _X, int _Y)
                 continue;
             }
             
-            if (grid[y][x].dir_to_goal >=0 && grid[y][x].valid) {
-                printf("G");
+            if (grid[y][x].on_path) {
+                printf("*");
                 continue;
             }
             
-            if (x == _X && y == _Y) {
-                printf("&");
-                continue;
-            }
             if (grid[y][x].blocked) {
                 printf("|");
                 continue;
@@ -74,23 +90,19 @@ void wiregrid::debug_display(int _X, int _Y)
                 continue;
             }
             #endif
-            if (grid[y][x].dirX && grid[y][x].dirY) {
-                printf("/");
-                continue;
-            }
-            if (grid[y][x].dirX) {
+            if (grid[y][x].visited) {
                 printf("x");
                 continue;
             }
-            if (grid[y][x].dirY) {
-                printf("y");
+            if (x == hqx && y == hqy) {
+                printf("Q");
+                continue;
+            }
+            if (grid[y][x].queued) {
+                printf("q");
                 continue;
             }
             
-            if (grid[y][x].valid) {
-                printf("*");
-                continue;
-            }
             printf(".");
         }
         printf("\n");
@@ -169,8 +181,8 @@ double wiregrid::cost_estimate(int x, int y)
 {
     int max, min;
     
-    if (is_blocked(x, y) || x <0 || y < 0)
-        return 4.0 * width * height;
+//    if (is_blocked(x, y) || x <0 || y < 0)
+//        return 4.0 * width * height;
         
     x -= targetX;
     y -= targetY;
@@ -178,6 +190,8 @@ double wiregrid::cost_estimate(int x, int y)
         x = -x;
     if (y < 0)
         y = -y;
+        
+    return sqrtf(x*x+y*y);
     if (x > y) {
         max = x;
         min = y;
@@ -188,152 +202,22 @@ double wiregrid::cost_estimate(int x, int y)
     return SQRT2 * min + (max - min);
 }
 
-/* 
- * 0 1 2
- * 3 4 5
- * 6 7 8
- */
-static const int DX[9] = {-1, 0, 1, -1, 0, 1, -1, 0, 1};
-static const int DY[9] = {-1, -1, -1, 0, 0, 0, 1, 1, 1};
-static const float COST[9] = {SQRT2, 1, SQRT2, 1, 0, 1, SQRT2, 1, SQRT2 };
-static const float COST2[9] = {1.4 * SQRT2, 1, 1.4 * SQRT2, 1, 0, 1, 1.4 * SQRT2, 1, 1.4 * SQRT2 };
 
-static int recursecount = 0;
-
-static bool abort_all_walks = false;
-
-bool wiregrid::one_path_walk(double cost_so_far, int x, int y, int dx, int dy, int recurse, bool is_clock)
+void wiregrid::update_destination(int tX, int tY)
 {
-    double costs[9];
-    bool walked[9];
-    double leastcost = cost_so_far + 4 * width * height;
-    double maxcost = 0;
-    int i;
-    const float *EFFECTIVE_COST;
-    
-    if (abort_all_walks)
-        return false;
-
-    EFFECTIVE_COST = COST;
-    if (is_clock) {
-	EFFECTIVE_COST = COST2; /* we want clocks to be routed with far fewer diagonals */
-    }
-    
-    recursecount++;
- 
- //   printf("Best %5.2f   current %5.2f\n", best_path, cost_so_far);
-//     debug_display(x, y);   
-    
-    if (x < 0 || x >= width)
-        return false;
-    if (y < 0 || y >= height)
-        return false;
-        
-    if (x == targetX && y == targetY) {
-        found_solution = true;
-        /* we found the end point */
-        if (cost_so_far < best_path) {
-            best_path = cost_so_far;
-            grid[y][x].dirX = -dx;
-            grid[y][x].dirY = -dy;
+    for (unsigned y = 0; y < grid.size(); y++)
+        for (unsigned x = 0; x < grid[y].size(); x++) {
+            grid[y][x].hamdist = cost_estimate(x,y);
+            if ((int)x == tX && (int)y == tY)
+                grid[y][x].hamdist = 0;
+            grid[y][x].distance_from_start = 100000000.0;
+            grid[y][x].x = x;
+            grid[y][x].y = y;
+            grid[y][x].visited = false;
+            grid[y][x].queued = false;
         }
-        return true;     
-    }
-    
-    cost_so_far += grid[y][x].extra_score;
-    
-    if (cost_so_far > best_path)
-        return false;
-        
-    if (grid[y][x].blocked) 
-        return false;
-        
-//    if (grid[y][x].dir_to_goal < 0 && grid[y][x].visited)
-//        return false;
-
-    /* we've been to this cell before with lower cost than the current path */
-    if (grid[y][x].valid and grid[y][x].distance <= cost_so_far)
-        return false;
-
-    if (recurse > 1000) {
-        printf("Recursion limit hit\n");
-        abort_all_walks = true;
-        return false;
-    }
-    if (!grid[y][x].valid)
-        grid[y][x].dir_to_goal = -1;
-        
-    grid[y][x].valid = true;
-    grid[y][x].distance = cost_so_far;        
-    grid[y][x].dirX = -dx;
-    grid[y][x].dirY = -dy;
-
-    for (i = 0; i < 9; i++)
-        walked[i] = 0;
-        
-    for (i = 0; i < 9 ; i++) {
-        if (i == 4)
-            continue;
-        costs[i] = cost_estimate(x + DX[i], y + DY[i]);
-        costs[i] += EFFECTIVE_COST[i];
-        
-        /* don't go straight back */
-        if (DX[i] == -dx && DY[i] == -dy)
-            walked[i] = true;
-        
-        if (costs[i] > best_path)
-            walked[i] = true;
-        if (costs[i] > maxcost)
-            maxcost = costs[i];
-        if (costs[i] < leastcost)
-            leastcost = costs[i];
-        if (costs[i] > best_path)
-            walked[i] = true;
-    }
-
-    if (maxcost > best_path)
-        maxcost = best_path;
-
-    walked[4] = true;
-
-    /* if we know where the goal is -- lets go there first to quickly update path distance */    
-    if (grid[y][x].dir_to_goal >= 0) {
-        double adder = 0.0;
-        
-        i = grid[y][x].dir_to_goal;
-        if (DX[i] != dx || DY[i] != dy)
-             adder += 0.01;
-        one_path_walk(cost_so_far + EFFECTIVE_COST[i] + adder, x + DX[i], y + DY[i], DX[i], DY[i], recurse+1, is_clock);
-        walked[i] = true;
-    }
-    bool ret = false;
-    while (leastcost < maxcost+0.3) {
-        for (i = 0; i < 9; i++) {
-             double adder = 0.0;
-             if (walked[i])
-                 continue;
-             if (costs[i] <= leastcost) {
-                 bool this_ret;
-                 
-                 /* pay a small penalty for direction changes to give same length paths with fewer changes a bonus*/
-                 if (DX[i] != dx || DY[i] != dy) {
-                     adder += 0.1;
-		     if (is_clock)
-			adder += 0.4;
-		 }
-                 this_ret = one_path_walk(cost_so_far + EFFECTIVE_COST[i] + adder, x + DX[i], y + DY[i], DX[i], DY[i], recurse+1, is_clock);
-                 ret |= this_ret;
-                 if (ret)
-                     grid[y][x].dir_to_goal = i;
-                 walked[i] = true;
-             }   
-        }
-        leastcost += 0.3;
-    }
-    grid[y][x].visited = true;   
-
-    return ret;    
 }
+
 
 std::vector<struct waypoint> *  wiregrid::walk_back(void)
 {
@@ -371,6 +255,8 @@ std::vector<struct waypoint> *  wiregrid::walk_back(void)
         dx = grid[y][x].dirX;
         dy = grid[y][x].dirY;
         
+        grid[y][x].on_path = true;
+        
         if (dx != prevDX || dy != prevDY) {
             /* we're changing direction */
             wp.X = x;
@@ -391,8 +277,78 @@ std::vector<struct waypoint> *  wiregrid::walk_back(void)
     wp.Y = y;
     vec->push_back(wp);
     std::reverse(vec->begin(), vec->end());
+ //   debug_display();
     return vec;
 }
+
+static const int DX[9] = {-1, 0, 1, -1, 0, 1, -1, 0, 1};
+static const int DY[9] = {-1, -1, -1, 0, 0, 0, 1, 1, 1};
+static const float COST[9] = {SQRT2, 1, SQRT2, 1, 0, 1, SQRT2, 1, SQRT2 };
+static const float COST2[9] = {1.4 * SQRT2, 1, 1.4 * SQRT2, 1, 0, 1, 1.4 * SQRT2, 1, 1.4 * SQRT2 };
+static const int order[8] = {1,3,5,7,0,2,6,8};
+
+void wiregrid::visit(struct point *p)
+{
+    recursecount++;
+//    debug_display();
+    const float *EFFECTIVE_COST = COST;
+    if (is_clock)
+        EFFECTIVE_COST = COST2;
+    if (p->x == targetX && p->y == targetY) {
+        printf("Found the solution at distance %5.2f at rc %i\n", p->distance_from_start, recursecount);
+//        debug_display();
+        found_solution = true;
+        best_path = p->distance_from_start;       
+        return;
+    }
+    
+    p->visited = true;
+//    printf("Visiting %i %i  at distance %5.2f  hd %5.2f  qs %lu\n", p->x, p->y, p->distance_from_start, p->hamdist, queue.size());
+//    debug_display();
+    for (unsigned int q = 0; q < 8; q++) {
+        int i = order[q];
+        int newX, newY;
+        newX = p->x + DX[i];
+        newY = p->y + DY[i];
+        float newdist;
+        
+        if (newX < 0 || newY < 0 || newY >= height || newX >= width)
+            continue;
+            
+        if (grid[newY][newX].blocked)
+            continue;
+        if (grid[newY][newX].queued)
+            continue;
+            
+        newdist = p->distance_from_start + p->extra_score + EFFECTIVE_COST[i];
+        if (newX == targetX && newY == targetY)
+            printf("SOLUTION best path is %5.2f  newdist is %5.2f   target %5.2f  t hd %5.2f\n", best_path, newdist, grid[newY][newX].distance_from_start, grid[newY][newX].hamdist);
+            
+ 
+ 
+         if (p->dirX != -DX[i] || p->dirY != -DY[i]) {
+             if (is_clock)
+                 newdist += 0.2;
+             newdist += 0.2;
+         }
+//        printf("Looking at %i %i for newdist %5.2f\n", newX,newY, newdist);
+        
+        if (newdist + grid[newY][newX].hamdist > best_path)
+             continue;
+
+        if (grid[newY][newX].distance_from_start > newdist) {
+            grid[newY][newX].distance_from_start = newdist;
+            grid[newY][newX].dirX = -DX[i];
+            grid[newY][newX].dirY = -DY[i];
+           /* if (!grid[newY][newX].visited)*/ {
+                queue.push(&grid[newY][newX]);
+                grid[newY][newX].queued = true;
+            }
+        }
+    }    
+    
+}
+
 
 std::vector<struct waypoint> * wiregrid::path_walk(int x1, int y1, int x2, int y2, bool is_clock)
 {
@@ -417,16 +373,34 @@ std::vector<struct waypoint> * wiregrid::path_walk(int x1, int y1, int x2, int y
     targetX = x2;
     targetY = y2;
     
-    recursecount = 0;
- 
     abort_all_walks = false;   
+    update_destination(targetX, targetY);
     
+    recursecount = 0;
+    found_solution = false;
+    best_path = 3.0 * width * height;
+   
+ 
     /* make sure the origin is not blocked -- which is quite possible as by default all terminal nodes
      * are blocked */
     unblock_point(x1, y1);   
-    unblock_point(x2, y2);   
-    one_path_walk(0.0, x1, y1, 0, 0, 0, is_clock);
-    printf("recursecount is %i \n", recursecount);
+    unblock_point(x2, y2); 
+    
+    grid[originY][originX].distance_from_start = 0;
+    
+    queue.push(&grid[y1][x1]);
+    
+ 
+    while (queue.size() > 0) {
+        struct point *p;
+        p = queue.top();
+        queue.pop();
+        visit(p);
+        p->queued = false;
+    }   
+    
+
+    printf("recursecount is %i for path length %5.2f \n", recursecount, best_path);
  //   debug_display();
     return walk_back();
 }
