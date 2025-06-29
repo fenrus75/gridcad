@@ -73,6 +73,7 @@ public:
     virtual class port *get_clk_port(void) { return nullptr;};
     void connect_clk(class port *clk);
     virtual void enter_edit_mode(void) {};
+    virtual void reset_pointer(void) {};
     
     class contextmenu *get_menu(void) { return menu;};
     

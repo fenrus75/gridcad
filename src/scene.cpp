@@ -37,6 +37,18 @@ void callback_fit_to_screen(class scene *scene)
 	SDL_PushEvent(&ev);
 }
 
+void callback_sequencer_reset(class scene *scene)
+{
+	SDL_Event ev = {};
+
+
+	ev.type = EVENT_SEQUENCER_RESET;
+	ev.user.code = 0;
+	ev.user.data1 = scene;
+
+	SDL_PushEvent(&ev);
+}
+
 void callback_autoclock(class scene *scene)
 {
 	class port *clk = NULL;
@@ -74,6 +86,7 @@ scene::scene(std::string _name, std::string _parent)
 	menu->add_item("Connect clocks", callback_autoclock);
 	menu->add_item("Reroute wires", callback_reroute);
 	menu->add_item("Validate routing", callback_validate);
+	menu->add_item("Reset all sequencers", callback_sequencer_reset);
 }
 
 scene::~scene(void)

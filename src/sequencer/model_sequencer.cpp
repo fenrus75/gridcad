@@ -7,7 +7,6 @@ void callback_reset_sequencer(class element *elmnt)
 {
 	class sequencer * seq = (class sequencer *)elmnt;
 	seq->reset_pointer();
-	queue_calculate(seq);
 }
 
 void callback_stop_error(class element *elmnt)

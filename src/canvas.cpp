@@ -387,6 +387,10 @@ bool canvas::handle_event(SDL_Event &event)
 		dialogbox = NULL;
 	}
 
+	if (event.type == EVENT_SEQUENCER_RESET && event.user.data1 == current_scene) {
+		for (auto elem : current_scene->elements)
+			elem->reset_pointer();
+	}
 	if (event.type == EVENT_ZOOM_TO_FIT && event.user.data1 == current_scene) {  /* zoom to fit the screen */
 		fittoscreen = true;
 		float bX1 = current_scene->sizeX, bY1 = current_scene->sizeY, bX2 = 0, bY2 = 0;

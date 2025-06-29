@@ -23,7 +23,7 @@ public:
 	bool mouse_select(float X, float Y) override;
 	void calculate(int ttl) override;
 	void queued_calculate(int ttl) override;
-	void reset_pointer(void) { current_value = 0; };
+	void reset_pointer(void) override { current_value = 0; queue_calculate(this); };
 	void toggle_stop_error(void) { stop_clock_on_error = !stop_clock_on_error; };
 
 
