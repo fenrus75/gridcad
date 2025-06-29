@@ -18,6 +18,7 @@ public:
 	void from_json(json &j) override;
         void handle_event(class basecanvas *canvas, SDL_Event &event) override;
 	bool in_edit_mode(void) override { return name_edit->get_edit_mode() && single && selected;};    
+	void enter_edit_mode(void) override { name_edit->set_edit_mode(true); selected = true; single = true;};
 	void drawAt(class basecanvas *canvas, float X, float Y, int type) override;
 	bool mouse_select(float X, float Y) override;
 	void calculate(int ttl) override;

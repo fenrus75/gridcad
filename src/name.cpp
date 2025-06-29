@@ -169,7 +169,7 @@ void name::handle_event(SDL_Event &event)
 						cursorpos--;
 					break;
 				case SDLK_RETURN:
-					toggle_edit_mode();
+					set_edit_mode(false);
 					break;
 			}
 			break;

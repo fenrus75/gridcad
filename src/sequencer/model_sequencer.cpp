@@ -73,6 +73,7 @@ void sequencer::from_json(json &j)
 void sequencer::handle_event(class basecanvas *canvas, SDL_Event &event)
 {
 	element::handle_event(canvas, event);
+	name_edit->handle_event(event);
 }
 
 
@@ -91,7 +92,7 @@ void sequencer::drawAt(class basecanvas *canvas, float X, float Y, int type)
 		canvas->draw_text(std::to_string(values[current_value].intval), X+1, Y+1, 1,1);
 	}
 	if (ports[0]->has_net())
-		canvas->draw_text(std::to_string(current_value), X+2, Y+3, 1, 1); 
+		canvas->draw_text(std::to_string(current_value), X+1.75, Y+3, 1.25, 1); 
 
 	name_edit->drawAt(canvas,X, Y - 1, sizeX);
 
