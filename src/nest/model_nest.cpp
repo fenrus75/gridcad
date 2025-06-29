@@ -164,6 +164,7 @@ bool model_nest::mouse_select(float _X, float _Y)
 	if (!canvas) {
 		printf("Spawning a new window\n");
 		canvas = new class canvas(_scene);
+		canvas->unhide();
 		register_new_canvas(canvas);	
 	} else {
 		canvas->unhide();

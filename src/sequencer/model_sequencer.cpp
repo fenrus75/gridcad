@@ -90,6 +90,8 @@ void sequencer::drawAt(class basecanvas *canvas, float X, float Y, int type)
 	if (values.size() > 0) {
 		canvas->draw_text(std::to_string(values[current_value].intval), X+1, Y+1, 1,1);
 	}
+	if (ports[0]->has_net())
+		canvas->draw_text(std::to_string(current_value), X+2, Y+3, 1, 1); 
 
 	name_edit->drawAt(canvas,X, Y - 1, sizeX);
 

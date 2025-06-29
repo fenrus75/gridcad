@@ -35,6 +35,7 @@ using json = nlohmann::json;
 static std::vector<class basecanvas *> canvases;
 
 extern void fill_png_maps(void);
+extern void clear_png_maps(void);
 extern void set_timer(void);
 extern bool show_fps;
 
@@ -184,6 +185,7 @@ document::~document(void)
 
 	TTF_Quit();
 	SDL_Quit();
+	clear_png_maps();
 }
 
 bool clock_running = true;

@@ -53,6 +53,12 @@ def print_prologue():
         print("    datamap[\"" + filename + "\"] = "+varname+";")
         print("    sizemap[\"" + filename + "\"] =",len,";")
     print("}")
+    print("")
+    print("void clear_png_maps(void)")
+    print("{")
+    print("   datamap.clear();")
+    print("   sizemap.clear();")
+    print("}")
     
     
 def main():

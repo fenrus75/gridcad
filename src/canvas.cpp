@@ -206,8 +206,9 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 
 				best_port_to_autocomplete(dragging_port);
 
-				dragging_wire =
-					new wire(floorf(x),
+				if (dragging_wire)
+					delete dragging_wire;
+				dragging_wire =new wire(floorf(x), 
 							floorf(y),
 							floorf(x),
 							floorf(y));

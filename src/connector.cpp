@@ -38,6 +38,7 @@ connector::connector(float _X, float _Y)  : element(3, 3, "")
 
 connector::~connector(void)
 {
+	
 }
 
 void connector::drawAt(class basecanvas *canvas, float X, float Y, int type)
