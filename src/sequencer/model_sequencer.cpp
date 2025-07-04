@@ -259,14 +259,14 @@ std::string sequencer::get_verilog_modules(std::string path)
 		s = s +"assign Out[" + std::to_string(i) + "] = ";
 
 		for (unsigned int Y = 0; Y < values.size(); Y++) {
-			if (BIT_IS_SET(i, Y)) {
+			if (BIT_IS_SET(i, values[Y].intval)) {
 				if (!first) 
 					s = s + " | ";
 				first = false;
 				s = s + "(";
 				bool nestedfirst = true;
 				for (unsigned int x = 0; x <= counterwidth; x++) {
-					if (BIT_IS_SET(x, values[Y].intval)) {
+					if (BIT_IS_SET(x, Y)) {
 						if (!nestedfirst)
 							s = s + " & ";
 						nestedfirst = false;
@@ -297,14 +297,14 @@ std::string sequencer::get_verilog_modules(std::string path)
 			unsigned int nextc = Y + 1;
 			if (nextc >= values.size())
 				nextc  = 0;
-			if (BIT_IS_SET(i, Y)) {
+			if (BIT_IS_SET(i, nextc)) {
 				if (!first) 
 					s = s + " | ";
 				first = false;
 				s = s + "(";
 				bool nestedfirst = true;
 				for (unsigned int x = 0; x <= counterwidth; x++) {
-					if (BIT_IS_SET(x, nextc)) {
+					if (BIT_IS_SET(x, Y)) {
 						if (!nestedfirst)
 							s = s + " & ";
 						nestedfirst = false;
