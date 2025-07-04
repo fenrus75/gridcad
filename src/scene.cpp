@@ -108,6 +108,16 @@ void scene::add_element(class element * element)
 	generation_count++;
 	element->update_parental_name(get_full_name());
 	printf("Element parnetal name is %s   name is %s parent is %s \n", element->get_parental_name().c_str(), name.c_str(), parental_name.c_str());
+	
+	has_sequencer = false;
+	for (auto elem : elements)
+		if (elem->class_id() == "sequencer:")
+			has_sequencer = true;
+			
+	if (has_sequencer)
+		menu->set_active("Reset all sequencers");
+	else
+		menu->set_inactive("Reset all sequencers");
 }
 
 bool scene::can_place_element(float x, float y, int w, int h,
@@ -181,6 +191,14 @@ void scene::remove_element(class element *element)
 		}
 	}
 	generation_count++;
+	has_sequencer = false;
+	for (auto elem : elements)
+		if (elem->class_id() == "sequencer:")
+			has_sequencer = true;
+	if (has_sequencer)
+		menu->set_active("Reset all sequencers");
+	else
+		menu->set_inactive("Reset all sequencers");
 }
 
 void scene::to_json(json &j)
@@ -192,6 +210,7 @@ void scene::to_json(json &j)
 	j["name"] = name;
 	j["parental_name"] = parental_name;
 	j["verilog_name"] = verilog_name;
+	j["has_sequencer"] = has_sequencer;
 
 	for (i = 0; i < elements.size(); i++) {
 		json p;
@@ -238,6 +257,11 @@ void scene::from_json(json &j)
 
 	cycle_color();
 	redo_nets();
+	has_sequencer = j.value("has_sequencer", false);
+	if (has_sequencer)
+		menu->set_active("Reset all sequencers");
+	else
+		menu->set_inactive("Reset all sequencers");
 }
 
 void scene::process_delete_requests(void)

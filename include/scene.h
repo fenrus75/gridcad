@@ -66,5 +66,6 @@ protected:
     std::string parental_name = "";    
     std::string verilog_name = "";
     uint64_t generation_count = 0;
+    bool has_sequencer = false;
 };
 
