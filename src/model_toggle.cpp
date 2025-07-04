@@ -51,6 +51,8 @@ model_toggle::model_toggle(float _X, float _Y)  : element(1, 1, "Input")
     value_edit->want_numbers_only();
     
     add_port(sizeX, 1, "Input", PORT_OUT);    
+    
+    ports[0]->allow_fancy_verilog();
     menu->add_item("Edit name", callback_editname);
     menu->add_item("Set as single wire", callback_wire1);
     menu->add_item("Set as 4 bit bus", callback_bus4);
@@ -215,7 +217,8 @@ std::string model_toggle::get_verilog_main(void)
     if (!ports[0]->has_net())
         return "";
 
-    s = s + "assign " + ports[0]->get_net_verilog_name() + " = " + get_verilog_name() + ";\n";
+    if (get_verilog_name() != ports[0]->get_net_verilog_name())
+      s = s + "assign " + ports[0]->get_net_verilog_name() + " = " + get_verilog_name() + ";\n";
 
     return s;
 }

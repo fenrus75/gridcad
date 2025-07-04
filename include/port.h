@@ -81,6 +81,7 @@ public:
     class net * get_net(void);
     void check_reverse(void);
     std::string get_verilog_width(void);
+    void allow_fancy_verilog(void) { allow_fancy_verilog_name = true; };
 	
 private:
     class port_contextmenu *menu = NULL;
@@ -92,4 +93,5 @@ private:
     std::string verilog_name = "";
     unsigned int distance_from_outport = INT_MAX;
     bool distress = false;
+    bool allow_fancy_verilog_name = false;
 };

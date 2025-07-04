@@ -99,6 +99,7 @@ model_clock::model_clock(float _X, float _Y)  : element(1, 1, "clk")
     global_clock.valid = true;
     
     add_port(1, sizeY, "clk", PORT_OUT, 1);    
+    ports[0]->allow_fancy_verilog();
     menu->add_item("Stop clock", callback_stop_clock);
     menu->add_item("Start clock", callback_start_clock);
     menu->add_item("Single clock", callback_single_clock);
@@ -185,7 +186,8 @@ std::string model_clock::get_verilog_main(void)
     if (!ports[0]->has_net())
       return "";
     
-    s = s + "assign " + ports[0]->get_net_verilog_name() + " = " + get_verilog_name() + ";\n";
+    if (get_verilog_name() != ports[0]->get_net_verilog_name())
+        s = s + "assign " + ports[0]->get_net_verilog_name() + " = " + get_verilog_name() + ";\n";
     
     return s;
 }

@@ -57,6 +57,7 @@ model_output::model_output(float _X, float _Y)  : element(1, 1, "Output")
     name_edit = new class name(&name);
     
     add_port(-1, 1, "Output", PORT_IN);    
+    ports[0]->allow_fancy_verilog();
     menu->add_item("Edit name", callback_editname);
     menu->add_item("Set as single wire", callback_wire1);
     menu->add_item("Set as 4 bit bus", callback_bus4);
@@ -165,7 +166,8 @@ std::string model_output::get_verilog_main(void)
     std::string p = "";
     std::string s = "";
     p = std::to_string(ports[0]->get_width()) + "'b0";
-    s = s + "assign " + get_verilog_name() + " = " + ports[0]->get_net_verilog_name(p) + ";\n";
+    if (get_verilog_name() != ports[0]->get_net_verilog_name(p))
+        s = s + "assign " + get_verilog_name() + " = " + ports[0]->get_net_verilog_name(p) + ";\n";
     return s;
 }
 

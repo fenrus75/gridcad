@@ -403,6 +403,7 @@ void port::to_json(json &j)
 	j["wires"] = json::array();
 	j["distance_from_outport"] = distance_from_outport;
 	j["distress"] = distress;
+	j["allow_fancy_verilog_name"] = allow_fancy_verilog_name;
 	for (i = 0; i < wires.size(); i++) {
 		json p;
 		wires[i]->to_json(p);
@@ -426,6 +427,7 @@ void port::from_json(json &j)
 	color = j.value("color", 0);
 	distress = j.value("distress", false);
 	distance_from_outport = j.value("distance_from_outport", INT_MAX);
+	allow_fancy_verilog_name = j.value("allow_fancy_verilog_name", false);
 	for (i = 0; i < j["wires"].size(); i++) {
 		class wire *wire;
 		wire = json_wire_factory(j["wires"][i]);
@@ -614,6 +616,8 @@ void port::add_net(class net *net)
 		wire->add_net(net);
 
 	net->add_port(this);
+	if (allow_fancy_verilog_name)
+		net->set_special_verilog_name(name);
 }
 
 void port::remove_net(void)
@@ -675,12 +679,15 @@ int port::get_net_width(void)
 	if (wires.size() < 1)
 		return 0;
 	net = wires[0]->get_net();
-	return net->get_width();
+	if (net)
+		return net->get_width();
+	else 
+		return get_width();
 }
 
 void port::validate(void)
 {
-	printf("Validaitng port %s\n", name.c_str());
+	printf("Validating port %s\n", name.c_str());
 	distress = false;
 	if (name == "clk" && wires.size() == 0 && direction == PORT_IN)
 		distress = true;

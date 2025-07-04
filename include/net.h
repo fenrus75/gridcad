@@ -28,6 +28,7 @@ public:
 	unsigned int netnum;
 	
 	std::string get_verilog_name(void);
+	void set_special_verilog_name(std::string name) { special_verilog_name = name; };
 	
 	int get_width(void);
 	std::string get_width_string(void);
@@ -45,5 +46,6 @@ protected:
 	int color = 0;
 	
 	std::string verilog_name = "";
+	std::string special_verilog_name = "";
 };
 

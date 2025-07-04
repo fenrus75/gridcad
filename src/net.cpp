@@ -156,6 +156,9 @@ void net::update_color(int _color)
 
 std::string net::get_verilog_name(void)
 {
+	if (special_verilog_name != "")
+		verilog_name = special_verilog_name;
+		
 	if (verilog_name == "")
 		verilog_name = generate_wire_name();
 
@@ -193,7 +196,10 @@ std::string net::get_width_string(void)
 
 std::string net::get_verilog_wire_decl(void)
 {
-	std::string s = "wire " + get_width_string() + " " + get_verilog_name() + ";";
+	std::string s = "";
+	/* special verilog names already have their own verilog decleration */
+	if (special_verilog_name == "")
+		s = "wire " + get_width_string() + " " + get_verilog_name() + ";";
 	return s;
 }
 
