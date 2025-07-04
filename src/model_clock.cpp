@@ -137,10 +137,12 @@ void model_clock::drawAt(class basecanvas *canvas, float X, float Y, int type)
 void model_clock::to_json(json &j)
 {
      element::to_json(j);
+     j["clock_running"] = clock_running;
 }
 void model_clock::from_json(json &j)
 {
      element::from_json(j);
+     clock_running = j.value("clock_running", true);
 }
 
 void model_clock::handle_event(class basecanvas *canvas, SDL_Event &event)
