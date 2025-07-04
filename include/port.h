@@ -82,6 +82,7 @@ public:
     void check_reverse(void);
     std::string get_verilog_width(void);
     void allow_fancy_verilog(void) { allow_fancy_verilog_name = true; };
+    void update_fancy_name(std::string name);
 	
 private:
     class port_contextmenu *menu = NULL;

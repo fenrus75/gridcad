@@ -28,6 +28,7 @@ public:
     void set_width(int width) { ports[0]->set_width(width); if (width == 1) value.type = VALUE_TYPE_BOOL; else value.type = VALUE_TYPE_INT;};
     std::string get_verilog_main(void) override;
     std::string get_verilog_width(void) override;
+    void create_verilog_name(int seqno, std::vector<std::string> *existing) override;
 private:
     std::string strvalue = "";
     struct value value = {};

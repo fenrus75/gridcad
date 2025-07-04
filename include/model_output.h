@@ -26,6 +26,7 @@ public:
     int get_width(void) { return ports[0]->get_width();};
     std::string get_verilog_main(void) override;
     std::string get_verilog_width(void) override;
+    void create_verilog_name(int seqno, std::vector<std::string> *existing) override;
 private:
     struct value value = {};
     class name *name_edit = NULL;

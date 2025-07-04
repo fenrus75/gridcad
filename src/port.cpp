@@ -713,3 +713,13 @@ std::string port::get_verilog_width(void)
       s = "[" + std::to_string(w-1) + ":0]";
     return s;
 }
+
+void port::update_fancy_name(std::string newname)
+{
+	class net *net;
+	net = get_net();
+	if (!net)
+		return;
+	if (allow_fancy_verilog_name)
+		net->set_special_verilog_name(newname);
+}

@@ -117,6 +117,7 @@ void model_output::from_json(json &j)
 {
      element::from_json(j);
      value = j.value("value", value);
+     ports[0]->allow_fancy_verilog();
 }
 
 void model_output::handle_event(class basecanvas *canvas, SDL_Event &event)
@@ -179,4 +180,10 @@ std::string model_output::get_verilog_width(void)
     if (w > 1)
       s = "[" + std::to_string(w-1) + ":0]";
     return s;
+}
+
+void model_output::create_verilog_name(int seqno, std::vector<std::string> *existing)
+{
+    element::create_verilog_name(seqno, existing);
+    ports[0]->update_fancy_name(verilog_name);
 }

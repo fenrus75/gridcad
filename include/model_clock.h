@@ -22,6 +22,7 @@ public:
     class port *get_clk_port(void) override { return ports[0];};
     std::string get_verilog_main(void) override;
     bool mouse_select(float _X, float _Y) override;
+    void create_verilog_name(int seqno, std::vector<std::string> *existing) override;
 private:
 };
 

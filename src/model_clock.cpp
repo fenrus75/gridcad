@@ -144,6 +144,7 @@ void model_clock::from_json(json &j)
 {
      element::from_json(j);
      clock_running = j.value("clock_running", true);
+     ports[0]->allow_fancy_verilog();
 }
 
 void model_clock::handle_event(class basecanvas *canvas, SDL_Event &event)
@@ -211,3 +212,9 @@ bool model_clock::mouse_select(float _X, float _Y)
 
 
 struct value global_clock = {};
+
+void model_clock::create_verilog_name(int seqno, std::vector<std::string> *existing)
+{
+    element::create_verilog_name(seqno, existing);
+    ports[0]->update_fancy_name(verilog_name);
+}
