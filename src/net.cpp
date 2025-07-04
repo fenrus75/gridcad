@@ -106,11 +106,18 @@ void net::validate(void)
 			value.is_error = true;
 			set_value(&value, DEFAULT_TTL);
 		}
+		for (auto port:ports)
+			if (port->direction == PORT_OUT)
+				port->set_distress();
+			else
+				port->clear_distress();
 	} else {
 		if (value.is_error) {
 			value.is_error = false;
 			set_value(&value, DEFAULT_TTL);
 		}
+		for (auto port:ports)
+			port->clear_distress();
 	}
 	if (zcount > 0)
 		has_z = true;
