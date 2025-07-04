@@ -178,3 +178,178 @@ void sequencer::check_input(void)
 	}
 
 }
+
+
+
+std::string sequencer::get_verilog_main(void)
+{
+	std::string s = "";
+	if (verilog_module_name == "")
+		verilog_module_name = append_random_bits(verilog_name + "_tt_");
+
+	s = s + verilog_module_name + " " + get_verilog_name() + "(";
+	bool first = true;
+	for (auto port : ports) {
+
+		if (!port->has_net())
+			continue;
+
+		if (!first)
+			s = s + ", ";
+		first = false;
+		s = s + "." + port->get_verilog_name() + "(";
+		s = s + port->get_net_verilog_name();
+		s = s + ")";
+
+	}
+	s = s + ");\n";
+
+	return s;
+}
+
+#define BIT_IS_SET(bit, value)  ( !!((1 << bit) & value))
+
+static unsigned int highest_addr_bit(unsigned int size)
+{
+    unsigned int i,j;
+    i = 0;
+    j = 2;
+    while (1) {
+        if (size <= j) {
+            return i;
+        }
+        j = j << 1;
+        i ++;
+    }
+    return 0;
+}
+
+
+/* TODO -- rather than a pure basic SOP, run espresso on this and make it more minimal */
+std::string sequencer::get_verilog_modules(std::string path)
+{
+	std::string s = "";
+	
+	unsigned int outwidth = ports[1]->get_net_width();
+	unsigned int counterwidth = highest_addr_bit(values.size());
+
+	s = s + "module " + verilog_module_name + "\n (";
+	bool first = true;
+	for (auto port : ports) {
+		if (!port->has_net())
+			continue;
+		if (!first)
+			s = s + ", ";
+		first = false;
+		if (port->direction == PORT_IN)
+			s = s + "input ";
+		if (port->direction == PORT_OUT)
+			s = s + "output ";
+		s = s + port->get_verilog_width() + " ";
+		s = s +port->get_verilog_name();
+
+	}
+	s = s + ");\n\n";
+	
+	s = s + "reg [" + std::to_string(counterwidth) + ":0] counter;\n";
+	s = s + "wire [" + std::to_string(counterwidth) + ":0] nextcounter;\n";
+	
+	for (unsigned int i = 0; i < outwidth; i++) {
+		first = true;
+		s = s +"assign Out[" + std::to_string(i) + "] = ";
+
+		for (unsigned int Y = 0; Y < values.size(); Y++) {
+			if (BIT_IS_SET(i, Y)) {
+				if (!first) 
+					s = s + " | ";
+				first = false;
+				s = s + "(";
+				bool nestedfirst = true;
+				for (unsigned int x = 0; x <= counterwidth; x++) {
+					if (BIT_IS_SET(x, values[Y].intval)) {
+						if (!nestedfirst)
+							s = s + " & ";
+						nestedfirst = false;
+						s = s + "counter[" + std::to_string(x) +"]";
+					} else {
+						if (!nestedfirst)
+							s = s + " & ";
+						nestedfirst = false;
+						s = s + "(! counter[" +std::to_string(x) + "])";
+					}
+				}
+
+				s = s + ")";
+			}
+		}
+
+		if (first) 
+			s = s + "1'b0";
+
+		s = s + ";\n";
+	}
+
+	for (unsigned int i = 0; i <= counterwidth; i++) {
+		first = true;
+		s = s +"assign nextcounter[" + std::to_string(i) + "] = ";
+
+		for (unsigned int Y = 0; Y < values.size(); Y++) {
+			unsigned int nextc = Y + 1;
+			if (nextc >= values.size())
+				nextc  = 0;
+			if (BIT_IS_SET(i, Y)) {
+				if (!first) 
+					s = s + " | ";
+				first = false;
+				s = s + "(";
+				bool nestedfirst = true;
+				for (unsigned int x = 0; x <= counterwidth; x++) {
+					if (BIT_IS_SET(x, nextc)) {
+						if (!nestedfirst)
+							s = s + " & ";
+						nestedfirst = false;
+						s = s + "counter[" + std::to_string(x) +"]";
+					} else {
+						if (!nestedfirst)
+							s = s + " & ";
+						nestedfirst = false;
+						s = s + "(! counter[" +std::to_string(x) + "])";
+					}
+				}
+
+				s = s + ")";
+			}
+		}
+
+		if (first) 
+			s = s + "1'b0";
+
+		s = s + ";\n";
+	}
+	s = s + "\n";
+	s = s + "always @(posedge clk) \n";
+	s = s + "begin\n";
+	s = s + "    counter <= nextcounter;\n";
+	s = s + "end \n";
+
+	s = s + "endmodule\n";
+
+
+	return s;
+}
+
+
+std::string sequencer::get_verilog_name(void)
+{
+	if (verilog_name == "") {
+		verilog_name = name; 
+		std::replace(verilog_name.begin(), verilog_name.end(), ' ', '_');
+		std::replace(verilog_name.begin(), verilog_name.end(), '-', '_');
+		std::replace(verilog_name.begin(), verilog_name.end(), '+', '_');
+		verilog_name = append_random_bits(verilog_name + "_");
+	}
+
+
+	return verilog_name;
+}
+

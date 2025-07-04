@@ -25,6 +25,9 @@ public:
 	void queued_calculate(int ttl) override;
 	void reset_pointer(void) override { current_value = 0; queue_calculate(this); };
 	void toggle_stop_error(void) { stop_clock_on_error = !stop_clock_on_error; };
+	std::string get_verilog_main(void) override;
+	std::string get_verilog_modules(std::string path) override;
+	std::string get_verilog_name(void) override;
 
 
 protected:
@@ -40,6 +43,6 @@ protected:
 	class seqcanvas *canvas = NULL;
 	bool is_error = false;
 	bool stop_clock_on_error = false;
-	
+	std::string verilog_module_name = "";	
 	friend class seqcanvas;
 };

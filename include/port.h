@@ -80,7 +80,7 @@ public:
     bool has_net(void);
     class net * get_net(void);
     void check_reverse(void);
-
+    std::string get_verilog_width(void);
 	
 private:
     class port_contextmenu *menu = NULL;

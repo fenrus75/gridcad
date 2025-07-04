@@ -695,3 +695,14 @@ void port::validate(void)
 			distress = true;
 	}
 }
+
+
+std::string port::get_verilog_width(void)
+{
+    std::string s = "";
+    unsigned int w = get_width();
+    
+    if (w > 1)
+      s = "[" + std::to_string(w-1) + ":0]";
+    return s;
+}
