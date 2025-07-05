@@ -425,8 +425,40 @@ SDL_Texture *basecanvas::text_to_texture(std::string text)
 	return image;
 }
 
+extern float ratio_effect(float ratio);
+
 void basecanvas::draw(void)
 {
+	if (in_animation) {
+		uint64_t now = SDL_GetTicks64();
+		
+		float ratio;
+		float effect;
+		float effect2;
+		ratio = (now - animation_start) / 400.0;
+		if (ratio > 1.0)
+			ratio = 1.0;
+			
+		effect = ratio_effect(ratio);
+		effect2 = ratio * 2;
+		if (effect2 > 1.0)
+			effect2 = 1.0;
+		
+		if (ratio >= 1.0) {
+			scaleX = target_scaleX;
+			scaleY = target_scaleY;
+			offsetX = target_offsetX;
+			offsetY = target_offsetY;
+			in_animation = false;
+			return;
+		}
+		
+		scaleX = from_scaleX + effect * (target_scaleX - from_scaleX);
+		scaleY = from_scaleY + effect * (target_scaleY - from_scaleY);
+		offsetX = from_offsetX + effect2 * (target_offsetX - from_offsetX);
+		offsetY = from_offsetY + effect2 * (target_offsetY - from_offsetY);
+			
+	}
 }
 
 bool basecanvas::handle_event(SDL_Event &event)

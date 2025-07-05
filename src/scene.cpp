@@ -37,6 +37,18 @@ void callback_fit_to_screen(class scene *scene)
 	SDL_PushEvent(&ev);
 }
 
+void callback_fit_to_screen2(class scene *scene)
+{
+	SDL_Event ev = {};
+
+
+	ev.type = EVENT_ZOOM_TO_FIT;
+	ev.user.code = 1;
+	ev.user.data1 = scene;
+
+	SDL_PushEvent(&ev);
+}
+
 void callback_sequencer_reset(class scene *scene)
 {
 	SDL_Event ev = {};

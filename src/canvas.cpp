@@ -40,6 +40,7 @@ bool show_fps = false;
 using json = nlohmann::json;
 
 extern void callback_fit_to_screen(class scene *scene);
+extern void callback_fit_to_screen2(class scene *scene);
 extern void callback_autoclock(class scene *scene);
 extern void callback_reroute(class scene *scene);
 
@@ -102,7 +103,7 @@ canvas::canvas(class scene *_scene, struct capabilities *cap)
 		button_bar->add_button("Upload to FPGA", "assets/icon_program_fpga.png", EVENT_PROGRAM_FPGA);
 	}
 	current_scene = _scene;
-	callback_fit_to_screen(current_scene);
+	callback_fit_to_screen2(current_scene);
 	SDL_MaximizeWindow(window);
 }
 
@@ -407,12 +408,25 @@ bool canvas::handle_event(SDL_Event &event)
 		}
 
 		if (bX2 != 0 && bX2 != bX1) {
-			offsetX = bX1 - 3;
-			offsetY = bY1 - 3;
-			scaleX = main_area_rect.w / (bX2-bX1 + 6.0) ;
-			scaleY = main_area_rect.h / (bY2-bY1 + 6.0) ;
-			scaleX = std::min(scaleX, scaleY);
-			scaleY = scaleX;
+			from_offsetX = offsetX;
+			from_offsetY = offsetY;
+			from_scaleX = scaleX;
+			from_scaleY = scaleY;
+			animation_start = SDL_GetTicks64();
+			target_offsetX = bX1 - 3;
+			target_offsetY = bY1 - 3;
+			target_scaleX = main_area_rect.w / (bX2-bX1 + 6.0) ;
+			target_scaleY = main_area_rect.h / (bY2-bY1 + 6.0) ;
+			target_scaleX = std::min(target_scaleX, target_scaleY);
+			target_scaleY = target_scaleX;
+			in_animation = true;
+		
+			if (event.user.code != 0) {
+				from_offsetX = target_offsetX;
+				from_offsetY = target_offsetY;
+				from_scaleX = target_scaleX;
+				from_scaleY = target_scaleY;
+			}
 		}
 	}
 
@@ -901,7 +915,7 @@ bool canvas::handle_event(SDL_Event &event)
 					ui_area_rect.h = event.window.data2;
 					icon_bar->resize(ui_area_rect);
 					if (fittoscreen)
-						callback_fit_to_screen(current_scene);
+						callback_fit_to_screen2(current_scene);
 					if (dialogbox)
 						dialogbox->update_screen_size(event.window.data1, event.window.data2);
 					break;
@@ -933,6 +947,8 @@ void canvas::draw(void)
 {
 	if (!window_shown)
 		return;
+		
+	basecanvas::draw();
 	/* first, draw the lighter gray background */
 
 	SDL_SetRenderDrawColor(renderer, R(COLOR_BACKGROUND_GRID),
