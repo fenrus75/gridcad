@@ -847,9 +847,15 @@ void wire::calculate_drawpoints(void)
 	
 	if (oldpoints) {
 		if ((*oldpoints)[0].X != (*points)[0].X || (*oldpoints)[0].Y != (*points)[0].Y) {
-			printf("XY mismatch on oldpoints\n");
-			delete oldpoints;
-			oldpoints = NULL;
+			unsigned int q = points->size() - 1;
+			unsigned int p = oldpoints->size() - 1;
+			if ((*oldpoints)[p].X == (*points)[q].X && (*oldpoints)[p].Y == (*points)[q].Y) {
+					/* just animate the wire to the new spot */
+			} else {
+				printf("XY mismatch on oldpoints %5.2f %5.2f vs %5.2f %5.2f\n", (*oldpoints)[0].X, (*oldpoints)[0].Y , (*points)[0].X, (*points)[0].Y);
+				delete oldpoints;
+				oldpoints = NULL;
+			}
 		}
 	}
 			
