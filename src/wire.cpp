@@ -820,6 +820,7 @@ void wire::calculate_drawpoints(void)
 	float ratio;
 	float reffect;
 	struct waypoint wp;
+	std::vector<struct waypoint> *temppoints = NULL;
 
 	if (drawpoints && !in_animation)
 		return;
@@ -858,6 +859,20 @@ void wire::calculate_drawpoints(void)
 			wp.X = ((*oldpoints)[i].X + (*oldpoints)[i - 1].X)/2;
 			wp.Y = ((*oldpoints)[i].Y + (*oldpoints)[i - 1].Y)/2;
 			oldpoints->insert(oldpoints->begin() + i, wp);
+		}
+	}
+
+	if (oldpoints && oldpoints->size() > points->size() && points->size() >= 2) {
+		temppoints = points;
+		points = new std::vector<struct waypoint>;
+		for (auto i : *temppoints)
+			points->push_back(i);
+			
+		while (oldpoints->size() > points->size()) {
+			unsigned int i = 1 + (rand() % (points->size()-1));
+			wp.X = ((*points)[i].X + (*points)[i - 1].X)/2;
+			wp.Y = ((*points)[i].Y + (*points)[i - 1].Y)/2;
+			points->insert(points->begin() + i, wp);
 		}
 	}
 	if (oldpoints && oldpoints->size() != points->size()) {
@@ -935,6 +950,12 @@ void wire::calculate_drawpoints(void)
 	
 	if (ratio >= 1.0)
 		in_animation = false;
+		
+	if (temppoints) {
+		delete points;
+		points = temppoints;
+		temppoints = NULL;
+	}
 }
 
 
