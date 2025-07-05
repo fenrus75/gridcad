@@ -309,7 +309,7 @@ void scene::rewire_section(int x1, int y1, int w, int h)
 			wire = is_wire(x, y);
 			if (wire) {
 				wire->reseat();
-				wire->route(this);
+				wire->redo_wires();
 			}
 		}
 }
