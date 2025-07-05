@@ -173,7 +173,7 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 			return false;
 		}
 
-		if (!dragging && wr && !is_port) {
+		if (!dragging && wr && !is_port && floating.size()==0) {
 			class wire *wr2;
 			class element *_element;
 			class port *port;
@@ -227,6 +227,7 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 				current_scene->add_element(flt);
 				flt->stop_drag(this);
 				flt->reseat();
+				current_scene->rewire_section(flt);
 			}
 			floating.clear();
 			if (active_icon)
