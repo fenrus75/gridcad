@@ -48,7 +48,7 @@ public:
     void set_new_name(void);
     
     bool is_empty(void) { return ports.size() == 0; };
-    void redo_wires(void) { delete points; points = NULL; };
+    void redo_wires(void);
     int get_width(void) { return width; };
     void set_width(int _width) { if (_width) width = _width;};
     class port * get_other_port(class port *port);
@@ -70,6 +70,8 @@ public:
     void set_is_z(bool z) { is_z  = z; };
     bool get_is_z(void) { return is_z; };
     
+    void calculate_drawpoints(void);
+    
 protected:
     bool dead = false;
     bool selected = false;
@@ -81,8 +83,12 @@ protected:
     int refcount = 0;
     int width = 0;
     std::vector<struct waypoint> *points = NULL;
+    std::vector<struct waypoint> *drawpoints = NULL;
+    std::vector<struct waypoint> *oldpoints = NULL;
     class net *net = NULL; /* nosave */
     bool is_reversed = false;
     bool is_z = false; /* nosave -- net recalculates this */
+    bool in_animation = false; /* nosave */
+    uint64_t points_timestamp = 0; /* nosave */
 };
 

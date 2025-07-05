@@ -45,6 +45,10 @@ wire::~wire(void)
 {
 	if (points)
 		delete points;
+	if (drawpoints)
+		delete drawpoints;
+	if (oldpoints)
+		delete oldpoints;
 }
 
 void wire::set_new_name(void)
@@ -204,7 +208,7 @@ void draw_snake_line(class basecanvas *canvas, float x1, float y1, float x2, flo
 
 void wire::draw(class basecanvas *canvas, int _color)
 {
-	int prevX, prevY;
+	float prevX, prevY;
 	bool first = true;
 	int stepsize;
 	int step;
@@ -213,8 +217,10 @@ void wire::draw(class basecanvas *canvas, int _color)
 
 	if (!points)
 		route(canvas->get_scene());
+		
+	calculate_drawpoints();	
 
-	if (!points) {
+	if (!drawpoints) {
 		return;
 	}
 
@@ -226,7 +232,7 @@ void wire::draw(class basecanvas *canvas, int _color)
 
 	if (value.is_clock && !clock_running)
 		step = (global_clock.arrayval * 4) % stepsize;;
-	for (auto point: *points) {
+	for (auto point: *drawpoints) {
 		if (first) {
 			prevX = point.X;
 			prevY = point.Y;
@@ -240,7 +246,7 @@ void wire::draw(class basecanvas *canvas, int _color)
 	first =true;
 
 	/* only draw the snake line on windows that have the focus -- it's resource intensive */
-	for (auto point: *points) {
+	for (auto point: *drawpoints) {
 		if (first) {
 			prevX = point.X;
 			prevY = point.Y;
@@ -262,23 +268,35 @@ void wire::move_target(int X, int Y)
 		return;
 	X2 = X;
 	Y2 = Y;
-	if (points)
-		delete points;
+	if (points) {
+		if (oldpoints)
+			delete oldpoints;
+		oldpoints = points;
+	}
 	points = NULL;
 }
 
 void wire::clear_route(void)
 {
-	if (points)
-		delete points;
+	if (!points)
+		return;
+	if (oldpoints)
+		delete oldpoints;
+	oldpoints = points;
 	points = NULL;
 }
 
 void wire::route(class scene *scene)
 {
 	being_routed = true;
-	if (points)
-		delete points;
+	
+	if (points) {
+		if (oldpoints) 
+			delete oldpoints;
+			
+		oldpoints = points;
+	}
+		
 
 	printf("Routing wire\n");
 
@@ -316,6 +334,9 @@ void wire::route(class scene *scene)
 	is_reversed = want_reverse;
 	being_routed = false;
 	reseat();
+	
+	points_timestamp = SDL_GetTicks64();
+	in_animation = true;
 }
 
 void wire::check_reverse(void)
@@ -756,4 +777,137 @@ bool wire::update_distances(void)
 		return true;
 	}
 	return false;
+}
+
+/* credit: https://easings.net/#easeInOutBack */
+float ratio_effect(float ratio)
+{
+	float c1 = 1.70157;
+	float c2 = c1 * 1.525;
+	float r;
+	if (ratio <= 0)
+		return 0.0;
+	if (ratio >= 1.0)
+		return 1.0;
+		
+	if (ratio < 0.5)
+		r = (pow(2 * ratio, 2) * ((c2 + 1) * 2 * ratio - c2))/2;
+	else
+		r = (pow(2 * ratio - 2, 2) * ((c2 + 1) * (ratio * 2 -2) + c2) + 2) /2;
+		
+	if (r < - 1)
+		r = -1;
+	if (r > 2)
+		r = 2;
+	return r;
+}
+
+void wire::calculate_drawpoints(void)
+{
+	uint64_t now;
+	float ratio;
+	float reffect;
+	struct waypoint wp;
+
+	if (drawpoints && !in_animation)
+		return;
+	if (drawpoints) {
+		delete drawpoints; 
+		drawpoints = NULL;
+	}
+	if (!points)
+		return;
+	if (points->size() < 2)
+		return;
+	
+	
+	now = SDL_GetTicks64();
+	
+	ratio = (now - points_timestamp) / 400.0;
+	if (ratio < 0.0)
+		ratio = 0.0;
+	if (ratio > 1.0)
+		ratio = 1.0;
+	
+	/* if we end up with a too different wire, just zap the old points */
+	if (oldpoints && oldpoints->size() != points->size()) {
+		printf("Size mismatch %lu vs %lu\n", oldpoints->size(), points->size());
+		delete oldpoints;
+		oldpoints = NULL;
+	}
+	
+	if (oldpoints) {
+		if ((*oldpoints)[0].X != (*points)[0].X || (*oldpoints)[0].Y != (*points)[0].Y) {
+			printf("XY mismatch on oldpoints\n");
+			delete oldpoints;
+			oldpoints = NULL;
+		}
+	}
+			
+	
+	if (!oldpoints) {
+		printf("No old points\n");
+		oldpoints = new std::vector<struct waypoint>;
+		float x1, y1, dx, dy;
+		x1 = (*points)[0].X;
+		y1 = (*points)[0].Y;
+		dx = (*points)[points->size()-1].X - x1;
+		dy = (*points)[points->size()-1].Y - y1;
+		dx = dx / (points->size()-1);
+		dy = dy / (points->size()-1);
+		printf("x1 y1 %5.2f %5.2f\n", x1, y1);
+		printf("dx dy %5.2f %5.2f\n", dx, dy);
+		for (unsigned int i = 0; i < points->size(); i++) {
+			if (i == 0 || i == points->size() - 1) {
+				wp = (*points)[i];
+				oldpoints->push_back(wp);
+				continue;
+			}
+			wp.X = x1 + dx * i;
+			wp.Y = y1 + dy * i;
+			printf("wpX wpY %5.2f %5.2f\n", wp.X, wp.Y);
+			oldpoints->push_back(wp);
+		}
+		printf("x2 y2 %5.2f %5.2f\n", (*points)[points->size()-1].X,(*points)[points->size()-1].Y) ;
+	}
+	
+
+	drawpoints = new std::vector<struct waypoint>;
+	
+	reffect = ratio_effect(ratio);
+
+	for (unsigned int i = 0; i < points->size(); i++)
+	{		
+		if (i == 0 || i == points->size() - 1) {
+			wp = (*points)[i];
+			drawpoints->push_back(wp);
+			continue;
+		}
+		float x1, y1, dx, dy;
+		auto p = (*points)[i];
+		auto o = (*oldpoints)[i];
+		x1 = o.X;
+		y1 = o.Y;		
+		dx = p.X - o.X;
+		dy = p.Y - o.Y;
+		wp.X = x1 + reffect * dx;
+		wp.Y = y1 + reffect * dy;
+		drawpoints->push_back(wp);
+	}
+	
+	if (ratio >= 1.0)
+		in_animation = false;
+}
+
+
+void wire::redo_wires(void)
+{
+	printf("redo_wires\n");
+	if (!points)
+		return;
+	if (oldpoints)
+		delete oldpoints; 
+	oldpoints = points;
+	
+	points = NULL;
 }

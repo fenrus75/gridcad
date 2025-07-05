@@ -338,7 +338,8 @@ void port::stop_drag(class basecanvas *canvas)
 
 	for (auto wire : wires) {
 		wire->reseat();
-		wire->route(canvas->get_scene());
+//		wire->route(canvas->get_scene());
+		wire->clear_route();
 	}
 
 }
