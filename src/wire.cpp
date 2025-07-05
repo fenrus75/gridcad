@@ -843,11 +843,6 @@ void wire::calculate_drawpoints(void)
 		ratio = 1.0;
 	
 	/* if we end up with a too different wire, just zap the old points */
-	if (oldpoints && oldpoints->size() != points->size()) {
-		printf("Size mismatch %lu vs %lu\n", oldpoints->size(), points->size());
-		delete oldpoints;
-		oldpoints = NULL;
-	}
 	
 	if (oldpoints) {
 		if ((*oldpoints)[0].X != (*points)[0].X || (*oldpoints)[0].Y != (*points)[0].Y) {
@@ -857,6 +852,19 @@ void wire::calculate_drawpoints(void)
 		}
 	}
 			
+	if (oldpoints && oldpoints->size() < points->size() && oldpoints->size() >= 2) {
+		while (oldpoints->size() < points->size()) {
+			unsigned int i = 1 + (rand() % (oldpoints->size()-1));
+			wp.X = ((*oldpoints)[i].X + (*oldpoints)[i - 1].X)/2;
+			wp.Y = ((*oldpoints)[i].Y + (*oldpoints)[i - 1].Y)/2;
+			oldpoints->insert(oldpoints->begin() + i, wp);
+		}
+	}
+	if (oldpoints && oldpoints->size() != points->size()) {
+		printf("Size mismatch %lu vs %lu\n", oldpoints->size(), points->size());
+		delete oldpoints;
+		oldpoints = NULL;
+	}
 	
 	if (!oldpoints) {
 		printf("No old points\n");
