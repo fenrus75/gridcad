@@ -85,6 +85,7 @@ protected:
     std::vector<struct waypoint> *points = NULL;
     std::vector<struct waypoint> *drawpoints = NULL;
     std::vector<struct waypoint> *oldpoints = NULL;
+    void add_midpoint(float x1, float y1, float x2, float y2, float effect);
     class net *net = NULL; /* nosave */
     bool is_reversed = false;
     bool is_z = false; /* nosave -- net recalculates this */

@@ -802,6 +802,18 @@ float ratio_effect(float ratio)
 	return r;
 }
 
+void wire::add_midpoint(float x1, float y1, float x2, float y2, float reffect)
+{
+	struct waypoint wp;
+	float dx, dy;
+	dx = x2 - x1;
+	dy = y2 - y1;
+	wp.X = x1 + reffect * dx;
+	wp.Y = y1 + reffect * dy;
+	drawpoints->push_back(wp);
+}
+
+
 void wire::calculate_drawpoints(void)
 {
 	uint64_t now;
@@ -824,6 +836,7 @@ void wire::calculate_drawpoints(void)
 	now = SDL_GetTicks64();
 	
 	ratio = (now - points_timestamp) / 400.0;
+//	ratio = (now - points_timestamp) / 4000.0;
 	if (ratio < 0.0)
 		ratio = 0.0;
 	if (ratio > 1.0)
@@ -848,13 +861,21 @@ void wire::calculate_drawpoints(void)
 	if (!oldpoints) {
 		printf("No old points\n");
 		oldpoints = new std::vector<struct waypoint>;
-		float x1, y1, dx, dy;
+		float x1, y1, dx, dy, totaldist = 0, runningdist = 0;
+		
+		for (unsigned int i = 1; i < points->size(); i++)
+		{
+			totaldist += dist((*points)[i-1].X, (*points)[i-1].Y, (*points)[i].X, (*points)[i].Y);
+		}
+		
+		if (totaldist == 0)
+			totaldist = 1;
+		
+		
 		x1 = (*points)[0].X;
 		y1 = (*points)[0].Y;
 		dx = (*points)[points->size()-1].X - x1;
 		dy = (*points)[points->size()-1].Y - y1;
-		dx = dx / (points->size()-1);
-		dy = dy / (points->size()-1);
 		printf("x1 y1 %5.2f %5.2f\n", x1, y1);
 		printf("dx dy %5.2f %5.2f\n", dx, dy);
 		for (unsigned int i = 0; i < points->size(); i++) {
@@ -863,8 +884,9 @@ void wire::calculate_drawpoints(void)
 				oldpoints->push_back(wp);
 				continue;
 			}
-			wp.X = x1 + dx * i;
-			wp.Y = y1 + dy * i;
+			runningdist += dist((*points)[i-1].X, (*points)[i-1].Y, (*points)[i].X, (*points)[i].Y);
+			wp.X = x1 + dx * (runningdist/totaldist);
+			wp.Y = y1 + dy * (runningdist/totaldist);
 			printf("wpX wpY %5.2f %5.2f\n", wp.X, wp.Y);
 			oldpoints->push_back(wp);
 		}
@@ -878,21 +900,29 @@ void wire::calculate_drawpoints(void)
 
 	for (unsigned int i = 0; i < points->size(); i++)
 	{		
-		if (i == 0 || i == points->size() - 1) {
+		if (i == 0) {
 			wp = (*points)[i];
 			drawpoints->push_back(wp);
 			continue;
 		}
-		float x1, y1, dx, dy;
+
+#if 0
+	/* does not seem to make a difference in the animation */
+		if (ratio < 1.0) {
+			add_midpoint(((*oldpoints)[i].X + (*oldpoints)[i-1].X)/2, ((*oldpoints)[i].Y + (*oldpoints)[i-1].Y)/2, 
+			             ((*points)[i].X + (*points)[i-1].X)/2, ((*points)[i].Y + (*points)[i-1].Y)/2, reffect);
+		}
+#endif
+
+		if (i == points->size() - 1) {
+			wp = (*points)[i];
+			drawpoints->push_back(wp);
+			continue;
+		}
+		
 		auto p = (*points)[i];
 		auto o = (*oldpoints)[i];
-		x1 = o.X;
-		y1 = o.Y;		
-		dx = p.X - o.X;
-		dy = p.Y - o.Y;
-		wp.X = x1 + reffect * dx;
-		wp.Y = y1 + reffect * dy;
-		drawpoints->push_back(wp);
+		add_midpoint(o.X, o.Y, p.X, p.Y, reffect);
 	}
 	
 	if (ratio >= 1.0)
