@@ -34,7 +34,7 @@ public:
     virtual ~icon(void);
     
     virtual class element *create_element(void);
-    void draw (SDL_Renderer *renderer, float X1, float Y1, float width, float height, class basecanvas *canvas);
+    void draw (SDL_Renderer *renderer, float X1, float Y1, float width, float height, class basecanvas *canvas, float delta = 0.0);
     void set_active(void) { active = true; };
     void set_inactive(void) { active = false; };
     void assign_library_element(struct library_block block);
@@ -74,6 +74,9 @@ private:
     SDL_Renderer *renderer = NULL;
     class basecanvas *canvas = NULL;
     std::string name;
+    int hover_item_x = 8888;
+    int hover_item_y = 8888;
+    uint64_t hover_time;
 
 };
 

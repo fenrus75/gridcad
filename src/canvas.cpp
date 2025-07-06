@@ -936,6 +936,7 @@ bool canvas::handle_event(SDL_Event &event)
 	for (auto elem : current_scene->elements)
 		elem->handle_event(this, event);
 	button_bar->handle_event(event);
+	icon_bar->handle_event(event);
 	if (dialogbox)
 		dialogbox->handle_event(this, event);
 	run_queued_calculations();

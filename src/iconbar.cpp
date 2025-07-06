@@ -128,7 +128,51 @@ std::string iconbar::current_tooltip(int ScreenX, int ScreenY)
 
 void iconbar::handle_event(SDL_Event &event)
 {
+	current_icons->handle_event(event);
 	return;
+}
+
+void oneiconbar::handle_event(SDL_Event &event)
+{
+	float ScreenX = (event.motion.x);
+	float ScreenY = (event.motion.y);
+	
+	if (event.type != SDL_MOUSEMOTION)
+		return;
+
+	float dX, dY;
+	int gridX, gridY;
+
+	ScreenX -= rect.x;
+	ScreenY -= rect.y;
+
+	/* subtract the border */
+	ScreenX -= 0.5 * SCALEX;
+	ScreenY -= 0.5 * SCALEY;
+
+	if (ScreenX < 0 || ScreenY <0) {/* left of the icons */
+		hover_item_x = 8888;
+		hover_item_y = 8888;
+		return;
+	}
+
+	dX = (ScreenX - OFFSETX) / (2.5 * SCALEX);
+	dY = (ScreenY - OFFSETY)/ (2.5 * SCALEY);
+
+	gridX = floor(dX);
+	gridY = floor(dY);
+	
+	if (gridX < 0 || gridY < 0 || gridX >= (int)icons.size() || gridY >= (int)icons[gridX].size() ) {
+		hover_item_x = 8888;
+		hover_item_y = 8888;
+		return;
+	}
+
+	if (gridX != hover_item_x || gridY != hover_item_y) {
+		hover_item_x = gridX;
+		hover_item_y = gridY;
+		hover_time = SDL_GetTicks64();
+	}	
 }
 
 
@@ -156,7 +200,7 @@ void icon::assign_library_element(struct library_block block)
 
 
 /* X and Y are our box to draw in -- we'll draw centered to that */
-void icon::draw(SDL_Renderer *renderer, float X, float Y, float width, float height, class basecanvas *canvas)
+void icon::draw(SDL_Renderer *renderer, float X, float Y, float width, float height, class basecanvas *canvas, float delta)
 {
 	SDL_Rect rect;
 	const int color = COLOR_WIRE_SOLID;
@@ -181,10 +225,10 @@ void icon::draw(SDL_Renderer *renderer, float X, float Y, float width, float hei
 	oX = (width - newwidth) / 2;
 	oY = (height - newheight) / 2; 
 
-	rect.x = X + oX;
-	rect.y = Y + oY;
-	rect.w = newwidth;
-	rect.h = newheight;
+	rect.x = X + oX - delta;
+	rect.y = Y + oY - delta;
+	rect.w = newwidth + 2 * delta;
+	rect.h = newheight + 2 * delta;
 
 	SDL_SetRenderDrawColor(renderer, R(color), G(color), B(color),
 			Alpha(color));
@@ -200,7 +244,7 @@ void icon::draw(SDL_Renderer *renderer, float X, float Y, float width, float hei
 		newY = canvas->scr_to_Y(Y + height/2);
 		newW = canvas->scale_to_X(width);
 		newH = canvas->scale_to_Y(height/2);
-		canvas->draw_text(overlay, newX, newY, newW, newH);
+		canvas->draw_text(overlay, newX - delta, newY - delta, newW + delta, newH + delta);
 	}
 }
 
@@ -257,6 +301,19 @@ void oneiconbar::resize(SDL_Rect _rect)
 #define SCALEX 40
 #define SCALEY 40
 
+extern float ratio_effect(float ratio);
+static float delta_hover(uint64_t deltaT)
+{
+	float f;
+	if (deltaT > 300)
+		return 0;
+		
+	f = ratio_effect(deltaT/300.0);
+	f = (1 - (0.8 + 0.2 * f)) * 20;
+	return f;
+	
+}
+
 void oneiconbar::draw(void)
 {
 	int x,y;
@@ -266,15 +323,20 @@ void oneiconbar::draw(void)
 
 	for (y = 0; y < 15; y++) {
 		for (x = 0; x < 2; x++) {
-			box.x = rect.x + (0.5 + 2.5 * x) * SCALEX + OFFSETX;
-			box.y = rect.y + (0.5 + 2.5 * y) * SCALEY + OFFSETY;
-			box.h = 2 * SCALEY;
-			box.w = 2 * SCALEX;
+			float delta = 0.0;
+			if (hover_item_x == x && hover_item_y == y) {
+				uint64_t now = SDL_GetTicks64();
+				delta = delta_hover(now - hover_time);
+			}
+			box.x = rect.x + (0.5 + 2.5 * x) * SCALEX + OFFSETX - delta;
+			box.y = rect.y + (0.5 + 2.5 * y) * SCALEY + OFFSETY - delta;
+			box.h = 2 * SCALEY + delta * 2;
+			box.w = 2 * SCALEX + delta * 2;
 			SDL_SetRenderDrawColor(renderer, R(color), G(color), B(color),
 					Alpha(color));
 			SDL_RenderFillRect(renderer, &box);
 			if (icons[x][y])
-				icons[x][y]->draw(renderer, rect.x + (0.6 + 2.5 * x) * SCALEX + OFFSETX, rect.y + (0.6 + 2.5 * y) * SCALEY + OFFSETY, 1.8 * SCALEX, 1.8 * SCALEY, canvas);
+				icons[x][y]->draw(renderer, rect.x + (0.6 + 2.5 * x) * SCALEX + OFFSETX, rect.y + (0.6 + 2.5 * y) * SCALEY + OFFSETY, 1.8 * SCALEX, 1.8 * SCALEY, canvas, delta);
 
 
 		}    

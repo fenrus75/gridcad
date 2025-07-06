@@ -136,7 +136,7 @@ std::string projcanvas::library_test_bench(void)
 }
 
 extern float ratio_effect(float ratio);
-float delta_hover(uint64_t deltaT)
+static float delta_hover(uint64_t deltaT)
 {
 	float f;
 	if (deltaT > 300)
