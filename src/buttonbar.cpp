@@ -55,6 +55,19 @@ void buttonbar::add_button(std::string text, std::string icon, int _event)
 	buttons.push_back(button);
 }
 
+extern float ratio_effect(float ratio);
+static float delta_hover(uint64_t deltaT)
+{
+	float f;
+	if (deltaT > 300)
+		return 0;
+		
+	f = ratio_effect(deltaT/300.0);
+	f = (1 - (0.8 + 0.2 * f))/2;
+	return f;
+	
+}
+
 
 void buttonbar::draw_at(class basecanvas *canvas, int W, int H)
 {
@@ -68,10 +81,19 @@ void buttonbar::draw_at(class basecanvas *canvas, int W, int H)
 
 	w = canvas->scale_to_X(W);
 	h = canvas->scale_to_Y(W);
+	
+	if (buttonindex != hover_button) {
+		hover_button = buttonindex;
+		hover_time = SDL_GetTicks64();
+	}
+	
 
 	for (unsigned int i = 0; i < buttons.size(); i++) {
 		auto button = buttons[i];
-		button->draw_at(canvas, canvas->scr_to_X(0), canvas->scr_to_Y(0) + Y_SPACING * h  * i, w, h, buttonindex == i);
+		float delta = 0;
+		if (buttonindex == i)
+			delta = delta_hover(SDL_GetTicks64() - hover_time);
+		button->draw_at(canvas, canvas->scr_to_X(0), canvas->scr_to_Y(0) + Y_SPACING * h  * i, w, h, buttonindex == i, delta);
 	}
 
 	if (fps > 0) {
@@ -112,17 +134,17 @@ barbutton::~barbutton(void)
 }
 
 
-void barbutton::draw_at(class basecanvas *canvas, float X, float Y, float W, float H, bool hover)
+void barbutton::draw_at(class basecanvas *canvas, float X, float Y, float W, float H, bool hover, float delta)
 {	
 	if (!active && hover) 
-		canvas->draw_image("assets/lightgray.png", X,Y,W,H);
+		canvas->draw_image("assets/lightgray.png", X - delta,Y - delta, W + 2 * delta, H + 2 * delta);
 
 	if (active) {
 		canvas->draw_image("assets/lightgray.png", X,Y,W,H);
 		X = X + canvas->scale_to_X(5);
 		Y = Y + canvas->scale_to_Y(5);;
 	}
-	canvas->draw_image(icon, X,Y,W,H);
+	canvas->draw_image(icon, X - delta, Y - delta ,W + 2 * delta, H + 2 * delta);
 }
 
 void barbutton::activate(void)

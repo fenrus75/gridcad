@@ -22,6 +22,8 @@ protected:
     unsigned int width = 0;
     unsigned int mouseX = 0;
     unsigned int mouseY = 0;
+    unsigned int hover_button = 8888;
+    uint64_t hover_time = 0;
     float fps = -1.0;
     
     std::vector<class barbutton *>buttons;
@@ -34,7 +36,7 @@ public:
     barbutton(std::string text, std::string icon, int event, class basecanvas *canvas);
     ~barbutton(void);
 
-    void draw_at(class basecanvas *canvas, float X, float Y, float  W, float H, bool hover = false);    
+    void draw_at(class basecanvas *canvas, float X, float Y, float  W, float H, bool hover = false, float delta = 0.0);    
     
     void activate(void);
     void deactivate(void) {active = false; };
