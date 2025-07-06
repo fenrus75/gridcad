@@ -518,7 +518,7 @@ bool wire::intersect(float targetX, float targetY)
 		prevY = point.Y + 0.5;
 	}
 
-	if (bestdist <= 0.5)
+	if (bestdist <= 0.51)
 		return true;
 	return false;
 }
