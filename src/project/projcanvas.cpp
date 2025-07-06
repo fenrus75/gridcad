@@ -135,6 +135,19 @@ std::string projcanvas::library_test_bench(void)
 	return benchname;
 }
 
+extern float ratio_effect(float ratio);
+float delta_hover(uint64_t deltaT)
+{
+	float f;
+	if (deltaT > 300)
+		return 0;
+		
+	f = ratio_effect(deltaT/300.0);
+	f = (1 - (0.8 + 0.2 * f))/2;
+	return f;
+	
+}
+
 void projcanvas::draw(void)
 {
 	SDL_SetRenderDrawColor(renderer, R(COLOR_BACKGROUND_GRID),
@@ -142,6 +155,8 @@ void projcanvas::draw(void)
 			B(COLOR_BACKGROUND_GRID),
 			Alpha(COLOR_BACKGROUND_GRID));
 	SDL_RenderClear(renderer);
+	
+	uint64_t now = SDL_GetTicks64();
 
 	float X = 0, Y = 0;
 	while (Y < 100) {
@@ -161,19 +176,31 @@ void projcanvas::draw(void)
 	newname->drawAt(this, TEMPLATE_X, 4.25, 15, 1);
 	draw_text_left("Project template to use", TEMPLATE_X, 6, 15, 1);
 
+	bool found_hover = false;
 	for (unsigned int T = 0; T < templates.size(); T++) {
+		float delta = 0;
+		if (currentX >= TEMPLATE_X && currentX <= TEMPLATE_X+TEMPLATE_WIDTH && currentY > TEMPLATE_Y + RADIO_HEIGHT * T && currentY <= TEMPLATE_Y + RADIO_HEIGHT * (T+1)) {
+			if (T != hover_template) {
+				hover_template = T;
+				hover_timestamp = now;
+			}
+			delta = delta_hover(now - hover_timestamp);
+			found_hover = true;
+		}
 		if (T == active_template)
-			draw_image("assets/radiobox_selected.png", TEMPLATE_X - 0.2, TEMPLATE_Y + RADIO_HEIGHT * T, TEMPLATE_WIDTH, RADIO_HEIGHT - 0.1);
+			draw_image("assets/radiobox_selected.png", TEMPLATE_X - 0.2 - delta, TEMPLATE_Y + RADIO_HEIGHT * T - delta, TEMPLATE_WIDTH + 2 * delta, RADIO_HEIGHT - 0.1 + 2 * delta);
 		else {
 			if (currentX >= TEMPLATE_X && currentX <= TEMPLATE_X + TEMPLATE_WIDTH && currentY > TEMPLATE_Y + RADIO_HEIGHT * T && currentY <= TEMPLATE_Y + RADIO_HEIGHT * (T+1))
-				draw_image("assets/radiobox_hover.png", TEMPLATE_X - 0.2, TEMPLATE_Y + RADIO_HEIGHT * T, TEMPLATE_WIDTH , RADIO_HEIGHT - 0.1);
+				draw_image("assets/radiobox_hover.png", TEMPLATE_X - 0.2 - delta, TEMPLATE_Y + RADIO_HEIGHT * T - delta, TEMPLATE_WIDTH + 2 * delta, RADIO_HEIGHT - 0.1 + 2 * delta);
 			else
 				draw_image("assets/radiobox.png", TEMPLATE_X - 0.2, TEMPLATE_Y + RADIO_HEIGHT * T, TEMPLATE_WIDTH , RADIO_HEIGHT - 0.1);
 		}
 
-		draw_text_left(template_descriptions[templates[T]], TEMPLATE_X, TEMPLATE_Y + 0.2 + RADIO_HEIGHT * T, TEMPLATE_WIDTH -1, 1);
+		draw_text_left(template_descriptions[templates[T]], TEMPLATE_X - delta/2, TEMPLATE_Y + 0.2 + RADIO_HEIGHT * T - delta/2, TEMPLATE_WIDTH -1 + delta, 1 + delta);
 	}
-
+	if (!found_hover) 
+		hover_template = 88888888;
+		
 
 	if (currentX >= TEMPLATE_X + 4 && currentX <= TEMPLATE_X + TEMPLATE_WIDTH && currentY >= TEMPLATE_Y + RADIO_HEIGHT * (templates.size() + 1) && currentY <= TEMPLATE_Y + RADIO_HEIGHT * (templates.size() + 2))
 		draw_image("assets/buttonbox_hover.png", TEMPLATE_X + 4, TEMPLATE_Y + RADIO_HEIGHT * (templates.size() + 1), TEMPLATE_WIDTH - 4, RADIO_HEIGHT - 0.1);	
@@ -197,18 +224,31 @@ void projcanvas::draw(void)
 	for (unsigned T = 0; T < (1 + projects.size()/PER_COLUMN) ; T++)
 		draw_image("assets/label2.png", PROJECT_X - 0.5 + T * (PROJECT_WIDTH+1), 2.5, PROJECT_WIDTH + 1, calc_project_height(projects.size()) + 5.5);
 	draw_text_left("Existing projects", PROJECT_X,3,15,1);
+	found_hover = false;
 	for (unsigned int T = 0; T < projects.size(); T++) {
+		float delta = 0;
+		if (currentX >= calc_project_X(T) && currentX <= calc_project_X(T) + PROJECT_WIDTH && currentY > calc_project_Y(T) && currentY <= calc_project_Y(T) +  RADIO_HEIGHT) {
+			if (T != hover_project) {
+				hover_project = T;
+				hover_timestamp = now;
+			}
+			delta = delta_hover(now - hover_timestamp);
+			found_hover = true;
+		}
 		if (T == active_project)
-			draw_image("assets/radiobox_selected.png", calc_project_X(T) - 0.2, calc_project_Y(T) - 0.2, PROJECT_WIDTH, RADIO_HEIGHT - 0.1);
+			draw_image("assets/radiobox_selected.png", calc_project_X(T) - 0.2 - delta, calc_project_Y(T) - 0.2 - delta, PROJECT_WIDTH + 2 * delta, RADIO_HEIGHT - 0.1 + 2 * delta);
 		else {
-			if (currentX >= calc_project_X(T) && currentX <= calc_project_X(T) + PROJECT_WIDTH && currentY > calc_project_Y(T)-0.2 && currentY <= calc_project_Y(T) +  RADIO_HEIGHT)
-				draw_image("assets/radiobox_hover.png", calc_project_X(T) - 0.2, calc_project_Y(T) - 0.2, PROJECT_WIDTH, RADIO_HEIGHT - 0.1);
-			else
+			if (currentX >= calc_project_X(T) && currentX <= calc_project_X(T) + PROJECT_WIDTH && currentY > calc_project_Y(T)-0.2 && currentY <= calc_project_Y(T) +  RADIO_HEIGHT) {
+				draw_image("assets/radiobox_hover.png", calc_project_X(T) - 0.2 - delta, calc_project_Y(T) - 0.2 - delta, PROJECT_WIDTH + 2 * delta, RADIO_HEIGHT - 0.1 + 2 * delta);
+			} else {
 				draw_image("assets/radiobox.png", calc_project_X(T) - 0.2, calc_project_Y(T) - 0.2 , PROJECT_WIDTH, RADIO_HEIGHT - 0.1);
+			}
 		}
 
-		draw_text_left(projects[T], calc_project_X(T), calc_project_Y(T), PROJECT_WIDTH - 1, 1);
+		draw_text_left(projects[T], calc_project_X(T) - delta/2, calc_project_Y(T)-delta/2, PROJECT_WIDTH - 1+delta, 1+delta);
 	}
+	if (!found_hover)
+		hover_project = 88888888;
 
 	if (currentX >= PROJECT_X + 4 && currentX <= PROJECT_X + PROJECT_WIDTH && currentY >= PROJECT_Y + calc_project_height(projects.size()) + RADIO_HEIGHT && currentY <= PROJECT_Y + calc_project_height(projects.size()) + 2 * RADIO_HEIGHT)
 		draw_image("assets/buttonbox_hover.png", PROJECT_X + 4, PROJECT_Y + calc_project_height(projects.size()) + RADIO_HEIGHT, PROJECT_WIDTH - 4.2, RADIO_HEIGHT - 0.1);	
