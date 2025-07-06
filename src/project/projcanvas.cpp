@@ -201,11 +201,18 @@ void projcanvas::draw(void)
 	if (!found_hover) 
 		hover_template = 88888888;
 		
-
-	if (currentX >= TEMPLATE_X + 4 && currentX <= TEMPLATE_X + TEMPLATE_WIDTH && currentY >= TEMPLATE_Y + RADIO_HEIGHT * (templates.size() + 1) && currentY <= TEMPLATE_Y + RADIO_HEIGHT * (templates.size() + 2))
-		draw_image("assets/buttonbox_hover.png", TEMPLATE_X + 4, TEMPLATE_Y + RADIO_HEIGHT * (templates.size() + 1), TEMPLATE_WIDTH - 4, RADIO_HEIGHT - 0.1);	
-	else
+	float delta = 0;
+	if (currentX >= TEMPLATE_X + 4 && currentX <= TEMPLATE_X + TEMPLATE_WIDTH && currentY >= TEMPLATE_Y + RADIO_HEIGHT * (templates.size() + 1) && currentY <= TEMPLATE_Y + RADIO_HEIGHT * (templates.size() + 2)) {
+		if (!hover_left_button) {
+			hover_timestamp = now;
+			hover_left_button = true;
+		}
+		delta = delta_hover(now - hover_timestamp);
+		draw_image("assets/buttonbox_hover.png", TEMPLATE_X + 4 - delta, TEMPLATE_Y + RADIO_HEIGHT * (templates.size() + 1) - delta, TEMPLATE_WIDTH - 4 + 2 * delta, RADIO_HEIGHT - 0.1 + 2 * delta);	
+	} else {
+		hover_left_button = false;
 		draw_image("assets/buttonbox.png", TEMPLATE_X + 4, TEMPLATE_Y + RADIO_HEIGHT * (templates.size() + 1), TEMPLATE_WIDTH - 4, RADIO_HEIGHT - 0.1);	
+	}
 
 	bool is_existing = false;
 	for (auto e : projects) {
@@ -214,9 +221,9 @@ void projcanvas::draw(void)
 	}
 
 	if (is_existing)
-		draw_text("Open project " + name, TEMPLATE_X + 4, TEMPLATE_Y + RADIO_HEIGHT * (templates.size() + 1)+0.2, TEMPLATE_WIDTH - 4, 1);
+		draw_text("Open project " + name, TEMPLATE_X + 4 - delta/2, TEMPLATE_Y + RADIO_HEIGHT * (templates.size() + 1)+0.2 - delta/2, TEMPLATE_WIDTH - 4 + delta, 1 + delta);
 	else
-		draw_text("Create project " + name, TEMPLATE_X + 4, TEMPLATE_Y + RADIO_HEIGHT * (templates.size() + 1)+0.2, TEMPLATE_WIDTH - 4, 1);
+		draw_text("Create project " + name, TEMPLATE_X + 4 - delta/2, TEMPLATE_Y + RADIO_HEIGHT * (templates.size() + 1)+0.2 - delta/2, TEMPLATE_WIDTH - 4 + delta, 1 + delta);
 
 
 
@@ -226,7 +233,7 @@ void projcanvas::draw(void)
 	draw_text_left("Existing projects", PROJECT_X,3,15,1);
 	found_hover = false;
 	for (unsigned int T = 0; T < projects.size(); T++) {
-		float delta = 0;
+		delta = 0;
 		if (currentX >= calc_project_X(T) && currentX <= calc_project_X(T) + PROJECT_WIDTH && currentY > calc_project_Y(T) && currentY <= calc_project_Y(T) +  RADIO_HEIGHT) {
 			if (T != hover_project) {
 				hover_project = T;
@@ -250,11 +257,19 @@ void projcanvas::draw(void)
 	if (!found_hover)
 		hover_project = 88888888;
 
-	if (currentX >= PROJECT_X + 4 && currentX <= PROJECT_X + PROJECT_WIDTH && currentY >= PROJECT_Y + calc_project_height(projects.size()) + RADIO_HEIGHT && currentY <= PROJECT_Y + calc_project_height(projects.size()) + 2 * RADIO_HEIGHT)
-		draw_image("assets/buttonbox_hover.png", PROJECT_X + 4, PROJECT_Y + calc_project_height(projects.size()) + RADIO_HEIGHT, PROJECT_WIDTH - 4.2, RADIO_HEIGHT - 0.1);	
-	else
+	if (currentX >= PROJECT_X + 4 && currentX <= PROJECT_X + PROJECT_WIDTH && currentY >= PROJECT_Y + calc_project_height(projects.size()) + RADIO_HEIGHT && currentY <= PROJECT_Y + calc_project_height(projects.size()) + 2 * RADIO_HEIGHT) {
+		if (!hover_right_button) {
+			hover_timestamp = now;
+			hover_right_button = true;
+		}
+		delta = delta_hover(now - hover_timestamp);
+		draw_image("assets/buttonbox_hover.png", PROJECT_X + 4 - delta, PROJECT_Y + calc_project_height(projects.size()) + RADIO_HEIGHT - delta, PROJECT_WIDTH - 4.2 + 2 * delta, RADIO_HEIGHT - 0.1 + 2 * delta);	
+		draw_text("Open project " + projects[active_project], PROJECT_X + 4 - delta/2, PROJECT_Y + calc_project_height(projects.size()) + RADIO_HEIGHT + 0.2 - delta/2, PROJECT_WIDTH - 4 + delta, 1 + delta);
+	} else {
+		hover_right_button = false;
 		draw_image("assets/buttonbox.png", PROJECT_X + 4, PROJECT_Y + calc_project_height(projects.size()) + RADIO_HEIGHT, PROJECT_WIDTH - 4.2, RADIO_HEIGHT - 0.1);	
-	draw_text("Open project " + projects[active_project], PROJECT_X + 4, PROJECT_Y + calc_project_height(projects.size()) + RADIO_HEIGHT + 0.2, PROJECT_WIDTH - 4, 1);
+		draw_text("Open project " + projects[active_project], PROJECT_X + 4, PROJECT_Y + calc_project_height(projects.size()) + RADIO_HEIGHT + 0.2, PROJECT_WIDTH - 4, 1);
+	}
 
 	SDL_RenderPresent(renderer);
 

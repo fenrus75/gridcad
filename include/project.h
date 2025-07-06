@@ -32,6 +32,8 @@ protected:
     
     unsigned int hover_project = 0;
     unsigned int hover_template = 0;
+    bool hover_left_button = false;
+    bool hover_right_button = false;
     uint64_t hover_timestamp = 0;
     
     float currentX = 0, currentY = 0;
