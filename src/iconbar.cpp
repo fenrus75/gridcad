@@ -309,7 +309,7 @@ static float delta_hover(uint64_t deltaT)
 		return 0;
 		
 	f = ratio_effect(deltaT/300.0);
-	f = (1 - (0.8 + 0.2 * f)) * 20;
+	f = (1 - (0.8 + 0.2 * f)) * 15;
 	return f;
 	
 }
@@ -324,7 +324,7 @@ void oneiconbar::draw(void)
 	for (y = 0; y < 15; y++) {
 		for (x = 0; x < 2; x++) {
 			float delta = 0.0;
-			if (hover_item_x == x && hover_item_y == y) {
+			if (hover_item_x == x && hover_item_y == y && icons[x][y]) {
 				uint64_t now = SDL_GetTicks64();
 				delta = delta_hover(now - hover_time);
 			}
