@@ -862,7 +862,7 @@ void wire::calculate_drawpoints(void)
 		}
 	}
 			
-	if (oldpoints && oldpoints->size() < points->size() && oldpoints->size() >= 2) {
+	if (oldpoints && oldpoints->size() < points->size() && oldpoints->size() > 2) {
 		while (oldpoints->size() < points->size()) {
 			unsigned int i = 1 + (rand() % (oldpoints->size()-1));
 			wp.X = ((*oldpoints)[i].X + (*oldpoints)[i - 1].X)/2;
@@ -937,14 +937,6 @@ void wire::calculate_drawpoints(void)
 			drawpoints->push_back(wp);
 			continue;
 		}
-
-#if 0
-	/* does not seem to make a difference in the animation */
-		if (ratio < 1.0) {
-			add_midpoint(((*oldpoints)[i].X + (*oldpoints)[i-1].X)/2, ((*oldpoints)[i].Y + (*oldpoints)[i-1].Y)/2, 
-			             ((*points)[i].X + (*points)[i-1].X)/2, ((*points)[i].Y + (*points)[i-1].Y)/2, reffect);
-		}
-#endif
 
 		if (i == points->size() - 1) {
 			wp = (*points)[i];
