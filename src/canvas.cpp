@@ -36,6 +36,7 @@
 
 bool wire_debug_mode = false;
 bool show_fps = false;
+float  animation_time = 400;
 
 using json = nlohmann::json;
 
@@ -558,6 +559,14 @@ bool canvas::handle_event(SDL_Event &event)
 				case SDLK_g:
 					if (!someone_in_editmode) {
 						draw_grid = !draw_grid;
+					}
+					break;
+				case SDLK_o:
+					if (!someone_in_editmode) {
+						if (animation_time < 1000)
+							animation_time = 4000;
+						else
+							animation_time = 400;
 					}
 					break;
 				case SDLK_n:

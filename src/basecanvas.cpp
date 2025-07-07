@@ -426,6 +426,7 @@ SDL_Texture *basecanvas::text_to_texture(std::string text)
 }
 
 extern float ratio_effect(float ratio);
+extern float animation_time;
 
 void basecanvas::draw(void)
 {
@@ -435,7 +436,7 @@ void basecanvas::draw(void)
 		float ratio;
 		float effect;
 		float effect2;
-		ratio = (now - animation_start) / 400.0;
+		ratio = (now - animation_start) / animation_time;
 		if (ratio > 1.0)
 			ratio = 1.0;
 			

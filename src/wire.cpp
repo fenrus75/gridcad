@@ -815,6 +815,7 @@ void wire::add_midpoint(float x1, float y1, float x2, float y2, float reffect)
 	drawpoints->push_back(wp);
 }
 
+extern float animation_time;
 
 void wire::calculate_drawpoints(void)
 {
@@ -838,7 +839,7 @@ void wire::calculate_drawpoints(void)
 	
 	now = SDL_GetTicks64();
 	
-	ratio = (now - points_timestamp) / 400.0;
+	ratio = (now - points_timestamp) / animation_time;
 //	ratio = (now - points_timestamp) / 4000.0;
 	if (ratio < 0.0)
 		ratio = 0.0;
