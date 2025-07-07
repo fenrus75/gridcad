@@ -563,10 +563,13 @@ bool canvas::handle_event(SDL_Event &event)
 					break;
 				case SDLK_o:
 					if (!someone_in_editmode) {
-						if (animation_time < 1000)
+						if (animation_time > 1 && animation_time < 1000)
 							animation_time = 4000;
-						else
+						else if (animation_time == 1)
 							animation_time = 400;
+						else
+							animation_time = 1;
+
 					}
 					break;
 				case SDLK_n:
