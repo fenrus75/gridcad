@@ -872,16 +872,49 @@ void wire::calculate_drawpoints(void)
 	}
 
 	if (oldpoints && oldpoints->size() > points->size() && points->size() >= 2) {
-		temppoints = points;
-		points = new std::vector<struct waypoint>;
-		for (auto i : *temppoints)
-			points->push_back(i);
+	
+		if (points->size() == 2) {
+			temppoints = points;
+			points = new std::vector<struct waypoint>;
+			float x1, y1, dx, dy, totaldist = 0, runningdist = 0;
+		
+			for (unsigned int i = 1; i < oldpoints->size(); i++)
+			{
+				totaldist += dist((*oldpoints)[i-1].X, (*oldpoints)[i-1].Y, (*oldpoints)[i].X, (*oldpoints)[i].Y);
+			}
+		
+			if (totaldist == 0)
+				totaldist = 1;
+		
+		
+			x1 = (*oldpoints)[0].X;
+			y1 = (*oldpoints)[0].Y;
+			dx = (*oldpoints)[oldpoints->size()-1].X - x1;
+			dy = (*oldpoints)[oldpoints->size()-1].Y - y1;
+			for (unsigned int i = 0; i < oldpoints->size(); i++) {
+				if (i == 0 || i == oldpoints->size() - 1) {
+					wp = (*oldpoints)[i];
+					points->push_back(wp);
+					continue;
+				}
+				runningdist += dist((*oldpoints)[i-1].X, (*oldpoints)[i-1].Y, (*oldpoints)[i].X, (*oldpoints)[i].Y);
+				wp.X = x1 + dx * (runningdist/totaldist);
+				wp.Y = y1 + dy * (runningdist/totaldist);
+				points->push_back(wp);
+			}
+		} else {
+
+			temppoints = points;
+			points = new std::vector<struct waypoint>;
+			for (auto i : *temppoints)
+				points->push_back(i);
 			
-		while (oldpoints->size() > points->size()) {
-			unsigned int i = 1 + (rand() % (points->size()-1));
-			wp.X = ((*points)[i].X + (*points)[i - 1].X)/2;
-			wp.Y = ((*points)[i].Y + (*points)[i - 1].Y)/2;
-			points->insert(points->begin() + i, wp);
+			while (oldpoints->size() > points->size()) {
+				unsigned int i = 1 + (rand() % (points->size()-1));
+				wp.X = ((*points)[i].X + (*points)[i - 1].X)/2;
+				wp.Y = ((*points)[i].Y + (*points)[i - 1].Y)/2;
+				points->insert(points->begin() + i, wp);
+			}
 		}
 	}
 	if (oldpoints && oldpoints->size() != points->size()) {
