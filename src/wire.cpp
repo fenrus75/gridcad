@@ -887,13 +887,18 @@ void wire::calculate_drawpoints(void)
 				totaldist = 1;
 		
 		
-			x1 = (*oldpoints)[0].X;
-			y1 = (*oldpoints)[0].Y;
-			dx = (*oldpoints)[oldpoints->size()-1].X - x1;
-			dy = (*oldpoints)[oldpoints->size()-1].Y - y1;
+			x1 = (*temppoints)[0].X;
+			y1 = (*temppoints)[0].Y;
+			dx = (*temppoints)[1].X - x1;
+			dy = (*temppoints)[1].Y - y1;
 			for (unsigned int i = 0; i < oldpoints->size(); i++) {
-				if (i == 0 || i == oldpoints->size() - 1) {
-					wp = (*oldpoints)[i];
+				if (i == 0) {
+					wp = (*temppoints)[i];
+					points->push_back(wp);
+					continue;
+				}
+				if (i == oldpoints->size() - 1) {
+					wp = (*temppoints)[1];
 					points->push_back(wp);
 					continue;
 				}
