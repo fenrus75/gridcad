@@ -806,7 +806,7 @@ float ratio_effect(float ratio)
 
 void wire::add_midpoint(float x1, float y1, float x2, float y2, float reffect)
 {
-	struct waypoint wp;
+	struct waypoint wp = {};
 	float dx, dy;
 	dx = x2 - x1;
 	dy = y2 - y1;
@@ -819,10 +819,10 @@ extern float animation_time;
 
 void wire::calculate_drawpoints(void)
 {
-	uint64_t now;
-	float ratio;
-	float reffect;
-	struct waypoint wp;
+	uint64_t now = 0;
+	float ratio = 1.0;
+	float reffect = 1.0;
+	struct waypoint wp = {};
 	std::vector<struct waypoint> *temppoints = NULL;
 
 	if (drawpoints && !in_animation)
@@ -840,7 +840,6 @@ void wire::calculate_drawpoints(void)
 	now = SDL_GetTicks64();
 	
 	ratio = (now - points_timestamp) / animation_time;
-//	ratio = (now - points_timestamp) / 4000.0;
 	if (ratio < 0.0)
 		ratio = 0.0;
 	if (ratio > 1.0)
