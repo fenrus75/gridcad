@@ -244,7 +244,7 @@ void icon::draw(SDL_Renderer *renderer, float X, float Y, float width, float hei
 		newY = canvas->scr_to_Y(Y + height/2);
 		newW = canvas->scale_to_X(width);
 		newH = canvas->scale_to_Y(height/2);
-		canvas->draw_text(overlay, newX - delta, newY - delta, newW + delta, newH + delta);
+		canvas->draw_text(overlay, newX - canvas->scale_to_X(delta), newY - canvas->scale_to_Y(delta), newW + canvas->scale_to_X(delta), newH + canvas->scale_to_Y(delta));
 	}
 }
 
