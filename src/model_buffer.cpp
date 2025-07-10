@@ -57,6 +57,7 @@ void model_buffer::calculate(int ttl)
 
 	result.type = VALUE_TYPE_BOOL;
 	result.boolval = ports[0]->value.boolval;
+	class net *net = ports[2]->get_net();
 
 	if (ports[1]->value.boolval) {
 		ports[2]->direction = PORT_OUT;
@@ -67,9 +68,11 @@ void model_buffer::calculate(int ttl)
 		result.valid = false;
 	}
 
+	if (net) {
+		net->update_net_distances();
+	}
 	ports[2]->update_distances();    
 	ports[2]->check_reverse();
-	class net *net = ports[2]->get_net();
 	if (net)
 		net->validate();
 }

@@ -298,6 +298,7 @@ void port::drawDistress(class basecanvas *canvas, float X, float Y)
 }
 
 
+extern bool wire_debug_mode;
 
 void port::drawConnector(class basecanvas * canvas, float X, float Y, int cX, int cY, int type)
 {
@@ -320,11 +321,13 @@ void port::drawConnector(class basecanvas * canvas, float X, float Y, int cX, in
 	}
 	canvas->draw_image(icon, cX + X, cY + Y, 1, 1, Alpha(type));
 
-	if (bus_width <= 1) {
+	if (bus_width <= 1 && !wire_debug_mode) {
 		canvas->draw_text(name, cX + X, cY + Y + 0.35, 1, 0.3);
 	} else  {
 		char buf[128];
 		sprintf(buf, "%i", bus_width);
+		if (wire_debug_mode)
+			sprintf(buf, "%i", distance_from_outport);
 		std::string s = buf;
 		canvas->draw_text(s, cX + X, cY + Y + 0.15, 1, 0.55);
 	}
