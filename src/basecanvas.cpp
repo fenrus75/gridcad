@@ -454,8 +454,8 @@ void basecanvas::draw(void)
 			return;
 		}
 		
-		scaleX = from_scaleX + effect * (target_scaleX - from_scaleX);
-		scaleY = from_scaleY + effect * (target_scaleY - from_scaleY);
+		scaleX = exp( log(from_scaleX) + effect * (log(target_scaleX) - log(from_scaleX)));
+		scaleY = exp( log(from_scaleY) + effect * (log(target_scaleY) - log(from_scaleY)));
 		offsetX = from_offsetX + effect2 * (target_offsetX - from_offsetX);
 		offsetY = from_offsetY + effect2 * (target_offsetY - from_offsetY);
 			
