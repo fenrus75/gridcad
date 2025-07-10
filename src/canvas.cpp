@@ -232,8 +232,14 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 				current_scene->rewire_section(flt);
 			}
 			floating.clear();
-			if (active_icon)
-				floating.push_back(active_icon->create_element());
+
+			if (active_icon) {
+				if (shift_down)
+					floating.push_back(active_icon->create_element());
+				else
+					active_icon->set_inactive();
+			}
+		
 			current_scene->cycle_color();
 			current_scene->redo_nets();
 		}
