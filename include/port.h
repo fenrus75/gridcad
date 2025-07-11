@@ -20,7 +20,6 @@ public:
     std::string name = "";
     class element *parent = NULL;
     struct value value = {};
-    int value_ttl = 0;
     void add_wire(class wire *wire);
     void update_value_final(struct value *newvalue, int ttl);
     void update_value_net(struct value *newvalue, int ttl);

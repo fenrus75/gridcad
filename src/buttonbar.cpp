@@ -91,7 +91,7 @@ void buttonbar::draw_at(class basecanvas *canvas, int W, int H)
 	for (unsigned int i = 0; i < buttons.size(); i++) {
 		auto button = buttons[i];
 		float delta = 0;
-		if (buttonindex == i)
+		if (hover_button == i)
 			delta = delta_hover(SDL_GetTicks64() - hover_time);
 		button->draw_at(canvas, canvas->scr_to_X(0), canvas->scr_to_Y(0) + Y_SPACING * h  * i, w, h, buttonindex == i, delta);
 	}

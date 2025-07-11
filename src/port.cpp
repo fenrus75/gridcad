@@ -155,7 +155,6 @@ void port::update_value(struct value *newvalue, int ttl)
 		return;
 
 	value = *newvalue;	
-	value_ttl = ttl;
 
 	for (auto wire:wires) {
 		wire->update_value(newvalue, ttl -1);

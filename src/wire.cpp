@@ -239,7 +239,7 @@ void wire::draw(class basecanvas *canvas, int _color)
 			first = false;
 			continue;
 		}
-		canvas->draw_shadow_Line(prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, color);
+		canvas->draw_shadow_Line(prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, _color);
 		prevX = point.X;
 		prevY = point.Y;
 	}
@@ -253,6 +253,13 @@ void wire::draw(class basecanvas *canvas, int _color)
 			first = false;
 			continue;
 		}
+		
+		float tX, tY;
+		tX = prevX + 0.25 * (point.X - prevX) + 0.5;
+		tY = prevY + 0.25 * (point.Y - prevY) + 0.5;
+		if (wire_debug_mode)
+			canvas->draw_circle(tX,tY, 0.4, COLOR_VALUE_RED);
+		
 		if (_color != COLOR_ELEMENT_GHOST)
 			draw_snake_line(canvas, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, wire_to_color(color), &step, &value, stepsize, this);
 		else
@@ -329,11 +336,18 @@ void wire::route(class scene *scene)
 		if (floorf(ports[0]->screenX) == X1 && floorf(ports[0]->screenY) == Y1 && ports[0]->get_distance_from_outport() < ports[1]->get_distance_from_outport()) 
 			want_reverse = true;
 	}
-	if (want_reverse) 
+	if (want_reverse)  {
+		float tX = X1, tY = Y1;
+		X1 = X2;
+		Y1 = Y2;
+		X2 = tX;
+		Y2 = tY;
 		std::reverse(points->begin(), points->end());
+		want_reverse = false;
+	}
 	is_reversed = want_reverse;
 	being_routed = false;
-	reseat();
+//	reseat();
 	
 	points_timestamp = SDL_GetTicks64();
 	in_animation = true;
@@ -347,25 +361,40 @@ void wire::check_reverse(void)
 
 	if (!points)
 		return;
+		
+	if (ports.size() < 2)
+		return;
 
-	for (auto port : ports) {
-		if (floorf(port->screenX) == X1 && floorf(port->screenY) == Y1 && port->direction == PORT_OUT) {
-			want_reverse = true;
-		}
-		if (floorf(port->screenX) == X2 && floorf(port->screenY) == Y2 && port->direction == PORT_IN) {
-			want_reverse = true;
-		}
-	}
+#if 0		
+	printf("Checking reverse. ports (%5.2f, %5.2f @ %i)  (%5.2f, %5.2f @ %i)   wire start (%5.2f %5.2f) @ (%i, %i)\n",
+			ports[0]->screenX, ports[0]->screenY, ports[0]->get_distance_from_outport(), 
+			ports[1]->screenX, ports[1]->screenY, ports[1]->get_distance_from_outport(),
+			(*points)[0].X, (*points)[0].Y, X1, Y1);
+#endif
 
-	if (ports.size() > 1) {
-		if (floorf(ports[0]->screenX) == X1 && floorf(ports[0]->screenY) == Y1 && ports[0]->get_distance_from_outport() < ports[1]->get_distance_from_outport()) 
-			want_reverse = true;
-	}
-	if (want_reverse != is_reversed && points->size()>1)
+	if (ports[0]->get_distance_from_outport() < ports[1]->get_distance_from_outport()) 
+		want_reverse = true;
+	
+	if (want_reverse && points->size()>1) {
+		float tX = X1, tY = Y1;
+		X1 = X2;
+		Y1 = Y2;
+		X2 = tX;
+		Y2 = tY;
 		std::reverse(points->begin(), points->end());
+		in_animation = true;
+//		printf("reversing\n");
+		want_reverse = false;
+		reseat();
+#if 0
+		printf("	post Checking reverse. ports (%5.2f, %5.2f @ %i)  (%5.2f, %5.2f @ %i)   wire start (%5.2f %5.2f) @ (%i, %i)\n",
+			ports[0]->screenX, ports[0]->screenY, ports[0]->get_distance_from_outport(), 
+			ports[1]->screenX, ports[1]->screenY, ports[1]->get_distance_from_outport(),
+			(*points)[0].X, (*points)[0].Y, X1, Y1);
+#endif
+	}
 	being_routed = false;
-	is_reversed = want_reverse;
-	reseat();
+	is_reversed = false;
 }
 
 void wire::get_ref(void)
@@ -397,6 +426,12 @@ void wire::del_port(class port *port)
 }
 void wire::reseat(void)
 {
+	if (points && ports.size() > 1) {
+		if ((*points)[0].X == ports[1]->screenX && (*points)[0].Y == ports[1]->screenY) {
+//			printf("flipping ports\n");
+			std::reverse(ports.begin(), ports.end());
+		}
+	}
 	if (ports.size() > 0) {
 		X1 = ports[0]->screenX;
 		Y1 = ports[0]->screenY;
@@ -404,16 +439,6 @@ void wire::reseat(void)
 	if (ports.size() > 1) {
 		X2 = ports[1]->screenX;
 		Y2 = ports[1]->screenY;
-
-		if (ports[0]->value_ttl > ports[1]->value_ttl && ports[0]->value_ttl && ports[1]->value_ttl) {
-			printf("Flip wires\n");
-			int tmpX, tmpY;
-			tmpX = X1; tmpY = Y1;
-			X1 = X2;
-			Y1 = Y2;
-			X2 = tmpX;
-			Y2 = tmpY;
-		}
 	}
 }
 #if 0

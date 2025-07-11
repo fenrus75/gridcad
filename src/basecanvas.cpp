@@ -133,10 +133,15 @@ void basecanvas::draw_thick_line(float X1, float Y1, float X2, float Y2, int col
 }
 void basecanvas::draw_shadow_Line(float X1, float Y1, float X2, float Y2, int color)
 {
+	int r = 0,g = 0,b = 0;
+	
+	if (color == COLOR_VALUE_RED)
+		r = 255;
+	
 	/* TODO: clip boxes that are fully outside of the visible window */
 
 	thickLineRGBA(renderer, X_to_scr(X1), Y_to_scr(Y1), X_to_scr(X2),
-			Y_to_scr(Y2), 0.25 * scaleX, 0, 0, 0, 
+			Y_to_scr(Y2), 0.25 * scaleX, r, g, b, 
 			64);
 }
 
