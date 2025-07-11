@@ -234,10 +234,12 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 			floating.clear();
 
 			if (active_icon) {
-				if (shift_down)
+				if (shift_down) {
 					floating.push_back(active_icon->create_element());
-				else
+				} else {
 					active_icon->set_inactive();
+					active_icon = NULL;
+				}
 			}
 		
 			current_scene->cycle_color();
