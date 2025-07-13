@@ -16,6 +16,14 @@ screenshots
 ![Testbech for the Add8 element](screenshots/add8hub.png)
 ![Start screen for a reference FPGA board](screenshots/fpga.png)
 
+Building
+--------
+
+
+git submodules init ; git submodules update
+make
+
+
 
 credits / references
 --------------------
