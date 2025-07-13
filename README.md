@@ -20,8 +20,7 @@ Building
 --------
 
 
-git submodules init ; git submodules update
-make
+git submodule init ; git submodule update ; make
 
 
 
