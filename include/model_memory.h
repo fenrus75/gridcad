@@ -28,6 +28,7 @@ public:
     std::string get_verilog_modules(std::string path) override;
     unsigned int highest_addr_bit(unsigned int size);
     void update_memory_size(unsigned int newsize);
+    void show_hex(void);
     
 private:
     std::vector<std::uint8_t> data;
@@ -35,5 +36,6 @@ private:
     unsigned int previous_address = 0;
     class name *name_edit = NULL;
     std::string verilog_module_name = "";
+    class basecanvas *canvas = NULL;
 };
 

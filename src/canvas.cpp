@@ -969,7 +969,6 @@ void canvas::draw(void)
 	if (!window_shown)
 		return;
 		
-	basecanvas::draw();
 	/* first, draw the lighter gray background */
 
 	SDL_SetRenderDrawColor(renderer, R(COLOR_BACKGROUND_GRID),
@@ -977,6 +976,7 @@ void canvas::draw(void)
 			B(COLOR_BACKGROUND_GRID),
 			Alpha(COLOR_BACKGROUND_GRID));
 	SDL_RenderClear(renderer);
+	basecanvas::draw();
 	icon_bar->draw();
 	SDL_RenderSetClipRect(renderer, &main_area_rect);
 

@@ -16,6 +16,7 @@
 #include "port.h"
 #include "contextmenu.h"
 #include "name.h"
+#include "hexcanvas.h"
 
 #include <algorithm>
 #include <string>
@@ -48,6 +49,12 @@ void callback_2048(class element *element)
     mem->update_memory_size(2048);
 }
 
+void callback_editcontent(class element *element)
+{
+    class model_memory *mem = (class model_memory *) element;
+    mem->show_hex();
+}
+
 model_memory::model_memory(float _X, float _Y)  : element(1, 1, "Memory")
 {
     sizeX = 6;
@@ -63,6 +70,7 @@ model_memory::model_memory(float _X, float _Y)  : element(1, 1, "Memory")
     add_port(sizeX, 2, "DI", PORT_IN, 8);    
     add_port(4, sizeY, "DO", PORT_OUT, 8);    
     menu->add_item("Edit name", callback_editname);
+    menu->add_item("Edit content", callback_editcontent);
     menu->add_item("Set 256 byte size", callback_256);
     menu->add_item("Set 512 byte size", callback_512);
     menu->add_item("Set 1024 byte size", callback_1024);
@@ -276,4 +284,16 @@ void model_memory::update_memory_size(unsigned int newsize)
 {
     data.resize(newsize);
     ports[2]->set_width(highest_addr_bit(data.size())+1);
+}
+
+void model_memory::show_hex(void)
+{
+	if (!canvas) {
+		printf("Spawning a new window\n");
+		canvas = new class hexcanvas(name, &data[0], data.size());
+		canvas->unhide();
+		register_new_canvas(canvas);	
+	} else {
+		canvas->unhide();
+	}
 }
