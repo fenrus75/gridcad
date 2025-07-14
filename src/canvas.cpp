@@ -460,27 +460,64 @@ bool canvas::handle_event(SDL_Event &event)
 				shift_down = false;
 			switch (event.key.keysym.sym) {
 				case SDLK_UP:
-					offsetY--;
-					if (offsetY < -1)
-						offsetY = -1;
+							from_offsetX = offsetX;
+							from_offsetY = offsetY;
+							from_scaleX = scaleX;
+							from_scaleY = scaleY;
+							animation_start = SDL_GetTicks64();
+							target_offsetX = offsetX;
+							target_offsetY = offsetY;
+							target_scaleX = scaleX;
+							target_scaleY = scaleY;
+							animation_type = 2;
+							in_animation = true;
+						
+							fittoscreen = false;
+					target_offsetY--;
+					if (target_offsetY < -1)
+						target_offsetY = -1;
 					fittoscreen = false;
 					break;
 				case SDLK_DOWN:
-					offsetY++;
-					if (offsetY > current_scene->sizeY + 1)
-						offsetY = current_scene->sizeY;
-					fittoscreen = false;
+							from_offsetX = offsetX;
+							from_offsetY = offsetY;
+							from_scaleX = scaleX;
+							from_scaleY = scaleY;
+							animation_start = SDL_GetTicks64();
+							target_offsetX = offsetX;
+							target_offsetY = offsetY;
+							target_scaleX = scaleX;
+							target_scaleY = scaleY;
+							animation_type = 2;
+							in_animation = true;
+						
+							fittoscreen = false;
+							target_offsetY++;
+							if (target_offsetY > current_scene->sizeY + 1)
+								target_offsetY = current_scene->sizeY;
 					break;
 				case SDLK_LEFT:
 					if (event.key.keysym.mod & KMOD_LCTRL) {
 						icon_bar->previous();
 					} else {
 						if (!someone_in_editmode) {
-							offsetX--;
-							if (offsetX < -1)
-								offsetX = -1;
+							from_offsetX = offsetX;
+							from_offsetY = offsetY;
+							from_scaleX = scaleX;
+							from_scaleY = scaleY;
+							animation_start = SDL_GetTicks64();
+							target_offsetX = offsetX;
+							target_offsetY = offsetY;
+							target_scaleX = scaleX;
+							target_scaleY = scaleY;
+							animation_type = 2;
+							in_animation = true;
+						
+							target_offsetX-- ;
+							if (target_offsetX < -1)
+								target_offsetX = -1;
+							fittoscreen = false;
 						}
-						fittoscreen = false;
 					}
 					break;
 
@@ -489,9 +526,21 @@ bool canvas::handle_event(SDL_Event &event)
 						icon_bar->next();
 					} else {
 						if (!someone_in_editmode) {
-							offsetX++;
-							if (offsetX > current_scene->sizeX + 1)
-								offsetX = current_scene->sizeX;
+							from_offsetX = offsetX;
+							from_offsetY = offsetY;
+							from_scaleX = scaleX;
+							from_scaleY = scaleY;
+							animation_start = SDL_GetTicks64();
+							target_offsetX = offsetX;
+							target_offsetY = offsetY;
+							target_scaleX = scaleX;
+							target_scaleY = scaleY;
+							animation_type = 2;
+							in_animation = true;
+						
+							target_offsetX++ ;
+							if (target_offsetX > current_scene->sizeX + 1)
+								target_offsetX = current_scene->sizeX;
 							fittoscreen = false;
 						}
 					}
