@@ -454,7 +454,7 @@ void basecanvas::draw(void)
 		if (animation_type == 1)
 			ratio = ratio * 2;
 		if (animation_type == 2)
-			ratio = ratio * 3;
+			ratio = ratio * 6;
 		if (ratio > 1.0)
 			ratio = 1.0;
 			
