@@ -23,9 +23,9 @@ model_buffer::model_buffer(float _X, float _Y)  : element(_X, _Y, "")
 	sizeX=3;
 	sizeY=3;
 
-	add_port(-1, 1, "In", PORT_IN, 1);
+	add_port(-1, 1, "In", PORT_IN);
 	add_port( 1, -1, "En", PORT_IN, 1);
-	add_port(sizeX, 1, "", PORT_OUT, 1);
+	add_port(sizeX, 1, "", PORT_OUT);
 }
 
 model_buffer::~model_buffer(void)

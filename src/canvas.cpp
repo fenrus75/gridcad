@@ -966,8 +966,10 @@ bool canvas::handle_event(SDL_Event &event)
 
 void canvas::draw(void)
 {
-	if (!window_shown)
+	if (!window_shown) {
+		SDL_RenderPresent(renderer);
 		return;
+	}
 		
 	/* first, draw the lighter gray background */
 

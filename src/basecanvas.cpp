@@ -311,6 +311,8 @@ void basecanvas::draw_image(std::string filename, float X, float Y, float W, flo
 			printf("Failure to load %s\n", filename.c_str());
 		}
 		texture_cache[filename] = image;
+		if ((texture_cache.size() % 100) == 0)
+			printf("Texture cache reaches %lu\n", texture_cache.size());
 	}
 	draw_image(image, X,Y,W,H,alpha,keep_aspect);
 }
@@ -327,6 +329,8 @@ void basecanvas::draw_image_rotated(std::string filename, float X, float Y, floa
 			printf("Failure to load %s\n", filename.c_str());
 		}
 		texture_cache[filename] = image;
+		if ((texture_cache.size() % 100) == 0)
+			printf("Texture cache reaches %lu\n", texture_cache.size());
 	}
 	draw_image_rotated(image, X,Y,W,H,alpha, angle);
 }
@@ -344,6 +348,8 @@ void basecanvas::draw_image_fragment(std::string filename, float X, float Y, flo
 			printf("Failure to load %s\n", filename.c_str());
 		}
 		texture_cache[filename] = image;
+		if ((texture_cache.size() % 100) == 0)
+			printf("Texture cache reaches %lu\n", texture_cache.size());
 	}
 	draw_image_fragment(image, X,Y,W,H,fromX,fromY,w,h, angle);
 }
@@ -425,6 +431,8 @@ SDL_Texture *basecanvas::text_to_texture(std::string text)
 			printf("Failure to render  %s\n", text.c_str());
 		}
 		text_cache[text] = image;
+		if ((text_cache.size() % 100) == 0)
+			printf("Text cache reaches %lu\n", text_cache.size());
 	}
 
 	return image;
