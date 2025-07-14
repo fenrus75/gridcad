@@ -131,6 +131,10 @@ void draw_snake_line(class basecanvas *canvas, float x1, float y1, float x2, flo
 	if (!canvas->canvas_has_focus())
 		return;
 
+	if (canvas->scale_to_X(1) > 1/20.0)
+		return;
+
+
 	dx = x2-x1;
 	dy = y2-y1;
 	d = dist(x1,y1,x2,y2);;

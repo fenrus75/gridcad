@@ -428,6 +428,7 @@ bool canvas::handle_event(SDL_Event &event)
 			target_scaleY = main_area_rect.h / (bY2-bY1 + 6.0) ;
 			target_scaleX = std::min(target_scaleX, target_scaleY);
 			target_scaleY = target_scaleX;
+			
 			in_animation = true;
 		
 			if (event.user.code != 0) {
@@ -499,8 +500,8 @@ bool canvas::handle_event(SDL_Event &event)
 				case SDLK_KP_PLUS:
 				case SDLK_EQUALS:
 					if (!someone_in_editmode) {
-						scaleX++;
-						scaleY++;
+						scaleX *= 1.1;
+						scaleY *= 1.1;
 						fittoscreen = false;
 					}
 					break;
@@ -508,9 +509,9 @@ bool canvas::handle_event(SDL_Event &event)
 				case SDLK_KP_MINUS:
 					if (!someone_in_editmode) {
 						if (scaleX > 1)
-							scaleX--;
+							scaleX *= 0.9;
 						if (scaleY > 1)
-							scaleY--;
+							scaleY *= 0.9;
 						fittoscreen = false;
 					}
 					break;
