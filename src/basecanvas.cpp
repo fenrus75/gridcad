@@ -450,11 +450,18 @@ void basecanvas::draw(void)
 		float effect;
 		float effect2;
 		ratio = (now - animation_start) / animation_time;
+		
+		if (animation_type == 1)
+			ratio = ratio * 2;
 		if (ratio > 1.0)
 			ratio = 1.0;
 			
 		effect = ratio_effect(ratio);
 		effect2 = ratio * 2;
+		if (animation_type == 1) {
+			effect = ratio;
+			effect2 = ratio;
+		}
 		if (effect2 > 1.0)
 			effect2 = 1.0;
 		
@@ -464,6 +471,7 @@ void basecanvas::draw(void)
 			offsetX = target_offsetX;
 			offsetY = target_offsetY;
 			in_animation = false;
+			animation_type = 0;
 			return;
 		}
 		

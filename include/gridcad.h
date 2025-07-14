@@ -119,6 +119,7 @@ protected:
     float from_offsetX = 0.0, from_offsetY = 0.0, from_scaleX = 25.0, from_scaleY = 25.0; /* nosave */
     float target_offsetX = 0.0, target_offsetY = 0.0, target_scaleX = 25.0, target_scaleY = 25.0; /* nosave */
     uint64_t animation_start = 0; /* nosave */
+    int animation_type = 0;
     bool in_animation = false; /* nosave */
     unsigned int windowID = 0;    
     SDL_Renderer *renderer = NULL;

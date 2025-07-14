@@ -500,18 +500,36 @@ bool canvas::handle_event(SDL_Event &event)
 				case SDLK_KP_PLUS:
 				case SDLK_EQUALS:
 					if (!someone_in_editmode) {
-						scaleX *= 1.1;
-						scaleY *= 1.1;
+//						scaleX *= 1.1;
+//						scaleY *= 1.1;
+						from_offsetX = offsetX;
+						from_offsetY = offsetY;
+						from_scaleX = scaleX;
+						from_scaleY = scaleY;
+						animation_start = SDL_GetTicks64();
+						target_offsetX = offsetX;
+						target_offsetY = offsetY;
+						target_scaleX = scaleX * 1.1;
+						target_scaleY = scaleY * 1.1;
+						animation_type = 1;
+						in_animation = true;
 						fittoscreen = false;
 					}
 					break;
 				case SDLK_MINUS:
 				case SDLK_KP_MINUS:
 					if (!someone_in_editmode) {
-						if (scaleX > 1)
-							scaleX *= 0.9;
-						if (scaleY > 1)
-							scaleY *= 0.9;
+						from_offsetX = offsetX;
+						from_offsetY = offsetY;
+						from_scaleX = scaleX;
+						from_scaleY = scaleY;
+						animation_start = SDL_GetTicks64();
+						target_offsetX = offsetX;
+						target_offsetY = offsetY;
+						target_scaleX = scaleX * 0.9;
+						target_scaleY = scaleY * 0.9;
+						in_animation = true;
+						animation_type = 1;
 						fittoscreen = false;
 					}
 					break;
