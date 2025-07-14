@@ -144,6 +144,7 @@ extern int G(int color);
 extern int B(int color);
 extern int Alpha(int color);
 extern int value_color(struct value *value);
+extern std::string value_color_texture(struct value *value);
 extern class element *element_from_class_id(std::string classid);
 
 extern bool wire_factory_force_new_name;

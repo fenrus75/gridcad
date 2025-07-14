@@ -92,6 +92,27 @@ int value_color(struct value *value)
       }
 }
 
+std::string value_color_texture(struct value *value)
+{
+      if (value->is_error) {
+          struct timeval tv;
+          gettimeofday(&tv, NULL);
+          if (tv.tv_usec > 500000)
+             return "assets/wire_white.png";
+          else
+             return "assets/wire_black.png";
+      }
+      switch (value->type) {
+         case VALUE_TYPE_BOOL:
+              if (value->boolval)
+                   return "assets/wire_green.png";
+              else
+                   return "assets/wire_red.png";
+         default:
+              return "assets/wire_green.png";
+      }
+}
+
 int wire_to_color(int color)
 {
 	if (color >= 0 && color <= 7)

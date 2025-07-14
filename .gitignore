@@ -13,3 +13,4 @@ pngs.o
 test.v
 *.json.v
 projects/
+imgui.ini

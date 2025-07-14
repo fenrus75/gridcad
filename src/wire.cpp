@@ -189,7 +189,8 @@ void draw_snake_line(class basecanvas *canvas, float x1, float y1, float x2, flo
 				float r = 0.18;
 				if (thick)
 					r = 0.22;
-				canvas->draw_circle2(x1, y1, r, COLOR_WIRE_MOTION, value_color(value));
+				canvas->draw_image(value_color_texture(value), x1-r, y1-r, 2 * r, 2 * r);
+//				canvas->draw_circle2(x1, y1, r, COLOR_WIRE_MOTION, value_color(value));
 			}
 			if (currentd > bigstep) {
 				x1 += (stepsize - 2) * dx;
