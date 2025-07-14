@@ -1,6 +1,5 @@
 #pragma once
 #include "gridcad.h"
-
 /* Main class -- handles events etc.
    A document has scenes (represented via canvases) which have elements/etc
  */

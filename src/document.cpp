@@ -20,7 +20,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
-
+#include <SDL2/SDL2_framerate.h>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -209,14 +209,18 @@ void document::run(void)
 	SDL_Event event;
 	int ret = 0;
 	bool leave = false;
+	FPSmanager fps = {};
+	
+	SDL_initFramerate(&fps);
+	SDL_setFramerate(&fps, 30);
 
 	for (auto canvas:canvases)
 		canvas->draw();
 
 	while (!leave) {
 		run_queued_calculations();
-		ret = SDL_WaitEventTimeout(&event, 1);
-		//		ret = SDL_PollEvent(&event);
+//		ret = SDL_WaitEventTimeout(&event, 1);
+		ret = SDL_PollEvent(&event);
 
 		if (event.type == SDL_QUIT)
 			leave = true;
@@ -273,6 +277,7 @@ void document::run(void)
 
 			}
 		} else {
+			SDL_framerateDelay(&fps);
 			//			SDL_Delay(1);
 		}
 
