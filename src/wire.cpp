@@ -884,7 +884,7 @@ void wire::calculate_drawpoints(void)
 			if ((*oldpoints)[p].X == (*points)[q].X && (*oldpoints)[p].Y == (*points)[q].Y) {
 					/* just animate the wire to the new spot */
 			} else {
-				printf("XY mismatch on oldpoints %5.2f %5.2f vs %5.2f %5.2f\n", (*oldpoints)[0].X, (*oldpoints)[0].Y , (*points)[0].X, (*points)[0].Y);
+//				printf("XY mismatch on oldpoints %5.2f %5.2f vs %5.2f %5.2f\n", (*oldpoints)[0].X, (*oldpoints)[0].Y , (*points)[0].X, (*points)[0].Y);
 				delete oldpoints;
 				oldpoints = NULL;
 			}
@@ -952,13 +952,13 @@ void wire::calculate_drawpoints(void)
 		}
 	}
 	if (oldpoints && oldpoints->size() != points->size()) {
-		printf("Size mismatch %lu vs %lu\n", oldpoints->size(), points->size());
+//		printf("Size mismatch %lu vs %lu\n", oldpoints->size(), points->size());
 		delete oldpoints;
 		oldpoints = NULL;
 	}
 	
 	if (!oldpoints) {
-		printf("No old points\n");
+//		printf("No old points\n");
 		oldpoints = new std::vector<struct waypoint>;
 		float x1, y1, dx, dy, totaldist = 0, runningdist = 0;
 		
@@ -975,8 +975,8 @@ void wire::calculate_drawpoints(void)
 		y1 = (*points)[0].Y;
 		dx = (*points)[points->size()-1].X - x1;
 		dy = (*points)[points->size()-1].Y - y1;
-		printf("x1 y1 %5.2f %5.2f\n", x1, y1);
-		printf("dx dy %5.2f %5.2f\n", dx, dy);
+//		printf("x1 y1 %5.2f %5.2f\n", x1, y1);
+//		printf("dx dy %5.2f %5.2f\n", dx, dy);
 		for (unsigned int i = 0; i < points->size(); i++) {
 			if (i == 0 || i == points->size() - 1) {
 				wp = (*points)[i];
@@ -986,10 +986,10 @@ void wire::calculate_drawpoints(void)
 			runningdist += dist((*points)[i-1].X, (*points)[i-1].Y, (*points)[i].X, (*points)[i].Y);
 			wp.X = x1 + dx * (runningdist/totaldist);
 			wp.Y = y1 + dy * (runningdist/totaldist);
-			printf("wpX wpY %5.2f %5.2f\n", wp.X, wp.Y);
+			//printf("wpX wpY %5.2f %5.2f\n", wp.X, wp.Y);
 			oldpoints->push_back(wp);
 		}
-		printf("x2 y2 %5.2f %5.2f\n", (*points)[points->size()-1].X,(*points)[points->size()-1].Y) ;
+//		printf("x2 y2 %5.2f %5.2f\n", (*points)[points->size()-1].X,(*points)[points->size()-1].Y) ;
 	}
 	
 
