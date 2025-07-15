@@ -1035,7 +1035,6 @@ bool canvas::handle_event(SDL_Event &event)
 void canvas::draw(void)
 {
 	if (!window_shown) {
-		SDL_RenderPresent(renderer);
 		return;
 	}
 		
@@ -1188,7 +1187,6 @@ void canvas::draw(void)
 	if (dialogbox)
 		dialogbox->draw(this);
 
-	SDL_RenderPresent(renderer);
 }
 
 static float scale = -1;

@@ -53,7 +53,6 @@ void seqcanvas::draw(void)
 	}
 
 
-	SDL_RenderPresent(renderer);
 }
 
 bool seqcanvas::handle_event(SDL_Event &event)

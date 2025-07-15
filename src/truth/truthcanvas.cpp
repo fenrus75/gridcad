@@ -168,7 +168,6 @@ void truthcanvas::draw(void)
     for (auto widget : widgets)
       widget->draw(this);
       
-    SDL_RenderPresent(renderer);
 }
 
 bool truthcanvas::handle_event(SDL_Event &event)

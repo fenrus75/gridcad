@@ -311,6 +311,9 @@ void document::run(void)
 				previous_fast_draw = now;
 				fast_draw_counter = 0;
 			}
+			for (auto canvas: canvases) 
+				canvas->present();
+
 		}
 	}
 

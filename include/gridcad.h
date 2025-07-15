@@ -73,6 +73,7 @@ public:
     virtual ~basecanvas(void);
     virtual bool handle_event(SDL_Event &event) = 0;
     virtual void draw(void) = 0;
+    virtual void present(void) { SDL_RenderPresent(renderer); };
     unsigned int get_window_ID(void) { return windowID;};
 
 
