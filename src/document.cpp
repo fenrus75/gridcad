@@ -216,6 +216,8 @@ static void wait_fps(float target_fps)
 	d = now.tv_sec - previous_frame.tv_sec + now.tv_usec/1000000.0 -  previous_frame.tv_usec/1000000.0;
 	
 	time_left = target_time - d;
+	if (time_left < 0.0002)  /* skip a whole frame */
+		time_left += target_time;
 	if (time_left < 0.0002) {
 		gettimeofday(&previous_frame, NULL);
 		return;
