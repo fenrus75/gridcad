@@ -309,11 +309,11 @@ void document::run(void)
 				if (canvas->canvas_has_focus()) {
 					canvas->draw();
 				} else {
-					if (tv_delta_msec(&previous_slow_draw, &now) > 60)
+					if (tv_delta_msec(&previous_slow_draw, &now) > 500)
 						canvas->draw();
 				}
 			}
-			if (tv_delta_msec(&previous_slow_draw, &now) > 60) {
+			if (tv_delta_msec(&previous_slow_draw, &now) > 500) {
 				previous_slow_draw = now;
 			}
 			fast_draw_counter++;
