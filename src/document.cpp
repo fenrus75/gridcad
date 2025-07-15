@@ -20,7 +20,6 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL2_framerate.h>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -204,16 +203,33 @@ document::~document(void)
 
 bool clock_running = true;
 
+static struct timeval previous_frame = {};
+
+static void wait_fps(float target_fps)
+{
+	struct timeval now;
+	double d = 0.0;
+	double target_time = 1.0 / target_fps;
+	double time_left;
+	
+	gettimeofday(&now, NULL);
+	d = now.tv_sec - previous_frame.tv_sec + now.tv_usec/1000000.0 -  previous_frame.tv_usec/1000000.0;
+	
+	time_left = target_time - d;
+	if (time_left < 0) {
+		gettimeofday(&previous_frame, NULL);
+		return;
+	}
+	usleep(time_left * 1000000 - 200);
+	gettimeofday(&previous_frame, NULL);
+}
+
 void document::run(void)
 {
 	SDL_Event event;
 	int ret = 0;
 	bool leave = false;
-	FPSmanager fps = {};
 	
-	SDL_initFramerate(&fps);
-	SDL_setFramerate(&fps, 30);
-
 	for (auto canvas:canvases)
 		canvas->draw();
 
@@ -277,7 +293,6 @@ void document::run(void)
 
 			}
 		} else {
-			SDL_framerateDelay(&fps);
 			//			SDL_Delay(1);
 		}
 
@@ -311,6 +326,7 @@ void document::run(void)
 				previous_fast_draw = now;
 				fast_draw_counter = 0;
 			}
+			wait_fps(30);
 			for (auto canvas: canvases) 
 				canvas->present();
 
