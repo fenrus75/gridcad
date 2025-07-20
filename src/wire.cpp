@@ -310,7 +310,7 @@ void wire::route(class scene *scene)
 	}
 		
 
-	printf("Routing wire\n");
+//	printf("Routing wire\n");
 
 	class wiregrid * grid = new wiregrid(scene->sizeX, scene->sizeY);
 
@@ -1029,7 +1029,7 @@ void wire::calculate_drawpoints(void)
 
 void wire::redo_wires(void)
 {
-	printf("redo_wires\n");
+//	printf("redo_wires\n");
 	if (!points)
 		return;
 	if (oldpoints)

@@ -398,7 +398,7 @@ std::vector<struct waypoint> * wiregrid::path_walk(int x1, int y1, int x2, int y
 	}   
 
 
-	printf("recursecount is %i for path length %5.2f \n", recursecount, best_path);
+//	printf("recursecount is %i for path length %5.2f \n", recursecount, best_path);
 	//   debug_display();
 	return walk_back();
 }
