@@ -727,3 +727,11 @@ void port::update_fancy_name(std::string newname)
 	if (allow_fancy_verilog_name)
 		net->set_special_verilog_name(newname);
 }
+
+void port::clear_distress(void) 
+{ 
+	bool old_distress = distress;
+	distress = false;
+	if (parent && old_distress)
+		parent->notify(DEFAULT_TTL); 
+};

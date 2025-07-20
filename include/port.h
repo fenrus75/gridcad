@@ -64,7 +64,7 @@ public:
     void collect_nets(std::vector<std::string> *netmap);
     void validate(void);
     void set_distress(void) { distress = true; };
-    void clear_distress(void) { distress = false; };
+    void clear_distress(void);
     
     std::string get_verilog_name(void);
     std::string get_net_verilog_name(std::string fallback = ""); /* verilog name of the net connected */

@@ -165,7 +165,7 @@ std::string net::get_verilog_name(void)
 {
 	if (special_verilog_name != "")
 		verilog_name = special_verilog_name;
-		
+
 	if (verilog_name == "")
 		verilog_name = generate_wire_name();
 
