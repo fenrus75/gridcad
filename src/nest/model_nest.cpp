@@ -326,6 +326,7 @@ void model_nest::regen_ports(void)
 
 		for (unsigned int i = 0; i < ports.size(); i++) {
 			class port *_port = ports[i];
+			_port->set_linked_element(NULL);
 			if (elem->get_uuid() == _port->get_linked_uuid()) {
 				_port->set_linked_element(elem);
 				_port->update_name(elem->get_name());
