@@ -45,3 +45,6 @@ Another reference is the Steam game called "Turing Complete"
 which is a hoot to play and shared also some of the same GUI
 design ideas.
 
+
+I'd like to also thank Cody Snider for his cu.pcf file that made
+the template for the CU fpa board a lot simpler.
