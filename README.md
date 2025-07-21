@@ -15,6 +15,7 @@ screenshots
 ![Implementation of the Add8 element](screenshots/add8.png)
 ![Testbech for the Add8 element](screenshots/add8hub.png)
 ![Start screen for a reference FPGA board](screenshots/fpga.png)
+![A real design for a reference FPGA board](screenshots/fpga2.png)
 
 Building
 --------
