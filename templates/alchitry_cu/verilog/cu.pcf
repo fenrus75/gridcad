@@ -1,0 +1,101 @@
+#
+# Used from https://github.com/codysnider/alchitry-cu-tutorial with
+# permission
+#
+
+# Clock
+set_io clk P7
+# Reset
+set_io rst P8
+
+# Onboard LEDs, bottom to top
+set_io LED[7] J11
+set_io LED[6] K11
+set_io LED[5] K12
+set_io LED[4] K14
+set_io LED[3] L12
+set_io LED[2] L14
+set_io LED[1] M12
+set_io LED[0] N14
+
+## Alchitry IO
+
+# LEDs, right-to-left
+set_io IO_LED3[0] G14 # BB21, IOR_141_GBIN2
+set_io IO_LED3[1] F14 # BB20, IOR_140_GBIN3
+set_io IO_LED3[2] E12 # BB18, IOR_147
+set_io IO_LED3[3] E14 # BB17, IOR_148
+set_io IO_LED3[4] D14 # BB15, IOR_152
+set_io IO_LED3[5] C14 # BB14, IOR_154
+set_io IO_LED3[6] B14 # BB12, IOR_161
+set_io IO_LED3[7] A12 # BB11, IOT_170
+
+set_io IO_LED2[0] C10 # BB9, IOT_186
+set_io IO_LED2[1] C9 # BB8, IOT_190
+set_io IO_LED2[2] A11 # BB6, IOT_179
+set_io IO_LED2[3] A10 # BB5, IOT_181
+set_io IO_LED2[4] A7 # BB3, IOT_197_GBIN1
+set_io IO_LED2[5] A6 # BB2, IOT_198_GBIN0
+set_io IO_LED2[6] A4 # AB24, IOT_219
+set_io IO_LED2[7] A3 # AB23, IOT_222
+
+set_io IO_LED1[0] A2 # AB21, IOT_223
+set_io IO_LED1[1] A1 # AB20, IOT_225
+set_io IO_LED1[2] C3 # AB18, IOL_4_P
+set_io IO_LED1[3] D3 # AB17, IOL_4_N
+set_io IO_LED1[4] B1 # AB15, IOL_2_P
+set_io IO_LED1[5] C1 # AB14, IOL_2_N
+set_io IO_LED1[6] D1 # AB12, IOL_5_P
+set_io IO_LED1[7] E1 # AB11, IOL_5_N
+
+# DIP Switches Right to Left
+set_io IO_DIP1[7] C11 # BB40
+set_io IO_DIP1[6] C12 # BB39
+set_io IO_DIP1[5] D11 # BB37
+set_io IO_DIP1[4] D12 # BB36
+set_io IO_DIP1[3] E11 # BB34
+set_io IO_DIP1[2] F11 # BB33
+set_io IO_DIP1[1] F12 # BB31
+set_io IO_DIP1[0] G12 # BB30
+
+set_io IO_DIP2[7] C5 # AB28
+set_io IO_DIP2[6] A5 # AB27
+set_io IO_DIP2[5] C6 # BB49
+set_io IO_DIP2[4] C7 # BB48
+set_io IO_DIP2[3] D6 # BB46
+set_io IO_DIP2[2] D7 # BB45
+set_io IO_DIP2[1] D9 # BB43
+set_io IO_DIP2[0] D10 # BB42
+
+set_io IO_DIP3[7] G4 # AB40
+set_io IO_DIP3[6] H4 # AB39
+set_io IO_DIP3[5] F3 # AB37
+set_io IO_DIP3[4] F4 # AB36
+set_io IO_DIP3[3] E4 # AB34
+set_io IO_DIP3[2] D4 # AB33
+set_io IO_DIP3[1] C4 # AB31
+set_io IO_DIP3[0] D5 # AB30
+
+
+# Buttons
+set_io IO_BUTTON0 G11 # BB28
+set_io IO_BUTTON1 H11 # BB27
+set_io IO_BUTTON2 H12 # BB23
+set_io IO_BUTTON3 J12 # BB24
+set_io IO_BUTTON4 P2 # CB49
+
+
+# Eight Segment Displays, right to left
+set_io IO_SEGSEL[3] H3 # AB43
+set_io IO_SEGSEL[2] H1 # AB42
+set_io IO_SEGSEL[1] G1 # AB8
+set_io IO_SEGSEL[0] G3 # AB9
+
+set_io IO_SEG[0] J1 # AB5
+set_io IO_SEG[1] J3 # AB6
+set_io IO_SEG[2] N1 # AB48
+set_io IO_SEG[3] K4 # AB46
+set_io IO_SEG[4] K3 # AB45
+set_io IO_SEG[5] L1 # AB3
+set_io IO_SEG[6] M1 # AB2
+set_io IO_SEG[7] P1 # AB49
