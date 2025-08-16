@@ -268,7 +268,8 @@ void projcanvas::draw(void)
 	} else {
 		hover_right_button = false;
 		draw_image("assets/buttonbox.png", PROJECT_X + 4, PROJECT_Y + calc_project_height(projects.size()) + RADIO_HEIGHT, PROJECT_WIDTH - 4.2, RADIO_HEIGHT - 0.1);	
-		draw_text("Open project " + projects[active_project], PROJECT_X + 4, PROJECT_Y + calc_project_height(projects.size()) + RADIO_HEIGHT + 0.2, PROJECT_WIDTH - 4, 1);
+		if (projects.size() > 0)
+			draw_text("Open project " + projects[active_project], PROJECT_X + 4, PROJECT_Y + calc_project_height(projects.size()) + RADIO_HEIGHT + 0.2, PROJECT_WIDTH - 4, 1);
 	}
 
 	SDL_RenderPresent(renderer);
