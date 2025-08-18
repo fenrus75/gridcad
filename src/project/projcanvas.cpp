@@ -264,7 +264,8 @@ void projcanvas::draw(void)
 		}
 		delta = delta_hover(now - hover_timestamp);
 		draw_image("assets/buttonbox_hover.png", PROJECT_X + 4 - delta, PROJECT_Y + calc_project_height(projects.size()) + RADIO_HEIGHT - delta, PROJECT_WIDTH - 4.2 + 2 * delta, RADIO_HEIGHT - 0.1 + 2 * delta);	
-		draw_text("Open project " + projects[active_project], PROJECT_X + 4 - delta/2, PROJECT_Y + calc_project_height(projects.size()) + RADIO_HEIGHT + 0.2 - delta/2, PROJECT_WIDTH - 4 + delta, 1 + delta);
+		if (projects.size() > 0)
+			draw_text("Open project " + projects[active_project], PROJECT_X + 4 - delta/2, PROJECT_Y + calc_project_height(projects.size()) + RADIO_HEIGHT + 0.2 - delta/2, PROJECT_WIDTH - 4 + delta, 1 + delta);
 	} else {
 		hover_right_button = false;
 		draw_image("assets/buttonbox.png", PROJECT_X + 4, PROJECT_Y + calc_project_height(projects.size()) + RADIO_HEIGHT, PROJECT_WIDTH - 4.2, RADIO_HEIGHT - 0.1);	
