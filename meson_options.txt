@@ -1,0 +1,20 @@
+# Meson build options for gridcad
+
+option('use_sanitizer',
+    type: 'combo',
+    value: 'none',
+    choices: ['none', 'address', 'leak'],
+    description: 'Enable sanitizers (address, leak, or none)'
+)
+
+option('with_lto',
+    type: 'boolean',
+    value: true,
+    description: 'Enable Link Time Optimization (LTO)'
+)
+
+option('build_tests',
+    type: 'boolean',
+    value: false,
+    description: 'Build test executables'
+)
