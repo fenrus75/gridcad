@@ -57,12 +57,28 @@ int main(int argc, char **argv)
 	segv.sa_flags = SA_ONSTACK;
 	
 	sigaction(SIGSEGV, &segv, NULL);
+
+	std::vector<std::string> positionals;
+	for (int i = 1; i < argc; ++i) {
+		std::string arg = argv[i];
+		if ((arg == "-l" || arg == "--logfile") && i + 1 < argc) {
+			logger::get().set_log_file(argv[++i]);
+		} else if (arg == "--loglevel" && i + 1 < argc) {
+			std::string level = argv[++i];
+			if (level == "debug") logger::get().set_level(log_level::debug);
+			else if (level == "info") logger::get().set_level(log_level::info);
+			else if (level == "warn") logger::get().set_level(log_level::warning);
+			else if (level == "error") logger::get().set_level(log_level::error);
+		} else {
+			positionals.push_back(arg);
+		}
+	}
 	
-	if (argc > 1) {
-		name = argv[1];
+	if (!positionals.empty()) {
+		name = positionals[0];
 		
 		if (name == "--library") {
-			printf("Library mode \n");
+			logger::get().info("Library mode");
 			library_mode = true;
 			class projcanvas *proj = new projcanvas(library_mode);
 		
@@ -80,7 +96,7 @@ int main(int argc, char **argv)
 		delete proj;
 	}
 	
-	printf("Starting project %s\n", name.c_str());
+	logger::get().info("Starting project {}", name);
 	
 	populate_library("library/");
 

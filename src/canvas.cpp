@@ -111,7 +111,7 @@ canvas::canvas(class scene *_scene, struct capabilities *cap)
 
 canvas::~canvas(void)
 {
-	printf("Canvas destructor\n");
+	logger::get().debug("Canvas destructor");
 	zap_autocomplete();
 	unregister_canvas(this);
 	SDL_DestroyRenderer(renderer);
@@ -165,7 +165,7 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 		if (wr)
 			is_wire = true;
 		if (is_wire)
-			printf("WR  %i\n", dragging != NULL);
+			logger::get().debug("WR  {}", dragging != NULL);
 
 
 		if (!dragging && !is_wire && floating.size() == 0 && !is_port) {
@@ -263,7 +263,7 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 		for (auto elem:	current_scene->elements) {
 			if (elem->intersect(x, y)) {
 				if (here == NULL || elem->is_background() == false) {
-					printf("HERE %s\n", elem->class_id().c_str());
+					logger::get().debug("HERE {}", elem->class_id());
 					here = elem;
 				}
 			}
@@ -286,7 +286,7 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 		}
 		if (active_menu)
 			active_menu->mouse_set(x, y);
-		printf("Right button\n");
+		logger::get().debug("Right button");
 	}
 	if (event.button.button == SDL_BUTTON_MIDDLE) {
 		middle_X = event.motion.x;
@@ -303,7 +303,7 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 		}
 
 		if (here) {
-			printf("Setting dragging for MM\n");
+			logger::get().debug("Setting dragging for MM");
 			dragging = here;
 			dragging->start_drag(x, y);
 		}
@@ -327,7 +327,7 @@ bool canvas::handle_event_iconarea(SDL_Event &event)
 		active_menu->mouse_set(scr_to_X(ui_area_rect.x+15), scr_to_Y(event.motion.y));
 
 	if (this_icon)
-		printf("ICON CLICK\n");
+		logger::get().debug("ICON CLICK");
 	if (active_icon && this_icon)
 		active_icon->set_inactive();
 	if (active_icon != this_icon && this_icon) {
@@ -446,7 +446,7 @@ bool canvas::handle_event(SDL_Event &event)
 			someone_in_editmode = true;
 	switch (event.type) {
 		case SDL_QUIT:
-			printf("QUIT\n");
+			logger::get().debug("QUIT");
 			leave = true;
 			return true;
 			break;
@@ -656,7 +656,7 @@ bool canvas::handle_event(SDL_Event &event)
 				case SDLK_z:
 					if (event.key.keysym.mod & KMOD_LCTRL) {
 						zap_autocomplete();
-						printf("UNDO\n");
+						logger::get().debug("UNDO");
 						class scene *oldscene;
 						oldscene = swap_scene(get_undo());
 						if (oldscene)
@@ -673,12 +673,12 @@ bool canvas::handle_event(SDL_Event &event)
 					break;
 				case SDLK_c:
 					if (event.key.keysym.mod & KMOD_LCTRL) {
-						printf("copy\n");
+						logger::get().debug("copy");
 						json p;
 
 						current_scene->selection_to_json(p);
 						clipboard = p.dump();
-						printf("clipboard is %s\n", clipboard.c_str());
+						logger::get().debug("clipboard is {}", clipboard);
 					}
 					break;
 				case SDLK_q:
@@ -703,7 +703,7 @@ bool canvas::handle_event(SDL_Event &event)
 					if (event.key.keysym.mod & KMOD_LCTRL) {
 						float x1 = 1000000, x2 = -100000;
 						float y1 = 1000000, y2 = -100000;
-						printf("paste\n");
+						logger::get().debug("paste");
 						json p = json::parse(clipboard);
 						from_json_to_floating(p);
 						for (auto elem : floating) {
@@ -759,10 +759,10 @@ bool canvas::handle_event(SDL_Event &event)
 					break;
 				}
 				if (dragging) {
-					printf("Up\n");
+					logger::get().debug("Up");
 					take_undo_snapshot(current_scene);
 					if (!dragging->has_moved())  {
-						printf("Click\n");
+						logger::get().debug("Click");
 						if (!dragging->mouse_select(x,y)) {
 							dragging->select();
 							if (current_scene->selected_count() == 1)
@@ -790,9 +790,9 @@ bool canvas::handle_event(SDL_Event &event)
 						wr2 = wr->split();
 						port = current_scene->is_port(x,y);
 						if (!port)
-							printf("No port found\n");
+							logger::get().debug("No port found");
 						else
-							printf("Port %s found\n", port->name.c_str());
+							logger::get().debug("Port {} found", port->name);
 						wr->add_port(port);
 						wr2->add_port(port);
 						port->add_wire(wr);
@@ -802,9 +802,9 @@ bool canvas::handle_event(SDL_Event &event)
 						wr->route(current_scene);
 						wr2->route(current_scene);
 						_element->reroute_all_wires();
-						printf("new split code\n");
+						logger::get().debug("new split code");
 					} else {
-						printf("not new split code\n");
+						logger::get().debug("not new split code");
 						_element = new connector(x, y);
 						current_scene->add_element(_element);
 					}
@@ -823,7 +823,7 @@ bool canvas::handle_event(SDL_Event &event)
 						dragging_wire->reseat();
 						dragging_wire->route(current_scene);
 						dragging_wire = NULL;
-						printf("Connection made\n");
+						logger::get().debug("Connection made");
 
 						current_scene->redo_nets();
 						create_autocomplete_from_wire(dragging_port, port2);
@@ -844,10 +844,10 @@ bool canvas::handle_event(SDL_Event &event)
 				middle_X = event.motion.x;
 				middle_Y = event.motion.y;
 				if (dragging) {
-					printf("Up\n");
+					logger::get().debug("Up");
 					take_undo_snapshot(current_scene);
 					if (!dragging->has_moved())  {
-						printf("Click\n");
+						logger::get().debug("Click");
 						if (!dragging->mouse_select(x,y)) {
 							dragging->select();
 							if (current_scene->selected_count() == 1)
@@ -1401,7 +1401,7 @@ void canvas::create_autocomplete_from_wire(class port *first, class port *second
 
 	zap_autocomplete();
 
-	printf("Creating multiwire autocomplete\n");	
+	logger::get().debug("Creating multiwire autocomplete");	
 
 
 	for (auto elem : current_scene->elements) {
@@ -1416,7 +1416,7 @@ void canvas::create_autocomplete_from_wire(class port *first, class port *second
 	}
 
 	if (from_port_index < 0 || to_port_index < 0) {
-		printf("Couldn't find both ports\n");
+		logger::get().debug("Couldn't find both ports");
 		return;
 	}
 
@@ -1463,7 +1463,7 @@ void canvas::create_autocomplete_from_wire(class port *first, class port *second
 		to_port_index++;
 	};
 
-	printf("Creating autocomplete of size %lu\n", autocomplete.size());
+	logger::get().debug("Creating autocomplete of size {}", autocomplete.size());
 
 
 }

@@ -117,7 +117,7 @@ document::document(std::string _name, bool _library_mode)
 
 
 	SDL_GetDisplayDPI(0, &d1, &d2, &d3);
-	printf("DPI %5.2f %5.2f %5.2f\n", d1, d2, d3);
+	logger::get().info("DPI {:5.2f} {:5.2f} {:5.2f}", d1, d2, d3);
 
 	SDL_timer_event = SDL_RegisterEvents(16);
 
@@ -149,7 +149,7 @@ void document::save_verilog(std::string path, std::string filename)
 {
 	if (library_mode)
 		return;
-	printf("Saving as %s\n", filename.c_str());
+	logger::get().info("Saving as {}", filename);
 	std::ofstream output(filename);
 	class scene *_scene;
 	class canvas *_canvas = (class canvas *)canvases[0];
@@ -170,7 +170,7 @@ void document::save_json(void)
 	else
 		filename = name;
 
-	printf("Saving to %s \n", filename.c_str());
+	logger::get().info("Saving to {}", filename);
 
 	json j;
 
@@ -246,11 +246,11 @@ void document::run(void)
 		if (ret) {
 			/* toggle the clock if there is a timer event -- this is the best race-free place to do this*/
 			if (event.type == EVENT_STOP_CLOCK) {
-				printf("Receive stop clock\n");
+				logger::get().debug("Receive stop clock");
 				clock_running = false;
 			}
 			if (event.type == EVENT_START_CLOCK) {
-				printf("Receive start clock\n");
+				logger::get().debug("Receive start clock");
 				clock_running = true;
 			}
 			if (event.type == EVENT_SAVE_TO_LIBRARY) {
@@ -299,7 +299,7 @@ void document::run(void)
 		}
 
 		if (leave)
-			printf("Want to quit\n");
+			logger::get().debug("Want to quit");
 
 		run_queued_calculations();
 		if (!ret && !leave) {

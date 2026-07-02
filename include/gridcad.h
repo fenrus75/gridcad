@@ -17,6 +17,7 @@
 
 #include "wirepath.h"
 #include "capabilities.h"
+#include "logger.h"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>

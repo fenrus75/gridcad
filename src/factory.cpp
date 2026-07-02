@@ -82,7 +82,7 @@ class element *element_from_class_id(std::string classid)
     ELEMENT(sequencer);
     
     
-    printf("Unknown class_id: %s\n", classid.c_str());
+    logger::get().error("Unknown class_id: {}", classid);
 
     return nullptr;
 }
