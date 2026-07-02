@@ -324,11 +324,11 @@ void port::drawConnector(class basecanvas * canvas, float X, float Y, int cX, in
 		if (name != "")
 			canvas->draw_text(name, cX + X, cY + Y + 0.35, 1, 0.3);
 	} else  {
-		char buf[128];
-		sprintf(buf, "%i", bus_width);
+		std::string s;
 		if (wire_debug_mode)
-			sprintf(buf, "%i", distance_from_outport);
-		std::string s = buf;
+			s = std::format("{}", distance_from_outport);
+		else
+			s = std::format("{}", bus_width);
 		canvas->draw_text(s, cX + X, cY + Y + 0.15, 1, 0.55);
 	}
 	if (distress)
@@ -598,13 +598,11 @@ std::string port::get_verilog_name(void)
 
 std::string port::get_tooltip(void)
 {
-	std::string s = ""; 
-	char buf[256];
+	std::string s;
 	if (value.type == VALUE_TYPE_INT)
-		sprintf(buf, "Name %s:%i value 0x%lx", name.c_str(), bus_width, value.intval);
+		s = std::format("Name {}:{} value 0x{:x}", name, bus_width, value.intval);
 	else
-		sprintf(buf, "Name %s:%i value %i", name.c_str(), bus_width, value.boolval);
-	s = buf;
+		s = std::format("Name {}:{} value {}", name, bus_width, value.boolval ? 1 : 0);
 	if (direction == PORT_IN)
 		s = "INPUT [" + s + "]";
 	if (direction == PORT_OUT)

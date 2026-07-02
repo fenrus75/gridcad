@@ -230,11 +230,7 @@ std::string model_memory::get_verilog_modules(std::string path)
 	std::ofstream output(filename);
 
         for (unsigned int i = 0; i < data.size(); i++) {
-            char buffer[32];
-            std::string d;
-            sprintf(buffer, "%02x ", data[i]);
-            d = buffer;
-            output << d;
+            output << std::format("{:02x} ", data[i]);
             if ((i % 16) == 0)
                 output << "\n";
         }

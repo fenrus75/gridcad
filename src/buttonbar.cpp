@@ -97,10 +97,7 @@ void buttonbar::draw_at(class basecanvas *canvas, int W, int H)
 	}
 
 	if (fps > 0) {
-		char buf[128];
-		std::string s;
-		sprintf(buf, "%3.1ffps", fps);
-		s = buf;
+		std::string s = std::format("{:3.1f}fps", fps);
 		canvas->draw_text(s, canvas->scr_to_X(0), canvas->scr_to_Y(0) + Y_SPACING * h  * buttons.size() + 5, w, h);
 	}
 

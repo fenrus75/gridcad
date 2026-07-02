@@ -26,7 +26,7 @@ wiretest: $(OBJS) include/gridcad.h Makefile test/wiretest.o
 	g++ $(CFLAGS) -O2 -Wall -march=native lib/wirepath.o test/wiretest.o $(LTO) -g -o wiretest -lSDL2_image -lSDL2_gfx -lSDL2_ttf -lSDL2 
 	
 .cpp.o:
-	g++ $(CXXFLAGS) -fvisibility=hidden -Iinclude/ -Iimgui/ -Iimgui_hex_editor/ `pkg-config --cflags sdl2` -O2 -Wall -march=native -flto -g $(SAN) -std=c++20  -c $< -o $@
+	g++ $(CXXFLAGS) -fvisibility=hidden -Iinclude/ -Iimgui/ -Iimgui_hex_editor/ `pkg-config --cflags sdl2` -O2 -Wall -march=native -flto -g $(SAN) -std=c++23  -c $< -o $@
 	
 pngs.o: pngs.cpp
 	g++ $(CXXFLAGS) -O1 pngs.cpp -c -o pngs.o

@@ -93,10 +93,7 @@ void model_output::drawAt(class basecanvas *canvas, float X, float Y, int type)
       name_edit->drawAt(canvas, X, Y + sizeY, sizeX);
 
     if (ports[0]->value.type == VALUE_TYPE_INT) {
-	char buf[128];
-	std::string s;
-	sprintf(buf, "%li", ports[0]->value.intval);
-	s = buf;
+	std::string s = std::format("{}", ports[0]->value.intval);
 	canvas->draw_text(s, X+ 0.6, Y + 0.6, 1.8,1.8);
     }
 

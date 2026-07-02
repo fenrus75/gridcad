@@ -162,15 +162,13 @@ void draw_snake_line(class basecanvas *canvas, float x1, float y1, float x2, flo
 					cursormag = 2;
 				const float size = 0.24 * cursormag;
 				const float size2 = 0.20 * cursormag;
-				char buf[128];
 				std::string s;
-				sprintf(buf, "%li", value->intval);
-
 				if (wire->get_is_z())
-					sprintf(buf, "%c", 'Z');
-				if (wire_debug_mode)
-					sprintf(buf, "%u", wire->get_distance_from_outport());
-				s = buf;
+					s = "Z";
+				else if (wire_debug_mode)
+					s = std::format("{}", wire->get_distance_from_outport());
+				else
+					s = std::format("{}", value->intval);
 				canvas->draw_box(x1-size, y1-size, x1+size, y1+size, COLOR_WIRE_MOTION);
 				canvas->draw_box(x1-size2, y1-size2, x1+size2, y1+size2, COLOR_BACKGROUND_MAIN);
 				canvas->draw_text(s, x1+0.05-size, y1+0.05-size, 2 * size - 0.1, 2 * size - 0.1);

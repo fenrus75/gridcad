@@ -59,17 +59,15 @@ void model_datascope::drawAt(class basecanvas *canvas, float X, float Y, int typ
         canvas->draw_image("assets/datascope.png", X, Y, sizeX, sizeY, Alpha(type));
     }
     if (ports[0]->value.type == VALUE_TYPE_INT) {
-	char buf[128];
-	std::string s;
-        sprintf(buf, "%li", ports[0]->value.intval);
-	if (format == 0)
-          sprintf(buf, "%li", ports[0]->value.intval);
-	if (format == 1)
-          sprintf(buf, "x%lx", ports[0]->value.intval);
-	if (format == 2)
-          sprintf(buf, "%lb", ports[0]->value.intval);
-	s = buf;
-	canvas->draw_text(s, X+ 0.6, Y + 0.6, 2.8,1.8);
+        std::string s;
+        if (format == 1) {
+            s = std::format("x{:x}", ports[0]->value.intval);
+        } else if (format == 2) {
+            s = std::format("{:b}", ports[0]->value.intval);
+        } else {
+            s = std::format("{}", ports[0]->value.intval);
+        }
+        canvas->draw_text(s, X + 0.6, Y + 0.6, 2.8, 1.8);
     }
 
     for (auto port : ports) {

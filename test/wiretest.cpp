@@ -1,5 +1,5 @@
 #include "wirepath.h"
-#include <stdio.h>
+#include <print>
 
 int main(int argc, char **argv)
 {
@@ -16,7 +16,7 @@ int main(int argc, char **argv)
     delete grid;
     
     for (auto p: *points) {
-        printf("X, Y : %i, %i\n", p.X, p.Y);
+        std::println("X, Y : {}, {}", p.X, p.Y);
     }
     return 0;
 }

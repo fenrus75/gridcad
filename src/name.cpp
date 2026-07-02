@@ -178,21 +178,12 @@ void name::handle_event(SDL_Event &event)
 
 void name::insert_char(unsigned char c)
 {
-	std::string before, after;
-	char buffer[2];
-
-
 	if (cursorpos >= value->size()) {
 		*value += c;
 		cursorpos++;
 		return;
 	}
-	before = value->substr(0, cursorpos);
-	after = value->substr(cursorpos, std::string::npos);
-	buffer[0] = c;
-	buffer[1] = 0;
-	after = before + buffer + after;
-	*value = after;
+	value->insert(cursorpos, 1, c);
 	cursorpos++;
 }
 

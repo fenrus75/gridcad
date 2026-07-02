@@ -54,14 +54,10 @@ model_truth::model_truth(float _X, float _Y):element(1, 1, "Truth Table")
 
 	names.resize(inputs + outputs);
 	for (i = 0; i < inputs; i++) {
-		char buf[128];
-		sprintf(buf, "In%i", i);
-		names[i] = buf;
+		names[i] = std::format("In{}", i);
 	}
 	for (i = 0; i < outputs; i++) {
-		char buf[128];
-		sprintf(buf, "Out%i", i);
-		names[inputs + i] = buf;
+		names[inputs + i] = std::format("Out{}", i);
 	}
 	menu->add_item("Edit name", callback_editname);
 	name_edit = new class name(&name);
@@ -152,12 +148,11 @@ void model_truth::from_json(json & j)
 void model_truth::add_output(void)
 {
 	unsigned int y;
-	char buf[128];
 
 	for (y = 0; y < values.size(); y++)
 		values[y].push_back('0');
 	outputs++;
-	sprintf(buf, "Out%i", outputs -1);
+	std::string buf = std::format("Out{}", outputs - 1);
 	names.push_back(buf);
 
 	add_port(sizeX, outputs, buf, PORT_OUT, 1);
@@ -214,7 +209,6 @@ static bool same_inputs(std::vector<char> A, std::vector<char> B, unsigned int i
 void model_truth::add_input(void)
 {
 	unsigned int y;
-	char buf[128];
 	class port *_port;
 
 	printf("Adding input\n");
@@ -223,7 +217,7 @@ void model_truth::add_input(void)
 
 	values2 = values;
 
-	sprintf(buf, "In%i", inputs);
+	std::string buf = std::format("In{}", inputs);
 	names.insert(names.begin() + inputs , buf);
 	for (y = 0; y < values.size(); y++) {
 		values[y].insert(values[y].begin() + inputs , '0');
@@ -247,10 +241,8 @@ void model_truth::add_input(void)
 void model_truth::del_input(void)
 {
 	unsigned int y;
-	char buf[128];
 	class port *port;
 
-	sprintf(buf, "In%i", inputs);
 	names.erase(names.begin() + inputs-1);
 	for (y = 0; y < values.size(); y++) {
 		values[y].erase(values[y].begin() + inputs -1);

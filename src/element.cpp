@@ -227,7 +227,7 @@ bool element::intersect_float(float _X, float _Y)
 	return false;
 }
 
-void element::add_port(int X, int Y, const char *_name, int direction, int _width)
+void element::add_port(int X, int Y, std::string _name, int direction, int _width)
 {
 	class port *_port;
 	_port = new port(_name, direction);

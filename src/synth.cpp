@@ -16,22 +16,23 @@
 static int phase = 0;
 
 
-std::string synth::log2string(char *str)
+std::string synth::log2string(std::string str)
 {
-    char *c;
-    c = strchr(str, '\n');
-    if (c) *c = 0;
+    auto pos = str.find('\n');
+    if (pos != std::string::npos) {
+        str = str.substr(0, pos);
+    }
     
     std::string s = str;
     if (phase == 0) {
-        if (strstr(str, "yosys"))
+        if (str.find("yosys") != std::string::npos)
             phase = 1;
     }
         
     if (phase == 1) {
-        if (strstr(str, "Time spent:"))
+        if (str.find("Time spent:") != std::string::npos)
             phase = 2;
-        if (str[0] >= '0' && str[0] <= '9' && false) {
+        if (!str.empty() && str[0] >= '0' && str[0] <= '9' && false) {
             /* new main line -- delete all non-main lines from the history */
                 bool retry = true;
                 while (retry) {

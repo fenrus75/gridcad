@@ -569,7 +569,6 @@ extern std::map<std::string, unsigned int> sizemap;
 
 void model_nest::save_to_library(std::string library_path)
 {
-	char buf[65];
 	std::string icon;
 	printf("Library path is %s\n", library_path.c_str());
 
@@ -605,8 +604,7 @@ void model_nest::save_to_library(std::string library_path)
 		srand(time(NULL));
 		while (pixels == NULL) {
 			int i = rand() % 64;
-			sprintf(buf, "assets/random/icon%i.png", i);
-			icon = buf;
+			icon = std::format("assets/random/icon{}.png", i);
 			if (datamap.find(icon) == datamap.end())
 				continue;
 			pixels = datamap[icon];

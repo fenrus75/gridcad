@@ -94,9 +94,7 @@ void model_toggle::drawAt(class basecanvas *canvas, float X, float Y, int type)
       name_edit->drawAt(canvas,X, Y + sizeY, sizeX);
 
     if (ports[0]->get_width() > 1 || value.type == VALUE_TYPE_INT) {
-	char buf[128];
-	sprintf(buf, "%li", ports[0]->value.intval);
-	strvalue = buf;
+	strvalue = std::format("{}", ports[0]->value.intval);
 //	canvas->draw_text(s, X+ 0.6, Y + 0.6, 1.8,1.8);
 	value_edit->drawAt(canvas, X + 0.6, Y + 1, 1.8);
     }
@@ -111,7 +109,6 @@ void model_toggle::drawAt(class basecanvas *canvas, float X, float Y, int type)
 
 void model_toggle::update_value(struct value *newvalue, int ttl)
 {
-    char buffer[128];
     if (!newvalue->valid)
       return;
     if (ttl <= 1)
@@ -120,8 +117,7 @@ void model_toggle::update_value(struct value *newvalue, int ttl)
 
     update_value_net(&value, 0, ttl - 1);
     notify(ttl - 1);
-    sprintf(buffer, "%lu", value.intval);
-    strvalue = buffer;
+    strvalue = std::format("{}", value.intval);
 }
 
 bool model_toggle::mouse_select(float _X, float _Y)
@@ -165,9 +161,7 @@ void model_toggle::from_json(json &j)
 void model_toggle::handle_event(class basecanvas *canvas, SDL_Event &event)
 {
     if (value_edit->get_edit_mode()) {
-      char buffer[128];
-      sprintf(buffer, "%lu", value.intval);
-      strvalue = buffer;
+      strvalue = std::format("{}", value.intval);
       value_edit->handle_event(event);
       if (strvalue != "")
         value.intval = std::stoi(strvalue);
