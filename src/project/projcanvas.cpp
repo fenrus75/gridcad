@@ -351,6 +351,10 @@ void projcanvas::run(void)
 {
 	SDL_Event event = {};
 	while (true) {
+		if (has_exit_time && std::chrono::steady_clock::now() >= exit_time) {
+			logger::get().info("Exiting project canvas due to exit-after timeout");
+			break;
+		}
 		int ret;
 		draw();
 		ret = SDL_WaitEventTimeout(&event, 5);

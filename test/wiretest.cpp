@@ -1,8 +1,10 @@
+#include "gridcad.h"
 #include "wirepath.h"
 #include <print>
 
 int main(int argc, char **argv)
 {
+	start_time = std::chrono::steady_clock::now();
     int y;
     class wiregrid * grid = new wiregrid(50, 33);
     std::vector<struct waypoint> *points;

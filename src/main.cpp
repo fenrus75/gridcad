@@ -40,6 +40,7 @@ void segv_handler(int sig) {
 
 int main(int argc, char **argv)
 {	
+	start_time = std::chrono::steady_clock::now();
 	std::string name = "default";
 	class document *document;
 	bool library_mode = false;
@@ -69,6 +70,10 @@ int main(int argc, char **argv)
 			else if (level == "info") logger::get().set_level(log_level::info);
 			else if (level == "warn") logger::get().set_level(log_level::warning);
 			else if (level == "error") logger::get().set_level(log_level::error);
+		} else if (arg == "--exit-after" && i + 1 < argc) {
+			int seconds = std::stoi(argv[++i]);
+			exit_time = start_time + std::chrono::seconds(seconds);
+			has_exit_time = true;
 		} else {
 			positionals.push_back(arg);
 		}

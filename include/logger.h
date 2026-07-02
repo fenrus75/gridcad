@@ -8,6 +8,8 @@
 #include <mutex>
 #include <chrono>
 
+extern std::chrono::steady_clock::time_point start_time;
+
 enum class log_level {
     debug,
     info,
@@ -102,8 +104,9 @@ private:
     }
 
     void write_log(log_level level, const std::string& message) {
-        auto now = std::chrono::system_clock::now();
-        std::string timestamp = std::format("{:%Y-%m-%d %H:%M:%S}", now);
+        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::steady_clock::now() - start_time);
+        std::string timestamp = std::format("{:8.3f}s", elapsed.count() / 1000.0);
 
         std::string log_line = std::format("[{}] [{}] {}\n", timestamp, level_to_string(level), message);
 

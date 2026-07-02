@@ -193,4 +193,8 @@ extern std::string wire_color_name(int color);
 extern std::string append_random_bits(std::string input);
 extern std::string path_to_template(std::string instr);
 extern std::string template_to_path(std::string instr);
+
+extern std::chrono::steady_clock::time_point start_time;
+extern std::chrono::steady_clock::time_point exit_time;
+extern bool has_exit_time;
 #endif

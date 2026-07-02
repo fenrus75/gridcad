@@ -18,6 +18,10 @@
 #include "canvas.h"
 #include "scene.h"
 
+std::chrono::steady_clock::time_point start_time;
+std::chrono::steady_clock::time_point exit_time;
+bool has_exit_time = false;
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <iostream>
@@ -236,6 +240,11 @@ void document::run(void)
 		canvas->draw();
 
 	while (!leave) {
+		if (has_exit_time && std::chrono::steady_clock::now() >= exit_time) {
+			logger::get().info("Exiting due to exit-after timeout");
+			leave = true;
+			break;
+		}
 		run_queued_calculations();
 //		ret = SDL_WaitEventTimeout(&event, 1);
 		ret = SDL_PollEvent(&event);
