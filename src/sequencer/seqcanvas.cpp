@@ -139,12 +139,12 @@ void seqcanvas::data_to_seq(void)
 void seqcanvas::add_row(void)
 {
 	data.push_back("0");
-	printf("Adding one %lu \n", data.size());
+	logger::get().debug("Adding one {}", data.size());
 	class name *edit;
 	unsigned i = data.size() - 1;
 	edit = new class name(&data[i]);
 	editors.push_back(edit);
-	printf("Added one %lu  %s\n", editors.size(), data[i].c_str());
+	logger::get().debug("Added one {} {}", editors.size(), data[i]);
 
 	for (unsigned int i = 0; i < editors.size(); i++) {
 		auto e = editors[i];

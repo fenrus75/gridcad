@@ -22,7 +22,7 @@
 
 void callback_set_color(class port *port, int color)
 {
-	printf("Pushing color %i \n", color);
+	logger::get().debug("Pushing color {}", color);
 	port->color = color;
 	port->push_net_color(color);
 }
@@ -516,13 +516,13 @@ void port::unsplice(void)
 		w3->add_port(p1);
 		p1->add_wire(w3);
 	} else {
-		printf("NO P1\n");
+		logger::get().warn("NO P1");
 	}
 	if (p2) {
 		w3->add_port(p2);
 		p2->add_wire(w3);
 	} else {
-		printf("NO P3\n");
+		logger::get().warn("NO P3");
 	}
 	w3->push_wire_color(w1->get_color());
 	w3->reseat();
@@ -689,7 +689,7 @@ int port::get_net_width(void)
 
 void port::validate(void)
 {
-	printf("Validating port %s\n", name.c_str());
+	logger::get().debug("Validating port {}", name);
 	distress = false;
 	if (name == "clk" && wires.size() == 0 && direction == PORT_IN)
 		distress = true;

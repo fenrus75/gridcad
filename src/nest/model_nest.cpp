@@ -162,7 +162,7 @@ bool model_nest::mouse_select(float _X, float _Y)
 	}	
 
 	if (!canvas) {
-		printf("Spawning a new window\n");
+		logger::get().info("Spawning a new window");
 		canvas = new class canvas(_scene);
 		canvas->unhide();
 		register_new_canvas(canvas);	
@@ -337,7 +337,7 @@ void model_nest::regen_ports(void)
 			}
 		}
 		if (!found) {
-			printf("Adding new port \n");
+			logger::get().debug("Adding new port");
 			class port *_port;
 			int direction = PORT_IN;
 			if (elem->class_id() == "model_output:")
@@ -570,7 +570,7 @@ extern std::map<std::string, unsigned int> sizemap;
 void model_nest::save_to_library(std::string library_path)
 {
 	std::string icon;
-	printf("Library path is %s\n", library_path.c_str());
+	logger::get().info("Library path is {}", library_path);
 
 	if (library_path != "")
 		std::filesystem::create_directory(library_path);
@@ -591,7 +591,7 @@ void model_nest::save_to_library(std::string library_path)
 	if (!outputfile.ends_with(".json"))
 		outputfile = outputfile +  ".json";
 
-	printf("Outputfile is %s\n", outputfile.c_str());
+	logger::get().info("Outputfile is {}", outputfile);
 
 	std::ofstream output(outputfile);
 

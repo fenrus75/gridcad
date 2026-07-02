@@ -55,7 +55,7 @@ void model_4to8::calculate(int ttl)
     struct value out = {};
     
     if (ttl <= 1) {
-        printf("4to8 ttl exceeded\n");
+        logger::get().warn("4to8 ttl exceeded");
         return;
     }
     out.valid = true;

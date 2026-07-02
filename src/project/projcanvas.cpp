@@ -95,7 +95,7 @@ std::string projcanvas::library_test_bench(void)
 	benchname = path + "/testbench_" + elem;
 	std::string libname = path + "/" + elem;
 
-	printf("Bench name is %s\n", benchname.c_str());
+	logger::get().debug("Bench name is {}", benchname);
 
 	if (!std::filesystem::exists(benchname)) {
 		class scene *scene;
@@ -104,7 +104,7 @@ std::string projcanvas::library_test_bench(void)
 		class model_nest *element;
 
 		element = new model_nest(10, 10);
-		printf("libname is %s \n", libname.c_str());
+		logger::get().debug("libname is {}", libname);
 
 		std::string logic = "";
 		std::ifstream input(libname);
@@ -131,7 +131,7 @@ std::string projcanvas::library_test_bench(void)
 		current_project = "";
 	}
 
-	printf("returning\n");
+	logger::get().debug("returning");
 	return benchname;
 }
 
@@ -281,7 +281,7 @@ bool projcanvas::handle_event(SDL_Event &event)
 {
 	switch (event.type) {
 		case SDL_QUIT:
-			printf("QUIT\n");
+			logger::get().debug("QUIT");
 			exit(0);
 			return true;
 			break;
@@ -316,7 +316,7 @@ bool projcanvas::handle_event(SDL_Event &event)
 				unsigned int index;
 
 				index = tY + tX * PER_COLUMN;
-				printf("index is %i \n", index);
+				logger::get().debug("index is {}", index);
 
 
 				if (index == active_project && time(NULL) - previous_click < 3) {
@@ -418,7 +418,7 @@ void projcanvas::crawl_filesystem(void)
 		projects.push_back(path);
 	}
 
-	printf("newest project is %s \n", newest_project.c_str());
+	logger::get().info("newest project is {}", newest_project);
 
 	for (unsigned int i = 0; i < projects.size() ; i++) {
 		if (projects[i] == newest_project)
@@ -440,7 +440,7 @@ void projcanvas::crawl_library(void)
 
 		projects.push_back(dir_entry.path());
 
-		printf("Library %s\n", path.c_str());
+		logger::get().info("Library {}", path);
 	}
 
 }
@@ -461,10 +461,10 @@ void projcanvas::create_project_from_template(std::string name, std::string temp
 			std::string fullpath = dir_entry.path();
 
 			std::string relative = fullpath.substr(("templates/"+templ).size() + 1, std::string::npos);
-			printf("Found %s / %s /%s \n", path.c_str(), fullpath.c_str(), relative.c_str());
+			logger::get().debug("Found {} / {} /{}", path, fullpath, relative);
 
 			if (dir_entry.is_directory()) {
-				printf("mkdir of %s\n", (target + path).c_str());
+				logger::get().debug("mkdir of {}", target + path);
 				std::filesystem::create_directory(target + relative);
 			} else {
 				std::ostringstream buf; 

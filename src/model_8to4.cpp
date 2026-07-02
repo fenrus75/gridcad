@@ -57,7 +57,7 @@ void model_8to4::calculate(int ttl)
     int val;
     
     if (ttl <= 1) {
-        printf("8to4 ttl exceeded\n");
+        logger::get().warn("8to4 ttl exceeded");
         return;
     }
     out.valid = true;

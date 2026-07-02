@@ -119,7 +119,7 @@ void scene::add_element(class element * element)
 	rewire_section(element->get_X(), element->get_Y(), element->get_width(), element->get_height());
 	generation_count++;
 	element->update_parental_name(get_full_name());
-	printf("Element parnetal name is %s   name is %s parent is %s \n", element->get_parental_name().c_str(), name.c_str(), parental_name.c_str());
+	logger::get().debug("Element parental name is {}   name is {} parent is {}", element->get_parental_name(), name, parental_name);
 	
 	has_sequencer = false;
 	for (auto elem : elements)

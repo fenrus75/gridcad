@@ -49,7 +49,7 @@ void model_delayline::calculate(int ttl)
         return;
 
     value = ports[0]->value;
-    printf("calculate %s from %i \n", name.c_str(), value.boolval);
+    logger::get().debug("calculate {} from {}", name, value.boolval ? 1 : 0);
     queue_calculate(this);
 
     if (ttl > DEFAULT_TTL - 10)
@@ -58,7 +58,7 @@ void model_delayline::calculate(int ttl)
 
 void model_delayline::queued_calculate(int ttl)
 {
-    printf("delated calculate %s from %i \n", name.c_str(), value.boolval);
+    logger::get().debug("delayed calculate {} from {}", name, value.boolval ? 1 : 0);
     update_value_net(&value, 1, ttl - 1);
 }
 

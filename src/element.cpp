@@ -161,7 +161,7 @@ bool element::stop_drag(class basecanvas *canvas)
 	bool no_move = false;
 	/* we did not move at all */
 
-	printf("%5.2f %5.2f      %5.2f  %5.2f\n", X,Y,Xghost, Yghost); 
+	logger::get().debug("{:5.2f} {:5.2f}      {:5.2f}  {:5.2f}", X, Y, Xghost, Yghost);
 	if (X == Xghost && Y == Yghost) {
 		no_move = true;
 	}
@@ -445,7 +445,7 @@ void element::handle_event(class basecanvas *thiscanvas, SDL_Event &event)
 
 void element::connect_clk(class port *clk)
 {
-	printf("COnnecting clock %s \n", name.c_str());
+	logger::get().debug("Connecting clock {}", name);
 	for (auto port : ports) {
 		if (port->name == "clk" && port->direction == PORT_IN && !port->has_wires()) {
 			class wire *wire;

@@ -285,7 +285,7 @@ void model_memory::update_memory_size(unsigned int newsize)
 void model_memory::show_hex(void)
 {
 	if (!canvas) {
-		printf("Spawning a new window\n");
+		logger::get().info("Spawning a new window");
 		canvas = new class hexcanvas(name, &data[0], data.size());
 		canvas->unhide();
 		register_new_canvas(canvas);	

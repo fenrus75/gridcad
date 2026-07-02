@@ -58,7 +58,7 @@ void model_16to8::calculate(int ttl)
     int val;
     
     if (ttl <= 1) {
-        printf("16to8 ttl exceeded\n");
+        logger::get().warn("16to8 ttl exceeded");
         return;
     }
     out.valid = true;

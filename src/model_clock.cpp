@@ -70,7 +70,7 @@ Uint32 SDL_timer_func(Uint32 interval, void *param)
     ev.user.data2 = NULL;
 
     if (!SDL_PushEvent(&ev)) {
-     printf("Push failure %s\n", SDL_GetError());
+        logger::get().error("Push failure {}", SDL_GetError());
     }
     return interval;;
 }

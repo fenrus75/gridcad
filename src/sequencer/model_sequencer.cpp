@@ -113,7 +113,7 @@ bool sequencer::mouse_select(float _X, float _Y)
 	}	
 
 	if (!canvas) {
-		printf("Spawning a new window\n");
+		logger::get().info("Spawning a new window");
 		canvas = new class seqcanvas(this);
 		register_new_canvas(canvas);	
 	} else {

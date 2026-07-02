@@ -29,7 +29,7 @@ void populate_library(std::string directory)
 {
     const std::filesystem::path libpath{directory};
     
-    printf("Loading library from %s\n", directory.c_str());
+    logger::get().info("Loading library from {}", directory);
     
     if (!std::filesystem::exists(libpath))
         return;

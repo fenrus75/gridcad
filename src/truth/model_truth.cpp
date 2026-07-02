@@ -111,7 +111,7 @@ bool model_truth::mouse_select(float _X, float _Y)
 	}	
 
 	if (!canvas) {
-		printf("Spawning a new window\n");
+		logger::get().info("Spawning a new window");
 		canvas = new class truthcanvas(this);
 		register_new_canvas(canvas);	
 	} else {
@@ -211,7 +211,7 @@ void model_truth::add_input(void)
 	unsigned int y;
 	class port *_port;
 
-	printf("Adding input\n");
+	logger::get().debug("Adding input");
 
 	std::vector<std::vector<char>> values2;	
 

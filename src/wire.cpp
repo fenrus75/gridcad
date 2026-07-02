@@ -457,7 +457,7 @@ void wire::update_value(struct value *newvalue, int ttl)
 	}
 	value = *newvalue;
 	if (ttl < 10) {
-		printf("wire ttl exceeded %i \n", ttl);
+		logger::get().warn("wire ttl exceeded {}", ttl);
 		newvalue->is_error = true;
 	}
 
@@ -570,7 +570,7 @@ class wire *wire::split(void)
 {
 	class wire *wr = new wire(0, 0, 0, 0, color);
 
-	printf("Splitting wire\n");
+	logger::get().debug("Splitting wire");
 	wr->update_value_final(&value, 100);    
 	wr->set_width(get_width());
 	/* upper bound the distance from outports */
@@ -719,7 +719,7 @@ void wire::fill_grid(class wiregrid *grid)
 void wire::remove_if_orphan(void)
 {
 	if (ports.size() < 2) {
-		printf("Removing orphan  %lu\n",ports.size());
+		logger::get().debug("Removing orphan  {}", ports.size());
 		remove();
 	}
 }

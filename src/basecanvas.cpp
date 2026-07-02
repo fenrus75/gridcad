@@ -184,7 +184,7 @@ SDL_Texture *IMG_LoadTextureFromMem(SDL_Renderer *renderer, const char *filename
 
 	s = filename;
 	if (datamap.find(s) == datamap.end()) {
-		printf("PNGMAP miss for '%s'\n", filename);
+		logger::get().debug("PNGMAP miss for '{}'", filename);
 		return IMG_LoadTexture(renderer, filename);
 	}
 
@@ -308,11 +308,11 @@ void basecanvas::draw_image(std::string filename, float X, float Y, float W, flo
 		//		printf("image cache miss %s\n", filename.c_str());
 		image = load_image(filename);
 		if (!image) {
-			printf("Failure to load %s\n", filename.c_str());
+			logger::get().error("Failure to load {}", filename);
 		}
 		texture_cache[filename] = image;
 		if ((texture_cache.size() % 100) == 0)
-			printf("Texture cache reaches %lu\n", texture_cache.size());
+			logger::get().debug("Texture cache reaches {}", texture_cache.size());
 	}
 	draw_image(image, X,Y,W,H,alpha,keep_aspect);
 }
@@ -326,11 +326,11 @@ void basecanvas::draw_image_rotated(std::string filename, float X, float Y, floa
 	} else {
 		image = load_image(filename);
 		if (!image) {
-			printf("Failure to load %s\n", filename.c_str());
+			logger::get().error("Failure to load {}", filename);
 		}
 		texture_cache[filename] = image;
 		if ((texture_cache.size() % 100) == 0)
-			printf("Texture cache reaches %lu\n", texture_cache.size());
+			logger::get().debug("Texture cache reaches {}", texture_cache.size());
 	}
 	draw_image_rotated(image, X,Y,W,H,alpha, angle);
 }
@@ -345,11 +345,11 @@ void basecanvas::draw_image_fragment(std::string filename, float X, float Y, flo
 		//		printf("image cache miss %s\n", filename.c_str());
 		image = load_image(filename);
 		if (!image) {
-			printf("Failure to load %s\n", filename.c_str());
+			logger::get().error("Failure to load {}", filename);
 		}
 		texture_cache[filename] = image;
 		if ((texture_cache.size() % 100) == 0)
-			printf("Texture cache reaches %lu\n", texture_cache.size());
+			logger::get().debug("Texture cache reaches {}", texture_cache.size());
 	}
 	draw_image_fragment(image, X,Y,W,H,fromX,fromY,w,h, angle);
 }
@@ -374,7 +374,7 @@ SDL_Texture *basecanvas::text_to_texture(const char *text)
 	}
 	surface = TTF_RenderUTF8_Blended(font, text, white);
 	if (!surface) {
-		printf("text_to_texture error %s\n", SDL_GetError());
+		logger::get().error("text_to_texture error {}", SDL_GetError());
 	}
 	tx = SDL_CreateTextureFromSurface(renderer, surface);
 	SDL_FreeSurface(surface);
@@ -434,11 +434,11 @@ SDL_Texture *basecanvas::text_to_texture(std::string text)
 	} else {
 		image = text_to_texture(text.c_str());;
 		if (!image) {
-			printf("Failure to render  %s\n", text.c_str());
+			logger::get().error("Failure to render {}", text);
 		}
 		text_cache[text] = image;
 		if ((text_cache.size() % 100) == 0)
-			printf("Text cache reaches %lu\n", text_cache.size());
+			logger::get().debug("Text cache reaches {}", text_cache.size());
 	}
 
 	return image;

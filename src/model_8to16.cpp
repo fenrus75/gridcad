@@ -55,7 +55,7 @@ void model_8to16::calculate(int ttl)
     struct value out = {};
     
     if (ttl <= 1) {
-        printf("8to16 ttl exceeded\n");
+        logger::get().warn("8to16 ttl exceeded");
         return;
     }
     out.valid = true;
