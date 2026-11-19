@@ -75,7 +75,7 @@ int value_color(struct value *value)
 {
       if (value->is_error) {
           struct timeval tv;
-          gettimeofday(&tv, NULL);
+          gettimeofday(&tv, nullptr);
           if (tv.tv_usec > 500000)
              return COLOR_ERROR_WHITE;
           else
@@ -96,7 +96,7 @@ std::string value_color_texture(struct value *value)
 {
       if (value->is_error) {
           struct timeval tv;
-          gettimeofday(&tv, NULL);
+          gettimeofday(&tv, nullptr);
           if (tv.tv_usec > 500000)
              return "assets/wire_white.png";
           else

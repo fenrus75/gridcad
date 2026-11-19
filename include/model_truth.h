@@ -40,8 +40,8 @@ public:
     std::string get_verilog_modules(std::string path) override;
     std::string get_verilog_name(void) override;
 private:
-    class truthcanvas *canvas = NULL;
-    class name *name_edit = NULL;
+    std::unique_ptr<class truthcanvas> canvas;
+    std::unique_ptr<class name> name_edit;
     
 
     unsigned int inputs = 2;

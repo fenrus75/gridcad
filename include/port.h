@@ -18,9 +18,9 @@ public:
     int X, Y;
     float screenX, screenY;
     std::string name = "";
-    class element *parent = NULL;
+    class element *parent = nullptr;
     struct value value = {};
-    void add_wire(class wire *wire);
+    void add_wire(std::shared_ptr<class wire> wire);
     void update_value_final(struct value *newvalue, int ttl);
     void update_value_net(struct value *newvalue, int ttl);
     int direction = PORT_IN;
@@ -34,11 +34,11 @@ public:
     void drawDistress(class basecanvas *canvas, float X, float Y);
     void stop_drag(class basecanvas *canva);
     virtual void notify(int ttl);
-    class wire *is_wire(float X, float Y);
+    std::shared_ptr<class wire> is_wire(float X, float Y);
     void fill_grid(class wiregrid *grid);
     
     void remove_wire(class wire *wire);
-    bool replace_wire(class wire *from, class wire *to);
+    bool replace_wire(class wire *from, std::shared_ptr<class wire> to);
     void to_json(json &j);
     void from_json(json &j);
     bool has_wires(void) { return wires.size() > 0; };
@@ -56,7 +56,7 @@ public:
     void unsplice(void);
     void push_wire_color(int color);
     void push_net_color(int color);
-    class contextmenu *get_menu(void) { return menu;};
+    class contextmenu *get_menu(void) { return menu.get(); };
     void add_menu(void);
     
     void cycle_color(void);
@@ -67,7 +67,7 @@ public:
     void clear_distress(void);
     
     std::string get_verilog_name(void);
-    std::string get_net_verilog_name(std::string fallback = ""); /* verilog name of the net connected */
+    std::string get_net_verilog_name(std::string_view fallback = ""); /* verilog name of the net connected */
     std::string get_net_verilog_wire_decl(void); /* verilog full wire line of the net connected */
     
     unsigned int get_distance_from_outport(void) { if (direction == PORT_OUT) return 0; else return distance_from_outport;};
@@ -83,15 +83,15 @@ public:
     void check_reverse(void);
     std::string get_verilog_width(void);
     void allow_fancy_verilog(void) { allow_fancy_verilog_name = true; };
-    void update_fancy_name(std::string name);
+    void update_fancy_name(std::string_view name);
 	
 private:
-    class port_contextmenu *menu = NULL;
+    std::unique_ptr<class port_contextmenu> menu;
     int bus_width = 0;
     void drawConnector(class basecanvas *canvas, float X, float Y, int cX, int cY, int type);    
-    std::vector<class wire*> wires;
+    std::vector<std::shared_ptr<class wire>> wires;
     std::string linked_uuid = "";
-    class element *linked_element = NULL;
+    class element *linked_element = nullptr;
     std::string verilog_name = "";
     unsigned int distance_from_outport = INT_MAX;
     bool distress = false;

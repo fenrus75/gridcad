@@ -7,9 +7,6 @@ class name
 {
 public:
     name(std::string * value);
-    ~name(void);
-    
-    
     void handle_event(SDL_Event &event);
 
     void drawAt(class basecanvas *canvas, float X, float Y, float W, float H = 1.0);
@@ -28,9 +25,9 @@ private:
 
     void insert_char(unsigned char c);
     void backspace(void);
-    float relative_cursor_pos(class basecanvas *canvas, std::string text, float H = 1.0);
+    float relative_cursor_pos(class basecanvas *canvas, std::string_view text, float H = 1.0);
     
-    std::string * value = NULL;
+    std::string * value = nullptr;
     unsigned int cursorpos = 0;
     bool edit_mode = false;
     bool numbers_only = false;

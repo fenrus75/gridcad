@@ -61,23 +61,20 @@ model_nest::model_nest(float _X, float _Y) : element(_X,_Y, "SubScreen")
 	X = floorf(_X);
 	Y = floorf(_Y);    
 	//	printf("New scene %s %s\n", name.c_str(), get_full_name().c_str());
-	_scene = new class scene(name, get_full_name());
+	owned_scene = std::make_unique<class scene>(name, get_full_name());
 	menu->add_item("Edit name", callback_editname);
 	menu->add_item("Reset to library version", callback_reset);
 	menu->add_item("Save to library", callback_save_to_library);
 
-	name_edit = new class name(&name);
+	name_edit = std::make_unique<class name>(&name);
 }
 
-model_nest::~model_nest(void)
+class scene *model_nest::active_scene(void) const
 {
-	delete name_edit;
-	if (canvas)
-		delete canvas;
-	else /* canvas destructor already deleted _scene, but there might not be a canvas yet */
-		delete _scene;
-
+	return canvas ? canvas->get_scene() : owned_scene.get();
 }
+
+model_nest::~model_nest(void) = default;
 
 
 void model_nest::drawAt(class basecanvas *canvas, float X, float Y, int type)
@@ -107,7 +104,7 @@ void model_nest::drawAt(class basecanvas *canvas, float X, float Y, int type)
 	else
 		name_edit->drawAt(canvas, X, Y + sizeY, sizeX);
 
-	for (auto port: ports) {
+	for (auto &port : ports) {
 		port->draw_wires(canvas);	
 		port->drawAt(canvas, X, Y, type);
 	}
@@ -121,7 +118,7 @@ void model_nest::calculate(int ttl)
 {
 	maybe_regen_ports();
 	add_nets();
-	for (auto port: ports) {
+	for (auto &port : ports) {
 		if (port->direction == PORT_IN) {
 			class model_toggle *tog;
 			class element *elmt;
@@ -134,7 +131,7 @@ void model_nest::calculate(int ttl)
 			}
 		}
 	}
-	for (auto port: ports) {
+	for (auto &port : ports) {
 		if (port->direction == PORT_OUT) {
 			class model_output *tog;
 			struct value val = {};
@@ -152,7 +149,7 @@ void model_nest::calculate(int ttl)
 
 bool model_nest::mouse_select(float _X, float _Y)
 {
-	long int click = time(NULL);
+	long int click = time(nullptr);
 
 	regen_ports();
 
@@ -163,9 +160,9 @@ bool model_nest::mouse_select(float _X, float _Y)
 
 	if (!canvas) {
 		logger::get().info("Spawning a new window");
-		canvas = new class canvas(_scene);
+		canvas = std::make_unique<class canvas>(std::move(owned_scene));
 		canvas->unhide();
-		register_new_canvas(canvas);	
+		register_new_canvas(canvas.get());	
 	} else {
 		canvas->unhide();
 	}
@@ -202,10 +199,7 @@ void model_nest::to_json(json &j)
 {
 	json p;
 	element::to_json(j);
-	if (!canvas)
-		_scene->to_json(p);
-	else
-		canvas->get_scene()->to_json(p);
+	active_scene()->to_json(p);
 	j["scene"] = p;   
 	j["icon"] = path_to_template(icon);
 	j["icon_selected"] = path_to_template(icon_selected);
@@ -215,10 +209,7 @@ void model_nest::to_json(json &j)
 void model_nest::from_json(json &j)
 {
 	element::from_json(j);
-	if (!canvas)
-		_scene->from_json(j["scene"]);
-	else
-		canvas->get_scene()->from_json(j["scene"]);
+	active_scene()->from_json(j["scene"]);
 
 	icon = template_to_path(j.value("icon", ""));
 	icon_selected = template_to_path(j.value("icon_selected", ""));
@@ -232,7 +223,7 @@ void model_nest::from_json(json &j)
 	regen_ports();
 }
 
-static bool compare_north(class port *A, class port *B)
+static bool compare_north(const std::unique_ptr<class port> &A, const std::unique_ptr<class port> &B)
 {
 	if (A->get_linked_element()->get_X() < B->get_linked_element()->get_X())
 		return true;
@@ -242,7 +233,7 @@ static bool compare_north(class port *A, class port *B)
 		return true;
 	return false;
 }
-static bool compare_south(class port *A, class port *B)
+static bool compare_south(const std::unique_ptr<class port> &A, const std::unique_ptr<class port> &B)
 {
 	if (A->get_linked_element()->get_X() < B->get_linked_element()->get_X())
 		return true;
@@ -252,7 +243,7 @@ static bool compare_south(class port *A, class port *B)
 		return true;
 	return false;
 }
-static bool compare_west(class port *A, class port *B)
+static bool compare_west(const std::unique_ptr<class port> &A, const std::unique_ptr<class port> &B)
 {
 	if (A->get_linked_element()->get_Y() < B->get_linked_element()->get_Y())
 		return true;
@@ -262,7 +253,7 @@ static bool compare_west(class port *A, class port *B)
 		return true;
 	return false;
 }
-static bool compare_east(class port *A, class port *B)
+static bool compare_east(const std::unique_ptr<class port> &A, const std::unique_ptr<class port> &B)
 {
 	if (A->get_linked_element()->get_Y() < B->get_linked_element()->get_Y())
 		return true;
@@ -282,9 +273,7 @@ void model_nest::regen_ports(void)
 
 	title_on_top = false;
 
-	/* refresh the scene from the canvas -- undo can have replaced it */
-	if (canvas)
-		_scene = canvas->get_scene();
+	class scene *_scene = active_scene();
 
 	_scene->update_name(name);
 	if (canvas)
@@ -295,7 +284,7 @@ void model_nest::regen_ports(void)
 	bY1 = 60000000;
 	bY2 = -10000;
 
-	for (auto elem : _scene->elements) {
+	for (auto &elem : _scene->elements) {
 		if (bX1 > elem->get_X())
 			bX1 = elem->get_X();
 		if (bX2 < elem->get_X())
@@ -318,50 +307,46 @@ void model_nest::regen_ports(void)
 	   Move the found/new port into one of the four wind directions.
 	   At the end, what's left in the port list is extra and goes away
 	   */
-	for (auto elem : _scene->elements) {
+	for (auto &elem : _scene->elements) {
 		bool found = false;
 		if (elem->class_id() != "model_toggle:" && elem->class_id() != "model_output:" && elem->class_id() != "model_clock:") {
 			continue;
 		}
 
 		for (unsigned int i = 0; i < ports.size(); i++) {
-			class port *_port = ports[i];
-			_port->set_linked_element(NULL);
-			if (elem->get_uuid() == _port->get_linked_uuid()) {
-				_port->set_linked_element(elem);
-				_port->update_name(elem->get_name());
-				place_port(_port);
+			ports[i]->set_linked_element(nullptr);
+			if (elem->get_uuid() == ports[i]->get_linked_uuid()) {
+				auto _port = std::move(ports[i]);
 				ports.erase(ports.begin() + i);
+				_port->set_linked_element(elem.get());
+				_port->update_name(elem->get_name());
+				place_port(std::move(_port));
 				found = true;
 				break;
 			}
 		}
 		if (!found) {
 			logger::get().debug("Adding new port");
-			class port *_port;
 			int direction = PORT_IN;
 			if (elem->class_id() == "model_output:")
 				direction = PORT_OUT;
-			_port = new port(elem->get_name(), direction);
+			auto _port = std::make_unique<port>(elem->get_name(), direction);
 			_port->X = 0;
 			_port->Y = 0;;
 			_port->parent = this;
 			_port->value = {};	
-			_port->set_linked_element(elem);
+			_port->set_linked_element(elem.get());
 			_port->link_uuid(elem->get_uuid());
-			place_port(_port);
+			place_port(std::move(_port));
 		}
 
 	}
 
 	/* what is left needs to go away */
-	while (ports.size() > 0) {
-		class port *_port;
-		_port = ports[0];
+	for (auto &_port : ports) {
 		_port->remove_wires();
-		ports.erase(ports.begin());
-		delete _port;
 	}
+	ports.clear();
 
 	sizeY = std::max(west.size() + 2U, std::max(east.size() + 2, 4UL));	
 	sizeX = std::max(north.size() + 2U, std::max(south.size() + 2, 4UL));
@@ -403,16 +388,24 @@ void model_nest::regen_ports(void)
 
 
 
-	ports.insert(ports.end(), north.begin(), north.end());
-	ports.insert(ports.end(), south.begin(), south.end());
-	ports.insert(ports.end(), east.begin(), east.end());
-	ports.insert(ports.end(), west.begin(), west.end());
+	for (auto &p : north)
+		ports.push_back(std::move(p));
+	for (auto &p : south)
+		ports.push_back(std::move(p));
+	for (auto &p : east)
+		ports.push_back(std::move(p));
+	for (auto &p : west)
+		ports.push_back(std::move(p));
+	north.clear();
+	south.clear();
+	east.clear();
+	west.clear();
 	remove_nets();
 	add_nets();
 }
 
 
-void model_nest::place_port(class port *port)
+void model_nest::place_port(std::unique_ptr<class port> port)
 {
 	float rX, rY;
 	float dN,dS,dE,dW;
@@ -422,19 +415,19 @@ void model_nest::place_port(class port *port)
 
 	/* first, the easy cases: at or too near the border */
 	if (rX < 0.05) {
-		west.push_back(port);
+		west.push_back(std::move(port));
 		return;
 	}
 	if (rX > 0.95) {
-		east.push_back(port);
+		east.push_back(std::move(port));
 		return;
 	}
 	if (rY < 0.05) {
-		north.push_back(port);
+		north.push_back(std::move(port));
 		return;
 	}
 	if (rY > 0.95) {
-		south.push_back(port);
+		south.push_back(std::move(port));
 		return;
 	}
 
@@ -445,25 +438,25 @@ void model_nest::place_port(class port *port)
 	dS = dist(0.5,1, rX, rY);
 
 	if (dW <= dE && dW <= dN && dW <= dS) {
-		west.push_back(port);
+		west.push_back(std::move(port));
 		return;
 	}
 	if (dE <= dN && dE <= dS) {
-		east.push_back(port);
+		east.push_back(std::move(port));
 		return;
 	}
 	if (dN <= dS) {
-		north.push_back(port);
+		north.push_back(std::move(port));
 		return;
 	}
-	south.push_back(port);	
+	south.push_back(std::move(port));
 }
 
 
-void model_nest::load_scene_from_json(std::string logic)
+void model_nest::load_scene_from_json(std::string_view logic)
 {
 	json j = json::parse(logic);
-	_scene->from_json(j);
+	active_scene()->from_json(j);
 	regen_ports();
 }
 
@@ -471,8 +464,7 @@ void model_nest::load_scene_from_json(std::string logic)
 
 void model_nest::maybe_regen_ports(void)
 {
-	if (canvas)
-		_scene = canvas->get_scene();
+	class scene *_scene = active_scene();
 
 	if (previous_generation_count != _scene->get_generation_count()) {
 		regen_ports();
@@ -483,14 +475,13 @@ void model_nest::maybe_regen_ports(void)
 std::string model_nest::get_verilog_main(void)
 {
 	std::string s = "";
-	if (canvas)
-		_scene = canvas->get_scene();
+	class scene *_scene = active_scene();
 
 	_scene->create_verilog_names();
 
 	s = s + _scene->get_verilog_name() + " " + get_verilog_name() + "(";
 	bool first = true;
-	for (auto port : ports) {
+	for (auto &port : ports) {
 
 		if (!first)
 			s = s + ", ";
@@ -508,8 +499,7 @@ std::string model_nest::get_verilog_main(void)
 std::string model_nest::get_verilog_modules(std::string path)
 {
 	std::string s = "";
-	if (canvas)
-		_scene = canvas->get_scene();
+	class scene *_scene = active_scene();
 
 	s += _scene->get_verilog_main();
 	s += _scene->get_verilog_modules(path);
@@ -520,27 +510,19 @@ std::string model_nest::get_verilog_modules(std::string path)
 void model_nest::update_parental_name(std::string _name)
 {
 	parental_name = _name;
-	if (canvas)
-		_scene = canvas->get_scene();
-	_scene->set_parental_name(get_full_name());
+	active_scene()->set_parental_name(get_full_name());
 }
 
 void model_nest::create_verilog_name(int seqno, std::vector<std::string> *existing)
 {
 	element::create_verilog_name(seqno, existing);
-	if (canvas)
-		_scene = canvas->get_scene();
-	_scene->update_vname(verilog_name);
+	active_scene()->update_vname(verilog_name);
 
 }
 
 void model_nest::reset_to_library(void)
 {
 	struct library_block *lib;
-	class scene *newscene, *oldscene;
-
-	if (canvas)
-		_scene = canvas->get_scene();
 
 	if (from_library_collection == "")
 		return;
@@ -549,15 +531,12 @@ void model_nest::reset_to_library(void)
 	if (!lib)
 		return;
 
-	newscene = new scene(_scene->get_name(), get_full_name());
+	auto newscene = std::make_unique<scene>(active_scene()->get_name(), get_full_name());
 	if (canvas) {
-		oldscene = canvas->swap_scene(newscene);
-		_scene = newscene;
+		canvas->swap_scene(std::move(newscene));
 	} else {
-		oldscene = _scene;
-		_scene = newscene;
+		owned_scene = std::move(newscene);
 	}
-	delete oldscene;
 
 
 	load_scene_from_json(lib->logic);
@@ -575,12 +554,9 @@ void model_nest::save_to_library(std::string library_path)
 	if (library_path != "")
 		std::filesystem::create_directory(library_path);
 
-	if (canvas)
-		_scene =  canvas->get_scene();
-
 	json j;
 
-	_scene->to_json(j);
+	active_scene()->to_json(j);
 
 	std::string outputfile = "";
 	if (library_path != "")
@@ -599,10 +575,10 @@ void model_nest::save_to_library(std::string library_path)
 	output.close();
 	if (!std::filesystem::exists(library_path + "/" + name + ".json.png")) {
 		/* write an icon */
-		const unsigned char *pixels = NULL;
+		const unsigned char *pixels = nullptr;
 		unsigned int size;
-		srand(time(NULL));
-		while (pixels == NULL) {
+		srand(time(nullptr));
+		while (pixels == nullptr) {
 			int i = rand() % 64;
 			icon = std::format("assets/random/icon{}.png", i);
 			if (datamap.find(icon) == datamap.end())

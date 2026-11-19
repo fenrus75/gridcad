@@ -47,10 +47,6 @@ model_datascope::model_datascope(float _X, float _Y)  : element(1, 1, "Output")
     menu->add_item("Binary", callback_binary);
 }
 
-model_datascope::~model_datascope(void)
-{
-}
-
 void model_datascope::drawAt(class basecanvas *canvas, float X, float Y, int type)
 {
     if (selected) {
@@ -70,7 +66,7 @@ void model_datascope::drawAt(class basecanvas *canvas, float X, float Y, int typ
         canvas->draw_text(s, X + 0.6, Y + 0.6, 2.8, 1.8);
     }
 
-    for (auto port : ports) {
+    for (auto &port : ports) {
         port->drawAt(canvas, X,Y, COLOR_WIRE_SOLID);
         port->draw_wires(canvas);
     }

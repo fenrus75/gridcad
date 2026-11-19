@@ -11,10 +11,6 @@ net::net(void)
 	netnum = global_netnum++;
 }
 
-net::~net(void)
-{
-}
-
 void net::add_port(class port *port)
 {
 	for (auto p : ports)

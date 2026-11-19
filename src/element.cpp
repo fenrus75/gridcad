@@ -50,7 +50,7 @@ element::element(int _sizeX, int _sizeY, std::string _name, std::string _parent)
 	name = _name;
 	parental_name = _parent;
 	uuid = generate_semi_uuid();
-	menu = new contextmenu(this);
+	menu = std::make_unique<contextmenu>(this);
 	menu->add_item("Delete", callback_delete);
 	menu->add_item("Select", callback_select);
 	menu->add_item("Rotate", callback_rotate);
@@ -59,14 +59,9 @@ element::element(int _sizeX, int _sizeY, std::string _name, std::string _parent)
 
 element::~element()
 {
-	//    printf("Destructor for element %s\n", name.c_str());
 	remove_nets();
-	for (auto port : ports) {
-		delete port;
-	}
 	ports.clear();
 	free_nets_memory();
-	delete menu;
 }
 
 void element::place(int _X, int _Y)
@@ -84,7 +79,7 @@ void element::drawAt(class basecanvas *canvas, float X, float Y, int type)
 	if (type == DRAW_NORMAL || type == DRAW_ORIGIN)
 		canvas->draw_box(X + 1.2, Y + 1.2, X + sizeX - 0.2, Y + sizeY - 0.2, COLOR_ELEMENT_INSIDE);
 
-	for (auto port: ports) {
+	for (auto &port : ports) {
 		port->drawAt(canvas, X, Y, type);
 	}
 }
@@ -116,7 +111,7 @@ void element::draw_phase2(class basecanvas *canvas, int type)
 {
 	switch (type) {
 		case DRAW_NORMAL:
-			for (auto port:ports)
+			for (auto &port : ports)
 				port->drawAt2(canvas, X, Y, type);
 			break;
 
@@ -172,7 +167,7 @@ bool element::stop_drag(class basecanvas *canvas)
 	over_drag_threshold = false;
 
 	if (!no_move)
-		for (auto port : ports)
+		for (auto &port : ports)
 			port->stop_drag(canvas);
 
 	calculate(DEFAULT_TTL);
@@ -198,7 +193,7 @@ bool element::intersect_full(float _X, float _Y)
 		return ret;
 	}
 
-	for (auto port : ports) { 
+	for (auto &port : ports) { 
 		if (port->screenX == mX && port->screenY == mY) {
 			return true;
 		}
@@ -219,7 +214,7 @@ bool element::intersect_float(float _X, float _Y)
 		return true;
 	}
 
-	for (auto port : ports) {
+	for (auto &port : ports) {
 		if (port->X + Xd == mX && port->Y + Yd == mY) {
 			return true;
 		}
@@ -229,13 +224,12 @@ bool element::intersect_float(float _X, float _Y)
 
 void element::add_port(int X, int Y, std::string _name, int direction, int _width)
 {
-	class port *_port;
-	_port = new port(_name, direction);
+	auto _port = std::make_unique<port>(_name, direction);
 	_port->X = X;
 	_port->Y = Y;
 	_port->parent = this;
 	_port->set_width(_width);
-	ports.push_back(_port);
+	ports.push_back(std::move(_port));
 }
 
 class port * element::is_port(float _X, float _Y)
@@ -244,11 +238,11 @@ class port * element::is_port(float _X, float _Y)
 	_X -= X;
 	_Y -= Y;
 
-	for (auto port : ports) {
+	for (auto &port : ports) {
 		if (floorf(_X) == port->X && floorf(_Y) == port->Y)
-			return port;
+			return port.get();
 	}
-	return NULL;
+	return nullptr;
 }
 
 void element::fill_grid(class wiregrid *grid)
@@ -263,7 +257,7 @@ void element::fill_grid(class wiregrid *grid)
 		for (y = -1; y < sizeY +1; y++)
 			grid->add_soft_cost(X+x, Y+y, 0.6);
 
-	for (auto port: ports) {
+	for (auto &port : ports) {
 		grid->block_point(X + port->X, Y + port->Y);
 		grid->add_soft_cost(X + port->X + 1, Y + port->Y + 0, 0.3);
 		grid->add_soft_cost(X + port->X + 1, Y + port->Y + 1, 0.6);
@@ -275,7 +269,7 @@ void element::fill_grid(class wiregrid *grid)
 		grid->add_soft_cost(X + port->X - 1, Y + port->Y + 1, 0.6);
 	}
 
-	for (auto port : ports)
+	for (auto &port : ports)
 		port->fill_grid(grid);
 }
 
@@ -306,20 +300,19 @@ bool element::mouse_select(float X, float Y)
 	return false;
 }
 
-class wire *element::is_wire(float X, float Y)
+std::shared_ptr<class wire> element::is_wire(float X, float Y)
 {
-	class wire *wire = NULL;
-	for (auto port : ports) {
-		wire = port->is_wire(X, Y);
+	for (auto &port : ports) {
+		auto wire = port->is_wire(X, Y);
 		if (wire)
-			return (wire);
+			return wire;
 	}
-	return NULL;
+	return nullptr;
 }
 
 void element::reseat(void)
 {
-	for (auto port: ports) {
+	for (auto &port : ports) {
 		port->screenX = X + port->X;
 		port->screenY = Y + port->Y;
 	}
@@ -386,10 +379,8 @@ void element::delete_if_selected(void)
 }
 void element::delete_element(void)
 {
-
-	for (auto port:ports) {
+	for (auto &port : ports) {
 		port->remove_wires();
-		delete port;
 	}	
 	ports.clear();
 	want_delete = true;
@@ -397,7 +388,7 @@ void element::delete_element(void)
 
 void element::remove_orphans(void)
 {
-	for (auto port:ports) {
+	for (auto &port : ports) {
 		port->remove_orphans();
 	}	
 }
@@ -417,7 +408,7 @@ static float dist(float X1, float Y1, float X2, float Y2)
 
 void element::hover_ports(class basecanvas *canvas)
 {
-	for (auto port:ports) {
+	for (auto &port : ports) {
 		int dx = 0, dy = 0;
 		if (port->X == -1) dx = 1;
 		if (port->X == sizeX) dx = - 1;
@@ -446,12 +437,11 @@ void element::handle_event(class basecanvas *thiscanvas, SDL_Event &event)
 void element::connect_clk(class port *clk)
 {
 	logger::get().debug("Connecting clock {}", name);
-	for (auto port : ports) {
+	for (auto &port : ports) {
 		if (port->name == "clk" && port->direction == PORT_IN && !port->has_wires()) {
-			class wire *wire;
-			wire = new class wire(0,0,0,0);
+			auto wire = std::make_shared<class wire>(0,0,0,0);
 			wire->add_port(clk);
-			wire->add_port(port);
+			wire->add_port(port.get());
 
 			port->add_wire(wire);
 			clk->add_wire(wire);
@@ -463,15 +453,15 @@ void element::connect_clk(class port *clk)
 
 void element::cycle_color(void)
 {
-	for (auto port : ports)
+	for (auto &port : ports)
 		port->cycle_color();
 }
 
 void element::reroute_all_wires(void)
 {
-	for (auto port : ports)
+	for (auto &port : ports)
 		port->update_distances();
-	for (auto port : ports)
+	for (auto &port : ports)
 		port->reroute_all_wires();
 }
 
@@ -499,13 +489,13 @@ void element::create_verilog_name(int seqno, std::vector<std::string> *existing)
 
 void element::collect_nets(std::vector<std::string> *netmap)
 {
-	for (auto port : ports)
+	for (auto &port : ports)
 		port->collect_nets(netmap);
 }
 
 void element::rotate_ports(void)
 {
-	for (auto port : ports) {
+	for (auto &port : ports) {
 
 		if (port->X == -1) {
 			port->X = sizeY -1 - port->Y;
@@ -541,20 +531,20 @@ void element::rotate_ports(void)
 
 void element::remove_nets(void)
 {
-	for (auto port : ports)
+	for (auto &port : ports)
 		port->remove_net();
 }
 
 void element::add_nets(void)
 {
-	for (auto port : ports) {
+	for (auto &port : ports) {
 		if (port->has_net())
 			continue;
-		class net *net = new class net();
-		net->add_port(port);
+		auto net = std::make_unique<class net>();
+		net->add_port(port.get());
 		net->validate();
 		net->update_net_distances();
-		my_nets.push_back(net);
+		my_nets.push_back(std::move(net));
 	}
 }
 
@@ -567,22 +557,19 @@ void element::update_value_net(struct value *value, int port, int ttl)
 void element::free_nets_memory(void)
 {
 	remove_nets();
-	for (auto n : my_nets) {
-		delete n;
-	}
 	my_nets.clear();
 }
 
 int element::has_port(class port *p)
 {
 	for (unsigned int i = 0; i < ports.size(); i++)
-		if (ports[i] == p)
+		if (ports[i].get() == p)
 			return i;
 	return -100;
 }
 
 void element::validate_ports(void)
 {
-	for (auto port : ports)
+	for (auto &port : ports)
 		port->validate();
 }

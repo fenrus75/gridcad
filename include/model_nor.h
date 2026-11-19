@@ -8,7 +8,6 @@ class model_nor : public model_logic2
 {
 public:
     model_nor(float X, float Y);
-    virtual ~model_nor(void);
     virtual std::string class_id(void) { return "model_nor:";};    
     void calculate(int ttl) override;
     std::string get_verilog_operand(void) override { return "~|"; };

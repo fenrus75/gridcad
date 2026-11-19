@@ -9,7 +9,6 @@ class model_deflipflop : public element
 {
 public:
     model_deflipflop(float X, float Y);
-    virtual ~model_deflipflop(void);
     virtual std::string class_id(void) { return "model_deflipflop:";};
 
 
@@ -30,7 +29,7 @@ public:
 private:
     struct value value = {};
     struct value previous_clock = {};
-    class name *name_edit = NULL;
+    std::unique_ptr<class name> name_edit;
     std::string verilog_module_name = "";
 };
 

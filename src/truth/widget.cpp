@@ -22,6 +22,3 @@ widget::widget(float X, float Y, float W, float H)
     Y2 = Y + H;
 }
 
-widget::~widget(void)
-{
-}

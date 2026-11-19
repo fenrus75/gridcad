@@ -18,10 +18,6 @@ model_and::model_and(float _X, float _Y)  : model_logic2(_X, _Y, "assets/andgate
     selected_filename = "assets/andgate_selected.png";
 }
 
-model_and::~model_and(void)
-{
-}
-
 void model_and::calculate(int ttl)
 {
     struct value result = {};

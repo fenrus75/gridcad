@@ -60,14 +60,10 @@ model_truth::model_truth(float _X, float _Y):element(1, 1, "Truth Table")
 		names[inputs + i] = std::format("Out{}", i);
 	}
 	menu->add_item("Edit name", callback_editname);
-	name_edit = new class name(&name);
+	name_edit = std::make_unique<class name>(&name);
 }
 
-model_truth::~model_truth(void)
-{
-	delete name_edit;
-	delete canvas;
-}
+model_truth::~model_truth(void) = default;
 
 void model_truth::drawAt(class basecanvas * canvas, float X, float Y, int type)
 {
@@ -94,7 +90,7 @@ void model_truth::drawAt(class basecanvas * canvas, float X, float Y, int type)
 
 	hover_ports(canvas);
 
-	for (auto port:ports) {
+	for (auto &port : ports) {
 		port->drawAt(canvas, X, Y, COLOR_WIRE_SOLID);
 		port->draw_wires(canvas);
 	}
@@ -103,7 +99,7 @@ void model_truth::drawAt(class basecanvas * canvas, float X, float Y, int type)
 
 bool model_truth::mouse_select(float _X, float _Y)
 {
-	long int click = time(NULL);
+	long int click = time(nullptr);
 
 	if (click - previous_click > 1) {
 		previous_click = click;
@@ -112,8 +108,8 @@ bool model_truth::mouse_select(float _X, float _Y)
 
 	if (!canvas) {
 		logger::get().info("Spawning a new window");
-		canvas = new class truthcanvas(this);
-		register_new_canvas(canvas);	
+		canvas = std::make_unique<class truthcanvas>(this);
+		register_new_canvas(canvas.get());	
 	} else {
 		canvas->unhide();
 	}
@@ -164,7 +160,6 @@ void model_truth::add_output(void)
 void model_truth::del_output(void)
 {
 	unsigned int y;
-	class port *port;
 
 	if (outputs <= 1)
 		return;
@@ -174,10 +169,8 @@ void model_truth::del_output(void)
 	outputs--;
 	names.pop_back();
 
-	port = ports[ports.size() - 1];
+	ports.back()->remove_wires();
 	ports.pop_back();
-	port->remove_wires();
-	delete port;	
 
 }
 
@@ -209,7 +202,6 @@ static bool same_inputs(std::vector<char> A, std::vector<char> B, unsigned int i
 void model_truth::add_input(void)
 {
 	unsigned int y;
-	class port *_port;
 
 	logger::get().debug("Adding input");
 
@@ -228,11 +220,11 @@ void model_truth::add_input(void)
 
 	std::sort(values.begin(), values.end(), compare_line);
 
-	_port = new port(buf, PORT_IN, 1);
+	auto _port = std::make_unique<port>(buf, PORT_IN, 1);
 	_port->X = -1;
 	_port->Y = inputs;
 	_port->parent = this;
-	ports.insert(ports.begin() + inputs - 1, _port);
+	ports.insert(ports.begin() + inputs - 1, std::move(_port));
 
 	sizeY = std::max(outputs + 2, std::max(inputs + 2, 4U));
 
@@ -241,17 +233,14 @@ void model_truth::add_input(void)
 void model_truth::del_input(void)
 {
 	unsigned int y;
-	class port *port;
 
 	names.erase(names.begin() + inputs-1);
 	for (y = 0; y < values.size(); y++) {
 		values[y].erase(values[y].begin() + inputs -1);
 	}
 
-	port = ports[inputs - 1];
+	ports[inputs - 1]->remove_wires();
 	ports.erase(ports.begin() + inputs - 1);
-	port->remove_wires();
-	delete port;	
 
 	inputs--;
 
@@ -411,7 +400,7 @@ std::string model_truth::get_verilog_main(void)
 
 	s = s + verilog_module_name + " " + get_verilog_name() + "(";
 	bool first = true;
-	for (auto port : ports) {
+	for (auto &port : ports) {
 
 		if (!port->has_net())
 			continue;
@@ -436,7 +425,7 @@ std::string model_truth::get_verilog_modules(std::string path)
 
 	s = s + "module " + verilog_module_name + "\n (";
 	bool first = true;
-	for (auto port : ports) {
+	for (auto &port : ports) {
 
 		if (!first)
 			s = s + ", ";

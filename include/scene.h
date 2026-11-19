@@ -12,13 +12,13 @@ public:
 
     float sizeX = 200, sizeY = 200;
     
-    void add_element(class element *element);
+    void add_element(std::unique_ptr<class element> element);
     void remove_element(class element *element);
     
-    bool can_place_element(float x, float y, int w, int h, class element *myself = NULL);
+    bool can_place_element(float x, float y, int w, int h, class element *myself = nullptr);
 
     class port * is_port(float X, float Y); /* X and Y are global positions */
-    class wire *is_wire(float X, float Y);
+    std::shared_ptr<class wire> is_wire(float X, float Y);
     
     void fill_grid(class wiregrid* grid);
     
@@ -32,7 +32,7 @@ public:
     void delete_selection(void);
 
     /* needs to become protected */
-    std::vector<class element *> elements;
+    std::vector<std::unique_ptr<class element>> elements;
     void rewire_section(int x1, int y1, int w, int h);
     void rewire_section(class element *element);
     void remove_orphans(void);
@@ -45,7 +45,7 @@ public:
     void update_name(std::string _name) { name = _name;};
     void update_vname(std::string _name) { vname = _name;};
     uint64_t get_generation_count(void) { return generation_count; };
-    class contextmenu *get_menu(void) { return menu; };
+    class contextmenu *get_menu(void) { return menu.get(); };
     void cycle_color(void);
     void reroute_all_wires(void);
     
@@ -60,7 +60,7 @@ public:
     void validate_ports(void);
     
 protected:
-    class contextmenu *menu = NULL;
+    std::unique_ptr<class contextmenu> menu;
     std::string name = "";
     std::string vname = ""; /* nosave */
     std::string parental_name = "";    

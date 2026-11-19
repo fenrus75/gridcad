@@ -9,10 +9,6 @@ dialog::dialog(int _screenX, int _screenY, std::string text)
 	minwtext = text;
 }
 
-dialog::~dialog(void)
-{
-}
-
 void dialog::draw(class basecanvas *canvas)
 {
 	float maxX = 0;

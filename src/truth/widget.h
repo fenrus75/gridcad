@@ -7,7 +7,7 @@
 class widget {
 public:
     widget(float X, float Y, float W, float H);
-    virtual ~widget();
+    virtual ~widget() = default;
     
     virtual void draw(class truthcanvas *canvas) = 0;
     virtual void handle_event(SDL_Event &event) = 0;
@@ -29,27 +29,23 @@ protected:
 class label : public widget {
 public:
     label(float X, float Y, float W, float H, std::string *text);
-    virtual ~label(void);
-
     void draw(class truthcanvas *canvas) override;
     void handle_event(SDL_Event &event) override;
 //    bool intersect(float X, float Y) override { return false;};
 private:
-    std::string *text = NULL;
+    std::string *text = nullptr;
 };
 
 class tristate : public widget {
 public:
     tristate(float X, float Y, float W, float H, char *tv, int x, int y, bool is_input, class truthcanvas *canvas);
-    virtual ~tristate(void);
-
     void draw(class truthcanvas *canvas) override;
     void handle_event(SDL_Event &event) override;
     
 private:
-    char *tv = NULL;
+    char *tv = nullptr;
     bool is_input;
-    class truthcanvas *canvas = NULL;
+    class truthcanvas *canvas = nullptr;
 };
 
 #define ACTION_ADD_INPUT 1
@@ -60,8 +56,6 @@ private:
 class button : public widget {
 public:
     button(float X, float Y, float W, float H, std::string icon, int action, class truthcanvas *canvas);
-    virtual ~button(void);
-
     void draw(class truthcanvas *canvas) override;
     void handle_event(SDL_Event &event) override;
     void select(void) override;
@@ -74,12 +68,10 @@ private:
 class slider : public widget {
 public:
     slider(float X, float Y, float W, float H, std::string description, bool *origin);
-    virtual ~slider(void);
-    
     void draw(class truthcanvas *canvas) override;
     void select(void) override;
     void handle_event(SDL_Event &event) override {};
 private:
-    bool *origin = NULL;
+    bool *origin = nullptr;
     std::string description;
 };

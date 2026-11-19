@@ -43,7 +43,7 @@ static std::vector<class basecanvas *> canvases;
 
 extern void fill_png_maps(void);
 extern void clear_png_maps(void);
-extern void set_timer(void);
+extern Uint32 SDL_timer_func(Uint32 interval, void *param);
 extern bool show_fps;
 
 
@@ -72,41 +72,40 @@ float tv_delta_usec(struct timeval *tv1, struct timeval *tv2)
 }
 
 
-static bool sdl_initialized = false;
-void init_SDL(void)
+namespace sdl {
+
+Context::Context()
 {
-	if (sdl_initialized)
-		return;
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
 	TTF_Init();
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2");
-//	SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
-//	SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 1);
 
-	
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 	ImGui::StyleColorsDark();
-
-	sdl_initialized = true;
 }
+
+Context::~Context()
+{
+	ImGui::DestroyContext();
+	TTF_Quit();
+	SDL_Quit();
+}
+
+} // namespace sdl
 
 extern std::string current_project;
 document::document(std::string _name, bool _library_mode)
 {
-	class canvas *_canvas;
-	class scene *_scene;
 	float d1,d2,d3;
 
 	struct capabilities cap = {};
 
 
 	library_mode = _library_mode;
-
-	init_SDL();
 
 	std::string filename;
 
@@ -125,15 +124,16 @@ document::document(std::string _name, bool _library_mode)
 
 	SDL_timer_event = SDL_RegisterEvents(16);
 
-	set_timer();
+	clock_timer = sdl::Timer(500, SDL_timer_func, nullptr);
 
-	_scene = new scene("main");
+	auto _scene = std::make_unique<scene>("main");
+	class scene *scene_ptr = _scene.get();
 
-	_canvas = new canvas(_scene, &cap);
+	main_canvas = std::make_unique<canvas>(std::move(_scene), &cap);
 
-	_canvas->set_project_name(name);
+	main_canvas->set_project_name(name);
 
-	register_new_canvas(_canvas);
+	register_new_canvas(main_canvas.get());
 
 	filename = name;
 	if (!library_mode)
@@ -143,23 +143,23 @@ document::document(std::string _name, bool _library_mode)
 		json j;
 		std::ifstream input(filename.c_str());
 		input >> j;
-		_scene->from_json(j);
+		scene_ptr->from_json(j);
 	}
 	clear_wire_factory();
-	_scene->cycle_color();
+	scene_ptr->cycle_color();
 }
 
-void document::save_verilog(std::string path, std::string filename)
+void document::save_verilog(std::string_view path, std::string_view filename)
 {
 	if (library_mode)
 		return;
 	logger::get().info("Saving as {}", filename);
-	std::ofstream output(filename);
+	std::ofstream output{std::string(filename)};
 	class scene *_scene;
 	class canvas *_canvas = (class canvas *)canvases[0];
 	_scene = _canvas->get_scene();
 
-	output << _scene->get_verilog_main() << "\n" << _scene->get_verilog_modules(path);
+	output << _scene->get_verilog_main() << "\n" << _scene->get_verilog_modules(std::string(path));
 	output.close();
 }
 
@@ -188,7 +188,7 @@ void document::save_json(void)
 
 document::~document(void)
 {
-	class canvas *_canvas = (class canvas *)canvases[0];
+	clock_timer.reset();
 
 	if (!library_mode)
 		std::filesystem::create_directory(name);
@@ -198,10 +198,6 @@ document::~document(void)
 		std::filesystem::create_directory(name + "/verilog");
 		save_verilog(name + "/verilog", name + "/verilog//main.v");
 	}
-	delete _canvas;
-
-	TTF_Quit();
-	SDL_Quit();
 	clear_png_maps();
 }
 
@@ -216,18 +212,18 @@ static void wait_fps(float target_fps)
 	double target_time = 1.0 / target_fps;
 	double time_left;
 	
-	gettimeofday(&now, NULL);
+	gettimeofday(&now, nullptr);
 	d = now.tv_sec - previous_frame.tv_sec + now.tv_usec/1000000.0 -  previous_frame.tv_usec/1000000.0;
 	
 	time_left = target_time - d;
 	if (time_left < 0.0002)  /* skip a whole frame */
 		time_left += target_time;
 	if (time_left < 0.0002) {
-		gettimeofday(&previous_frame, NULL);
+		gettimeofday(&previous_frame, nullptr);
 		return;
 	}
 	usleep(time_left * 1000000 - 200);
-	gettimeofday(&previous_frame, NULL);
+	gettimeofday(&previous_frame, nullptr);
 }
 
 void document::run(void)
@@ -313,7 +309,7 @@ void document::run(void)
 		run_queued_calculations();
 		if (!ret && !leave) {
 			struct timeval now;
-			gettimeofday(&now, NULL);
+			gettimeofday(&now, nullptr);
 			for (auto canvas: canvases) {
 				if (canvas->canvas_has_focus()) {
 					canvas->draw();
@@ -372,23 +368,20 @@ unsigned int SDL_timer_event = 0;
 std::string current_project = "";
 
 /* replace project/<name/ with $project and back */
-std::string path_to_template(std::string instr)
+std::string path_to_template(std::string_view instr)
 {
-	std::string s = instr;
-	size_t index;
-	std::string find = current_project;
-	index = s.find(find);
-	if (index != std::string::npos && index >= 0)
-		s.replace(index, find.size(), "$project"); 
+	std::string s(instr);
+	size_t index = s.find(current_project);
+	if (index != std::string::npos)
+		s.replace(index, current_project.size(), "$project"); 
 	return s;
 }
-std::string template_to_path(std::string instr)
+std::string template_to_path(std::string_view instr)
 {
-	std::string s = instr;
-	size_t index;
-	std::string find = "$project";
-	index = s.find(find);
-	if (index != std::string::npos && index >= 0)
+	std::string s(instr);
+	constexpr std::string_view find = "$project";
+	size_t index = s.find(find);
+	if (index != std::string::npos)
 		s.replace(index, find.size(), current_project); 
 	return s;
 }

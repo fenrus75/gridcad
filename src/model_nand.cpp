@@ -18,10 +18,6 @@ model_nand::model_nand(float _X, float _Y)  : model_logic2(_X, _Y, "assets/nandg
     selected_filename = "assets/nandgate_selected.png";
 }
 
-model_nand::~model_nand(void)
-{
-}
-
 void model_nand::calculate(int ttl)
 {
     struct value result = {};

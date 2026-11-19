@@ -25,7 +25,7 @@ public:
     
     void enter_edit_mode(void) override { name_edit->set_edit_mode(true); selected = true; single = true;};
     void update_parental_name(std::string _name) override;
-    void load_scene_from_json(std::string);
+    void load_scene_from_json(std::string_view);
     void set_icon(std::string _icon, std::string _selected) { icon = _icon; icon_selected = _selected;};
     void create_verilog_name(int seqno, std::vector<std::string> *existing) override;
     std::string get_verilog_main(void) override;
@@ -36,18 +36,20 @@ public:
 private:
 
     float bX1,bY1,bX2,bY2; /* bounding box of the scene -- no save*/
-    class scene *_scene = NULL;
-    class canvas *canvas = NULL;
+    /* Scene is owned here until a canvas window is opened, at which point ownership moves into canvas. */
+    std::unique_ptr<class scene> owned_scene;
+    std::unique_ptr<class canvas> canvas;
+    class scene *active_scene(void) const;
     long int previous_click = -1;  /* no save */
-    std::vector<class port *> north, south, east, west; /* nosave */
+    std::vector<std::unique_ptr<class port>> north, south, east, west; /* nosave */
     
     std::string from_library_collection = "";
     std::string from_library_element = "";
-    void place_port(class port *port);
+    void place_port(std::unique_ptr<class port> port);
     void maybe_regen_ports(void);
     uint64_t previous_generation_count = 0;
     std::string icon = "";
     std::string icon_selected = "";
-    class name *name_edit = NULL;
+    std::unique_ptr<class name> name_edit;
     bool title_on_top = false;
 };

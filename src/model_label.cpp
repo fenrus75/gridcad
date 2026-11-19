@@ -32,16 +32,11 @@ model_label::model_label(float _X, float _Y)  : element(1, 1, "Label")
     X = floorf(_X);
     Y = floorf(_Y);
 
-    name_edit = new class name(&name);
+    name_edit = std::make_unique<class name>(&name);
     name_edit->allow_spaces();
     
     menu->add_item("Edit name", callback_editname);
     menu->add_item("Change color", callback_color);
-}
-
-model_label::~model_label(void)
-{
-    delete name_edit;
 }
 
 void model_label::drawAt_early(class basecanvas *canvas, float X, float Y, int type)

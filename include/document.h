@@ -9,7 +9,7 @@ public:
 	document(std::string name, bool library_mode = false);
 	~document(void);
 	
-	void save_verilog(std::string path, std::string filename);
+	void save_verilog(std::string_view path, std::string_view filename);
 	void save_json(void);
 
 	void run(void);
@@ -21,7 +21,7 @@ private:
 	unsigned int fast_draw_counter = 0;
 	
 	bool library_mode = false;
+	std::unique_ptr<class canvas> main_canvas;
+	sdl::Timer clock_timer;
 	
 };
-
-extern void init_SDL(void);

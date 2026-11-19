@@ -8,7 +8,6 @@ class model_datascope : public element
 {
 public:
     model_datascope(float X, float Y);
-    virtual ~model_datascope(void);
     virtual std::string class_id(void) { return "model_datascope:";};
 
 

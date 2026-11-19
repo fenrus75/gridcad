@@ -28,10 +28,6 @@ model_buffer::model_buffer(float _X, float _Y)  : element(_X, _Y, "")
 	add_port(sizeX, 1, "", PORT_OUT);
 }
 
-model_buffer::~model_buffer(void)
-{
-}
-
 void model_buffer::drawAt(class basecanvas *canvas, float X, float Y, int type)
 {
 	if (selected)
@@ -42,7 +38,7 @@ void model_buffer::drawAt(class basecanvas *canvas, float X, float Y, int type)
 		else
 			canvas->draw_image_rotated("assets/buffer.png", X, Y, sizeX, sizeY, Alpha(type), angle);
 	}
-	for (auto port: ports) {
+	for (auto &port : ports) {
 		port->drawAt(canvas, X, Y, type);
 	}
 }

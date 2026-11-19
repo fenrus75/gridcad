@@ -6,19 +6,16 @@
 
 class net;
 
-class wire : public base
+class wire : public base, public std::enable_shared_from_this<wire>
 {
 public:
     wire(int x1, int y1, int x2, int y2, int _color = 0);
-    virtual ~wire(void);
-
     virtual std::string class_id(void) { return "wire:";};
     
     void move_target(int x2, int y2);
     void draw(class basecanvas *, int color = COLOR_WIRE_SOLID);
     void route(class scene *);
     
-    void get_ref(void);
     void add_port(class port *port);
     void del_port(class port *port);
     void reseat(void);
@@ -37,7 +34,7 @@ public:
     void check_reverse(void);
     void clear_route(void);
     
-    class wire *split(void);
+    std::shared_ptr<class wire> split(void);
     
     std::string name = "";
     
@@ -65,7 +62,7 @@ public:
 
     void add_net(class net *net);
     void remove_net(void);
-    bool has_net(void) { return net != NULL;};
+    bool has_net(void) { return net != nullptr;};
     class net *get_net(void) { return net ; };
     void set_is_z(bool z) { is_z  = z; };
     bool get_is_z(void) { return is_z; };
@@ -80,13 +77,12 @@ protected:
     std::vector<class port *> ports;
     int X1 = 0, Y1 = 0, X2 = 0, Y2 = 0;
     int color = 0;
-    int refcount = 0;
     int width = 0;
-    std::vector<struct waypoint> *points = NULL;
-    std::vector<struct waypoint> *drawpoints = NULL;
-    std::vector<struct waypoint> *oldpoints = NULL;
+    std::unique_ptr<std::vector<struct waypoint>> points;
+    std::unique_ptr<std::vector<struct waypoint>> drawpoints;
+    std::unique_ptr<std::vector<struct waypoint>> oldpoints;
     void add_midpoint(float x1, float y1, float x2, float y2, float effect);
-    class net *net = NULL; /* nosave */
+    class net *net = nullptr; /* nosave */
     bool is_reversed = false;
     bool is_z = false; /* nosave -- net recalculates this */
     bool in_animation = false; /* nosave */

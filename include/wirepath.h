@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <queue>
 #include <vector>
 #include <nlohmann/json.hpp>
@@ -39,8 +40,6 @@ struct CompareTask {
 class wiregrid {
 public:
     wiregrid(int width, int height);
-    ~wiregrid();
-
     void debug_display(int X = 0, int Y=0);    
     
     void block_point(int x, int y);
@@ -50,7 +49,7 @@ public:
     bool is_blocked(int x, int y);
     float get_soft_cost(int x, int y);
     
-    std::vector<struct waypoint> *  path_walk(int x1, int y1, int x2, int y2, bool is_clock = false);
+    std::unique_ptr<std::vector<struct waypoint>> path_walk(int x1, int y1, int x2, int y2, bool is_clock = false);
 
     bool is_clock = false;
 private:
@@ -66,7 +65,7 @@ private:
 
     double cost_estimate(int x, int y);
     void update_destination(int tX, int tY);
-    std::vector<struct waypoint> *  walk_back(void);
+    std::unique_ptr<std::vector<struct waypoint>> walk_back(void);
     
     void visit(struct point *p);
     

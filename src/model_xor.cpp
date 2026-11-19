@@ -18,10 +18,6 @@ model_xor::model_xor(float _X, float _Y)  : model_logic2(_X, _Y, "assets/xorgate
     selected_filename = "assets/xorgate_selected.png";
 }
 
-model_xor::~model_xor(void)
-{
-}
-
 void model_xor::calculate(int ttl)
 {
     struct value result = {};

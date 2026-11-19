@@ -33,13 +33,7 @@ model_deflipflop::model_deflipflop(float _X, float _Y)  : element(1, 1, "Flipflo
 	add_port(1, -1, "En", PORT_IN ,1);    
 	menu->add_item("Edit name", callback_editname);
 
-	name_edit = new class name(&name);
-}
-
-model_deflipflop::~model_deflipflop(void)
-{
-	if (name_edit)
-		delete name_edit;
+	name_edit = std::make_unique<class name>(&name);
 }
 
 void model_deflipflop::drawAt(class basecanvas *canvas, float X, float Y, int type)
@@ -53,7 +47,7 @@ void model_deflipflop::drawAt(class basecanvas *canvas, float X, float Y, int ty
 	}
 	name_edit->drawAt(canvas, X, Y + sizeY, sizeX);
 
-	for (auto port : ports) {
+	for (auto &port : ports) {
 		port->drawAt(canvas, X,Y, COLOR_WIRE_SOLID);
 		port->draw_wires(canvas);
 	}

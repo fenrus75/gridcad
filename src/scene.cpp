@@ -20,7 +20,7 @@
 
 void callback_select_all(class scene *scene)
 {
-	for (auto elem : scene->elements) {
+	for (auto &elem : scene->elements) {
 		elem->select();
 	}
 }
@@ -63,15 +63,15 @@ void callback_sequencer_reset(class scene *scene)
 
 void callback_autoclock(class scene *scene)
 {
-	class port *clk = NULL;
-	for (auto elem : scene->elements) {
+	class port *clk = nullptr;
+	for (auto &elem : scene->elements) {
 		clk = elem->get_clk_port();
 		if (clk) 
 			break;
 	}
 	if (!clk)
 		return;
-	for (auto elem : scene->elements) {
+	for (auto &elem : scene->elements) {
 		elem->connect_clk(clk);
 	}
 }
@@ -92,7 +92,7 @@ scene::scene(std::string _name, std::string _parent)
 	sizeY = 200;
 	name = _name;
 	parental_name = _parent;
-	menu = new class contextmenu(this);
+	menu = std::make_unique<class contextmenu>(this);
 	menu->add_item("Fit to Screen", callback_fit_to_screen);
 	menu->add_item("Select All", callback_select_all);
 	menu->add_item("Connect clocks", callback_autoclock);
@@ -104,25 +104,24 @@ scene::scene(std::string _name, std::string _parent)
 scene::~scene(void)
 {
 	remove_nets();
-	for (auto elem: elements) {
-		remove_from_calculate_queue(elem); 
-		delete elem;
+	for (auto &elem : elements) {
+		remove_from_calculate_queue(elem.get());
 	}
-	delete menu;
 }
 
 
 
-void scene::add_element(class element * element)
+void scene::add_element(std::unique_ptr<class element> element)
 {
-	elements.push_back(element);
-	rewire_section(element->get_X(), element->get_Y(), element->get_width(), element->get_height());
+	class element *raw = element.get();
+	elements.push_back(std::move(element));
+	rewire_section(raw->get_X(), raw->get_Y(), raw->get_width(), raw->get_height());
 	generation_count++;
-	element->update_parental_name(get_full_name());
-	logger::get().debug("Element parental name is {}   name is {} parent is {}", element->get_parental_name(), name, parental_name);
+	raw->update_parental_name(get_full_name());
+	logger::get().debug("Element parental name is {}   name is {} parent is {}", raw->get_parental_name(), name, parental_name);
 	
 	has_sequencer = false;
-	for (auto elem : elements)
+	for (auto &elem : elements)
 		if (elem->class_id() == "sequencer:")
 			has_sequencer = true;
 			
@@ -135,9 +134,9 @@ void scene::add_element(class element * element)
 bool scene::can_place_element(float x, float y, int w, int h,
 		class element * myself)
 {
-	for (auto const elem:elements) {
+	for (auto const &elem : elements) {
 		int _x, _y;
-		if (elem == myself)
+		if (elem.get() == myself)
 			continue;
 		if (elem->is_background()) /* labels are special and can be placed upon */
 			continue;
@@ -152,59 +151,58 @@ bool scene::can_place_element(float x, float y, int w, int h,
 
 class port *scene::is_port(float X, float Y)
 {
-	for (auto const elem:elements) {
+	for (auto const &elem : elements) {
 		class port *p = elem->is_port(X, Y);
 		if (p)
 			return p;
 	}
-	return NULL;
+	return nullptr;
 
 }
 
-class wire *scene::is_wire(float X, float Y)
+std::shared_ptr<class wire> scene::is_wire(float X, float Y)
 {
-	for (auto const elem:elements) {
-		class wire *p = elem->is_wire(X, Y);
+	for (auto const &elem : elements) {
+		auto p = elem->is_wire(X, Y);
 		if (p) {
 			return p;
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 void scene::fill_grid(class wiregrid * grid)
 {
-	for (auto const elem:elements)
+	for (auto const &elem : elements)
 		elem->fill_grid(grid);
 }
 
 void scene::deselect_all(void)
 {
-	for (auto element : elements)
+	for (auto &element : elements)
 		element->deselect();
 }
 class element * scene::selected_element(void)
 {
-	for (auto element : elements)
+	for (auto &element : elements)
 		if (element->is_selected())
-			return element;
-	return NULL;
+			return element.get();
+	return nullptr;
 }
 
 void scene::remove_element(class element *element)
 {
 	unsigned int i;
 	for (i = 0; i < elements.size(); i++) {
-		if (elements[i] == element) {
-			elements.erase(elements.begin() + i); /* must exit the for loop now */
+		if (elements[i].get() == element) {
 			remove_from_calculate_queue(element);
-			delete element;
+			elements.erase(elements.begin() + i); /* must exit the for loop now */
 			return;
 		}
 	}
 	generation_count++;
 	has_sequencer = false;
-	for (auto elem : elements)
+	for (auto &elem : elements)
 		if (elem->class_id() == "sequencer:")
 			has_sequencer = true;
 	if (has_sequencer)
@@ -259,12 +257,12 @@ void scene::from_json(json &j)
 	for (i = 0; i <j["elements"].size(); i++) {
 		json p = j["elements"][i];
 		std::string cid = p["class_id"];
-		class element *element = element_from_class_id(cid);
+		auto element = element_from_class_id(cid);
 		element->from_json(p);
-		elements.push_back(element);
 		element->update_parental_name(get_full_name());
+		elements.push_back(std::move(element));
 	}
-	for (auto element : elements)
+	for (auto &element : elements)
 		element->calculate(100);
 
 	cycle_color();
@@ -280,9 +278,9 @@ void scene::process_delete_requests(void)
 {
 	std::vector<class element *> todo;
 
-	for (auto elem : elements) {
+	for (auto &elem : elements) {
 		if (elem->want_deleted())
-			todo.push_back(elem);
+			todo.push_back(elem.get());
 	}
 
 	for (auto elem : todo) {
@@ -293,7 +291,7 @@ void scene::process_delete_requests(void)
 
 void scene::delete_selection(void)
 {
-	for (auto elem : elements)
+	for (auto &elem : elements)
 		if (!elem->in_edit_mode())
 			elem->delete_if_selected();
 }
@@ -305,8 +303,7 @@ void scene::rewire_section(int x1, int y1, int w, int h)
 
 	for (y = y1 - 1 ; y <= y1 + h + 1; y++)
 		for (x = x1 -1 ; x <= x1 + w + 1; x++) {
-			class wire *wire;
-			wire = is_wire(x, y);
+			auto wire = is_wire(x, y);
 			if (wire) {
 				wire->reseat();
 				wire->redo_wires();
@@ -321,14 +318,14 @@ void scene::rewire_section(class element *element)
 
 void scene::remove_orphans(void)
 {
-	for (auto elem : elements)
+	for (auto &elem : elements)
 		elem->remove_orphans();
 }
 
 unsigned int scene::selected_count(void)
 {
 	unsigned int count = 0;
-	for (auto elem : elements)
+	for (auto &elem : elements)
 		if (elem->is_selected()) 
 			count++;
 
@@ -338,14 +335,14 @@ unsigned int scene::selected_count(void)
 
 void scene::cycle_color(void)
 {
-	for (auto elem:elements)
+	for (auto &elem : elements)
 		elem->cycle_color();
 	redo_nets();
 }
 
 void scene::reroute_all_wires(void)
 {
-	for (auto elem:elements)
+	for (auto &elem : elements)
 		elem->reroute_all_wires();
 }
 
@@ -366,7 +363,7 @@ void scene::create_verilog_names(void)
 
 	std::vector<std::string> existing;
 	for (unsigned int i = 0; i < elements.size(); i++) {
-		auto elem = elements[i];
+		auto &elem = elements[i];
 		elem->create_verilog_name(i, &existing);
 	}
 }
@@ -387,7 +384,7 @@ std::string scene::get_verilog_main(void)
 	s += "(";
 	/* in */
 	bool first = true;
-	for (auto elem : elements) {
+	for (auto &elem : elements) {
 		if (elem->class_id() == "model_toggle:") {
 			if (!first)
 				s += ", ";
@@ -412,7 +409,7 @@ std::string scene::get_verilog_main(void)
 
 	std::vector<std::string> netmap;
 
-	for (auto elem : elements) {
+	for (auto &elem : elements) {
 		elem->collect_nets(&netmap);
 	}
 
@@ -421,7 +418,7 @@ std::string scene::get_verilog_main(void)
 
 	s = s + "\n";
 
-	for (auto elem : elements) {
+	for (auto &elem : elements) {
 		s = s + elem->get_verilog_main();
 	}	
 
@@ -439,7 +436,7 @@ std::string scene::get_verilog_modules(std::string verilog_path)
 {
 	std::string s = "";
 
-	for (auto elem : elements) {
+	for (auto &elem : elements) {
 		s = s + elem->get_verilog_modules(verilog_path);
 	}	
 
@@ -455,15 +452,15 @@ std::string scene::get_full_name(void)
 
 void scene::remove_nets(void)
 {
-	for (auto elem : elements)
+	for (auto &elem : elements)
 		elem->remove_nets();
-	for (auto elem : elements)
+	for (auto &elem : elements)
 		elem->free_nets_memory();
 }
 
 void scene::add_nets(void)
 {
-	for (auto elem : elements)
+	for (auto &elem : elements)
 		elem->add_nets();
 }
 
@@ -475,6 +472,6 @@ void scene::redo_nets(void)
 
 void scene::validate_ports(void)
 {
-	for (auto elem : elements)
+	for (auto &elem : elements)
 		elem->validate_ports();
 }

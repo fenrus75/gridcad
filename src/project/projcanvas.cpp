@@ -18,14 +18,13 @@ projcanvas::projcanvas(bool _library_mode)
 {
 	std::string s;
 	library_mode = _library_mode;
-	s = "GridCad Welcome Screen";;
+	s = "GridCad Welcome Screen";
 
-	init_SDL();
 	fill_png_maps();
 
-	window = SDL_CreateWindow(s.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1024, 768, SDL_WINDOW_RESIZABLE);
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+	window.reset(SDL_CreateWindow(s.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1024, 768, SDL_WINDOW_RESIZABLE));
+	renderer.reset(SDL_CreateRenderer(window.get(), -1, SDL_RENDERER_ACCELERATED));
+	SDL_SetRenderDrawBlendMode(renderer.get(), SDL_BLENDMODE_BLEND);
 
 	scaleX = 25;
 	scaleY = 25;
@@ -34,7 +33,7 @@ projcanvas::projcanvas(bool _library_mode)
 		name = "library/";
 	}
 
-	newname	= new class name(&name);
+	newname = std::make_unique<class name>(&name);
 	newname->set_edit_mode(true);
 
 	templates.push_back("<None>");
@@ -46,13 +45,7 @@ projcanvas::projcanvas(bool _library_mode)
 		crawl_filesystem();
 }
 
-projcanvas::~projcanvas(void)
-{
-	delete newname;
-	SDL_DestroyRenderer(renderer);
-	renderer = NULL;
-	SDL_DestroyWindow(window);
-}
+projcanvas::~projcanvas(void) = default;
 
 #define RADIO_HEIGHT 1.5
 #define TEMPLATE_X 2
@@ -98,12 +91,9 @@ std::string projcanvas::library_test_bench(void)
 	logger::get().debug("Bench name is {}", benchname);
 
 	if (!std::filesystem::exists(benchname)) {
-		class scene *scene;
 		/* create */
-		scene = new class scene(elem, "");
-		class model_nest *element;
-
-		element = new model_nest(10, 10);
+		class scene s(elem, "");
+		auto element = std::make_unique<model_nest>(10, 10);
 		logger::get().debug("libname is {}", libname);
 
 		std::string logic = "";
@@ -118,16 +108,15 @@ std::string projcanvas::library_test_bench(void)
 		element->update_name(path + "/" + elem);
 		element->set_icon(libname + ".png", libname + ".selected.png");
 		element->set_library_origin(path, libname);
-		scene->add_element(element);
+		s.add_element(std::move(element));
 
 		current_project="ABABABAABABABBABAA";
 
 		json j;
-		scene->to_json(j);
+		s.to_json(j);
 		std::ofstream output(benchname);
 		output << j.dump(4);
 		output.close();		
-		delete scene;
 		current_project = "";
 	}
 
@@ -150,11 +139,11 @@ static float delta_hover(uint64_t deltaT)
 
 void projcanvas::draw(void)
 {
-	SDL_SetRenderDrawColor(renderer, R(COLOR_BACKGROUND_GRID),
+	SDL_SetRenderDrawColor(renderer.get(), R(COLOR_BACKGROUND_GRID),
 			G(COLOR_BACKGROUND_GRID),
 			B(COLOR_BACKGROUND_GRID),
 			Alpha(COLOR_BACKGROUND_GRID));
-	SDL_RenderClear(renderer);
+	SDL_RenderClear(renderer.get());
 	
 	uint64_t now = SDL_GetTicks64();
 
@@ -273,7 +262,7 @@ void projcanvas::draw(void)
 			draw_text("Open project " + projects[active_project], PROJECT_X + 4, PROJECT_Y + calc_project_height(projects.size()) + RADIO_HEIGHT + 0.2, PROJECT_WIDTH - 4, 1);
 	}
 
-	SDL_RenderPresent(renderer);
+	SDL_RenderPresent(renderer.get());
 
 }
 
@@ -319,7 +308,7 @@ bool projcanvas::handle_event(SDL_Event &event)
 				logger::get().debug("index is {}", index);
 
 
-				if (index == active_project && time(NULL) - previous_click < 3) {
+				if (index == active_project && time(nullptr) - previous_click < 3) {
 					/* double click */
 					name = projects[active_project];
 					return true;
@@ -334,7 +323,7 @@ bool projcanvas::handle_event(SDL_Event &event)
 				}
 			}
 
-			previous_click = time(NULL);
+			previous_click = time(nullptr);
 			break;
 		case SDL_MOUSEMOTION:
 			currentX = scr_to_X(event.motion.x);

@@ -38,7 +38,7 @@ protected:
     
     float currentX = 0, currentY = 0;
     
-    class name *newname = NULL;
+    std::unique_ptr<class name> newname;
     
     void crawl_filesystem(void);
     void crawl_library(void);

@@ -54,7 +54,7 @@ model_output::model_output(float _X, float _Y)  : element(1, 1, "Output")
     X = floorf(_X);
     Y = floorf(_Y);
 
-    name_edit = new class name(&name);
+    name_edit = std::make_unique<class name>(&name);
     
     add_port(-1, 1, "Output", PORT_IN);    
     ports[0]->allow_fancy_verilog();
@@ -64,11 +64,6 @@ model_output::model_output(float _X, float _Y)  : element(1, 1, "Output")
     menu->add_item("Set as 8 bit bus", callback_bus8);
     menu->add_item("Set as 16 bit bus", callback_bus16);
     menu->add_item("Set as 32 bit bus", callback_bus32);
-}
-
-model_output::~model_output(void)
-{
-    delete name_edit;
 }
 
 void model_output::drawAt(class basecanvas *canvas, float X, float Y, int type)
@@ -97,7 +92,7 @@ void model_output::drawAt(class basecanvas *canvas, float X, float Y, int type)
 	canvas->draw_text(s, X+ 0.6, Y + 0.6, 1.8,1.8);
     }
 
-    for (auto port : ports) {
+    for (auto &port : ports) {
         port->drawAt(canvas, X,Y, COLOR_WIRE_SOLID);
         port->draw_wires(canvas);
     }
@@ -141,7 +136,7 @@ struct value model_output::get_value(void)
 
 void model_output::rotate_ports(void)
 {
-    for (auto port : ports) {
+    for (auto &port : ports) {
         float x,y,_x,_y;
         x = port->X - (sizeX-1)/2.0;
         y = port->Y - (sizeY-1)/2.0;

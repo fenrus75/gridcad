@@ -21,11 +21,6 @@ button::button(float X, float Y, float W, float H, std::string _icon, int _actio
     canvas = _canvas;
 }
 
-button::~button(void)
-{
-}
-
-
 void button::draw(class truthcanvas *canvas) 
 {
     canvas->draw_image(icon, X1, Y1, X2-X1, Y2-Y1, 255, true);    

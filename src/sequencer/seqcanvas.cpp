@@ -6,11 +6,11 @@ seqcanvas::seqcanvas(class sequencer *_element) : basecanvas()
 {
 	seq = _element;
 
-	window = SDL_CreateWindow(("Sequencer / "+ _element->get_full_name()).c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_RESIZABLE);
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+	window.reset(SDL_CreateWindow(("Sequencer / "+ _element->get_full_name()).c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_RESIZABLE));
+	renderer.reset(SDL_CreateRenderer(window.get(), -1, SDL_RENDERER_ACCELERATED));
+	SDL_SetRenderDrawBlendMode(renderer.get(), SDL_BLENDMODE_BLEND);
 
-	windowID = SDL_GetWindowID(window);
+	windowID = SDL_GetWindowID(window.get());
 
 	editors.reserve(4096);
 
@@ -22,22 +22,17 @@ seqcanvas::seqcanvas(class sequencer *_element) : basecanvas()
 
 seqcanvas::~seqcanvas(void)
 {
-	while (editors.size() > 0)
-		delete_row();
 	unregister_canvas(this);
-	SDL_DestroyRenderer(renderer);
-	renderer = NULL;
-	SDL_DestroyWindow(window);
 }
 
 void seqcanvas::draw(void)
 {
-	SDL_SetRenderDrawColor(renderer, R(COLOR_BACKGROUND_GRID),
+	SDL_SetRenderDrawColor(renderer.get(), R(COLOR_BACKGROUND_GRID),
 			G(COLOR_BACKGROUND_GRID),
 			B(COLOR_BACKGROUND_GRID),
 			Alpha(COLOR_BACKGROUND_GRID));
 
-	SDL_RenderClear(renderer);
+	SDL_RenderClear(renderer.get());
 
 	draw_image("assets/model_truth/minus.png", 3,0,1,1);
 	draw_image("assets/model_truth/plus.png", 5,0,1,1);
@@ -48,7 +43,7 @@ void seqcanvas::draw(void)
 		draw_text_left("Time " + std::to_string(i), 1, 1 + i, 3.5,1);
 		if (i == cursor)
 			draw_image("assets/lightgray.png", 4, 1+i,5,1);
-		auto e = editors[i];
+		auto &e = editors[i];
 		e->drawAt(this, 4, 1 + i, 5, 1);
 	}
 
@@ -83,7 +78,7 @@ bool seqcanvas::handle_event(SDL_Event &event)
 			break;
 		case SDL_WINDOWEVENT:
 			if (event.window.event == SDL_WINDOWEVENT_CLOSE) {  /* user clicked the 'x' */
-				SDL_HideWindow(window); /* TODO: THis leaks like a sieve */
+				SDL_HideWindow(window.get()); /* TODO: THis leaks like a sieve */
 			}
 			break;
 	};
@@ -99,14 +94,9 @@ void seqcanvas::seq_to_data(void)
 {
 	data.resize(seq->values.size());
 	while (editors.size() < seq->values.size()) {
-		class name *edit;
-		edit = new class name(&data[data.size() - 1]);
-		editors.push_back(edit);
+		editors.push_back(std::make_unique<class name>(&data[data.size() - 1]));
 	}
 	while (editors.size() > seq->values.size()) {
-		class name *edit;
-		edit = editors[editors.size() - 1];
-		delete edit;
 		editors.pop_back();
 	}
 
@@ -115,7 +105,7 @@ void seqcanvas::seq_to_data(void)
 	}
 
 	for (unsigned int i = 0; i < editors.size(); i++) {
-		auto e = editors[i];
+		auto &e = editors[i];
 		e->update_string_pointer(&data[i]);
 	}
 }
@@ -140,14 +130,12 @@ void seqcanvas::add_row(void)
 {
 	data.push_back("0");
 	logger::get().debug("Adding one {}", data.size());
-	class name *edit;
 	unsigned i = data.size() - 1;
-	edit = new class name(&data[i]);
-	editors.push_back(edit);
+	editors.push_back(std::make_unique<class name>(&data[i]));
 	logger::get().debug("Added one {} {}", editors.size(), data[i]);
 
 	for (unsigned int i = 0; i < editors.size(); i++) {
-		auto e = editors[i];
+		auto &e = editors[i];
 		e->update_string_pointer(&data[i]);
 		e->want_numbers_only();
 	}
@@ -156,12 +144,9 @@ void seqcanvas::add_row(void)
 void seqcanvas::delete_row(void)
 {
 	data.pop_back();
-	class name *edit;
-	edit = editors[editors.size() - 1];
-	delete edit;
 	editors.pop_back();
 	for (unsigned int i = 0; i < editors.size(); i++) {
-		auto e = editors[i];
+		auto &e = editors[i];
 		e->update_string_pointer(&data[i]);
 	}
 }
@@ -173,7 +158,7 @@ void seqcanvas::make_active(unsigned int i)
 		return;
 	cursor = i;
 	for (unsigned p = 0; p < editors.size(); p++) {
-		auto e = editors[p];
+		auto &e = editors[p];
 		e->set_edit_mode(p == cursor);
 	}
 

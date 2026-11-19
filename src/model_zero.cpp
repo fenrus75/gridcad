@@ -30,15 +30,11 @@ model_zero::model_zero(float _X, float _Y)  : element(1, 1, "")
     add_port(1, 0, "ZERO", PORT_OUT, 0);    
 
 
-    for (auto port : ports) {
+    for (auto &port : ports) {
         port->update_value_final(&value, DEFAULT_TTL);
     }
 
 }
-model_zero::~model_zero(void)
-{
-}
-
 void model_zero::drawAt(class basecanvas *canvas, float X, float Y, int type)
 {
     if (selected) {
@@ -47,7 +43,7 @@ void model_zero::drawAt(class basecanvas *canvas, float X, float Y, int type)
         canvas->draw_image_rotated("assets/zero.png", X, Y, sizeX, sizeY, Alpha(type), angle);
     }
 
-    for (auto port : ports) {
+    for (auto &port : ports) {
         port->draw_wires(canvas);
         if (type != DRAW_NORMAL)
             port->drawAt(canvas, X, Y, type);

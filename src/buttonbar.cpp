@@ -10,13 +10,7 @@ buttonbar::buttonbar(class basecanvas *_canvas, unsigned int _width)
 }
 
 
-buttonbar::~buttonbar(void)
-{
-	for (auto b : buttons) {
-		delete b;
-	}
-	buttons.clear();
-}
+buttonbar::~buttonbar(void) = default;
 
 #define Y_SPACING 1.2
 
@@ -38,7 +32,7 @@ void buttonbar::handle_event(SDL_Event &event)
 			buttons[buttonindex]->activate();
 			break;
 		case SDL_MOUSEBUTTONUP:
-			for (auto button : buttons)
+			for (auto &button : buttons)
 				button->deactivate();
 			break;
 		case SDL_MOUSEMOTION:
@@ -51,8 +45,7 @@ void buttonbar::handle_event(SDL_Event &event)
 
 void buttonbar::add_button(std::string text, std::string icon, int _event)
 {
-	class barbutton *button = new barbutton(text, icon, _event, canvas);
-	buttons.push_back(button);
+	buttons.push_back(std::make_unique<barbutton>(text, icon, _event, canvas));
 }
 
 extern float ratio_effect(float ratio);
@@ -89,7 +82,7 @@ void buttonbar::draw_at(class basecanvas *canvas, int W, int H)
 	
 
 	for (unsigned int i = 0; i < buttons.size(); i++) {
-		auto button = buttons[i];
+		auto &button = buttons[i];
 		float delta = 0;
 		if (hover_button == i)
 			delta = delta_hover(SDL_GetTicks64() - hover_time);
@@ -125,11 +118,6 @@ barbutton::barbutton(std::string _text, std::string _icon, int _event, class bas
 	eventnr = _event;
 	canvas = _canvas;
 }
-
-barbutton::~barbutton(void)
-{
-}
-
 
 void barbutton::draw_at(class basecanvas *canvas, float X, float Y, float W, float H, bool hover, float delta)
 {	

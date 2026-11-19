@@ -21,6 +21,6 @@ protected:
 	void make_active(unsigned int i);
 	
 	std::vector<std::string> data;
-	std::vector<class name *> editors;
+	std::vector<std::unique_ptr<class name>> editors;
 	unsigned int cursor = 0;
 };

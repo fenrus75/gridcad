@@ -46,8 +46,8 @@ model_toggle::model_toggle(float _X, float _Y)  : element(1, 1, "Input")
     value = {};
     value.valid = true;
     
-    name_edit = new class name(&name);
-    value_edit = new class name(&strvalue);
+    name_edit = std::make_unique<class name>(&name);
+    value_edit = std::make_unique<class name>(&strvalue);
     value_edit->want_numbers_only();
     
     add_port(sizeX, 1, "Input", PORT_OUT);    
@@ -58,12 +58,6 @@ model_toggle::model_toggle(float _X, float _Y)  : element(1, 1, "Input")
     menu->add_item("Set as 4 bit bus", callback_bus4);
     menu->add_item("Set as 8 bit bus", callback_bus8);
     
-}
-
-model_toggle::~model_toggle(void)
-{
-  delete name_edit;
-  delete value_edit;
 }
 
 void model_toggle::drawAt(class basecanvas *canvas, float X, float Y, int type)
@@ -99,7 +93,7 @@ void model_toggle::drawAt(class basecanvas *canvas, float X, float Y, int type)
 	value_edit->drawAt(canvas, X + 0.6, Y + 1, 1.8);
     }
 
-    for (auto port : ports) {
+    for (auto &port : ports) {
         port->drawAt(canvas, X,Y, COLOR_WIRE_SOLID);
         port->draw_wires(canvas);
     }
@@ -187,7 +181,7 @@ void model_toggle::handle_event(class basecanvas *canvas, SDL_Event &event)
 
 void model_toggle::rotate_ports(void)
 {
-    for (auto port : ports) {
+    for (auto &port : ports) {
         float x,y,_x,_y;
         x = port->X - (sizeX-1)/2.0;
         y = port->Y - (sizeY-1)/2.0;

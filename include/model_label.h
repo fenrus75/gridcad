@@ -7,7 +7,6 @@ class model_label : public element
 {
 public:
     model_label(float X, float Y);
-    virtual ~model_label(void);
     virtual std::string class_id(void) { return "model_label:";};
 
 
@@ -33,7 +32,7 @@ public:
     
     bool is_background(void) override {return true;};
 private:
-    class name *name_edit = NULL;
+    std::unique_ptr<class name> name_edit;
     void drawAt_early(class basecanvas*, float, float, int);
     int color = 0;
     bool bottomlabel = true;

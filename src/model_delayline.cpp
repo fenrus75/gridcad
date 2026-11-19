@@ -27,17 +27,13 @@ model_delayline::model_delayline(float _X, float _Y)  : element(_X, _Y, "")
     add_port(sizeX, 0, "Out", PORT_OUT);
 }
 
-model_delayline::~model_delayline(void)
-{
-}
-
 void model_delayline::drawAt(class basecanvas *canvas, float X, float Y, int type)
 {
     if (selected)
         canvas->draw_image_rotated("assets/delayline_selected.png", X, Y, sizeX, sizeY, Alpha(type), angle);
     else
         canvas->draw_image_rotated("assets/delayline.png", X, Y, sizeX, sizeY, Alpha(type), angle);
-    for (auto port: ports) {
+    for (auto &port : ports) {
         port->drawAt(canvas, X, Y, type);
     }
 }
@@ -65,7 +61,7 @@ void model_delayline::queued_calculate(int ttl)
 
 void model_delayline::rotate_ports(void)
 {
-    for (auto port : ports) {
+    for (auto &port : ports) {
         float x,y,_x,_y;
         x = port->X - (sizeX-1)/2.0;
         y = port->Y - (sizeY-1)/2.0;

@@ -21,7 +21,7 @@ std::string generate_semi_uuid(void)
     std::uniform_int_distribution<> dis(0, 255);
     std::stringstream ss;
 
-    ss << std::hex << std::setw(8) << std::setfill('0') << time(NULL);
+    ss << std::hex << std::setw(8) << std::setfill('0') << time(nullptr);
     ss << "-";
     
     for (int i = 0; i < 16; ++i) {
@@ -41,7 +41,7 @@ std::string generate_wire_name(void)
     std::uniform_int_distribution<> dis(0, 255);
     std::stringstream ss;
 
-    ss << "Wire-" << std::hex << std::setw(8) << std::setfill('0') << time(NULL);
+    ss << "Wire-" << std::hex << std::setw(8) << std::setfill('0') << time(nullptr);
     ss << "-";
     
     for (int i = 0; i < 8; ++i) {
@@ -54,7 +54,7 @@ std::string generate_wire_name(void)
     return ss.str();
 }
 
-std::string append_random_bits(std::string input)
+std::string append_random_bits(std::string_view input)
 {
     std::random_device rd;
     std::mt19937 gen(rd());

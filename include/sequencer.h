@@ -38,9 +38,9 @@ protected:
 	std::vector<struct value> values;
 	unsigned int current_value = 0;
 	bool current_clock = false;
-	class name *name_edit = NULL;
+	std::unique_ptr<class name> name_edit;
 	time_t previous_click = 0;
-	class seqcanvas *canvas = NULL;
+	std::unique_ptr<class seqcanvas> canvas;
 	bool is_error = false;
 	bool stop_clock_on_error = false;
 	std::string verilog_module_name = "";	

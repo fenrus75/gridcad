@@ -13,51 +13,24 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
+#include <charconv>
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <unistd.h>
 
-#include <execinfo.h>
-#include <unistd.h>
-#include <signal.h>
-
 #include "gridcad.h"
+#include "crash_handler.h"
 #include "document.h"
 #include "project.h"
-
-static unsigned char signalstack[2 * 1024 * 1024];
-
-void segv_handler(int sig) {
-	void *entries[32];
-	size_t count;
-	
-	count = backtrace(entries, 32);
-	fprintf(stderr, "Segmentation fault:\n");
-	backtrace_symbols_fd(entries, count, STDERR_FILENO);
-	exit(1);
-}
 
 int main(int argc, char **argv)
 {	
 	start_time = std::chrono::steady_clock::now();
 	std::string name = "default";
-	class document *document;
 	bool library_mode = false;
 
-	stack_t stack = {};
-	struct sigaction segv = {};
-	
-	stack.ss_sp = &signalstack;
-	stack.ss_size = sizeof(signalstack);
-	stack.ss_flags = 0;
-	
-	sigaltstack(&stack, NULL);
-	
-	segv.sa_handler = &segv_handler;
-	segv.sa_flags = SA_ONSTACK;
-	
-	sigaction(SIGSEGV, &segv, NULL);
+	crash_handler::install_fallback_handler();
 
 	std::vector<std::string> positionals;
 	for (int i = 1; i < argc; ++i) {
@@ -71,7 +44,26 @@ int main(int argc, char **argv)
 			else if (level == "warn") logger::get().set_level(log_level::warning);
 			else if (level == "error") logger::get().set_level(log_level::error);
 		} else if (arg == "--exit-after" && i + 1 < argc) {
-			int seconds = std::stoi(argv[++i]);
+			/* Untrusted CLI input: parse non-negative timeout safely. */
+			std::string_view val = argv[++i];
+			int seconds = 1;
+			auto [ptr, ec] = std::from_chars(val.data(), val.data() + val.size(), seconds);
+			if (ec != std::errc{} || ptr != val.data() + val.size() || seconds < 0)
+				seconds = 1;
+			exit_time = start_time + std::chrono::seconds(seconds);
+			has_exit_time = true;
+		} else if (arg == "--exit-immediately") {
+			/* Optional timeout in seconds (default: 1s). */
+			int seconds = 1;
+			if (i + 1 < argc) {
+				std::string_view next = argv[i + 1];
+				int parsed = 0;
+				auto [ptr, ec] = std::from_chars(next.data(), next.data() + next.size(), parsed);
+				if (ec == std::errc{} && ptr == next.data() + next.size() && parsed >= 0) {
+					seconds = parsed;
+					++i;
+				}
+			}
 			exit_time = start_time + std::chrono::seconds(seconds);
 			has_exit_time = true;
 		} else {
@@ -79,26 +71,24 @@ int main(int argc, char **argv)
 		}
 	}
 	
+	sdl::Context sdl_ctx;
+
 	if (!positionals.empty()) {
 		name = positionals[0];
 		
 		if (name == "--library") {
 			logger::get().info("Library mode");
 			library_mode = true;
-			class projcanvas *proj = new projcanvas(library_mode);
+			projcanvas proj(library_mode);
 		
-			proj->run();
-			name = proj->get_name();
-		
-			delete proj;
+			proj.run();
+			name = proj.get_name();
 		}
 	} else {
-		class projcanvas *proj = new projcanvas();
+		projcanvas proj;
 		
-		proj->run();
-		name = proj->get_name();
-		
-		delete proj;
+		proj.run();
+		name = proj.get_name();
 	}
 	
 	logger::get().info("Starting project {}", name);
@@ -112,12 +102,9 @@ int main(int argc, char **argv)
 	/* project based library */
 	populate_library(name + "/library");
 
-	document = new class document(name, library_mode);
+	document doc(name, library_mode);
 
-	document->run();
-	
-	delete document;
-	document = NULL;
+	doc.run();
 
 	return 0;
 }

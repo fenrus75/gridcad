@@ -18,10 +18,6 @@ model_or::model_or(float _X, float _Y)  : model_logic2(_X, _Y, "assets/orgate.pn
     selected_filename = "assets/orgate_selected.png";
 }
 
-model_or::~model_or(void)
-{
-}
-
 void model_or::calculate(int ttl)
 {
     struct value result = {};

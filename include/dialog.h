@@ -8,7 +8,7 @@
 class dialog {
 public:
     dialog(int screenX, int screenY, std::string minwidthstring = "");
-    virtual ~dialog(void);
+    virtual ~dialog(void) = default;
     
     void draw(class basecanvas *canvas);
     virtual void handle_event(class basecanvas *canvas, SDL_Event &event);

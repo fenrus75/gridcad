@@ -9,11 +9,7 @@ name::name(std::string *_val)
 	cursorpos = value->size();
 }
 
-name::~name(void)
-{
-}
-
-float name::relative_cursor_pos(class basecanvas *canvas, std::string text, float H)
+float name::relative_cursor_pos(class basecanvas *canvas, std::string_view text, float H)
 {
 	SDL_Point size;
 	float w,h,W = 40;
@@ -22,7 +18,7 @@ float name::relative_cursor_pos(class basecanvas *canvas, std::string text, floa
 		return 0;
 
 	SDL_Texture *texture = canvas->text_to_texture(text);
-	SDL_QueryTexture(texture, NULL, NULL, &size.x, &size.y);
+	SDL_QueryTexture(texture, nullptr, nullptr, &size.x, &size.y);
 
 	h = H;
 	w = 1.0 * size.x / size.y * h;
@@ -38,7 +34,7 @@ void name::drawAt(class basecanvas *canvas, float X, float Y, float W, float H)
 {
 	if (edit_mode) {
 		struct timeval tv;
-		gettimeofday(&tv, NULL);
+		gettimeofday(&tv, nullptr);
 		std::string before, after;
 		if (cursorpos < value->size()) {
 			before = value->substr(0, cursorpos);

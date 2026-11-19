@@ -5,30 +5,30 @@
 
 class autocomplete_element {
 public:
-    autocomplete_element(void) {};
-    ~autocomplete_element(void) {};
-    class element *from = NULL, *to = NULL;
-    class port *from_port = NULL, *to_port = NULL;
+    autocomplete_element(void) = default;
+    ~autocomplete_element(void);
+    class element *from = nullptr, *to = nullptr;
+    class port *from_port = nullptr, *to_port = nullptr;
     
-    class wire *tempwire = NULL;
+    std::shared_ptr<class wire> tempwire;
 };
 
 /* gui canvas to draw on */
 class canvas : public basecanvas
 {
 public:
-    canvas (class scene *_scene, struct capabilities *cap = NULL);
+    canvas (std::unique_ptr<class scene> _scene, struct capabilities *cap = nullptr);
     virtual ~canvas(void);
     
     void draw(void) override;
     
-    class scene *get_scene(void) override { return current_scene; };
-    class scene *swap_scene(class scene *scene);
+    class scene *get_scene(void) override { return current_scene.get(); };
+    std::unique_ptr<class scene> swap_scene(std::unique_ptr<class scene> scene);
     bool handle_event(SDL_Event &event) override;
     
 
     void to_json(json& j);
-    class scene *get_undo(void);
+    std::unique_ptr<class scene> get_undo(void);
     void take_undo_snapshot(class scene *scene);
     void from_json_to_floating(json &j);
     
@@ -39,24 +39,25 @@ public:
     
     float screen_width(void) override;
     
-    void set_dialog(class dialog *D) { dialogbox = D;};
+    void set_dialog(std::unique_ptr<class dialog> D);
     void set_project_name(std::string _projectname) { projectname = _projectname;};
     
          
 protected:
     bool draw_grid = false;
     bool window_shown = true;
-    class scene *current_scene = NULL;
+    std::unique_ptr<class scene> current_scene;
     SDL_Rect main_area_rect, ui_area_rect, button_rect;
-    class element *dragging = NULL;
-    std::vector<class element *> floating;
-    class port *dragging_port = NULL;
-    class wire *dragging_wire = NULL, *hover_wire = NULL;
-    class iconbar *icon_bar = NULL;
-    class icon *active_icon = NULL;
-    class buttonbar *button_bar = NULL;
-    class contextmenu *active_menu = NULL;
-    class dialog *dialogbox = NULL;
+    class element *dragging = nullptr;
+    std::vector<std::unique_ptr<class element>> floating;
+    class port *dragging_port = nullptr;
+    std::shared_ptr<class wire> dragging_wire;
+    std::weak_ptr<class wire> hover_wire;
+    std::unique_ptr<class iconbar> icon_bar;
+    class icon *active_icon = nullptr;
+    std::unique_ptr<class buttonbar> button_bar;
+    class contextmenu *active_menu = nullptr;
+    std::unique_ptr<class dialog> dialogbox;
     bool left_mouse_down = false;
     float mouseX = 0.0, mouseY = 0.0;
     uint64_t mouse_timestamp = 0; /* SDL_GetTicks64 time of when the mouse last moved */
@@ -66,14 +67,14 @@ protected:
     std::vector<std::string> undo_list;
     bool in_area_select = false;
     float area_select_X1 = 0.0, area_select_Y1 = 0.0;
-    SDL_Texture *area_select_texture = NULL;
+    sdl::TexturePtr area_select_texture;
     bool tooltip_eligable = false;
     std::string projectname = "";
     
     
     bool handle_event_iconarea(SDL_Event &event);
     bool handle_event_drawingarea(SDL_Event &event);
-    void draw_tooltip(float X, float Y, std::string tooltip);
+    void draw_tooltip(float X, float Y, std::string_view tooltip);
     bool fittoscreen = false;
     float DPI = 96;    
     
@@ -85,5 +86,5 @@ protected:
     void apply_autocomplete(void);
     void best_port_to_autocomplete(class port *origin);
     
-    std::vector<struct autocomplete_element *> autocomplete;
+    std::vector<std::unique_ptr<class autocomplete_element>> autocomplete;
 };

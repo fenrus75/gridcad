@@ -9,7 +9,6 @@ class model_clock : public element
 {
 public:
     model_clock(float X, float Y);
-    virtual ~model_clock(void);
     virtual std::string class_id(void) { return "model_clock:";};
 
 
@@ -19,7 +18,7 @@ public:
     struct value get_value(void);
     void handle_event(class basecanvas *canvas, SDL_Event &event) override;
     void rotate_ports(void) override;
-    class port *get_clk_port(void) override { return ports[0];};
+    class port *get_clk_port(void) override { return ports[0].get();};
     std::string get_verilog_main(void) override;
     bool mouse_select(float _X, float _Y) override;
     void create_verilog_name(int seqno, std::vector<std::string> *existing) override;

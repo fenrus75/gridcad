@@ -76,13 +76,7 @@ model_memory::model_memory(float _X, float _Y)  : element(1, 1, "Memory")
     menu->add_item("Set 1024 byte size", callback_1024);
     menu->add_item("Set 2048 byte size", callback_2048);
     
-    name_edit = new class name(&name);
-}
-
-model_memory::~model_memory(void)
-{
-     if (name_edit)
-        delete name_edit;
+    name_edit = std::make_unique<class name>(&name);
 }
 
 void model_memory::drawAt(class basecanvas *canvas, float X, float Y, int type)
@@ -97,7 +91,7 @@ void model_memory::drawAt(class basecanvas *canvas, float X, float Y, int type)
     name_edit->drawAt(canvas, X, Y - 1, sizeX);
 
     hover_ports(canvas);
-    for (auto port : ports) {
+    for (auto &port : ports) {
         port->drawAt(canvas, X,Y, COLOR_WIRE_SOLID);
         port->draw_wires(canvas);
     }
@@ -286,9 +280,9 @@ void model_memory::show_hex(void)
 {
 	if (!canvas) {
 		logger::get().info("Spawning a new window");
-		canvas = new class hexcanvas(name, &data[0], data.size());
+		canvas = std::make_unique<class hexcanvas>(name, &data[0], data.size());
 		canvas->unhide();
-		register_new_canvas(canvas);	
+		register_new_canvas(canvas.get());	
 	} else {
 		canvas->unhide();
 	}

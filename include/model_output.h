@@ -9,7 +9,6 @@ class model_output : public element
 {
 public:
     model_output(float X, float Y);
-    virtual ~model_output(void);
     virtual std::string class_id(void) { return "model_output:";};
 
 
@@ -29,6 +28,6 @@ public:
     void create_verilog_name(int seqno, std::vector<std::string> *existing) override;
 private:
     struct value value = {};
-    class name *name_edit = NULL;
+    std::unique_ptr<class name> name_edit;
 };
 

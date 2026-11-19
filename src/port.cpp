@@ -30,10 +30,7 @@ void callback_set_color(class port *port, int color)
 void port::add_menu(void)
 {
 	if (direction == PORT_OUT) {
-		if (menu)
-			delete menu;
-
-		menu = new class port_contextmenu(this);	
+		menu = std::make_unique<class port_contextmenu>(this);	
 		menu->add_item(wire_color_name(0), 0, callback_set_color);
 		menu->add_item(wire_color_name(1), 1, callback_set_color);
 		menu->add_item(wire_color_name(2), 2, callback_set_color);
@@ -57,25 +54,17 @@ port::port(std::string _name, int _direction, int _bus_width)
 
 port::~port()
 {
-	//	printf("port destructor\n");
-	if (menu) {
-		delete menu;
-		menu = NULL;
-	}
 	while (wires.size() > 0) {
-		class wire *wire = wires[0];
+		auto wire = wires[0];
 		wire->del_port(this);
-		remove_wire(wire);
-		if (wire->is_empty()) {
-			delete wire;
-		} 
+		remove_wire(wire.get());
 	}
 }
 
 
-void port::add_wire(class wire * wire)
+void port::add_wire(std::shared_ptr<class wire> wire)
 {
-	for (auto _wire : wires) {
+	for (auto &_wire : wires) {
 		if (wire == _wire)
 			return;
 	}
@@ -123,7 +112,7 @@ void port::update_value(struct value *newvalue, int ttl)
 	unsigned int best_dist = INT_MAX;
 
 	if (bus_width == 0)
-		for (auto wire:wires) {
+		for (auto &wire : wires) {
 			if (wire->get_width() > bus_width)
 				bus_width = wire->get_width();
 
@@ -132,14 +121,14 @@ void port::update_value(struct value *newvalue, int ttl)
 
 	if (direction == PORT_OUT) {
 		distance_from_outport = 0;
-		for (auto wire:wires)
+		for (auto &wire : wires)
 			wire->set_distance_from_outport(0);
 	} else {
-		for (auto wire:wires)
+		for (auto &wire : wires)
 			if (wire->get_distance_from_outport() < best_dist)
 				best_dist = wire->get_distance_from_outport();
 
-		for (auto wire:wires) {
+		for (auto &wire : wires) {
 			distance_from_outport = best_dist + 1;
 			wire->set_distance_from_outport(best_dist + 1);
 		}
@@ -156,7 +145,7 @@ void port::update_value(struct value *newvalue, int ttl)
 
 	value = *newvalue;	
 
-	for (auto wire:wires) {
+	for (auto &wire : wires) {
 		wire->update_value(newvalue, ttl -1);
 	}
 
@@ -174,20 +163,20 @@ bool port::update_distances(void)
 
 	if (direction == PORT_OUT) {
 		distance_from_outport = 0;
-		for (auto wire:wires)
+		for (auto &wire : wires)
 			changed += wire->set_distance_from_outport(0);
 	} else if (direction == PORT_Z) {
 		distance_from_outport = 1000;
-		for (auto wire:wires)
+		for (auto &wire : wires)
 			changed += wire->set_distance_from_outport(1000);
 	} else {
-		for (auto wire:wires) {
+		for (auto &wire : wires) {
 			if (wire->get_distance_from_outport() < best_dist) {
 				best_dist = wire->get_distance_from_outport();
 			}
 		}
 
-		for (auto wire:wires) {
+		for (auto &wire : wires) {
 			if (distance_from_outport != best_dist + 1)
 				changed++;
 			distance_from_outport = best_dist + 1;
@@ -203,7 +192,7 @@ void port::update_value_final(struct value *newvalue, int ttl)
 	unsigned int best_dist = INT_MAX;
 
 	if (bus_width == 0)
-		for (auto wire:wires) {
+		for (auto &wire : wires) {
 			if (wire->get_width() > bus_width)
 				bus_width = wire->get_width();
 
@@ -212,14 +201,14 @@ void port::update_value_final(struct value *newvalue, int ttl)
 
 	if (direction == PORT_OUT) {
 		distance_from_outport = 0;
-		for (auto wire:wires)
+		for (auto &wire : wires)
 			wire->set_distance_from_outport(0);
 	} else {
-		for (auto wire:wires)
+		for (auto &wire : wires)
 			if (wire->get_distance_from_outport() < best_dist)
 				best_dist = wire->get_distance_from_outport();
 
-		for (auto wire:wires) {
+		for (auto &wire : wires) {
 			distance_from_outport = best_dist + 1;
 			wire->set_distance_from_outport(best_dist + 1);
 		}
@@ -258,7 +247,7 @@ void port::drawAt2(class basecanvas * canvas, float _X, float _Y, int type)
 
 void port::draw_wires(class basecanvas * canvas)
 {
-	for (auto wire : wires) {
+	for (auto &wire : wires) {
 		wire->draw(canvas);
 	}
 }
@@ -277,7 +266,7 @@ void port::drawDistress(class basecanvas *canvas, float X, float Y)
 	X = X + 0.5;
 	Y = Y + 0.5;
 
-	gettimeofday(&tv, NULL);
+	gettimeofday(&tv, nullptr);
 
 	if (tv.tv_usec > 500000)
 		tv.tv_usec = 1000000 - tv.tv_usec;
@@ -339,7 +328,7 @@ void port::stop_drag(class basecanvas *canvas)
 {
 	update_distances();
 
-	for (auto wire : wires) {
+	for (auto &wire : wires) {
 		wire->reseat();
 //		wire->route(canvas->get_scene());
 		wire->clear_route();
@@ -351,40 +340,29 @@ void port::notify(int ttl)
 {	
 }
 
-class wire *port::is_wire(float X, float Y)
+std::shared_ptr<class wire> port::is_wire(float X, float Y)
 {
-	for (auto wire : wires) {
+	for (auto &wire : wires) {
 		if (wire->intersect(X, Y))
 			return wire;	
 	}
-	return NULL;
+	return nullptr;
 }
 
 void port::remove_wire(class wire *_wire)
 {
 	for (unsigned int i = 0; i< wires.size(); ++i) {
-		class wire *wire = wires[i];
-		if (wire == _wire) {
+		if (wires[i].get() == _wire) {
 			wires.erase(wires.begin() + i);
 			return;
 		}
 	}
 }
-bool port::replace_wire(class wire *from, class wire *to)
+bool port::replace_wire(class wire *from, std::shared_ptr<class wire> to)
 {
 	bool result = true;
-#if 0	
-	for (unsigned int i = 0; i< wires.size(); ++i) {
-		class wire *wire = wires[i];
-		if (wire == from) {
-			wires[i] = to;
-			to->add_port(this);
-			result = true;
-		}
-	}
-#endif
 	remove_wire(from);
-	add_wire(to);	
+	add_wire(std::move(to));	
 	return result;
 }
 
@@ -433,8 +411,7 @@ void port::from_json(json &j)
 	distance_from_outport = j.value("distance_from_outport", INT_MAX);
 	allow_fancy_verilog_name = j.value("allow_fancy_verilog_name", false);
 	for (i = 0; i < j["wires"].size(); i++) {
-		class wire *wire;
-		wire = json_wire_factory(j["wires"][i]);
+		auto wire = json_wire_factory(j["wires"][i]);
 		add_wire(wire);
 		wire->add_port(this);
 		wire->reseat();
@@ -447,22 +424,21 @@ void port::remove_wires(void)
 	while (wires.size() > 0) {
 		auto wire = wires[0];
 		wire->remove();
-		if (wire->is_empty())
-			delete wire;
 	}
 	wires.clear();
 }
 
 void port::fill_grid(class wiregrid *grid)
 {
-	for (auto wire : wires) {
+	for (auto &wire : wires) {
 		wire->fill_grid(grid);
 	}
 }
 
 void port::remove_orphans(void)
 {
-	for (auto wire : wires) {
+	auto wires_copy = wires;
+	for (auto &wire : wires_copy) {
 		wire->remove_if_orphan();
 	}
 }
@@ -479,7 +455,7 @@ void port::link_uuid(std::string _uuid)
 
 void port::route_wires(void)
 {
-	for (auto wire : wires) {
+	for (auto &wire : wires) {
 		wire->reseat();
 		wire->redo_wires();
 	}
@@ -490,7 +466,7 @@ int port::get_width(void)
 	int width = 0;
 	if (bus_width)
 		return bus_width;
-	for (auto wire : wires) {
+	for (auto &wire : wires) {
 		width = std::max(width, wire->get_width());
 	}
 	return width;
@@ -500,12 +476,11 @@ void port::unsplice(void)
 {
 	if (wires.size() != 2)
 		return;
-	class wire *w1, *w2, *w3;
-	w1 = wires[0];
-	w2 = wires[1];
+	auto w1 = wires[0];
+	auto w2 = wires[1];
 	class port *p1, *p2;
 
-	w3 = new class wire(0,0,0,0);
+	auto w3 = std::make_shared<class wire>(0,0,0,0);
 
 	p1 = w1->get_other_port(this);
 	p2 = w2->get_other_port(this);
@@ -532,7 +507,7 @@ void port::unsplice(void)
 
 void port::push_wire_color(int color)
 {
-	for (auto wire : wires)
+	for (auto &wire : wires)
 		wire->push_wire_color(color);
 }
 
@@ -551,13 +526,13 @@ void port::push_net_color(int color)
 
 void port::cycle_color(void)
 {
-	for (auto wire:wires)
+	for (auto &wire : wires)
 		wire->clear_distance_from_outport();
 
 	if (direction != PORT_OUT)
 		return;
 
-	for (auto wire:wires)
+	for (auto &wire : wires)
 		wire->set_distance_from_outport(0);
 
 	if (value.is_clock)
@@ -574,7 +549,7 @@ void port::cycle_color(void)
 
 void port::reroute_all_wires(void)
 {
-	for (auto wire : wires)
+	for (auto &wire : wires)
 		wire->redo_wires();
 }
 
@@ -614,7 +589,7 @@ std::string port::get_tooltip(void)
 
 void port::add_net(class net *net)
 {
-	for (auto wire : wires)
+	for (auto &wire : wires)
 		wire->add_net(net);
 
 	net->add_port(this);
@@ -624,13 +599,13 @@ void port::add_net(class net *net)
 
 void port::remove_net(void)
 {
-	for (auto wire : wires)
+	for (auto &wire : wires)
 		wire->remove_net();
 }
 
 bool port::has_net(void)
 {
-	for (auto wire : wires)
+	for (auto &wire : wires)
 		if (wire->has_net())
 			return true;
 	return false;
@@ -638,10 +613,10 @@ bool port::has_net(void)
 
 class net * port::get_net(void)
 {
-	for (auto wire : wires)
+	for (auto &wire : wires)
 		if (wire->has_net())
 			return wire->get_net();
-	return NULL;
+	return nullptr;
 }
 void port::update_value_net(struct value *newvalue, int ttl)
 {
@@ -653,15 +628,15 @@ void port::update_value_net(struct value *newvalue, int ttl)
 
 void port::check_reverse(void)
 {
-	for (auto wire:wires)
+	for (auto &wire : wires)
 		wire->check_reverse();
 }
 
-std::string port::get_net_verilog_name(std::string fallback)
+std::string port::get_net_verilog_name(std::string_view fallback)
 {
 	class net *net;
 	if (wires.size() < 1)
-		return fallback;
+		return std::string(fallback);
 	net = wires[0]->get_net();
 	return net->get_verilog_name();
 }
@@ -716,14 +691,14 @@ std::string port::get_verilog_width(void)
     return s;
 }
 
-void port::update_fancy_name(std::string newname)
+void port::update_fancy_name(std::string_view newname)
 {
 	class net *net;
 	net = get_net();
 	if (!net)
 		return;
 	if (allow_fancy_verilog_name)
-		net->set_special_verilog_name(newname);
+		net->set_special_verilog_name(std::string(newname));
 }
 
 void port::clear_distress(void) 

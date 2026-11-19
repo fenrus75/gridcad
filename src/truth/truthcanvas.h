@@ -10,7 +10,7 @@ public:
     virtual ~truthcanvas();
     void draw(void) override;
     bool handle_event(SDL_Event &event) override;
-    void add_widget(class widget *widget);
+    void add_widget(std::unique_ptr<class widget> widget);
     
     void deselect_all(void);
     void unhide(void);
@@ -30,7 +30,7 @@ public:
     
 private:
     class model_truth *element;
-    std::vector<class widget *> widgets;
+    std::vector<std::unique_ptr<class widget>> widgets;
     bool need_fill_grid = false;
     
     int selectX, selectY;

@@ -14,6 +14,6 @@ public :
     void draw(void) override;
     
 private:
-    unsigned char *buffer = NULL;
+    unsigned char *buffer = nullptr;
     unsigned int length = 0;
 };

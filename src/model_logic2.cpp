@@ -29,10 +29,6 @@ model_logic2::model_logic2(float _X, float _Y, std::string _filename)  : element
     add_port(sizeX, 1, "Out", PORT_OUT, 1);
 }
 
-model_logic2::~model_logic2(void)
-{
-}
-
 void model_logic2::drawAt(class basecanvas *canvas, float X, float Y, int type)
 {
     int alpha = Alpha(type);
@@ -42,7 +38,7 @@ void model_logic2::drawAt(class basecanvas *canvas, float X, float Y, int type)
     } else {	
         canvas->draw_image_rotated(filename, X, Y, sizeX , sizeY, alpha, angle);
     }
-    for (auto port: ports) {
+    for (auto &port : ports) {
         port->draw_wires(canvas);
         port->drawAt(canvas, X, Y, type);
     }

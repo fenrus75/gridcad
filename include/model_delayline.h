@@ -7,7 +7,6 @@ class model_delayline : public element
 {
 public:
     model_delayline(float X, float Y);
-    virtual ~model_delayline(void);
     virtual std::string class_id(void) { return "model_delayline:";};
     
     void drawAt(class basecanvas *canvas, float X, float Y, int type) override;

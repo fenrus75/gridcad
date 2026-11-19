@@ -31,13 +31,9 @@ model_one::model_one(float _X, float _Y)  : element(_X, _Y, "")
     add_port(1, 0, "ONE", PORT_OUT, 0);    
 
 
-    for (auto port : ports) {
+    for (auto &port : ports) {
         port->update_value_final(&value, DEFAULT_TTL);
     }
-}
-
-model_one::~model_one(void)
-{
 }
 
 void model_one::drawAt(class basecanvas *canvas, float X, float Y, int type)
@@ -48,7 +44,7 @@ void model_one::drawAt(class basecanvas *canvas, float X, float Y, int type)
         canvas->draw_image("assets/one.png", X, Y, sizeX, sizeY, Alpha(type));
     }
     
-    for (auto port : ports) {
+    for (auto &port : ports) {
         port->draw_wires(canvas);
         if (type != DRAW_NORMAL)
             port->drawAt(canvas, X, Y, type);

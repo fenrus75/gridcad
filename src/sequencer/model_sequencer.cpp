@@ -29,14 +29,10 @@ sequencer::sequencer(int X, int Y) : element(X, Y, "Sequencer")
 	menu->add_item("Edit name", callback_editname);
 	menu->add_item("Reset position", callback_reset_sequencer);
 	menu->add_item("Toggle 'stop on error'", callback_stop_error);
-	name_edit = new class name(&name);
+	name_edit = std::make_unique<class name>(&name);
 }
 
-sequencer::~sequencer(void)
-{
-	delete name_edit;
-	delete canvas;
-}
+sequencer::~sequencer(void) = default;
 
 
 void sequencer::add_value_row(void)
@@ -97,7 +93,7 @@ void sequencer::drawAt(class basecanvas *canvas, float X, float Y, int type)
 
 	hover_ports(canvas);
 
-	for (auto port:ports) {
+	for (auto &port : ports) {
 		port->drawAt(canvas, X, Y, COLOR_WIRE_SOLID);
 		port->draw_wires(canvas);
 	}
@@ -105,7 +101,7 @@ void sequencer::drawAt(class basecanvas *canvas, float X, float Y, int type)
 
 bool sequencer::mouse_select(float _X, float _Y)
 {
-	long int click = time(NULL);
+	long int click = time(nullptr);
 
 	if (click - previous_click > 1) {
 		previous_click = click;
@@ -114,8 +110,8 @@ bool sequencer::mouse_select(float _X, float _Y)
 
 	if (!canvas) {
 		logger::get().info("Spawning a new window");
-		canvas = new class seqcanvas(this);
-		register_new_canvas(canvas);	
+		canvas = std::make_unique<class seqcanvas>(this);
+		register_new_canvas(canvas.get());	
 	} else {
 		canvas->unhide();
 	}
@@ -189,7 +185,7 @@ std::string sequencer::get_verilog_main(void)
 
 	s = s + verilog_module_name + " " + get_verilog_name() + "(";
 	bool first = true;
-	for (auto port : ports) {
+	for (auto &port : ports) {
 
 		if (!port->has_net())
 			continue;
@@ -235,7 +231,7 @@ std::string sequencer::get_verilog_modules(std::string path)
 
 	s = s + "module " + verilog_module_name + "\n (";
 	bool first = true;
-	for (auto port : ports) {
+	for (auto &port : ports) {
 		if (!port->has_net())
 			continue;
 		if (!first)

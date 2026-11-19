@@ -34,16 +34,6 @@ wiregrid::wiregrid(int _width, int _height)
 	found_solution = false;
 }
 
-wiregrid::~wiregrid()
-{
-	int y;
-	for (y = 0; y < height; y++)
-		grid[y].resize(0);
-	grid.resize(0);
-
-}
-
-
 void wiregrid::debug_display(int _X, int _Y)
 {
 	int x,y;
@@ -219,14 +209,12 @@ void wiregrid::update_destination(int tX, int tY)
 }
 
 
-std::vector<struct waypoint> *  wiregrid::walk_back(void)
+std::unique_ptr<std::vector<struct waypoint>> wiregrid::walk_back(void)
 {
 	int x, y;
 	int prevDX = 0, prevDY = 0;
 
-	std::vector<struct waypoint> *vec;
-
-	vec = new std::vector<struct waypoint>;
+	auto vec = std::make_unique<std::vector<struct waypoint>>();
 	struct waypoint wp;
 
 	if (abort_all_walks || !found_solution) {
@@ -348,7 +336,7 @@ void wiregrid::visit(struct point *p)
 }
 
 
-std::vector<struct waypoint> * wiregrid::path_walk(int x1, int y1, int x2, int y2, bool is_clock)
+std::unique_ptr<std::vector<struct waypoint>> wiregrid::path_walk(int x1, int y1, int x2, int y2, bool is_clock)
 {
 	if (x1 < 0)
 		x1 = 0;

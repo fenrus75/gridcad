@@ -10,8 +10,6 @@ class port;
 class net {
 public:
 	net(void);
-	~net(void);
-
 	void destroy(void);   /* prepare the net object for delete */
 	void add_port(class port *port);
 	void add_wire(class wire *wire);

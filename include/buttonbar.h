@@ -18,7 +18,7 @@ public:
     std::string current_tooltip(unsigned int X, unsigned int Y);
     void set_fps(float _fps) { fps = _fps; };
 protected:
-    class basecanvas *canvas = NULL;
+    class basecanvas *canvas = nullptr;
     unsigned int width = 0;
     unsigned int mouseX = 0;
     unsigned int mouseY = 0;
@@ -26,7 +26,7 @@ protected:
     uint64_t hover_time = 0;
     float fps = -1.0;
     
-    std::vector<class barbutton *>buttons;
+    std::vector<std::unique_ptr<class barbutton>> buttons;
 };
 
 
@@ -34,8 +34,6 @@ class barbutton
 {
 public:
     barbutton(std::string text, std::string icon, int event, class basecanvas *canvas);
-    ~barbutton(void);
-
     void draw_at(class basecanvas *canvas, float X, float Y, float  W, float H, bool hover = false, float delta = 0.0);    
     
     void activate(void);
@@ -44,7 +42,7 @@ public:
 
 protected:
 
-    class basecanvas *canvas = NULL;    
+    class basecanvas *canvas = nullptr;    
     std::string text = "";
     std::string icon = "";
     int eventnr = 0;

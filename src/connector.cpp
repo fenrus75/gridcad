@@ -36,15 +36,10 @@ connector::connector(float _X, float _Y)  : element(3, 3, "")
 	menu->add_item("Join wire", splice_wire_callback);
 }
 
-connector::~connector(void)
-{
-	
-}
-
 void connector::drawAt(class basecanvas *canvas, float X, float Y, int type)
 {
 	std::string icon = "";
-	for (auto port: ports) 
+	for (auto &port : ports) 
 		port->draw_wires(canvas);
 
 	if (ports[0]->value.boolval)

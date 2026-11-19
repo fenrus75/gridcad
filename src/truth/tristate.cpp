@@ -23,10 +23,6 @@ tristate::tristate(float X, float Y, float W, float H, char *_tv, int _gridX, in
 	canvas = _canvas;
 }
 
-tristate::~tristate(void)
-{
-}
-
 void tristate::handle_event(SDL_Event &event)
 {
 	if (!selected())

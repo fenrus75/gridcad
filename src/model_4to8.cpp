@@ -29,10 +29,6 @@ model_4to8::model_4to8(float _X, float _Y)  : element(_X, _Y, "")
     add_port(sizeX, 3, "0-7", PORT_OUT, 8);
 }
 
-model_4to8::~model_4to8(void)
-{
-}
-
 void model_4to8::drawAt(class basecanvas *canvas, float X, float Y, int type)
 {
     int alpha = Alpha(type);
@@ -43,7 +39,7 @@ void model_4to8::drawAt(class basecanvas *canvas, float X, float Y, int type)
         canvas->draw_image_rotated("assets/4to8.png", X, Y, sizeX , sizeY, alpha, angle);
     }
     hover_ports(canvas);
-    for (auto port: ports) {
+    for (auto &port : ports) {
         port->drawAt(canvas, X, Y, type);
 	port->draw_wires(canvas);
     }

@@ -52,7 +52,7 @@ static float distsq(float X1, float Y1, float X2, float Y2)
 	return (X1-X2)*(X1-X2) + (Y1-Y2)*(Y1-Y2);
 }
 
-canvas::canvas(class scene *_scene, struct capabilities *cap)
+canvas::canvas(std::unique_ptr<class scene> _scene, struct capabilities *cap)
 {
 	std::string s;
 
@@ -60,15 +60,14 @@ canvas::canvas(class scene *_scene, struct capabilities *cap)
 		show_toolchain = cap->has_full_workflow;
 
 	s = "GridCad " + _scene->get_full_name();
-	window =
+	window.reset(
 		SDL_CreateWindow(s.c_str(), SDL_WINDOWPOS_UNDEFINED,
-				SDL_WINDOWPOS_UNDEFINED, 1024, 768, SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
-//	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+				SDL_WINDOWPOS_UNDEFINED, 1024, 768, SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI));
+	renderer.reset(SDL_CreateRenderer(window.get(), -1, SDL_RENDERER_ACCELERATED));
+	SDL_SetRenderDrawBlendMode(renderer.get(), SDL_BLENDMODE_BLEND);
 
-	windowID = SDL_GetWindowID(window);
-	SDL_GetDisplayDPI(0, &DPI, NULL, NULL);
+	windowID = SDL_GetWindowID(window.get());
+	SDL_GetDisplayDPI(0, &DPI, nullptr, nullptr);
 	if (DPI < 96)
 		DPI = 96;
 
@@ -89,12 +88,12 @@ canvas::canvas(class scene *_scene, struct capabilities *cap)
 	scaleX = 25;
 	scaleY = 25;
 
-	dragging = NULL;
+	dragging = nullptr;
 	left_mouse_down = false;
-	dragging_port = NULL;
-	dragging_wire = NULL;
-	icon_bar = new iconbar(renderer, ui_area_rect, this);
-	button_bar = new buttonbar(this, button_rect.w);
+	dragging_port = nullptr;
+	dragging_wire.reset();
+	icon_bar = std::make_unique<iconbar>(renderer.get(), ui_area_rect, this);
+	button_bar = std::make_unique<buttonbar>(this, button_rect.w);
 	button_bar->add_button("Save design to file", "assets/save_icon.png", EVENT_SAVE);
 	button_bar->add_button("Fit to screen", "assets/icon_fit_to_screen.png", EVENT_ZOOM_TO_FIT);
 	button_bar->add_button("Wire all clock signals", "assets/autoclock.png", EVENT_AUTOCLOCK);
@@ -103,23 +102,24 @@ canvas::canvas(class scene *_scene, struct capabilities *cap)
 		button_bar->add_button("Compile verilog", "assets/icon_compile_verilog.png", EVENT_RUN_VERILOG);
 		button_bar->add_button("Upload to FPGA", "assets/icon_program_fpga.png", EVENT_PROGRAM_FPGA);
 	}
-	current_scene = _scene;
-	callback_fit_to_screen2(current_scene);
-	SDL_MaximizeWindow(window);
+	current_scene = std::move(_scene);
+	callback_fit_to_screen2(current_scene.get());
+	SDL_MaximizeWindow(window.get());
 }
 
+
+autocomplete_element::~autocomplete_element(void) = default;
+
+void canvas::set_dialog(std::unique_ptr<class dialog> D)
+{
+	dialogbox = std::move(D);
+}
 
 canvas::~canvas(void)
 {
 	logger::get().debug("Canvas destructor");
 	zap_autocomplete();
 	unregister_canvas(this);
-	SDL_DestroyRenderer(renderer);
-	renderer = NULL;
-	SDL_DestroyWindow(window);
-	delete icon_bar;  icon_bar = NULL;
-	delete current_scene;
-	delete button_bar; button_bar = NULL;
 }
 
 bool canvas::handle_event_drawingarea(SDL_Event &event)
@@ -130,7 +130,7 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 	if (!left_mouse_down
 			&& event.button.button == SDL_BUTTON_LEFT) {
 
-		class wire *wr;
+		std::shared_ptr<class wire> wr;
 		bool is_port = false;
 		//		bool is_element = false;
 		bool is_wire = false;
@@ -139,8 +139,8 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 
 		if (dragging)
 			dragging->deselect();
-		dragging = NULL;
-		dragging_port = NULL;
+		dragging = nullptr;
+		dragging_port = nullptr;
 		left_mouse_down = true;
 		float x, y;
 
@@ -152,11 +152,10 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 
 		is_port = current_scene->is_port(x,y);
 
-		for (auto elem:	current_scene->elements) {
+		for (auto &elem : current_scene->elements) {
 			if (elem->intersect(x, y) && !elem->is_port(x,y)) {
-				//				printf("Start drag: %5.2f %5.2f \n", x, y);
-				if (dragging == NULL || dragging->is_background())
-					dragging = elem;
+				if (dragging == nullptr || dragging->is_background())
+					dragging = elem.get();
 			}
 		}
 
@@ -165,7 +164,7 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 		if (wr)
 			is_wire = true;
 		if (is_wire)
-			logger::get().debug("WR  {}", dragging != NULL);
+			logger::get().debug("WR  {}", dragging != nullptr);
 
 
 		if (!dragging && !is_wire && floating.size() == 0 && !is_port) {
@@ -176,14 +175,11 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 		}
 
 		if (!dragging && wr && !is_port && floating.size()==0) {
-			class wire *wr2;
-			class element *_element;
 			class port *port;
-			take_undo_snapshot(current_scene);
-			_element = new connector(x, y);
-			current_scene->add_element(_element);
+			take_undo_snapshot(current_scene.get());
+			current_scene->add_element(std::make_unique<connector>(x, y));
 
-			wr2 = wr->split();
+			auto wr2 = wr->split();
 			port = current_scene->is_port(x,y);
 			wr->add_port(port);
 			wr2->add_port(port);
@@ -191,8 +187,8 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 			port->add_wire(wr2);
 			wr->reseat();
 			wr2->reseat();
-			wr->route(current_scene);
-			wr2->route(current_scene);
+			wr->route(current_scene.get());
+			wr2->route(current_scene.get());
 			freshsplit = true;
 			current_scene->cycle_color();
 			current_scene->redo_nets();
@@ -201,20 +197,18 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 		if (!freshsplit) {
 			dragging_port = current_scene->is_port(x, y);
 			if (dragging && dragging->is_background() == false)
-				dragging_port = NULL;
+				dragging_port = nullptr;
 			if (dragging_port) {
 				dragging_port->screenX = x;
 				dragging_port->screenY = y;
 
 				best_port_to_autocomplete(dragging_port);
 
-				if (dragging_wire)
-					delete dragging_wire;
-				dragging_wire =new wire(floorf(x), 
+				dragging_wire = std::make_shared<wire>(floorf(x), 
 							floorf(y),
 							floorf(x),
 							floorf(y));
-				dragging = NULL;
+				dragging = nullptr;
 			}
 		}
 
@@ -223,13 +217,14 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 
 
 		if (floating.size() > 0) {
-			take_undo_snapshot(current_scene);
-			for (auto flt : floating) {
-				flt->reset_uuid();
-				current_scene->add_element(flt);
-				flt->stop_drag(this);
-				flt->reseat();
-				current_scene->rewire_section(flt);
+			take_undo_snapshot(current_scene.get());
+			for (auto &flt : floating) {
+				class element *raw = flt.get();
+				raw->reset_uuid();
+				current_scene->add_element(std::move(flt));
+				raw->stop_drag(this);
+				raw->reseat();
+				current_scene->rewire_section(raw);
 			}
 			floating.clear();
 
@@ -238,7 +233,7 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 					floating.push_back(active_icon->create_element());
 				} else {
 					active_icon->set_inactive();
-					active_icon = NULL;
+					active_icon = nullptr;
 				}
 			}
 		
@@ -249,27 +244,27 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 
 	}
 	if ( event.button.button == SDL_BUTTON_RIGHT) {
-		class element *here = NULL;
+		class element *here = nullptr;
 		float x, y;
-		dragging = NULL;
+		dragging = nullptr;
 
 		clear_floating();
 		if (active_icon)
 			active_icon->set_inactive();
-		active_icon = NULL;
+		active_icon = nullptr;
 
 		x = scr_to_X(event.motion.x);
 		y = scr_to_Y(event.motion.y);
-		for (auto elem:	current_scene->elements) {
+		for (auto &elem : current_scene->elements) {
 			if (elem->intersect(x, y)) {
-				if (here == NULL || elem->is_background() == false) {
+				if (here == nullptr || elem->is_background() == false) {
 					logger::get().debug("HERE {}", elem->class_id());
-					here = elem;
+					here = elem.get();
 				}
 			}
 		}
-		active_menu = NULL;
-		class wire *wr = current_scene->is_wire(x, y);
+		active_menu = nullptr;
+		auto wr = current_scene->is_wire(x, y);
 		class port *is_port = current_scene->is_port(x,y);
 
 
@@ -295,10 +290,10 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 		x = scr_to_X(event.motion.x);
 		y = scr_to_Y(event.motion.y);
 
-		class element *here = NULL;
-		for (auto elem:	current_scene->elements) {
+		class element *here = nullptr;
+		for (auto &elem : current_scene->elements) {
 			if (elem->intersect(x, y) && elem->class_id() == "connector:") {
-				here = elem;
+				here = elem.get();
 			}
 		}
 
@@ -335,17 +330,16 @@ bool canvas::handle_event_iconarea(SDL_Event &event)
 		clear_floating();
 	} else {
 		if (this_icon)
-			active_icon = NULL;
+			active_icon = nullptr;
 	}
 
 	if (active_icon) {
 		if (floating.size() == 0) {
-			class element *elem;
-			elem = active_icon->create_element();
+			auto elem = active_icon->create_element();
 			if (elem) {
 				elem->place(mouseX, mouseY);
 				elem->start_drag(mouseX, mouseY);	
-				floating.push_back(elem);
+				floating.push_back(std::move(elem));
 			}
 		}
 	} else {
@@ -361,7 +355,7 @@ bool canvas::handle_event(SDL_Event &event)
 	bool leave = false;
 	bool someone_in_editmode = false;
 
-	if (SDL_GetTicks64() - mouse_timestamp > 1000 && active_menu == NULL) 
+	if (SDL_GetTicks64() - mouse_timestamp > 1000 && active_menu == nullptr) 
 		tooltip_eligable = true;
 	else
 		tooltip_eligable = false;
@@ -370,42 +364,36 @@ bool canvas::handle_event(SDL_Event &event)
 		icon_bar->create_menu();
 
 
-	if (event.type == EVENT_AUTOCLOCK && event.user.data1 == current_scene) {
-		take_undo_snapshot(current_scene);
-		callback_autoclock(current_scene);
+	if (event.type == EVENT_AUTOCLOCK && event.user.data1 == current_scene.get()) {
+		take_undo_snapshot(current_scene.get());
+		callback_autoclock(current_scene.get());
 	}
 
 
-	if (event.type == EVENT_REWIRE && event.user.data1 == current_scene) {
-		take_undo_snapshot(current_scene);
-		callback_reroute(current_scene);
+	if (event.type == EVENT_REWIRE && event.user.data1 == current_scene.get()) {
+		take_undo_snapshot(current_scene.get());
+		callback_reroute(current_scene.get());
 	}
 
-	if (event.type == EVENT_RUN_VERILOG && event.user.data1 == current_scene) {
-		class synth *dialog = new class synth(main_area_rect.w + ui_area_rect.w + button_rect.w, main_area_rect.h, projectname, "");
-
-		set_dialog(dialog);
+	if (event.type == EVENT_RUN_VERILOG && event.user.data1 == current_scene.get()) {
+		set_dialog(std::make_unique<class synth>(main_area_rect.w + ui_area_rect.w + button_rect.w, main_area_rect.h, projectname, ""));
 	}
-	if (event.type == EVENT_PROGRAM_FPGA && event.user.data1 == current_scene) {
-		class synth *dialog = new class synth(main_area_rect.w + ui_area_rect.w + button_rect.w, main_area_rect.h, projectname, "program");
-
-		set_dialog(dialog);
+	if (event.type == EVENT_PROGRAM_FPGA && event.user.data1 == current_scene.get()) {
+		set_dialog(std::make_unique<class synth>(main_area_rect.w + ui_area_rect.w + button_rect.w, main_area_rect.h, projectname, "program"));
 	}
 
-	if (event.type == EVENT_CLOSE_DIALOG && event.user.data1 == current_scene) {
-		if (dialogbox)
-			delete dialogbox;
-		dialogbox = NULL;
+	if (event.type == EVENT_CLOSE_DIALOG && event.user.data1 == current_scene.get()) {
+		dialogbox.reset();
 	}
 
-	if (event.type == EVENT_SEQUENCER_RESET && event.user.data1 == current_scene) {
-		for (auto elem : current_scene->elements)
+	if (event.type == EVENT_SEQUENCER_RESET && event.user.data1 == current_scene.get()) {
+		for (auto &elem : current_scene->elements)
 			elem->reset_pointer();
 	}
-	if (event.type == EVENT_ZOOM_TO_FIT && event.user.data1 == current_scene) {  /* zoom to fit the screen */
+	if (event.type == EVENT_ZOOM_TO_FIT && event.user.data1 == current_scene.get()) {  /* zoom to fit the screen */
 		fittoscreen = true;
 		float bX1 = current_scene->sizeX, bY1 = current_scene->sizeY, bX2 = 0, bY2 = 0;
-		for (auto elem : current_scene->elements) {
+		for (auto &elem : current_scene->elements) {
 			if (elem->get_X() < bX1)
 				bX1 = elem->get_X();
 			if (elem->get_Y() < bY1)
@@ -441,7 +429,7 @@ bool canvas::handle_event(SDL_Event &event)
 	}
 
 
-	for (auto elem : current_scene->elements)
+	for (auto &elem : current_scene->elements)
 		if (elem->in_edit_mode())
 			someone_in_editmode = true;
 	switch (event.type) {
@@ -584,19 +572,18 @@ bool canvas::handle_event(SDL_Event &event)
 					break;
 				case SDLK_ESCAPE:
 					clear_floating();
-					active_menu = NULL;
+					active_menu = nullptr;
 					if (active_icon)
 						active_icon->set_inactive();
-					active_icon = NULL;
+					active_icon = nullptr;
 					current_scene->deselect_all();
 					break;
 				case SDLK_BACKSPACE:
 					if (!someone_in_editmode) {
-						take_undo_snapshot(current_scene);
-						if (hover_wire) {
-							hover_wire->remove();
-							delete hover_wire;
-							hover_wire = NULL;
+						take_undo_snapshot(current_scene.get());
+						if (auto hw = hover_wire.lock()) {
+							hw->remove();
+							hover_wire.reset();
 						}
 						current_scene->delete_selection();
 						current_scene->process_delete_requests();
@@ -606,8 +593,8 @@ bool canvas::handle_event(SDL_Event &event)
 					break;
 				case SDLK_SPACE:
 					if (!someone_in_editmode) {
-						take_undo_snapshot(current_scene);
-						for (auto elem : current_scene->elements) {
+						take_undo_snapshot(current_scene.get());
+						for (auto &elem : current_scene->elements) {
 							if (!elem->is_selected())
 								continue;
 							elem->rotate_ports();
@@ -617,12 +604,11 @@ bool canvas::handle_event(SDL_Event &event)
 				case SDLK_TAB:
 					if (!someone_in_editmode) {
 						if (autocomplete.size() > 0)
-							take_undo_snapshot(current_scene);
+							take_undo_snapshot(current_scene.get());
 						apply_autocomplete();
 						if (dragging_wire) {
-							delete dragging_wire;
-							dragging_wire = NULL;
-							dragging_port = NULL;
+							dragging_wire.reset();
+							dragging_port = nullptr;
 						}
 
 					}
@@ -657,16 +643,13 @@ bool canvas::handle_event(SDL_Event &event)
 					if (event.key.keysym.mod & KMOD_LCTRL) {
 						zap_autocomplete();
 						logger::get().debug("UNDO");
-						class scene *oldscene;
-						oldscene = swap_scene(get_undo());
-						if (oldscene)
-							delete(oldscene);
+						swap_scene(get_undo());
 						current_scene->redo_nets();
 					}
 					break;
 				case SDLK_a:
 					if (event.key.keysym.mod & KMOD_LCTRL) {
-						for (auto elem : current_scene->elements) {
+						for (auto &elem : current_scene->elements) {
 							elem->select();
 						}
 					}
@@ -690,7 +673,7 @@ bool canvas::handle_event(SDL_Event &event)
 					if (event.key.keysym.mod & KMOD_LCTRL) {
 						json p;
 
-						take_undo_snapshot(current_scene);
+						take_undo_snapshot(current_scene.get());
 						current_scene->selection_to_json(p);
 						clipboard = p.dump();
 						current_scene->delete_selection();
@@ -706,7 +689,7 @@ bool canvas::handle_event(SDL_Event &event)
 						logger::get().debug("paste");
 						json p = json::parse(clipboard);
 						from_json_to_floating(p);
-						for (auto elem : floating) {
+						for (auto &elem : floating) {
 							if (elem->get_X() < x1)
 								x1 = elem->get_X();
 							if (elem->get_X() + elem->get_width() > x2)
@@ -716,7 +699,7 @@ bool canvas::handle_event(SDL_Event &event)
 							if (elem->get_Y() + elem->get_height() > y2)
 								y2 = elem->get_Y() + elem->get_height();
 						}
-						for (auto elem : floating) {
+						for (auto &elem : floating) {
 							elem->start_drag((x1+x2)/2, (y1+y2)/2);
 							elem->reseat();
 						}
@@ -737,7 +720,7 @@ bool canvas::handle_event(SDL_Event &event)
 				x = scr_to_X(event.motion.x);
 				y = scr_to_Y(event.motion.y);
 				active_menu->mouse_click(x,y);
-				active_menu = NULL;
+				active_menu = nullptr;
 				current_scene->process_delete_requests();
 				break;
 			}
@@ -760,7 +743,7 @@ bool canvas::handle_event(SDL_Event &event)
 				}
 				if (dragging) {
 					logger::get().debug("Up");
-					take_undo_snapshot(current_scene);
+					take_undo_snapshot(current_scene.get());
 					if (!dragging->has_moved())  {
 						logger::get().debug("Click");
 						if (!dragging->mouse_select(x,y)) {
@@ -775,19 +758,18 @@ bool canvas::handle_event(SDL_Event &event)
 					current_scene->redo_nets();
 				}
 				if (dragging_port && !current_scene->is_port(x, y)) {
-					class wire *wr;
-					class element *_element;
+					std::shared_ptr<class wire> wr;
 
-					take_undo_snapshot(current_scene);
+					take_undo_snapshot(current_scene.get());
 
 					wr = current_scene->is_wire(x, y);
 					if (wr) {
-						class wire *wr2;
 						class port *port;
-						_element = new connector(x, y);
-						current_scene->add_element(_element);
+						auto conn = std::make_unique<connector>(x, y);
+						class element *_element = conn.get();
+						current_scene->add_element(std::move(conn));
 
-						wr2 = wr->split();
+						auto wr2 = wr->split();
 						port = current_scene->is_port(x,y);
 						if (!port)
 							logger::get().debug("No port found");
@@ -799,14 +781,13 @@ bool canvas::handle_event(SDL_Event &event)
 						port->add_wire(wr2);
 						wr->reseat();
 						wr2->reseat();
-						wr->route(current_scene);
-						wr2->route(current_scene);
+						wr->route(current_scene.get());
+						wr2->route(current_scene.get());
 						_element->reroute_all_wires();
 						logger::get().debug("new split code");
 					} else {
 						logger::get().debug("not new split code");
-						_element = new connector(x, y);
-						current_scene->add_element(_element);
+						current_scene->add_element(std::make_unique<connector>(x, y));
 					}
 
 					current_scene->cycle_color();
@@ -816,26 +797,23 @@ bool canvas::handle_event(SDL_Event &event)
 					class port *port2 = current_scene->is_port(x, y);
 
 					if (dragging_port != port2) {
-						take_undo_snapshot(current_scene);
+						take_undo_snapshot(current_scene.get());
 						zap_autocomplete();
 						dragging_port->add_wire(dragging_wire);
 						port2->add_wire(dragging_wire);
 						dragging_wire->reseat();
-						dragging_wire->route(current_scene);
-						dragging_wire = NULL;
+						dragging_wire->route(current_scene.get());
+						dragging_wire.reset();
 						logger::get().debug("Connection made");
 
 						current_scene->redo_nets();
 						create_autocomplete_from_wire(dragging_port, port2);
 					}
 				} 
-				dragging = NULL;
-				dragging_port = NULL;
+				dragging = nullptr;
+				dragging_port = nullptr;
 				left_mouse_down = false;
-				if (dragging_wire) {
-					delete dragging_wire;
-				}
-				dragging_wire = NULL;
+				dragging_wire.reset();
 			}
 			if (event.button.button == SDL_BUTTON_MIDDLE) {
 				float x, y;
@@ -845,7 +823,7 @@ bool canvas::handle_event(SDL_Event &event)
 				middle_Y = event.motion.y;
 				if (dragging) {
 					logger::get().debug("Up");
-					take_undo_snapshot(current_scene);
+					take_undo_snapshot(current_scene.get());
 					if (!dragging->has_moved())  {
 						logger::get().debug("Click");
 						if (!dragging->mouse_select(x,y)) {
@@ -856,7 +834,7 @@ bool canvas::handle_event(SDL_Event &event)
 					}
 					if (dragging->stop_drag(this))
 						current_scene->rewire_section(dragging);
-					dragging = NULL;
+					dragging = nullptr;
 
 				}
 			}
@@ -871,7 +849,7 @@ bool canvas::handle_event(SDL_Event &event)
 			y = scr_to_Y(event.motion.y);
 
 			if (active_menu && !active_menu->mouse_in_bounds(x,y))
-				active_menu = NULL;
+				active_menu = nullptr;
 
 			if (active_menu)
 				active_menu->mouse_motion(x,y);
@@ -895,31 +873,31 @@ bool canvas::handle_event(SDL_Event &event)
 				}
 
 				current_scene->deselect_all();
-				for (auto elem : current_scene->elements) {
+				for (auto &elem : current_scene->elements) {
 					if (elem->get_X() >= X1 && elem->get_X()+elem->get_width() <= X2 && elem->get_Y() >= Y1 && elem->get_Y()+elem->get_height() <= Y2)
 						elem->select();
 				}
 			}
 
-			if (hover_wire)
-				hover_wire->deselect();
+			if (auto hw = hover_wire.lock())
+				hw->deselect();
 			hover_wire = current_scene->is_wire(x, y);
-			if (hover_wire)
-				hover_wire->select();
+			if (auto hw = hover_wire.lock())
+				hw->select();
 
 			if (dragging) {
-				dragging->update_drag(this, current_scene,
+				dragging->update_drag(this, current_scene.get(),
 						scr_to_X(event.motion.x),
 						scr_to_Y(event.motion.y));
 			}
-			for (auto flt : floating) {
-				flt->update_drag(this, current_scene,
+			for (auto &flt : floating) {
+				flt->update_drag(this, current_scene.get(),
 						scr_to_X(event.motion.x),
 						scr_to_Y(event.motion.y));
 			}
 			if (dragging_wire) {
 				bool banned = false;
-				for (auto elem:	current_scene->elements) {
+				for (auto &elem : current_scene->elements) {
 					if (elem->intersect(x, y) && !elem->is_port(x,y) && elem->is_background() == false)
 						banned = true;
 				}
@@ -1003,12 +981,12 @@ bool canvas::handle_event(SDL_Event &event)
 					ui_area_rect.h = event.window.data2;
 					icon_bar->resize(ui_area_rect);
 					if (fittoscreen)
-						callback_fit_to_screen2(current_scene);
+						callback_fit_to_screen2(current_scene.get());
 					if (dialogbox)
 						dialogbox->update_screen_size(event.window.data1, event.window.data2);
 					break;
 				case SDL_WINDOWEVENT_CLOSE:   /* user clicked the 'x' */
-					SDL_HideWindow(window);
+					SDL_HideWindow(window.get());
 					leave = true;
 					break;
 				case SDL_WINDOWEVENT_FOCUS_GAINED:
@@ -1021,7 +999,7 @@ bool canvas::handle_event(SDL_Event &event)
 			break;
 	}
 
-	for (auto elem : current_scene->elements)
+	for (auto &elem : current_scene->elements)
 		elem->handle_event(this, event);
 	button_bar->handle_event(event);
 	icon_bar->handle_event(event);
@@ -1040,14 +1018,14 @@ void canvas::draw(void)
 		
 	/* first, draw the lighter gray background */
 
-	SDL_SetRenderDrawColor(renderer, R(COLOR_BACKGROUND_GRID),
+	SDL_SetRenderDrawColor(renderer.get(), R(COLOR_BACKGROUND_GRID),
 			G(COLOR_BACKGROUND_GRID),
 			B(COLOR_BACKGROUND_GRID),
 			Alpha(COLOR_BACKGROUND_GRID));
-	SDL_RenderClear(renderer);
+	SDL_RenderClear(renderer.get());
 	basecanvas::draw();
 	icon_bar->draw();
-	SDL_RenderSetClipRect(renderer, &main_area_rect);
+	SDL_RenderSetClipRect(renderer.get(), &main_area_rect);
 
 	/* then fill in the darger gray grid to keep lines */
 	float X = 0, Y = 0;
@@ -1064,36 +1042,31 @@ void canvas::draw(void)
 
 	if (draw_grid) {
 		int x, y;
-		class wiregrid * grid = new wiregrid(current_scene->sizeX, current_scene->sizeY);
-		current_scene->fill_grid(grid);
+		wiregrid grid(current_scene->sizeX, current_scene->sizeY);
+		current_scene->fill_grid(&grid);
 
 		for (y = 0; y < current_scene->sizeY ; y++)
 			for (x = 0; x < current_scene->sizeX ; x++) {
-				float c = grid->get_soft_cost(x, y);
+				float c = grid.get_soft_cost(x, y);
 				if (c > 0.01) {
 					draw_box(x + 0.1, y + 0.1, x + 0.9, y + 0.9, COLOR_ELEMENT_GHOST, 64 * c);
 				}
-				if (grid->is_blocked(x,y)) {
+				if (grid.is_blocked(x,y)) {
 					draw_box(x + 0.1, y + 0.1, x + 0.9, y + 0.9, COLOR_ELEMENT_DND);
 				} 
-				//				if (current_scene->is_port(x,y)) {
-				//					draw_circle(x + 0.5, y + 0.5, 2, COLOR_VALUE_RED);
-				//				}
 			}
-
-		delete grid;
 	}
 
 	/* draw the elements */
-	for (auto const elem: current_scene->elements) {
-		if (elem != dragging)
+	for (auto const &elem : current_scene->elements) {
+		if (elem.get() != dragging)
 			elem->draw_early(this, DRAW_NORMAL);
 		else
 			elem->draw_early(this, DRAW_ORIGIN);
 	}
 
-	for (auto const elem: current_scene->elements) {
-		if (elem != dragging)
+	for (auto const &elem : current_scene->elements) {
+		if (elem.get() != dragging)
 			elem->draw(this, DRAW_NORMAL);
 		else
 			elem->draw(this, DRAW_ORIGIN);
@@ -1105,7 +1078,7 @@ void canvas::draw(void)
 		dragging->draw(this, DRAW_GHOST);
 		dragging->draw(this, DRAW_DND);
 	}
-	for (auto flt : floating) {
+	for (auto &flt : floating) {
 		flt->draw_early(this, DRAW_GHOST);
 		flt->draw_early(this, DRAW_DND);
 		flt->draw(this, DRAW_GHOST);
@@ -1123,8 +1096,8 @@ void canvas::draw(void)
 		dragging_wire->draw(this, color);
 	}
 
-	for (auto const elem: current_scene->elements) {
-		if (elem != dragging)
+	for (auto const &elem : current_scene->elements) {
+		if (elem.get() != dragging)
 			elem->draw_phase2(this, DRAW_NORMAL);
 	}
 
@@ -1150,10 +1123,10 @@ void canvas::draw(void)
 			Y2 = mouseY;
 		}
 
-		draw_image(area_select_texture, X1, Y1, X2-X1, Y2-Y1, 64);
+		draw_image(area_select_texture.get(), X1, Y1, X2-X1, Y2-Y1, 64);
 	}
 
-	SDL_RenderSetClipRect(renderer, NULL);
+	SDL_RenderSetClipRect(renderer.get(), nullptr);
 	if (fps > 0)
 		button_bar->set_fps(fps);
 	button_bar->draw_at(this, button_rect.w, button_rect.h);
@@ -1180,7 +1153,7 @@ void canvas::draw(void)
 	draw_autocomplete();
 
 	if (active_menu) {
-		SDL_RenderSetClipRect(renderer, NULL);
+		SDL_RenderSetClipRect(renderer.get(), nullptr);
 		active_menu->draw_at(this);
 	}
 
@@ -1196,20 +1169,20 @@ static void fill_scale(void)
 	if (scale > 0)
 		return;
 	float dpi;
-	SDL_GetDisplayDPI(0, &dpi, NULL, NULL);
+	SDL_GetDisplayDPI(0, &dpi, nullptr, nullptr);
 	if (dpi < 90)
 		dpi = 96;
 	scale = 1.3 * 96.0 / dpi;
 }
 
 
-void canvas::draw_tooltip(float X, float Y, std::string tooltip)
+void canvas::draw_tooltip(float X, float Y, std::string_view tooltip)
 {
-	SDL_Texture *text, *shade;
+	SDL_Texture *text;
 	fill_scale();
 
-	text = text_to_texture(tooltip)	;
-	shade = load_image("assets/gray.png");
+	text = text_to_texture(tooltip);
+	sdl::TexturePtr shade = load_image("assets/gray.png");
 	if (!text)
 		return;
 
@@ -1217,7 +1190,7 @@ void canvas::draw_tooltip(float X, float Y, std::string tooltip)
 	SDL_Point size;
 	int x, y;
 
-	SDL_QueryTexture(text, NULL, NULL, &size.x, &size.y);
+	SDL_QueryTexture(text, nullptr, nullptr, &size.x, &size.y);
 
 	x = X_to_scr(X);
 	if (x > size.x/scale) 
@@ -1232,9 +1205,9 @@ void canvas::draw_tooltip(float X, float Y, std::string tooltip)
 	rect.w = size.x/scale;
 	rect.h = size.y/scale;
 
-	SDL_RenderSetClipRect(renderer, NULL);	
-	SDL_RenderCopy(renderer, shade, NULL, &rect);
-	SDL_RenderCopy(renderer, text, NULL, &rect);
+	SDL_RenderSetClipRect(renderer.get(), nullptr);	
+	SDL_RenderCopy(renderer.get(), shade.get(), nullptr, &rect);
+	SDL_RenderCopy(renderer.get(), text, nullptr, &rect);
 }
 
 
@@ -1247,22 +1220,16 @@ void canvas::to_json(json& j)
 	j["scaleY"] = scaleY;
 }
 
-class scene * canvas::swap_scene(class scene *scene)
+std::unique_ptr<class scene> canvas::swap_scene(std::unique_ptr<class scene> scene)
 {
-	class scene *tmp;
-
 	if (!scene)
-		return NULL;
-	tmp = current_scene;
-	current_scene = scene;
+		return nullptr;
+	auto tmp = std::move(current_scene);
+	current_scene = std::move(scene);
 	return tmp;
 }
 
 #define UNDO_DEPTH 16
-
-
-
-static std::vector<std::string> undo_list;
 
 void canvas::take_undo_snapshot(class scene *scene)
 {
@@ -1280,18 +1247,17 @@ void canvas::take_undo_snapshot(class scene *scene)
 }
 
 
-class scene *canvas::get_undo(void)
+std::unique_ptr<class scene> canvas::get_undo(void)
 {
-	class scene *scene;
 	std::string s;
 	json J;
 
 	clear_wire_factory();
 
 	if (undo_list.size() == 0)
-		return NULL;
+		return nullptr;
 
-	scene = new class scene(current_scene->get_name());
+	auto scene = std::make_unique<class scene>(current_scene->get_name());
 	s = undo_list[undo_list.size() -1];
 
 	undo_list.pop_back();
@@ -1311,9 +1277,9 @@ void canvas::from_json_to_floating(json &j)
 	for (i = 0; i <j["elements"].size(); i++) {
 		json p = j["elements"][i];
 		std::string cid = p["class_id"];
-		class element *element = element_from_class_id(cid);
+		auto element = element_from_class_id(cid);
 		element->from_json(p);
-		floating.push_back(element);
+		floating.push_back(std::move(element));
 	}
 	clear_wire_factory();
 	wire_factory_force_new_name = saved;
@@ -1326,7 +1292,7 @@ void canvas::update_window_title(void)
 	std::string s;
 
 	s = "GridCad " + current_scene->get_full_name();
-	SDL_SetWindowTitle(window, s.c_str());
+	SDL_SetWindowTitle(window.get(), s.c_str());
 }
 
 float canvas::distance_from_mouse(float X, float Y)
@@ -1336,8 +1302,6 @@ float canvas::distance_from_mouse(float X, float Y)
 
 void canvas::clear_floating(void)
 {
-	for (auto elem : floating)
-		delete elem;
 	floating.clear();
 }
 
@@ -1351,11 +1315,6 @@ float canvas::screen_width(void)
 
 void canvas::zap_autocomplete(void)
 {
-	for (auto a : autocomplete) {
-		if (a->tempwire)
-			delete a->tempwire;
-		delete a;
-	}
 	autocomplete.clear();
 }
 
@@ -1387,7 +1346,7 @@ static std::string numeric_end(std::string input)
 
 void canvas::draw_autocomplete(void)
 {
-	for (auto autoc : autocomplete) 
+	for (auto &autoc : autocomplete) 
 		if (autoc->tempwire) {
 			autoc->tempwire->draw(this, COLOR_ELEMENT_GHOST);
 		}
@@ -1395,7 +1354,7 @@ void canvas::draw_autocomplete(void)
 
 void canvas::create_autocomplete_from_wire(class port *first, class port *second)
 {
-	class element *frome = NULL, *toe = NULL;
+	class element *frome = nullptr, *toe = nullptr;
 	int from_port_index = -100;
 	int to_port_index = -100;
 
@@ -1404,14 +1363,14 @@ void canvas::create_autocomplete_from_wire(class port *first, class port *second
 	logger::get().debug("Creating multiwire autocomplete");	
 
 
-	for (auto elem : current_scene->elements) {
+	for (auto &elem : current_scene->elements) {
 		if (elem->has_port(first) >= 0) {
 			from_port_index = elem->has_port(first);
-			frome = elem;
+			frome = elem.get();
 		}
 		if (elem->has_port(second) >= 0) {
 			to_port_index = elem->has_port(second);
-			toe = elem;
+			toe = elem.get();
 		}
 	}
 
@@ -1447,17 +1406,17 @@ void canvas::create_autocomplete_from_wire(class port *first, class port *second
 			break;
 
 
-		class autocomplete_element *autoc = new class autocomplete_element();
+		auto autoc = std::make_unique<class autocomplete_element>();
 		autoc->from = frome;
 		autoc->to = toe;
 		autoc->from_port = candidate_from;
 		autoc->to_port = candidate_to;
 
 		if (candidate_to->direction == PORT_IN)
-			autoc->tempwire = new class wire(autoc->to_port->screenX, autoc->to_port->screenY, autoc->from_port->screenX, autoc->from_port->screenY, 0);
+			autoc->tempwire = std::make_shared<class wire>(autoc->to_port->screenX, autoc->to_port->screenY, autoc->from_port->screenX, autoc->from_port->screenY, 0);
 		else
-			autoc->tempwire = new class wire(autoc->from_port->screenX, autoc->from_port->screenY, autoc->to_port->screenX, autoc->to_port->screenY, 0);
-		autocomplete.push_back(autoc);
+			autoc->tempwire = std::make_shared<class wire>(autoc->from_port->screenX, autoc->from_port->screenY, autoc->to_port->screenX, autoc->to_port->screenY, 0);
+		autocomplete.push_back(std::move(autoc));
 
 		from_port_index++;
 		to_port_index++;
@@ -1470,10 +1429,9 @@ void canvas::create_autocomplete_from_wire(class port *first, class port *second
 
 void canvas::apply_autocomplete(void)
 {
-	class port *p1 = NULL, *p2 = NULL;
-	for (auto autoc : autocomplete) {
-		class wire *wire = autoc->tempwire;
-		autoc->tempwire = NULL;
+	class port *p1 = nullptr, *p2 = nullptr;
+	for (auto &autoc : autocomplete) {
+		auto wire = std::move(autoc->tempwire);
 
 		wire->add_port(autoc->from_port);
 		wire->add_port(autoc->to_port);
@@ -1520,29 +1478,29 @@ static bool width_compatible(class port *one, class port *two)
 
 void canvas::best_port_to_autocomplete(class port *origin)
 {
-	class port *target = NULL;
-	class element *targete = NULL;
-	class element *sourcee = NULL;
+	class port *target = nullptr;
+	class element *targete = nullptr;
+	class element *sourcee = nullptr;
 	double target_dist = 500*500*1000;
 
 	zap_autocomplete();
 
-	for (auto elem : current_scene->elements) {
+	for (auto &elem : current_scene->elements) {
 		unsigned int i = 0;
-		class port *p = NULL;
+		class port *p = nullptr;
 		do {
 			p = elem->port_at(i);
 			if (!p)
 				break;
 			i++;
 			if (p == origin)
-				sourcee = elem;
+				sourcee = elem.get();
 		} while(p);
 	}
 
-	for (auto elem : current_scene->elements) {
+	for (auto &elem : current_scene->elements) {
 		unsigned int i = 0;
-		class port *p = NULL;
+		class port *p = nullptr;
 		do {	
 			float dist;
 			p = elem->port_at(i);
@@ -1550,7 +1508,7 @@ void canvas::best_port_to_autocomplete(class port *origin)
 				break;
 			i++;
 			if (p == origin)
-				sourcee = elem;
+				sourcee = elem.get();
 			if (p->has_wires())
 				continue;
 			if (!direction_compatible(origin, p))
@@ -1558,7 +1516,7 @@ void canvas::best_port_to_autocomplete(class port *origin)
 			if (!width_compatible(origin, p))
 				continue;
 
-			if (sourcee == elem)
+			if (sourcee == elem.get())
 				continue;
 
 			dist = distsq(origin->screenX, origin->screenY, p->screenX, p->screenY);
@@ -1570,23 +1528,23 @@ void canvas::best_port_to_autocomplete(class port *origin)
 			if (dist < target_dist) {
 				target_dist = dist;
 				target = p;
-				targete = elem;
+				targete = elem.get();
 			}
 
 		} while (p);
 	}
-	if (target == NULL || sourcee == NULL || targete == NULL)
+	if (target == nullptr || sourcee == nullptr || targete == nullptr)
 		return;
-	class autocomplete_element *autoc = new class autocomplete_element();
+	auto autoc = std::make_unique<class autocomplete_element>();
 	autoc->from = sourcee;
 	autoc->to = targete;
 	autoc->from_port = origin;
 	autoc->to_port = target;
 	if (target->direction == PORT_IN)
-		autoc->tempwire = new class wire(autoc->to_port->screenX, autoc->to_port->screenY, autoc->from_port->screenX, autoc->from_port->screenY, 0);
+		autoc->tempwire = std::make_shared<class wire>(autoc->to_port->screenX, autoc->to_port->screenY, autoc->from_port->screenX, autoc->from_port->screenY, 0);
 	else
-		autoc->tempwire = new class wire(autoc->from_port->screenX, autoc->from_port->screenY, autoc->to_port->screenX, autoc->to_port->screenY, 0);
-	autocomplete.push_back(autoc);
+		autoc->tempwire = std::make_shared<class wire>(autoc->from_port->screenX, autoc->from_port->screenY, autoc->to_port->screenX, autoc->to_port->screenY, 0);
+	autocomplete.push_back(std::move(autoc));
 
 
 }

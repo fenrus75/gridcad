@@ -29,10 +29,6 @@ model_8to16::model_8to16(float _X, float _Y)  : element(_X, _Y, "")
     add_port(sizeX, 3, "0-15", PORT_OUT, 16);
 }
 
-model_8to16::~model_8to16(void)
-{
-}
-
 void model_8to16::drawAt(class basecanvas *canvas, float X, float Y, int type)
 {
     int alpha = Alpha(type);
@@ -43,7 +39,7 @@ void model_8to16::drawAt(class basecanvas *canvas, float X, float Y, int type)
         canvas->draw_image_rotated("assets/8to16.png", X, Y, sizeX , sizeY, alpha, angle);
     }
     hover_ports(canvas);
-    for (auto port: ports) {
+    for (auto &port : ports) {
         port->drawAt(canvas, X, Y, type);
 	port->draw_wires(canvas);
     }

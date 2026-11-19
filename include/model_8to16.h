@@ -7,7 +7,6 @@ class model_8to16 : public element
 {
 public:
     model_8to16(float X, float Y);
-    virtual ~model_8to16(void);
     virtual std::string class_id(void) { return "model_8to16:";};
     
     void drawAt(class basecanvas *canvas, float X, float Y, int type) override;

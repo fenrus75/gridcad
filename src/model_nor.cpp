@@ -18,10 +18,6 @@ model_nor::model_nor(float _X, float _Y)  : model_logic2(_X, _Y, "assets/norgate
     selected_filename = "assets/norgate_selected.png";
 }
 
-model_nor::~model_nor(void)
-{
-}
-
 void model_nor::calculate(int ttl)
 {
     struct value result = {};

@@ -18,12 +18,16 @@
 #include "wirepath.h"
 #include "capabilities.h"
 #include "logger.h"
+#include "sdl_raii.h"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
+#include <functional>
+#include <memory>
 #include <vector>
 #include <string>
+#include <string_view>
 #include <format>
 #include <map>
 
@@ -72,10 +76,10 @@ class basecanvas
 {
 public:
     basecanvas(void);
-    virtual ~basecanvas(void);
+    virtual ~basecanvas(void) = default;
     virtual bool handle_event(SDL_Event &event) = 0;
     virtual void draw(void) = 0;
-    virtual void present(void) { SDL_RenderPresent(renderer); };
+    virtual void present(void) { SDL_RenderPresent(renderer.get()); };
     unsigned int get_window_ID(void) { return windowID;};
 
 
@@ -95,23 +99,21 @@ public:
     void draw_thick_line(float X1, float Y1, float X2, float Y2, int color);
     void draw_shadow_Line(float X1, float Y1, float X2, float Y2, int color);
 
-    SDL_Texture *load_image(const char *filename);
-    SDL_Texture *load_image(std::string filename);
+    sdl::TexturePtr load_image(std::string_view filename);
     void draw_image(SDL_Texture *image, float X, float Y, float W, float H, int alpha=255, bool keepaspect = false);
-    void draw_image(std::string filename, float X, float Y, float W, float H, int alpha=255, bool keepaspect = false);
+    void draw_image(std::string_view filename, float X, float Y, float W, float H, int alpha=255, bool keepaspect = false);
     void draw_image_rotated(SDL_Texture *image, float X, float Y, float W, float H, int alpha=255, int angle = 0);
-    void draw_image_rotated(std::string filename, float X, float Y, float W, float H, int alpha=255, int angle = 0);
+    void draw_image_rotated(std::string_view filename, float X, float Y, float W, float H, int alpha=255, int angle = 0);
     void draw_image_fragment(SDL_Texture *image, float X, float Y, float W, float H, int fromX, int fromY, int w, int h, int angle = 0);
-    void draw_image_fragment(std::string filename, float X, float Y, float W, float H, int fromX, int fromY, int w, int h, int angle = 0);
-    SDL_Texture *text_to_texture(const char *text);
-    SDL_Texture *text_to_texture(std::string text);
-    void draw_text(std::string text, float X, float Y, float W, float H);
-    void draw_text_left(std::string text, float X, float Y, float W, float H);
+    void draw_image_fragment(std::string_view filename, float X, float Y, float W, float H, int fromX, int fromY, int w, int h, int angle = 0);
+    SDL_Texture *text_to_texture(std::string_view text);
+    void draw_text(std::string_view text, float X, float Y, float W, float H);
+    void draw_text_left(std::string_view text, float X, float Y, float W, float H);
     void unhide(void);
     bool canvas_has_focus(void) { return has_focus; };
     void set_fps(float _fps) { fps = _fps;};
     virtual float distance_from_mouse(float X, float Y) { return 0; };
-    virtual class scene* get_scene(void) { return NULL; };
+    virtual class scene* get_scene(void) { return nullptr; };
     virtual float screen_width(void) { return 0; };
 
 protected:
@@ -124,12 +126,14 @@ protected:
     uint64_t animation_start = 0; /* nosave */
     int animation_type = 0;
     bool in_animation = false; /* nosave */
-    unsigned int windowID = 0;    
-    SDL_Renderer *renderer = NULL;
-    SDL_Window *window = NULL;
-    TTF_Font *font = NULL;
-    std::map<std::string, SDL_Texture *> texture_cache;
-    std::map<std::string, SDL_Texture *> text_cache;
+    unsigned int windowID = 0;
+    /* Declared in lifecycle order: textures & font are destroyed before renderer, which is destroyed before window. */
+    sdl::WindowPtr window;
+    sdl::RendererPtr renderer;
+    sdl::FontPtr font;
+    sdl::TexturePtr render_text_to_texture(const char *text);
+    std::map<std::string, sdl::TexturePtr, std::less<>> texture_cache;
+    std::map<std::string, sdl::TexturePtr, std::less<>> text_cache;
     bool has_focus = true;
     float fps = -1.0;
 };
@@ -149,11 +153,11 @@ extern int B(int color);
 extern int Alpha(int color);
 extern int value_color(struct value *value);
 extern std::string value_color_texture(struct value *value);
-extern class element *element_from_class_id(std::string classid);
+extern std::unique_ptr<class element> element_from_class_id(std::string_view classid);
 
 extern bool wire_factory_force_new_name;
 
-extern class wire *json_wire_factory(json &jwire);
+extern std::shared_ptr<class wire> json_wire_factory(json &jwire);
 extern void clear_wire_factory(void);
 
 extern void register_new_canvas(class basecanvas *canvas);
@@ -162,7 +166,7 @@ extern void labelevent(SDL_Event &event, std::string *text);
 
 extern std::string generate_semi_uuid(void);
 extern std::string generate_wire_name(void);
-extern void populate_library(std::string directory);
+extern void populate_library(std::string_view directory);
 
 extern void queue_calculate(class element *element);
 extern void remove_from_calculate_queue(class element *element);
@@ -187,12 +191,12 @@ extern unsigned int SDL_timer_event;
 #define EVENT_SEQUENCER_RESET (SDL_timer_event + 15)
 
 extern void callback_editname(class element *element);
-extern SDL_Texture *IMG_LoadTextureFromMem(SDL_Renderer *renderer, const char *filename);
+extern sdl::TexturePtr IMG_LoadTextureFromMem(SDL_Renderer *renderer, const char *filename);
 extern int wire_to_color(int color);
 extern std::string wire_color_name(int color);
-extern std::string append_random_bits(std::string input);
-extern std::string path_to_template(std::string instr);
-extern std::string template_to_path(std::string instr);
+extern std::string append_random_bits(std::string_view input);
+extern std::string path_to_template(std::string_view instr);
+extern std::string template_to_path(std::string_view instr);
 
 extern std::chrono::steady_clock::time_point start_time;
 extern std::chrono::steady_clock::time_point exit_time;

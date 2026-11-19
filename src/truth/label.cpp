@@ -20,14 +20,10 @@ label::label(float X, float Y, float W, float H, std::string *_text) : widget(X,
     text = _text;
 }
 
-label::~label(void)
-{
-}
-
 void label::draw(class truthcanvas *canvas)
 {
     struct timeval tv;
-    gettimeofday(&tv, NULL);
+    gettimeofday(&tv, nullptr);
     if (_selected && tv.tv_usec > 500000) 
         canvas->draw_text(*text+"|", X1, Y1, X2-X1, Y2-Y1);
     else

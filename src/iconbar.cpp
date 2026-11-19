@@ -36,7 +36,7 @@ iconbar::iconbar(SDL_Renderer *_renderer, SDL_Rect _rect, class basecanvas *_can
 
 void oneiconbar::set_element(unsigned int X, unsigned int Y, std::string class_id, std::string filename, std::string tooltip, struct library_block *block)
 {
-	icons[X][Y] = new icon(renderer, class_id, filename, tooltip);
+	icons[X][Y] = std::make_unique<icon>(renderer, class_id, filename, tooltip);
 	cIndex = Y * 2 + X + 1;
 
 	if (Y >= icons[X].size())
@@ -60,18 +60,10 @@ void oneiconbar::insert_blank(void)
 }
 
 
-iconbar::~iconbar(void)
-{
-	for (auto one : icons) {
-		delete one;
-	}
-	delete menu;
-}
-
 void iconbar::resize(SDL_Rect _rect)
 {
 	rect = _rect;
-	for (auto one : icons)
+	for (auto &one : icons)
 		one->resize(_rect);
 }
 
@@ -87,7 +79,7 @@ void iconbar::draw(void)
 	int w, h;
 	float newH;
 
-	if (dropdown == NULL)
+	if (!dropdown)
 		dropdown = IMG_LoadTextureFromMem(renderer, "assets/icondropdown.png");     
 
 	if (current_icons)
@@ -99,13 +91,13 @@ void iconbar::draw(void)
 	drop.x = rect.x + 5;
 	drop.w = rect.w - 10;
 	drop.y = 5;
-	SDL_QueryTexture(dropdown, NULL, NULL, &w, &h);
+	SDL_QueryTexture(dropdown.get(), nullptr, nullptr, &w, &h);
 
 	newH = 1.0 * h/w * drop.w;
 	drop.h = newH;
 
-	SDL_SetTextureAlphaMod(dropdown, 255);
-	SDL_RenderCopy(renderer, dropdown, NULL, &drop);
+	SDL_SetTextureAlphaMod(dropdown.get(), 255);
+	SDL_RenderCopy(renderer, dropdown.get(), nullptr, &drop);
 }
 
 class icon * iconbar::current_icon(int ScreenX, int ScreenY)
@@ -116,9 +108,9 @@ class icon * iconbar::current_icon(int ScreenX, int ScreenY)
 class contextmenu * iconbar::get_menu(int ScreenX, int ScreenY)
 {
 	if (ScreenY < OFFSETY * 1.5) {
-		return menu;
+		return menu.get();
 	}
-	return NULL;
+	return nullptr;
 }
 
 std::string iconbar::current_tooltip(int ScreenX, int ScreenY)
@@ -186,10 +178,6 @@ icon::icon(SDL_Renderer *renderer, std::string _class_id, std::string filename, 
 		texture = IMG_LoadTextureFromMem(renderer, filename.c_str());
 }
 
-icon::~icon(void)
-{
-}
-
 void icon::assign_library_element(struct library_block block) 
 { 
 	lib = block;
@@ -209,7 +197,7 @@ void icon::draw(SDL_Renderer *renderer, float X, float Y, float width, float hei
 	float ratioX, ratioY;
 	float newwidth, newheight;
 
-	SDL_QueryTexture(texture, NULL, NULL, &w, &h);
+	SDL_QueryTexture(texture.get(), nullptr, nullptr, &w, &h);
 
 	ratioX = width / w;
 	ratioY = height / h;
@@ -232,10 +220,10 @@ void icon::draw(SDL_Renderer *renderer, float X, float Y, float width, float hei
 
 	SDL_SetRenderDrawColor(renderer, R(color), G(color), B(color),
 			Alpha(color));
-	SDL_SetTextureAlphaMod(texture, 255);
+	SDL_SetTextureAlphaMod(texture.get(), 255);
 	if (active)                              
 		SDL_RenderFillRect(renderer, &rect);
-	SDL_RenderCopy(renderer, texture, NULL, &rect);
+	SDL_RenderCopy(renderer, texture.get(), nullptr, &rect);
 
 	if (overlay != "") {
 		float newX, newY, newW, newH;
@@ -248,7 +236,7 @@ void icon::draw(SDL_Renderer *renderer, float X, float Y, float width, float hei
 	}
 }
 
-class element * icon::create_element(void)
+std::unique_ptr<class element> icon::create_element(void)
 {
 	if (class_id == "library")
 		return library_element();
@@ -256,11 +244,9 @@ class element * icon::create_element(void)
 }
 
 
-class element *icon::library_element(void)
+std::unique_ptr<class element> icon::library_element(void)
 {
-	class model_nest *element;
-
-	element = new model_nest(-10, -10);
+	auto element = std::make_unique<model_nest>(-10, -10);
 	element->load_scene_from_json(lib.logic);
 	element->update_name(lib.name);
 	element->set_icon(lib.icon, lib.icon_selected);
@@ -279,18 +265,6 @@ oneiconbar::oneiconbar(SDL_Renderer *_renderer, SDL_Rect _rect, std::string _nam
 
 	name = _name;
 	canvas = _canvas;
-}
-
-oneiconbar::~oneiconbar(void)
-{
-	unsigned int y,x;
-	//      printf("oneiconbar destructor\n");
-	for (y = 0; y < icons.size(); y++) {
-		for (x = 0; x < icons[y].size(); x++) {
-			delete icons[y][x];
-			icons[y][x] = NULL;
-		}
-	}
 }
 
 void oneiconbar::resize(SDL_Rect _rect)
@@ -356,7 +330,7 @@ class icon * oneiconbar::current_icon(int ScreenX, int ScreenY)
 	ScreenY -= 0.5 * SCALEY;
 
 	if (ScreenX < 0 || ScreenY <0) /* left of the icons */
-		return NULL;
+		return nullptr;
 
 	dX = (ScreenX - OFFSETX) / (2.5 * SCALEX);
 	dY = (ScreenY - OFFSETY)/ (2.5 * SCALEY);
@@ -365,18 +339,18 @@ class icon * oneiconbar::current_icon(int ScreenX, int ScreenY)
 	gridY = floor(dY);
 
 	if (gridX < 0)
-		return NULL;
+		return nullptr;
 	if (gridY < 0)
-		return NULL;    
+		return nullptr;    
 	if (gridX >= (int)icons.size())
-		return NULL;
+		return nullptr;
 	if (gridY >= (int)icons[gridX].size())
-		return NULL;
+		return nullptr;
 
 	if (icons[gridX][gridY])
 		icons[gridX][gridY]->set_active();
 
-	return icons[gridX][gridY];
+	return icons[gridX][gridY].get();
 
 }
 
@@ -421,14 +395,14 @@ void iconbar::next(void)
 {
 	if (active_index + 1 < icons.size())
 		active_index++;
-	current_icons = icons[active_index];
+	current_icons = icons[active_index].get();
 }
 
 void iconbar::previous(void)
 {
 	if (active_index >= 1)
 		active_index--;
-	current_icons = icons[active_index];
+	current_icons = icons[active_index].get();
 }
 
 
@@ -436,7 +410,7 @@ void iconbar::set(class oneiconbar *b)
 {
 	current_icons = b;
 	for (unsigned int i = 0; i < icons.size(); i++) {
-		if (icons[i] == b)
+		if (icons[i].get() == b)
 			active_index = i;
 	}
 }
@@ -445,19 +419,12 @@ void iconbar::create_menu(void)
 {
 	unsigned int li;
 
-	class oneiconbar *init_icon, *libtab;
-	if (menu) {
-		delete menu;
-		menu = NULL;
-	}
-
-	for (auto I : icons) {
-		delete I;
-	}
+	menu.reset();
+	current_icons = nullptr;
 	icons.clear();
 	libtabs.clear();
 
-	init_icon = new class oneiconbar(renderer, rect, "Logic", canvas);
+	auto init_icon = std::make_unique<class oneiconbar>(renderer, rect, "Logic", canvas);
 
 	init_icon->set_element("model_zero:", "assets/zero.png", "constant zero value");
 	init_icon->set_element("model_one:", "assets/one.png", "constant one value");
@@ -480,9 +447,10 @@ void iconbar::create_menu(void)
 	init_icon->set_element("model_datascope:", "assets/datascope.png", "Data scope");
 	init_icon->set_element("model_label:", "assets/label.png", "Area Label");
 
-	icons.push_back(init_icon);
-	current_icons = init_icon;    
-	init_icon = new class oneiconbar(renderer, rect, "Bus converters", canvas);    
+	current_icons = init_icon.get();
+	icons.push_back(std::move(init_icon));
+
+	init_icon = std::make_unique<class oneiconbar>(renderer, rect, "Bus converters", canvas);    
 	init_icon->set_element("model_4to1:", "assets/4to1.png", "Bus to 4 bits split");
 	init_icon->set_element("model_1to4:", "assets/1to4.png", "4 bits to Bus concentrator");
 	init_icon->set_element("model_8to1:", "assets/8to1.png", "Bus to 8 bits split");
@@ -491,31 +459,29 @@ void iconbar::create_menu(void)
 	init_icon->set_element("model_4to8:", "assets/4to8.png", "2 bus4 to bus8 concentrator");
 	init_icon->set_element("model_16to8:", "assets/16to8.png", "bus16 to 2 bus8 split");
 	init_icon->set_element("model_8to16:", "assets/8to16.png", "2 bus8 to bus16 concentrator");
-	icons.push_back(init_icon);
+	icons.push_back(std::move(init_icon));
 
-	init_icon = new class oneiconbar(renderer, rect, "Memory", canvas);
+	init_icon = std::make_unique<class oneiconbar>(renderer, rect, "Memory", canvas);
 	init_icon->set_element("model_memory:", "assets/memory.png", "8 Bit Memory");
 	init_icon->insert_blank();
 	init_icon->set_element("model_clock:", "assets/clock_on.png", "Clock");
 	init_icon->set_element("model_dflipflop:", "assets/dflipflop.png", "D flip flop");
-	icons.push_back(init_icon);
+	icons.push_back(std::move(init_icon));
 
 
 	for (li = 0; li < library.size(); li++) {
 		if (libtabs.find(library[li].collection) == libtabs.end()) {
-			libtab = new class oneiconbar(renderer, rect, library[li].collection, canvas);
-			libtabs[library[li].collection] = libtab;
-			icons.push_back(libtab);
+			auto newtab = std::make_unique<class oneiconbar>(renderer, rect, library[li].collection, canvas);
+			libtabs[library[li].collection] = newtab.get();
+			icons.push_back(std::move(newtab));
 		}
-		libtab = libtabs[library[li].collection];
+		class oneiconbar *libtab = libtabs[library[li].collection];
 		libtab->set_element("library", &library[li]);
 	}
 
-	if (menu)
-		delete menu;
-	menu = new icon_contextmenu(this);
-	for (auto ib : icons) {
-		menu->add_item(ib->get_name(), ib, callback_ib);
+	menu = std::make_unique<icon_contextmenu>(this);
+	for (auto &ib : icons) {
+		menu->add_item(ib->get_name(), ib.get(), callback_ib);
 	}
 
 }

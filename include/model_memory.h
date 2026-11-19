@@ -9,7 +9,6 @@ class model_memory : public element
 {
 public:
     model_memory(float X, float Y);
-    virtual ~model_memory(void);
     virtual std::string class_id(void) { return "model_memory:";};
 
 
@@ -34,8 +33,8 @@ private:
     std::vector<std::uint8_t> data;
     struct value previous_clock = {};
     unsigned int previous_address = 0;
-    class name *name_edit = NULL;
+    std::unique_ptr<class name> name_edit;
     std::string verilog_module_name = "";
-    class basecanvas *canvas = NULL;
+    std::unique_ptr<class basecanvas> canvas;
 };
 

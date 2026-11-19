@@ -33,22 +33,11 @@ wire::wire(int x1, int y1, int x2, int y2, int _color)
 	X2 = x2;
 	Y2 = y2;
 	color = _color;
-	refcount = 1;
 
-	points = NULL;
+	points.reset();
 	value = {};
 	name = generate_wire_name();;
 
-}
-
-wire::~wire(void)
-{
-	if (points)
-		delete points;
-	if (drawpoints)
-		delete drawpoints;
-	if (oldpoints)
-		delete oldpoints;
 }
 
 void wire::set_new_name(void)
@@ -63,7 +52,7 @@ static int current_interval(void)
 {
 	struct timeval tv;
 	double d;
-	gettimeofday(&tv, NULL);
+	gettimeofday(&tv, nullptr);
 	d = tv.tv_usec;
 
 	d = d * 60 / 1000000.0;
@@ -279,21 +268,16 @@ void wire::move_target(int X, int Y)
 	X2 = X;
 	Y2 = Y;
 	if (points) {
-		if (oldpoints)
-			delete oldpoints;
-		oldpoints = points;
+		oldpoints = std::move(points);
 	}
-	points = NULL;
+	points.reset();
 }
 
 void wire::clear_route(void)
 {
 	if (!points)
 		return;
-	if (oldpoints)
-		delete oldpoints;
-	oldpoints = points;
-	points = NULL;
+	oldpoints = std::move(points);
 }
 
 void wire::route(class scene *scene)
@@ -301,28 +285,19 @@ void wire::route(class scene *scene)
 	being_routed = true;
 	
 	if (points) {
-		if (oldpoints) 
-			delete oldpoints;
-			
-		oldpoints = points;
+		oldpoints = std::move(points);
 	}
 		
 
 //	printf("Routing wire\n");
 
-	class wiregrid * grid = new wiregrid(scene->sizeX, scene->sizeY);
+	wiregrid grid(scene->sizeX, scene->sizeY);
 
-	grid->is_clock = value.is_clock;
+	grid.is_clock = value.is_clock;
 
-	scene->fill_grid(grid);
+	scene->fill_grid(&grid);
 
-	points = grid->path_walk(X1, Y1, X2, Y2, value.is_clock);
-	//    printf("Walk is %i %i -> %i %i \n", X1, Y1, X2, Y2);
-	//    for (auto p: *points) {
-	//        printf("X, Y : %i, %i\n", p.X, p.Y);
-	//    }
-	//    printf("----\n");
-	delete(grid);
+	points = grid.path_walk(X1, Y1, X2, Y2, value.is_clock);
 
 	bool want_reverse = false;
 
@@ -398,11 +373,6 @@ void wire::check_reverse(void)
 	}
 	being_routed = false;
 	is_reversed = false;
-}
-
-void wire::get_ref(void)
-{
-	refcount++;
 }
 
 void wire::add_port(class port *port)
@@ -555,20 +525,23 @@ bool wire::intersect(float targetX, float targetY)
 
 void wire::remove(void)
 {
-	for (auto port : ports) {
+	/* Hold a strong reference while detaching from both endpoints so `this`
+	 * cannot be destroyed before the loop finishes. */
+	auto self = shared_from_this();
+	auto ports_copy = ports;
+	ports.clear();
+	for (auto port : ports_copy) {
 		port->remove_wire(this);
 	}
-	if (points)
-		delete points;
-	points = NULL;
+	points.reset();
 }
 
 
 /* returns a new wire. After this call both
    the current and new wire have one loose side */
-class wire *wire::split(void)
+std::shared_ptr<class wire> wire::split(void)
 {
-	class wire *wr = new wire(0, 0, 0, 0, color);
+	auto wr = std::make_shared<wire>(0, 0, 0, 0, color);
 
 	logger::get().debug("Splitting wire");
 	wr->update_value_final(&value, 100);    
@@ -616,13 +589,13 @@ void wire::from_json(json &j)
 	is_reversed = j.value("is_reversed", false);
 	distance_from_outport = j.value("distance_from_outport", INT_MAX);
 	if (j.contains("points")) {
-		points =  new std::vector<struct waypoint>;
+		points = std::make_unique<std::vector<struct waypoint>>();
 		*points = j["points"];
 	}
 }
 
 
-static std::map<std::string, class wire*> json_wires;
+static std::map<std::string, std::shared_ptr<class wire>> json_wires;
 
 void clear_wire_factory(void)
 {
@@ -631,23 +604,19 @@ void clear_wire_factory(void)
 
 bool wire_factory_force_new_name;
 
-class wire *json_wire_factory(json &jwire)
+std::shared_ptr<class wire> json_wire_factory(json &jwire)
 {
-	class wire *_wire;
 	if (json_wires.find(jwire["name"]) != json_wires.end()) {
 		std::string s = jwire["name"];
-		_wire = json_wires[s];
+		auto _wire = json_wires[s];
 		json_wires.erase(s);
-		//        printf("Wire factory match found for %s  factory size %lu\n", s.c_str(), json_wires.size());
 		return _wire;
 	}
-	class wire *new_wire = new wire(jwire["X1"], jwire["Y1"], jwire["X2"], jwire["Y2"]);
+	auto new_wire = std::make_shared<wire>(jwire["X1"], jwire["Y1"], jwire["X2"], jwire["Y2"]);
 
 	json_wires[jwire["name"]] = new_wire;
 
 	new_wire->from_json(jwire);
-
-	//    printf("New wire created: %s  total factory size %lu\n", new_wire->name.c_str(), json_wires.size());
 
 	if (wire_factory_force_new_name)
 		new_wire->set_new_name();
@@ -730,7 +699,7 @@ class port *wire::get_other_port(class port *port)
 		if (p != port)
 			return p;
 	}
-	return NULL;
+	return nullptr;
 }
 
 void wire::push_wire_color(int _color)
@@ -785,7 +754,7 @@ void wire::remove_net(void)
 	if (!net)
 		return;
 	save = net;
-	net = NULL;
+	net = nullptr;
 	for (auto port : ports) {
 		port->remove_net();	 
 		save->remove_port(port);
@@ -851,14 +820,11 @@ void wire::calculate_drawpoints(void)
 	float ratio = 1.0;
 	float reffect = 1.0;
 	struct waypoint wp = {};
-	std::vector<struct waypoint> *temppoints = NULL;
+	std::unique_ptr<std::vector<struct waypoint>> temppoints;
 
 	if (drawpoints && !in_animation)
 		return;
-	if (drawpoints) {
-		delete drawpoints; 
-		drawpoints = NULL;
-	}
+	drawpoints.reset();
 	if (!points)
 		return;
 	if (points->size() < 2)
@@ -882,9 +848,7 @@ void wire::calculate_drawpoints(void)
 			if ((*oldpoints)[p].X == (*points)[q].X && (*oldpoints)[p].Y == (*points)[q].Y) {
 					/* just animate the wire to the new spot */
 			} else {
-//				printf("XY mismatch on oldpoints %5.2f %5.2f vs %5.2f %5.2f\n", (*oldpoints)[0].X, (*oldpoints)[0].Y , (*points)[0].X, (*points)[0].Y);
-				delete oldpoints;
-				oldpoints = NULL;
+				oldpoints.reset();
 			}
 		}
 	}
@@ -901,8 +865,8 @@ void wire::calculate_drawpoints(void)
 	if (oldpoints && oldpoints->size() > points->size() && points->size() >= 2) {
 	
 		if (points->size() == 2) {
-			temppoints = points;
-			points = new std::vector<struct waypoint>;
+			temppoints = std::move(points);
+			points = std::make_unique<std::vector<struct waypoint>>();
 			float x1, y1, dx, dy, totaldist = 0, runningdist = 0;
 		
 			for (unsigned int i = 1; i < oldpoints->size(); i++)
@@ -936,8 +900,8 @@ void wire::calculate_drawpoints(void)
 			}
 		} else {
 
-			temppoints = points;
-			points = new std::vector<struct waypoint>;
+			temppoints = std::move(points);
+			points = std::make_unique<std::vector<struct waypoint>>();
 			for (auto i : *temppoints)
 				points->push_back(i);
 			
@@ -950,14 +914,11 @@ void wire::calculate_drawpoints(void)
 		}
 	}
 	if (oldpoints && oldpoints->size() != points->size()) {
-//		printf("Size mismatch %lu vs %lu\n", oldpoints->size(), points->size());
-		delete oldpoints;
-		oldpoints = NULL;
+		oldpoints.reset();
 	}
 	
 	if (!oldpoints) {
-//		printf("No old points\n");
-		oldpoints = new std::vector<struct waypoint>;
+		oldpoints = std::make_unique<std::vector<struct waypoint>>();
 		float x1, y1, dx, dy, totaldist = 0, runningdist = 0;
 		
 		for (unsigned int i = 1; i < points->size(); i++)
@@ -973,8 +934,6 @@ void wire::calculate_drawpoints(void)
 		y1 = (*points)[0].Y;
 		dx = (*points)[points->size()-1].X - x1;
 		dy = (*points)[points->size()-1].Y - y1;
-//		printf("x1 y1 %5.2f %5.2f\n", x1, y1);
-//		printf("dx dy %5.2f %5.2f\n", dx, dy);
 		for (unsigned int i = 0; i < points->size(); i++) {
 			if (i == 0 || i == points->size() - 1) {
 				wp = (*points)[i];
@@ -984,14 +943,12 @@ void wire::calculate_drawpoints(void)
 			runningdist += dist((*points)[i-1].X, (*points)[i-1].Y, (*points)[i].X, (*points)[i].Y);
 			wp.X = x1 + dx * (runningdist/totaldist);
 			wp.Y = y1 + dy * (runningdist/totaldist);
-			//printf("wpX wpY %5.2f %5.2f\n", wp.X, wp.Y);
 			oldpoints->push_back(wp);
 		}
-//		printf("x2 y2 %5.2f %5.2f\n", (*points)[points->size()-1].X,(*points)[points->size()-1].Y) ;
 	}
 	
 
-	drawpoints = new std::vector<struct waypoint>;
+	drawpoints = std::make_unique<std::vector<struct waypoint>>();
 	
 	reffect = ratio_effect(ratio);
 
@@ -1018,21 +975,14 @@ void wire::calculate_drawpoints(void)
 		in_animation = false;
 		
 	if (temppoints) {
-		delete points;
-		points = temppoints;
-		temppoints = NULL;
+		points = std::move(temppoints);
 	}
 }
 
 
 void wire::redo_wires(void)
 {
-//	printf("redo_wires\n");
 	if (!points)
 		return;
-	if (oldpoints)
-		delete oldpoints; 
-	oldpoints = points;
-	
-	points = NULL;
+	oldpoints = std::move(points);
 }

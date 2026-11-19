@@ -22,11 +22,11 @@ truthcanvas::truthcanvas(class model_truth *_element)
 
     element = _element;
 
-    window = SDL_CreateWindow(("GridCad Truth Table / "+ _element->get_full_name()).c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_RESIZABLE);
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    window.reset(SDL_CreateWindow(("GridCad Truth Table / "+ _element->get_full_name()).c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_RESIZABLE));
+    renderer.reset(SDL_CreateRenderer(window.get(), -1, SDL_RENDERER_ACCELERATED));
+    SDL_SetRenderDrawBlendMode(renderer.get(), SDL_BLENDMODE_BLEND);
 
-    windowID = SDL_GetWindowID(window);
+    windowID = SDL_GetWindowID(window.get());
 
     fill_grid();
     unhide();
@@ -37,20 +37,10 @@ truthcanvas::truthcanvas(class model_truth *_element)
 truthcanvas::~truthcanvas(void)
 {
 	unregister_canvas(this);
-	SDL_DestroyRenderer(renderer);
-	renderer = NULL;
-	SDL_DestroyWindow(window);
 }
 
 void truthcanvas::clear_widgets(void)
 {
-    unsigned int i;
-    
-    for (i = 0; i < widgets.size(); i++) {
-        auto widget = widgets[i];
-        delete widget;
-        widgets[i] = nullptr;
-    }
     widgets.clear();
 }
 
@@ -128,29 +118,29 @@ void truthcanvas::fill_grid(void)
 	  
 	  
 
-        add_widget(new class slider(2,1,11,1, "Reverse input port order", &element->flip_input_ports));         
-        add_widget(new class slider(15,1,11,1, "Reverse output port order", &element->flip_output_ports));         
+        add_widget(std::make_unique<class slider>(2,1,11,1, "Reverse input port order", &element->flip_input_ports));         
+        add_widget(std::make_unique<class slider>(15,1,11,1, "Reverse output port order", &element->flip_output_ports));         
 	
-	add_widget(new class button(calcX(inputs-1, inputs), 2, 2.4,1.8, "assets/model_truth/minus.png", ACTION_DEL_INPUT, this));
-	add_widget(new class button(calcX(inputs-1, inputs)+2.5, 2, 2.4,1.8, "assets/model_truth/plus.png", ACTION_ADD_INPUT, this));
+	add_widget(std::make_unique<class button>(calcX(inputs-1, inputs), 2, 2.4,1.8, "assets/model_truth/minus.png", ACTION_DEL_INPUT, this));
+	add_widget(std::make_unique<class button>(calcX(inputs-1, inputs)+2.5, 2, 2.4,1.8, "assets/model_truth/plus.png", ACTION_ADD_INPUT, this));
 
-	add_widget(new class button(calcX(element->values[0].size()-1, inputs), 2, 2.4,1.8, "assets/model_truth/minus.png", ACTION_DEL_OUTPUT, this));
-	add_widget(new class button(calcX(element->values[0].size()-1, inputs)+2.5, 2, 2.4,1.8, "assets/model_truth/plus.png", ACTION_ADD_OUTPUT, this));
+	add_widget(std::make_unique<class button>(calcX(element->values[0].size()-1, inputs), 2, 2.4,1.8, "assets/model_truth/minus.png", ACTION_DEL_OUTPUT, this));
+	add_widget(std::make_unique<class button>(calcX(element->values[0].size()-1, inputs)+2.5, 2, 2.4,1.8, "assets/model_truth/plus.png", ACTION_ADD_OUTPUT, this));
 
 	for (x = 0; x < element->names.size(); x++) 
-		add_widget(new class label(calcX(x, inputs), 3+1.1, 4.8, 1.8, &element->names[x]));    
+		add_widget(std::make_unique<class label>(calcX(x, inputs), 3+1.1, 4.8, 1.8, &element->names[x]));    
 
 
 	for (y = 0; y < element->values.size(); y++) {
 		for (x = 0; x < element->values[y].size(); x++) {
-			add_widget(new class tristate(calcX(x, inputs), 3+1.1 + (y + 1) * 2, 4.8, 1.8, &element->values[y][x], x, y, x < inputs, this));    
+			add_widget(std::make_unique<class tristate>(calcX(x, inputs), 3+1.1 + (y + 1) * 2, 4.8, 1.8, &element->values[y][x], x, y, x < inputs, this));    
 		}
 	}
 }
 
 void truthcanvas::draw(void)
 {
-    SDL_SetRenderDrawColor(renderer, R(COLOR_BACKGROUND_GRID),
+    SDL_SetRenderDrawColor(renderer.get(), R(COLOR_BACKGROUND_GRID),
 			       G(COLOR_BACKGROUND_GRID),
 			       B(COLOR_BACKGROUND_GRID),
 			       Alpha(COLOR_BACKGROUND_GRID));
@@ -163,16 +153,16 @@ void truthcanvas::draw(void)
     unsigned int row = rand() % canX.size();
     do_canX(row);
 			       
-    SDL_RenderClear(renderer);
+    SDL_RenderClear(renderer.get());
     
-    for (auto widget : widgets)
+    for (auto &widget : widgets)
       widget->draw(this);
       
 }
 
 bool truthcanvas::handle_event(SDL_Event &event)
 {
-    for (auto widget : widgets)
+    for (auto &widget : widgets)
         widget->handle_event(event);
         
     if (event.type == SDL_KEYDOWN) {
@@ -183,7 +173,7 @@ bool truthcanvas::handle_event(SDL_Event &event)
     case SDL_KEYDOWN:
          switch (event.key.keysym.sym) {
 	 case SDLK_UP:
-	       for (auto widget : widgets)
+	       for (auto &widget : widgets)
 	          if (widget->get_gridX() == selectX && widget->get_gridY() == selectY-1 && selectY >= 1) {
                      deselect_all();
                      selectX = widget->get_gridX();
@@ -193,7 +183,7 @@ bool truthcanvas::handle_event(SDL_Event &event)
 	          }
                break;
 	 case SDLK_DOWN:
-	       for (auto widget : widgets)
+	       for (auto &widget : widgets)
 	          if (widget->get_gridX() == selectX && widget->get_gridY() == selectY+1) {
                      deselect_all();
                      selectX = widget->get_gridX();
@@ -203,7 +193,7 @@ bool truthcanvas::handle_event(SDL_Event &event)
 	          }
                break;
 	 case SDLK_LEFT:
-	       for (auto widget : widgets)
+	       for (auto &widget : widgets)
 	          if (widget->get_gridX() == selectX-1 && widget->get_gridY() == selectY) {
                      deselect_all();
                      selectX = widget->get_gridX();
@@ -213,7 +203,7 @@ bool truthcanvas::handle_event(SDL_Event &event)
 	          }
                break;
 	 case SDLK_RIGHT:
-	       for (auto widget : widgets)
+	       for (auto &widget : widgets)
 	          if (widget->get_gridX() == selectX+1 && widget->get_gridY() == selectY) {
                      deselect_all();
                      selectX = widget->get_gridX();
@@ -228,7 +218,7 @@ bool truthcanvas::handle_event(SDL_Event &event)
           float x, y;
 	  x = scr_to_X(event.motion.x);
 	  y = scr_to_Y(event.motion.y);
-          for (auto widget:widgets)
+          for (auto &widget:widgets)
              if (widget->intersect(x, y)) {
                deselect_all();
                selectX = widget->get_gridX();
@@ -241,7 +231,7 @@ bool truthcanvas::handle_event(SDL_Event &event)
    
     case SDL_WINDOWEVENT:
          if (event.window.event == SDL_WINDOWEVENT_CLOSE) {  /* user clicked the 'x' */
-              SDL_HideWindow(window); /* TODO: THis leaks like a sieve */
+              SDL_HideWindow(window.get()); /* TODO: THis leaks like a sieve */
          }
          break;
     };
@@ -249,20 +239,20 @@ bool truthcanvas::handle_event(SDL_Event &event)
     return false;
 }
 
-void truthcanvas::add_widget(class widget *widget)
+void truthcanvas::add_widget(std::unique_ptr<class widget> widget)
 {
-     widgets.push_back(widget);
+     widgets.push_back(std::move(widget));
 }
 
 void truthcanvas::deselect_all(void)
 {
-    for (auto widget : widgets)
+    for (auto &widget : widgets)
        widget->deselect();
 }
 
 void truthcanvas::unhide(void)
 {
-    SDL_ShowWindow(window);
+    SDL_ShowWindow(window.get());
 }
 
 void truthcanvas::add_output(void)

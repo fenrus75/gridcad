@@ -36,10 +36,6 @@ model_8to1::model_8to1(float _X, float _Y)  : element(_X, _Y, "")
     add_port(-1, 5, "0-7", PORT_IN, 8);
 }
 
-model_8to1::~model_8to1(void)
-{
-}
-
 void model_8to1::drawAt(class basecanvas *canvas, float X, float Y, int type)
 {
     int alpha = Alpha(type);
@@ -50,7 +46,7 @@ void model_8to1::drawAt(class basecanvas *canvas, float X, float Y, int type)
         canvas->draw_image_rotated("assets/8to1.png", X, Y, sizeX , sizeY, alpha, angle);
     }
     hover_ports(canvas);
-    for (auto port: ports) {
+    for (auto &port : ports) {
         port->drawAt(canvas, X, Y, type);
 	port->draw_wires(canvas);
     }

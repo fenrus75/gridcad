@@ -9,7 +9,6 @@ class model_toggle : public element
 {
 public:
     model_toggle(float X, float Y);
-    virtual ~model_toggle(void);
     virtual std::string class_id(void) { return "model_toggle:";};
 
 
@@ -19,7 +18,7 @@ public:
     void from_json(json &j) override;
     void handle_event(class basecanvas *canvas, SDL_Event &event) override;
     void update_value(struct value *value, int ttl);
-    class port *get_clk_port(void) override { if (ports[0]->name == "clk") return ports[0]; return NULL;};  
+    class port *get_clk_port(void) override { if (ports[0]->name == "clk") return ports[0].get(); return nullptr;};  
     
     bool in_edit_mode(void) override { return (name_edit->get_edit_mode() && single && selected) || (value_edit->get_edit_mode());};
     void enter_edit_mode(void) override { name_edit->set_edit_mode(true); selected = true; single = true;};    
@@ -32,8 +31,8 @@ public:
 private:
     std::string strvalue = "";
     struct value value = {};
-    class name *name_edit = NULL;
-    class name *value_edit = NULL;
+    std::unique_ptr<class name> name_edit;
+    std::unique_ptr<class name> value_edit;
 };
 
 

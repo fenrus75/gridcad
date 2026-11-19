@@ -51,6 +51,7 @@ sdl2_dep = dependency('SDL2')
 sdl2_image_dep = dependency('SDL2_image')
 sdl2_gfx_dep = dependency('SDL2_gfx')
 sdl2_ttf_dep = dependency('SDL2_ttf')
+libunwind_dep = dependency('libunwind')
 
 # ============================================================================
 # Source Files
@@ -59,6 +60,7 @@ sdl2_ttf_dep = dependency('SDL2_ttf')
 # Core source files (excluding main.cpp for wiretest)
 core_sources = files(
     'src/document.cpp',
+    'src/crash_handler.cpp',
     'src/canvas.cpp',
     'src/scene.cpp',
     'src/color.cpp',
@@ -220,7 +222,7 @@ png_gen = custom_target('generate_pngs',
 # ============================================================================
 
 # Main executable
-executable('gridcad',
+gridcad_exe = executable('gridcad',
     main_sources,
     core_sources,
     model_sources,
@@ -237,19 +239,20 @@ executable('gridcad',
         sdl2_image_dep,
         sdl2_gfx_dep,
         sdl2_ttf_dep,
+        libunwind_dep,
     ],
     install: true,
 )
 
 # ============================================================================
-# Test Executable
+# Tests
 # ============================================================================
 
 test_sources = files(
     'test/wiretest.cpp',
 )
 
-# Wire test executable
+# Wire routing prototype executable
 executable('wiretest',
     core_sources,
     model_sources,
@@ -267,8 +270,42 @@ executable('wiretest',
         sdl2_image_dep,
         sdl2_gfx_dep,
         sdl2_ttf_dep,
+        libunwind_dep,
     ],
 )
+
+# Smoke test: start GUI binary headlessly and exit cleanly after 1 second
+test('smoke_startup',
+    gridcad_exe,
+    args: ['default', '--exit-immediately', '1'],
+    env: ['SDL_VIDEODRIVER=dummy'],
+    workdir: meson.project_source_root(),
+    timeout: 15,
+)
+
+# Headless unit tests for core circuit logic, routing, JSON, and Verilog
+test_logic_exe = executable('test_logic',
+    core_sources,
+    model_sources,
+    sequencer_sources,
+    truth_sources,
+    nest_sources,
+    project_sources,
+    imgui_sources,
+    imgui_hex_sources,
+    png_gen,
+    files('tests/test_logic.cpp'),
+    include_directories: inc_dirs,
+    dependencies: [
+        sdl2_dep,
+        sdl2_image_dep,
+        sdl2_gfx_dep,
+        sdl2_ttf_dep,
+        libunwind_dep,
+    ],
+)
+
+test('logic_unit_tests', test_logic_exe)
 
 # ============================================================================
 # Installation

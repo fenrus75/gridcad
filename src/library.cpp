@@ -25,7 +25,7 @@ std::vector<struct library_block> library;
 
 
 
-void populate_library(std::string directory)
+void populate_library(std::string_view directory)
 {
     const std::filesystem::path libpath{directory};
     
@@ -85,13 +85,13 @@ void populate_library(std::string directory)
 }
 
 
-struct library_block * find_in_library(std::string collection, std::string element)
+struct library_block * find_in_library(std::string_view collection, std::string_view element)
 {
     for (unsigned int i = 0; i < library.size(); i++) {
         if (library[i].collection == collection && library[i].name == element)
             return &library[i];
     }
-    return NULL;
+    return nullptr;
 }
 
 

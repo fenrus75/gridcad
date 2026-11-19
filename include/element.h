@@ -44,7 +44,7 @@ public:
     virtual void queued_calculate(int ttl) {};
     virtual bool mouse_select(float X, float Y); /* scene absolute */
     bool has_moved(void) { return over_drag_threshold;};
-    class wire *is_wire(float X, float Y);
+    std::shared_ptr<class wire> is_wire(float X, float Y);
     
     void reseat(void);
     virtual void to_json(json& j);
@@ -75,7 +75,7 @@ public:
     virtual void enter_edit_mode(void) {};
     virtual void reset_pointer(void) {};
     
-    class contextmenu *get_menu(void) { return menu;};
+    class contextmenu *get_menu(void) { return menu.get(); };
     
     void cycle_color(void);
     void reroute_all_wires(void);
@@ -94,11 +94,11 @@ public:
 
     void update_value_net(struct value *value, int port, int ttl);
     int has_port(class port *port); /* true if this element has this port */
-    class port * port_at(unsigned int i) { if (i < ports.size()) return ports[i]; else return NULL; };
+    class port * port_at(unsigned int i) { if (i < ports.size()) return ports[i].get(); else return nullptr; };
     void validate_ports(void);
     
 protected:
-    class contextmenu *menu = NULL; /* nosave */
+    std::unique_ptr<class contextmenu> menu; /* nosave */
     std::string uuid = "";
     std::string name = "";
     std::string parental_name = "";    
@@ -118,9 +118,8 @@ protected:
     bool single = false; /* only selected item in the scene - not saved to disk */
     float mouseX = -100, mouseY = -100; /* nosave */
     
-    std::vector<class port *> ports;
-    std::vector<class net *> my_nets; /* nets allocated by this element */
-    std::vector<class wire *> my_wires; /* wires allocated by this element */
+    std::vector<std::unique_ptr<class port>> ports;
+    std::vector<std::unique_ptr<class net>> my_nets; /* nets allocated by this element */
     
 };
 

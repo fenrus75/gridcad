@@ -20,11 +20,6 @@ slider::slider(float X, float Y, float W, float H, std::string _desc, bool *valu
     origin = value;
 }
 
-slider::~slider(void)
-{
-}
-
-
 void slider::draw(class truthcanvas *canvas) 
 {
     if (origin && *origin)

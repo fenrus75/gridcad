@@ -44,11 +44,11 @@
 #include "connector.h"
 #include "sequencer.h"
 
-#define ELEMENT(x)  if (classid == #x":") return new x(0, 0);
-class element *element_from_class_id(std::string classid)
+#define ELEMENT(x)  if (classid == #x":") return std::make_unique<x>(0, 0);
+std::unique_ptr<class element> element_from_class_id(std::string_view classid)
 {
     if (classid == "element:")
-        return new element(0,0, "");
+        return std::make_unique<element>(0,0, "");
         
     ELEMENT(model_toggle);
     ELEMENT(model_not);        

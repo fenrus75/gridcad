@@ -57,8 +57,6 @@ void callback_single_clock(class element *element)
 	SDL_PushEvent(&ev);
 }
 
-static bool timer_set = false;
-
 Uint32 SDL_timer_func(Uint32 interval, void *param)
 {
      SDL_Event ev = {};
@@ -66,24 +64,13 @@ Uint32 SDL_timer_func(Uint32 interval, void *param)
 
     ev.type = SDL_timer_event;
     ev.user.code = 0;
-    ev.user.data1 = NULL;
-    ev.user.data2 = NULL;
+    ev.user.data1 = nullptr;
+    ev.user.data2 = nullptr;
 
     if (!SDL_PushEvent(&ev)) {
         logger::get().error("Push failure {}", SDL_GetError());
     }
-    return interval;;
-}
-
-static SDL_TimerID timer;
-
-void set_timer(void)
-{
-    if (timer_set)
-        return;
-    timer_set = true;
-    
-    timer = SDL_AddTimer(500, SDL_timer_func, NULL);
+    return interval;
 }
 
 
@@ -94,8 +81,6 @@ model_clock::model_clock(float _X, float _Y)  : element(1, 1, "clk")
     X = floorf(_X);
     Y = floorf(_Y);
     
-    set_timer();
-    
     global_clock.valid = true;
     
     add_port(1, sizeY, "clk", PORT_OUT, 1);    
@@ -105,10 +90,6 @@ model_clock::model_clock(float _X, float _Y)  : element(1, 1, "clk")
     menu->add_item("Single clock", callback_single_clock);
 }
 
-model_clock::~model_clock(void)
-{
-}
-
 void model_clock::drawAt(class basecanvas *canvas, float X, float Y, int type)
 {
 
@@ -116,7 +97,7 @@ void model_clock::drawAt(class basecanvas *canvas, float X, float Y, int type)
         canvas->draw_image("assets/clock_selected.png", X, Y, sizeX, sizeY, Alpha(type));
     } else {
         struct timeval tv;
-        gettimeofday(&tv, NULL);
+        gettimeofday(&tv, nullptr);
         float f;
         f = tv.tv_usec / 1000000.0;
         f = f * (450-25);
@@ -127,7 +108,7 @@ void model_clock::drawAt(class basecanvas *canvas, float X, float Y, int type)
         canvas->draw_image_fragment("assets/clock_wave.png", X+0.6, Y+0.6, sizeX-1.2, sizeY-1.2, 25 + f, 0, 450 -25, 189 );
     }
 
-    for (auto port : ports) {
+    for (auto &port : ports) {
         port->drawAt(canvas, X,Y, COLOR_WIRE_SOLID);
         port->draw_wires(canvas);
     }
@@ -156,7 +137,7 @@ void model_clock::handle_event(class basecanvas *canvas, SDL_Event &event)
 
 void model_clock::rotate_ports(void)
 {
-    for (auto port : ports) {
+    for (auto &port : ports) {
         float x,y,_x,_y;
         x = port->X - (sizeX-1)/2.0;
         y = port->Y - (sizeY-1)/2.0;
@@ -205,7 +186,7 @@ bool model_clock::mouse_select(float _X, float _Y)
     if (clock_running)
          return false;
          
-    callback_single_clock(NULL);
+    callback_single_clock(nullptr);
          
     return true;
 }
