@@ -67,18 +67,27 @@ void model_toggle::drawAt(class basecanvas *canvas, float X, float Y, int type)
     if (!selected)
       name_edit->set_edit_mode(false);
       
-    if (value.boolval) {
-      icon = "assets/toggle_on.png";
-    } else {	
-      icon = "assets/toggle_off.png";
-    }
-    
-    if (ports[0]->get_width() > 1)
-      icon = "assets/toggle_bus.png";
+    if (ports[0]->get_width() <= 1 && (name == "clk" || ports[0]->name == "clk")) {
+      if (selected)
+        icon = "assets/clock_selected.png";
+      else if (value.boolval)
+        icon = "assets/clock_on.png";
+      else
+        icon = "assets/clock_off.png";
+    } else {
+      if (value.boolval) {
+        icon = "assets/toggle_on.png";
+      } else {	
+        icon = "assets/toggle_off.png";
+      }
+      
+      if (ports[0]->get_width() > 1)
+        icon = "assets/toggle_bus.png";
 
-    if (selected) {
-        icon = "assets/toggle_base.png";
-    }    
+      if (selected) {
+          icon = "assets/toggle_base.png";
+      }
+    }
     
     canvas->draw_image(icon, X, Y, sizeX, sizeY, Alpha(type));
     

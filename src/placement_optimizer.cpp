@@ -772,8 +772,14 @@ double placement_optimizer::compute_scene_cost(class scene *target_scene)
 placement_optimizer::step_result placement_optimizer::optimize_all_elements(
     class scene *target_scene, int max_follow_steps)
 {
+    return optimize_rounds(target_scene, 1, max_follow_steps);
+}
+
+placement_optimizer::step_result placement_optimizer::optimize_rounds(
+    class scene *target_scene, int rounds, int max_follow_steps)
+{
     step_result res;
-    if (!target_scene || target_scene->elements.empty())
+    if (!target_scene || target_scene->elements.empty() || rounds <= 0)
         return res;
 
     std::vector<element *> movable;
@@ -796,17 +802,23 @@ placement_optimizer::step_result placement_optimizer::optimize_all_elements(
     res.cost_before += ctx.all_grid_snap_cost();
 
     static std::mt19937 rng{std::random_device{}()};
-    std::shuffle(movable.begin(), movable.end(), rng);
 
-    int moved_count = 0;
-    for (element *elem : movable) {
-        int dx = 0, dy = 0, steps = 0;
-        if (try_improve_element(target_scene, ctx, elem, max_follow_steps, dx, dy, steps) > 0.0)
-            moved_count++;
+    int total_moved = 0;
+    for (int r = 0; r < rounds; ++r) {
+        std::shuffle(movable.begin(), movable.end(), rng);
+        int round_moved = 0;
+        for (element *elem : movable) {
+            int dx = 0, dy = 0, steps = 0;
+            if (try_improve_element(target_scene, ctx, elem, max_follow_steps, dx, dy, steps) > 0.0)
+                round_moved++;
+        }
+        total_moved += round_moved;
+        if (round_moved == 0)
+            break;
     }
 
-    res.moved = (moved_count > 0);
-    res.steps_taken = moved_count;
+    res.moved = (total_moved > 0);
+    res.steps_taken = total_moved;
     res.moved_element = "all_elements";
     res.crossings_after = ctx.count_all_crossings();
     res.cost_after = 0.0;

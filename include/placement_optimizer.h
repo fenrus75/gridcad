@@ -53,6 +53,11 @@ public:
      */
     static step_result optimize_all_elements(class scene *target_scene,
                                              int max_follow_steps = 5);
+
+    /* Run multiple sweeps reusing a single opt_context (fast for import-time optimization). */
+    static step_result optimize_rounds(class scene *target_scene,
+                                       int rounds,
+                                       int max_follow_steps = 5);
 };
 
 /* Tracks whether gridcad is running in imported-Verilog view mode (for UI button behavior). */

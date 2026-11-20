@@ -501,6 +501,7 @@ static void test_verilog_import(void)
     {
         verilog_importer::options opts;
         opts.use_clock_element = false;
+        opts.optimize_rounds = 0; // Start from raw topological placement to test optimizer below
         auto res = verilog_importer::import_file(reg16_path, opts);
         assert(res.ok);
         assert(res.imported_scene != nullptr);
