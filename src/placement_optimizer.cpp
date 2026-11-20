@@ -58,8 +58,8 @@ bool is_global_control_wire(const wire *w)
 /*
  * Fast geometric cost for a single wire segment between its two endpoint ports:
  *  - Base Manhattan wirelength (weighted by bus width; 3x for model_const)
- *  - Straight-wire bonus (0 bend penalty for pure horizontal/vertical wires,
- *    +bend_penalty when dx != 0 && dy != 0)
+ *  - Smooth straight-wire discount (up to 2x cheaper for pure horizontal/vertical,
+ *    tapering smoothly with offset so elements aren't trapped on a 10x rail cliff)
  *  - Backward-edge / U-turn penalty when dx < 0 (right-to-left)
  */
 double wire_cost(const wire *w)
@@ -85,15 +85,15 @@ double wire_cost(const wire *w)
     if ((src->parent && is_constant(src->parent)) || (dst->parent && is_constant(dst->parent)))
         weight *= 3.0;
 
-    double cost = weight * (adx + ady);
+    /* Smooth alignment valley: 0.5x at exact alignment, smoothly approaching 1.0x. */
+    const double horiz_factor = (dx >= 0.0) ? (1.0 - 0.5 / (1.0 + ady)) : 1.0;
+    const double vert_factor = 1.0 - 0.5 / (1.0 + adx);
+    const double align_factor = std::min(horiz_factor, vert_factor);
 
-    /* Pure horizontal (dy == 0, dx >= 0) or pure vertical (dx == 0) gets a 10x discount (not 0). */
-    const bool pure_horiz = (ady < 0.01 && dx >= 0.0);
-    const bool pure_vert = (adx < 0.01);
-    if (pure_horiz || pure_vert)
-        cost *= 0.1;
-    else
-        cost += 4.0 * weight;
+    double cost = weight * (adx + ady) * align_factor;
+
+    if (adx >= 0.01 && ady >= 0.01)
+        cost += 1.5 * weight;
 
     /* Backward-edge penalty (lighter for sequential/submodule feedback loops). */
     if (dx < 0.0) {
@@ -105,9 +105,17 @@ double wire_cost(const wire *w)
     return cost;
 }
 
-/* Fast AABB collision check including 1-cell port margin around every element. */
-bool can_place_at(const scene *s, const element *myself, int new_x, int new_y)
+/*
+ * Fast AABB collision check with port-clearance padding (pad_x = 2, pad_y = 1
+ * for non-connectors) so elements keep an open routing lane between ports.
+ * Optionally ignores a second element (for swap validation) and reports a blocker.
+ */
+bool can_place_at(const scene *s, const element *myself, int new_x, int new_y,
+                  const element *ignore_other = nullptr, element **out_blocker = nullptr)
 {
+    if (out_blocker)
+        *out_blocker = nullptr;
+
     const int mw = std::max(1, static_cast<int>(std::ceil(const_cast<element *>(myself)->get_width())));
     const int mh = std::max(1, static_cast<int>(std::ceil(const_cast<element *>(myself)->get_height())));
 
@@ -118,29 +126,34 @@ bool can_place_at(const scene *s, const element *myself, int new_x, int new_y)
     }
 
     const bool self_conn = (const_cast<element *>(myself)->class_id() == "connector:");
-    const int m_pad = self_conn ? 0 : 1;
-    const int ax1 = new_x - m_pad;
-    const int ay1 = new_y - m_pad;
-    const int ax2 = new_x + mw + m_pad;
-    const int ay2 = new_y + mh + m_pad;
+    const int m_pad_x = self_conn ? 0 : 2;
+    const int m_pad_y = self_conn ? 0 : 1;
+    const int ax1 = new_x - m_pad_x;
+    const int ay1 = new_y - m_pad_y;
+    const int ax2 = new_x + mw + m_pad_x;
+    const int ay2 = new_y + mh + m_pad_y;
 
     for (const auto &other : s->elements) {
-        if (other.get() == myself || other->is_background())
+        if (other.get() == myself || other.get() == ignore_other || other->is_background())
             continue;
         const int ox = static_cast<int>(std::floor(other->get_X()));
         const int oy = static_cast<int>(std::floor(other->get_Y()));
         const int ow = std::max(1, static_cast<int>(std::ceil(other->get_width())));
         const int oh = std::max(1, static_cast<int>(std::ceil(other->get_height())));
         const bool other_conn = (other->class_id() == "connector:");
-        const int o_pad = other_conn ? 0 : 1;
+        const int o_pad_x = other_conn ? 0 : 1;
+        const int o_pad_y = other_conn ? 0 : 1;
 
-        const int bx1 = ox - o_pad;
-        const int by1 = oy - o_pad;
-        const int bx2 = ox + ow + o_pad;
-        const int by2 = oy + oh + o_pad;
+        const int bx1 = ox - o_pad_x;
+        const int by1 = oy - o_pad_y;
+        const int bx2 = ox + ow + o_pad_x;
+        const int by2 = oy + oh + o_pad_y;
 
-        if (ax1 < bx2 && ax2 > bx1 && ay1 < by2 && ay2 > by1)
+        if (ax1 < bx2 && ax2 > bx1 && ay1 < by2 && ay2 > by1) {
+            if (out_blocker)
+                *out_blocker = other.get();
             return false;
+        }
     }
     return true;
 }
@@ -160,6 +173,200 @@ void reseat_element_wires(element *elem, bool clear_routes)
                 w->clear_route();
         }
     }
+}
+
+/* Compute combined cost of all unique wires incident to two elements (for swap evaluation). */
+double compute_pair_cost(element *a, element *b)
+{
+    double total = 0.0;
+    std::unordered_set<const wire *> seen;
+    for (element *e : {a, b}) {
+        if (!e)
+            continue;
+        for (unsigned int pi = 0;; ++pi) {
+            port *p = e->port_at(pi);
+            if (!p)
+                break;
+            for (const auto &w : p->get_wires()) {
+                if (!w || !seen.insert(w.get()).second)
+                    continue;
+                total += wire_cost(w.get());
+            }
+        }
+    }
+    return total;
+}
+
+/*
+ * Try moving a single element using:
+ *  1. 1-cell steps in all 8 directions (+ up to max_follow_steps in the best direction)
+ *  2. Leap-over jumps of 3 or 5 cells in any of the 8 directions (to jump over jams)
+ *  3. Swapping with an adjacent blocking non-pinned element if that strictly lowers cost
+ * Returns the positive cost saved (0.0 if no improving move was found).
+ */
+double try_improve_element(scene *target_scene, element *elem, int max_follow_steps,
+                           int &out_dx, int &out_dy, int &out_steps)
+{
+    out_dx = 0;
+    out_dy = 0;
+    out_steps = 0;
+
+    const int orig_x = static_cast<int>(std::floor(elem->get_X()));
+    const int orig_y = static_cast<int>(std::floor(elem->get_Y()));
+    const double before_local = placement_optimizer::compute_element_cost(elem);
+
+    int best_x = orig_x;
+    int best_y = orig_y;
+    int best_dir = -1;
+    int best_stride = 1;
+    double best_local = before_local;
+    std::vector<element *> blockers;
+
+    /* Evaluate 1-cell steps and jump-over strides (3, 5) in all 8 directions. */
+    static constexpr int STRIDES[3] = {1, 3, 5};
+    for (int dir = 0; dir < 8; ++dir) {
+        for (int stride : STRIDES) {
+            const int cand_x = orig_x + DIR_X[dir] * stride;
+            const int cand_y = orig_y + DIR_Y[dir] * stride;
+            element *blocker = nullptr;
+            if (!can_place_at(target_scene, elem, cand_x, cand_y, nullptr, &blocker)) {
+                if (stride == 1 && blocker && !is_pinned_element(blocker) && !blocker->is_background())
+                    blockers.push_back(blocker);
+                continue;
+            }
+            elem->place(cand_x, cand_y);
+            elem->reseat();
+            const double after_local = placement_optimizer::compute_element_cost(elem);
+            if (after_local + 1e-6 < best_local) {
+                best_local = after_local;
+                best_x = cand_x;
+                best_y = cand_y;
+                best_dir = dir;
+                best_stride = stride;
+            }
+        }
+    }
+
+    elem->place(orig_x, orig_y);
+    elem->reseat();
+
+    /* Also check swapping with any adjacent blocking element to break traffic jams. */
+    element *best_swap = nullptr;
+    double best_swap_saving = before_local - best_local;
+    std::sort(blockers.begin(), blockers.end());
+    blockers.erase(std::unique(blockers.begin(), blockers.end()), blockers.end());
+
+    for (element *other : blockers) {
+        const int ox = static_cast<int>(std::floor(other->get_X()));
+        const int oy = static_cast<int>(std::floor(other->get_Y()));
+        if (!can_place_at(target_scene, elem, ox, oy, other) ||
+            !can_place_at(target_scene, other, orig_x, orig_y, elem)) {
+            continue;
+        }
+        const double pair_before = compute_pair_cost(elem, other);
+        elem->place(ox, oy);
+        elem->reseat();
+        other->place(orig_x, orig_y);
+        other->reseat();
+        const double pair_after = compute_pair_cost(elem, other);
+
+        /* Revert for now. */
+        elem->place(orig_x, orig_y);
+        elem->reseat();
+        other->place(ox, oy);
+        other->reseat();
+
+        const double saving = pair_before - pair_after;
+        if (saving > best_swap_saving + 1e-6) {
+            best_swap_saving = saving;
+            best_swap = other;
+        }
+    }
+
+    if (best_swap) {
+        const int ox = static_cast<int>(std::floor(best_swap->get_X()));
+        const int oy = static_cast<int>(std::floor(best_swap->get_Y()));
+        elem->place(ox, oy);
+        best_swap->place(orig_x, orig_y);
+        reseat_element_wires(elem, /*clear_routes=*/true);
+        reseat_element_wires(best_swap, /*clear_routes=*/true);
+        out_dx = ox - orig_x;
+        out_dy = oy - orig_y;
+        out_steps = 1;
+        return best_swap_saving;
+    }
+
+    if (best_dir >= 0) {
+        const int dx = DIR_X[best_dir];
+        const int dy = DIR_Y[best_dir];
+        int cur_x = best_x;
+        int cur_y = best_y;
+        double cur_local = best_local;
+        int steps = best_stride;
+
+        elem->place(cur_x, cur_y);
+        elem->reseat();
+
+        /* Follow the winning direction up to max_follow_steps more unit steps while improving. */
+        for (int f = 0; f < max_follow_steps; ++f) {
+            const int nx = cur_x + dx;
+            const int ny = cur_y + dy;
+            if (!can_place_at(target_scene, elem, nx, ny))
+                break;
+            elem->place(nx, ny);
+            elem->reseat();
+            const double next_local = placement_optimizer::compute_element_cost(elem);
+            if (next_local + 1e-6 < cur_local) {
+                cur_x = nx;
+                cur_y = ny;
+                cur_local = next_local;
+                steps++;
+            } else {
+                elem->place(cur_x, cur_y);
+                elem->reseat();
+                break;
+            }
+        }
+
+        reseat_element_wires(elem, /*clear_routes=*/true);
+        out_dx = dx;
+        out_dy = dy;
+        out_steps = steps;
+        return before_local - cur_local;
+    }
+
+    return 0.0;
+}
+
+template <typename Pred>
+placement_optimizer::step_result optimize_matching_elements(
+    class scene *target_scene, Pred &&matches, std::string_view label, int max_follow_steps)
+{
+    placement_optimizer::step_result res;
+    if (!target_scene || target_scene->elements.empty())
+        return res;
+
+    res.cost_before = placement_optimizer::compute_scene_cost(target_scene);
+    double total_saved = 0.0;
+    int moved_count = 0;
+
+    for (auto &e : target_scene->elements) {
+        element *elem = e.get();
+        if (!matches(elem))
+            continue;
+        int dx = 0, dy = 0, steps = 0;
+        const double saved = try_improve_element(target_scene, elem, max_follow_steps, dx, dy, steps);
+        if (saved > 0.0) {
+            total_saved += saved;
+            moved_count++;
+        }
+    }
+
+    res.moved = (moved_count > 0);
+    res.steps_taken = moved_count;
+    res.moved_element = std::string(label);
+    res.cost_after = res.cost_before - total_saved;
+    return res;
 }
 
 } // namespace
@@ -230,165 +437,21 @@ placement_optimizer::step_result placement_optimizer::optimize_one_round(
 
     for (int attempt = 0; attempt < max_attempts; ++attempt) {
         element *elem = movable[elem_dist(rng)];
-        const int orig_x = static_cast<int>(std::floor(elem->get_X()));
-        const int orig_y = static_cast<int>(std::floor(elem->get_Y()));
-        const double before_local = compute_element_cost(elem);
-
-        /* Evaluate all 8 directions and pick the steepest strictly-improving move. */
-        int best_dir = -1;
-        double best_local = before_local;
-
-        for (int dir = 0; dir < 8; ++dir) {
-            const int cand_x = orig_x + DIR_X[dir];
-            const int cand_y = orig_y + DIR_Y[dir];
-            if (!can_place_at(target_scene, elem, cand_x, cand_y))
-                continue;
-
-            elem->place(cand_x, cand_y);
-            elem->reseat();
-            const double after_local = compute_element_cost(elem);
-            if (after_local + 1e-6 < best_local) {
-                best_local = after_local;
-                best_dir = dir;
-            }
-        }
-
-        if (best_dir >= 0) {
-            const int dx = DIR_X[best_dir];
-            const int dy = DIR_Y[best_dir];
-            int cur_x = orig_x + dx;
-            int cur_y = orig_y + dy;
-            double cur_local = best_local;
-            int steps = 1;
-
-            elem->place(cur_x, cur_y);
-            elem->reseat();
-
-            /* Follow the winning direction up to max_follow_steps more times while improving. */
-            for (int f = 0; f < max_follow_steps; ++f) {
-                const int nx = cur_x + dx;
-                const int ny = cur_y + dy;
-                if (!can_place_at(target_scene, elem, nx, ny))
-                    break;
-                elem->place(nx, ny);
-                elem->reseat();
-                const double next_local = compute_element_cost(elem);
-                if (next_local + 1e-6 < cur_local) {
-                    cur_x = nx;
-                    cur_y = ny;
-                    cur_local = next_local;
-                    steps++;
-                } else {
-                    elem->place(cur_x, cur_y);
-                    elem->reseat();
-                    break;
-                }
-            }
-
-            reseat_element_wires(elem, /*clear_routes=*/true);
-
+        int dx = 0, dy = 0, steps = 0;
+        const double saved = try_improve_element(target_scene, elem, max_follow_steps, dx, dy, steps);
+        if (saved > 0.0) {
             res.moved = true;
             res.steps_taken = steps;
             res.moved_element = elem->get_name().empty() ? elem->class_id() : elem->get_name();
             res.dx = dx;
             res.dy = dy;
-            res.cost_after = res.cost_before - (before_local - cur_local);
+            res.cost_after = res.cost_before - saved;
             return res;
         }
-
-        /* Restore original position before trying another element. */
-        elem->place(orig_x, orig_y);
-        elem->reseat();
     }
 
     return res;
 }
-
-namespace {
-
-template <typename Pred>
-placement_optimizer::step_result optimize_matching_elements(
-    class scene *target_scene, Pred &&matches, std::string_view label, int max_follow_steps)
-{
-    placement_optimizer::step_result res;
-    if (!target_scene || target_scene->elements.empty())
-        return res;
-
-    res.cost_before = placement_optimizer::compute_scene_cost(target_scene);
-    double total_saved = 0.0;
-    int moved_count = 0;
-
-    for (auto &e : target_scene->elements) {
-        element *elem = e.get();
-        if (!matches(elem))
-            continue;
-
-        const int orig_x = static_cast<int>(std::floor(elem->get_X()));
-        const int orig_y = static_cast<int>(std::floor(elem->get_Y()));
-        const double before_local = placement_optimizer::compute_element_cost(elem);
-
-        int best_dir = -1;
-        double best_local = before_local;
-        for (int dir = 0; dir < 8; ++dir) {
-            const int cand_x = orig_x + DIR_X[dir];
-            const int cand_y = orig_y + DIR_Y[dir];
-            if (!can_place_at(target_scene, elem, cand_x, cand_y))
-                continue;
-            elem->place(cand_x, cand_y);
-            elem->reseat();
-            const double after_local = placement_optimizer::compute_element_cost(elem);
-            if (after_local + 1e-6 < best_local) {
-                best_local = after_local;
-                best_dir = dir;
-            }
-        }
-
-        if (best_dir >= 0) {
-            const int dx = DIR_X[best_dir];
-            const int dy = DIR_Y[best_dir];
-            int cur_x = orig_x + dx;
-            int cur_y = orig_y + dy;
-            double cur_local = best_local;
-
-            elem->place(cur_x, cur_y);
-            elem->reseat();
-
-            for (int f = 0; f < max_follow_steps; ++f) {
-                const int nx = cur_x + dx;
-                const int ny = cur_y + dy;
-                if (!can_place_at(target_scene, elem, nx, ny))
-                    break;
-                elem->place(nx, ny);
-                elem->reseat();
-                const double next_local = placement_optimizer::compute_element_cost(elem);
-                if (next_local + 1e-6 < cur_local) {
-                    cur_x = nx;
-                    cur_y = ny;
-                    cur_local = next_local;
-                } else {
-                    elem->place(cur_x, cur_y);
-                    elem->reseat();
-                    break;
-                }
-            }
-
-            reseat_element_wires(elem, /*clear_routes=*/true);
-            total_saved += (before_local - cur_local);
-            moved_count++;
-        } else {
-            elem->place(orig_x, orig_y);
-            elem->reseat();
-        }
-    }
-
-    res.moved = (moved_count > 0);
-    res.steps_taken = moved_count;
-    res.moved_element = std::string(label);
-    res.cost_after = res.cost_before - total_saved;
-    return res;
-}
-
-} // namespace
 
 placement_optimizer::step_result placement_optimizer::optimize_all_connectors(
     class scene *target_scene, int max_follow_steps)
