@@ -706,13 +706,20 @@ std::unique_ptr<scene> import_module_recursive(
                     w->set_vcd_name(full_vcd_name);
                 if (wire_lbl_tbl)
                     w->set_label_table(wire_lbl_tbl);
+                int wire_color = 0;
                 if (wname == "clk" || vcd_local == "clk") {
                     w->value.valid = true;
                     w->value.is_clock = true;
+                    wire_color = 1; /* Gold/yellow for clock lines */
+                } else if (!vcd_local.empty() ||
+                           (!wname.empty() && !wname.starts_with("wire_"))) {
+                    wire_color = 6; /* Cyan/teal for named Verilog signals vs gray internal wires */
                 }
                 w->set_width(width);
                 a->add_wire(w);
                 b->add_wire(w);
+                if (wire_color != 0)
+                    w->push_wire_color(wire_color);
                 stats.wires++;
             };
 

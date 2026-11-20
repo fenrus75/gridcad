@@ -10,6 +10,7 @@
 #include "placer.h"
 #include "scene.h"
 #include "element.h"
+#include "connector.h"
 #include "port.h"
 #include "wire.h"
 
@@ -456,67 +457,105 @@ void topological_placer::place(class scene *target_scene, const options &opts)
         }
     }
 
-    /*
-     * Place connector split junctions staggered across the horizontal routing
-     * channel to the right of their driving port so they never form a wall.
-     */
-    std::set<std::pair<int, int>> occupied_connectors;
-    std::unordered_map<int, int> channel_stagger;
-    for (size_t i = 0; i < n; ++i) {
-        element *elem = target_scene->elements[i].get();
-        if (!is_connector(elem))
-            continue;
-
-        port *cp = elem->port_at(0);
-        if (!cp)
-            continue;
-
-        port *drv_port = nullptr;
-        float sink_y_sum = 0.0f;
-        int sink_cnt = 0;
-
-        for (const auto &w : cp->get_wires()) {
-            if (!w)
-                continue;
-            for (port *other : w->get_ports()) {
-                if (!other || other == cp)
-                    continue;
-                if (other->direction == PORT_OUT) {
-                    drv_port = other;
-                } else if (other->direction == PORT_IN) {
-                    sink_y_sum += other->screenY;
-                    sink_cnt++;
-                }
-            }
-        }
-
-        int cx = opts.margin_x;
-        int cy = opts.margin_y;
-        if (drv_port) {
-            const int base_x = static_cast<int>(std::round(drv_port->screenX));
-            const int lane = (channel_stagger[base_x]++) % std::max(1, opts.col_gap - 4);
-            cx = base_x + 2 + lane;
-            cy = (sink_cnt > 0) ? static_cast<int>(std::round(sink_y_sum / sink_cnt))
-                                : static_cast<int>(std::round(drv_port->screenY));
-        }
-        cx = std::max(2, cx);
-        cy = std::max(2, cy);
-
-        while (occupied_connectors.count({cx, cy}) ||
-               !target_scene->can_place_element(cx, cy, 1, 1, elem)) {
-            cy++;
-        }
-        occupied_connectors.insert({cx, cy});
-
-        elem->place(cx, cy);
-        elem->reseat();
-        max_x = std::max(max_x, cx + 2);
-        max_y = std::max(max_y, cy + 2);
-    }
-
     /* Ensure the scene grid comfortably encloses all elements and their ports. */
     target_scene->sizeX = std::max(200.0f, static_cast<float>(max_x + opts.margin_x));
     target_scene->sizeY = std::max(200.0f, static_cast<float>(max_y + opts.margin_y));
+
+    /*
+     * Split high-fanout connectors (e.g. clk, rst, wide shared buses) into a
+     * spatial trunk of smaller connectors (at most 2 local taps per hop, up to
+     * 3 on the final hop) sorted left-to-right by sink coordinates so the
+     * schematic gets a clean trunk instead of a giant starburst.
+     */
+    {
+        constexpr size_t MAX_SINKS_LEAF = 3;
+        constexpr size_t SINKS_PER_HOP = 2;
+
+        std::vector<element *> orig_connectors;
+        orig_connectors.reserve(target_scene->elements.size());
+        for (auto &elem : target_scene->elements) {
+            if (elem && is_connector(elem.get()))
+                orig_connectors.push_back(elem.get());
+        }
+
+        for (element *conn : orig_connectors) {
+            port *cp = conn->port_at(0);
+            if (!cp)
+                continue;
+
+            std::shared_ptr<wire> drv_wire;
+            std::vector<std::pair<std::shared_ptr<wire>, port *>> sink_wires;
+
+            for (const auto &w : cp->get_wires()) {
+                if (!w)
+                    continue;
+                port *other = w->get_other_port(cp);
+                if (!other)
+                    continue;
+                if (other->direction == PORT_OUT && !drv_wire) {
+                    drv_wire = w;
+                } else {
+                    sink_wires.emplace_back(w, other);
+                }
+            }
+
+            if (sink_wires.size() <= MAX_SINKS_LEAF)
+                continue;
+
+            /* Sort sinks spatially left-to-right, then top-to-bottom. */
+            std::sort(sink_wires.begin(), sink_wires.end(),
+                      [](const auto &a, const auto &b) {
+                          if (std::abs(a.second->screenX - b.second->screenX) > 2.0f)
+                              return a.second->screenX < b.second->screenX;
+                          return a.second->screenY < b.second->screenY;
+                      });
+
+            const std::shared_ptr<wire> &tmpl = drv_wire ? drv_wire : sink_wires[0].first;
+            const int bus_w = std::max(1, tmpl->get_width());
+
+            /* Keep the first SINKS_PER_HOP sinks on `conn`; chain the rest. */
+            port *prev_cp = cp;
+            size_t idx = SINKS_PER_HOP;
+            while (idx < sink_wires.size()) {
+                const size_t remaining = sink_wires.size() - idx;
+                const size_t take = (remaining <= MAX_SINKS_LEAF) ? remaining : SINKS_PER_HOP;
+
+                auto next_conn = std::make_unique<connector>(0, 0);
+                port *next_cp = next_conn->port_at(0);
+                next_cp->set_width(bus_w);
+
+                /* Trunk wire linking previous connector to this new connector. */
+                auto trunk = std::make_shared<wire>(0, 0, 0, 0, tmpl->get_color());
+                trunk->name = tmpl->name;
+                if (!tmpl->get_vcd_name().empty())
+                    trunk->set_vcd_name(tmpl->get_vcd_name());
+                if (tmpl->get_label_table())
+                    trunk->set_label_table(tmpl->get_label_table());
+                if (tmpl->value.is_clock) {
+                    trunk->value.valid = true;
+                    trunk->value.is_clock = true;
+                }
+                trunk->set_width(bus_w);
+                prev_cp->add_wire(trunk);
+                next_cp->add_wire(trunk);
+
+                /* Move this chunk's sink wires from the original connector to next_conn. */
+                for (size_t k = 0; k < take; ++k) {
+                    auto &sw = sink_wires[idx + k].first;
+                    cp->remove_wire(sw.get());
+                    sw->del_port(cp);
+                    next_cp->add_wire(sw);
+                }
+
+                target_scene->add_element(std::move(next_conn));
+                prev_cp = next_cp;
+                idx += take;
+            }
+        }
+    }
+
+    /* Place all connector split junctions clear of components and ports. */
+    place_connectors(target_scene);
 
     /* Update wire endpoints to match the newly placed port coordinates. */
     for (auto &elem : target_scene->elements) {
@@ -527,6 +566,267 @@ void topological_placer::place(class scene *target_scene, const options &opts)
             for (const auto &w : p->get_wires()) {
                 if (w)
                     w->reseat();
+            }
+        }
+    }
+}
+
+void topological_placer::place_connectors(class scene *target_scene)
+{
+    if (!target_scene || target_scene->elements.empty())
+        return;
+
+    /*
+     * Build forbidden bounding boxes for every non-connector, non-background
+     * element (body + port clearance) so connectors can never overlap a
+     * component or sit on top of its pins.
+     */
+    struct box {
+        int x1, y1, x2, y2; /* inclusive */
+    };
+    std::vector<box> blocked_boxes;
+    blocked_boxes.reserve(target_scene->elements.size());
+
+    for (const auto &elem : target_scene->elements) {
+        if (!elem || elem->is_background() || is_connector(elem.get()))
+            continue;
+
+        const int ox = static_cast<int>(std::floor(elem->get_X()));
+        const int oy = static_cast<int>(std::floor(elem->get_Y()));
+        const int ow = std::max(1, static_cast<int>(std::ceil(elem->get_width())));
+        const int oh = std::max(1, static_cast<int>(std::ceil(elem->get_height())));
+
+        /* Leave 2 cells in X (1 for port + 1 breathing lane) and 1 cell in Y. */
+        int x1 = ox - 2;
+        int y1 = oy - 1;
+        int x2 = ox + ow + 1;
+        int y2 = oy + oh;
+
+        /* Also enclose every actual port with a 1-cell halo (covers top/bottom pins). */
+        for (unsigned int pi = 0;; ++pi) {
+            port *p = elem->port_at(pi);
+            if (!p)
+                break;
+            const int px = static_cast<int>(std::round(p->screenX));
+            const int py = static_cast<int>(std::round(p->screenY));
+            x1 = std::min(x1, px - 1);
+            y1 = std::min(y1, py - 1);
+            x2 = std::max(x2, px + 1);
+            y2 = std::max(y2, py + 1);
+        }
+
+        blocked_boxes.push_back({x1, y1, x2, y2});
+    }
+
+    auto hits_component = [&](int x, int y) -> bool {
+        for (const auto &b : blocked_boxes) {
+            if (x >= b.x1 && x <= b.x2 && y >= b.y1 && y <= b.y2)
+                return true;
+        }
+        return false;
+    };
+
+    const int max_x_bound = std::max(200, static_cast<int>(target_scene->sizeX) - 3);
+    const int max_y_bound = std::max(200, static_cast<int>(target_scene->sizeY) - 3);
+
+    std::vector<element *> connectors;
+    connectors.reserve(target_scene->elements.size());
+    for (auto &elem : target_scene->elements) {
+        if (elem && is_connector(elem.get()))
+            connectors.push_back(elem.get());
+    }
+    if (connectors.empty())
+        return;
+
+    /*
+     * Run 3 relaxation passes:
+     *   Pass 0: seed each connector from its non-connector neighbors (driver + local sinks).
+     *   Passes 1-2: refine using all neighbors (including chained trunk connectors) so
+     *               multi-connector trunks align cleanly into straight T-junctions.
+     */
+    constexpr int NUM_PASSES = 3;
+    for (int pass = 0; pass < NUM_PASSES; ++pass) {
+        std::set<std::pair<int, int>> occupied_connectors;
+
+        auto near_connector = [&](int x, int y) -> bool {
+            for (int dy = -1; dy <= 1; ++dy) {
+                for (int dx = -1; dx <= 1; ++dx) {
+                    if (occupied_connectors.count({x + dx, y + dy}))
+                        return true;
+                }
+            }
+            return false;
+        };
+
+        for (element *elem : connectors) {
+            port *cp = elem->port_at(0);
+            if (!cp)
+                continue;
+
+            port *drv_port = nullptr;
+            std::vector<port *> sink_ports;
+            std::vector<port *> all_ports;
+            bool is_ctrl = false;
+            bool has_conn_neighbor = false;
+
+            for (const auto &w : cp->get_wires()) {
+                if (!w)
+                    continue;
+                if (w->value.is_clock || w->name == "clk" || w->name == "rst" || w->name == "rst_n")
+                    is_ctrl = true;
+                for (port *other : w->get_ports()) {
+                    if (!other || other == cp)
+                        continue;
+                    const bool other_is_conn = (other->parent && is_connector(other->parent));
+                    if (other_is_conn) {
+                        has_conn_neighbor = true;
+                        if (pass > 0)
+                            all_ports.push_back(other);
+                        continue;
+                    }
+                    all_ports.push_back(other);
+                    if (other->direction == PORT_OUT && !drv_port) {
+                        drv_port = other;
+                    } else {
+                        sink_ports.push_back(other);
+                    }
+                }
+            }
+
+            int tx = static_cast<int>(std::round(elem->get_X()));
+            int ty = static_cast<int>(std::round(elem->get_Y()));
+
+            if (pass > 0 && has_conn_neighbor && !all_ports.empty()) {
+                /* Chained trunk connector: 1D geometric median in X and Y of all neighbors. */
+                std::vector<float> xs;
+                std::vector<float> ys;
+                xs.reserve(all_ports.size());
+                ys.reserve(all_ports.size());
+                for (port *np : all_ports) {
+                    xs.push_back(np->screenX);
+                    ys.push_back(np->screenY);
+                }
+                std::sort(xs.begin(), xs.end());
+                std::sort(ys.begin(), ys.end());
+                tx = static_cast<int>(std::round(xs[xs.size() / 2]));
+                ty = static_cast<int>(std::round(ys[ys.size() / 2]));
+            } else if (drv_port && !sink_ports.empty()) {
+                if (is_ctrl && !has_conn_neighbor) {
+                    /* Single clock/reset split: sit neatly right outside the driver. */
+                    tx = static_cast<int>(std::round(drv_port->screenX)) + 3;
+                    ty = static_cast<int>(std::round(drv_port->screenY));
+                } else {
+                    float min_sx = sink_ports[0]->screenX;
+                    float sum_sx = 0.0f;
+                    std::vector<float> ys;
+                    ys.reserve(sink_ports.size() + 1);
+                    ys.push_back(drv_port->screenY);
+                    for (port *sp : sink_ports) {
+                        min_sx = std::min(min_sx, sp->screenX);
+                        sum_sx += sp->screenX;
+                        ys.push_back(sp->screenY);
+                    }
+                    const float avg_sx = sum_sx / static_cast<float>(sink_ports.size());
+                    if (min_sx > drv_port->screenX + 2.0f) {
+                        const int step = std::clamp(
+                            static_cast<int>(std::round((min_sx - drv_port->screenX) * 0.5f)),
+                            2, 10);
+                        tx = static_cast<int>(std::round(drv_port->screenX)) + step;
+                    } else {
+                        tx = static_cast<int>(std::round((drv_port->screenX + avg_sx) * 0.5f));
+                    }
+
+                    /* Geometric 1D median in Y minimizes total vertical wire length. */
+                    std::sort(ys.begin(), ys.end());
+                    ty = static_cast<int>(std::round(ys[ys.size() / 2]));
+                }
+            } else if (drv_port) {
+                tx = static_cast<int>(std::round(drv_port->screenX)) + 3;
+                ty = static_cast<int>(std::round(drv_port->screenY));
+            } else if (!sink_ports.empty()) {
+                std::vector<float> xs;
+                std::vector<float> ys;
+                xs.reserve(sink_ports.size());
+                ys.reserve(sink_ports.size());
+                for (port *sp : sink_ports) {
+                    xs.push_back(sp->screenX);
+                    ys.push_back(sp->screenY);
+                }
+                std::sort(xs.begin(), xs.end());
+                std::sort(ys.begin(), ys.end());
+                /* Place slightly to the left of the local sinks so the trunk enters cleanly. */
+                tx = static_cast<int>(std::round(xs[0])) - 3;
+                ty = static_cast<int>(std::round(ys[ys.size() / 2]));
+            }
+
+            tx = std::clamp(tx, 2, max_x_bound);
+            ty = std::clamp(ty, 2, max_y_bound);
+
+            /* Spiral search outward for the nearest valid, non-overlapping grid cell. */
+            int best_x = tx;
+            int best_y = ty;
+            bool found = false;
+
+            auto try_search = [&](bool enforce_conn_spacing, int max_radius) -> bool {
+                for (int r = 0; r <= max_radius; ++r) {
+                    if (r == 0) {
+                        if (!hits_component(tx, ty) &&
+                            !(enforce_conn_spacing ? near_connector(tx, ty)
+                                                   : occupied_connectors.count({tx, ty}) > 0)) {
+                            best_x = tx;
+                            best_y = ty;
+                            return true;
+                        }
+                        continue;
+                    }
+                    /* Walk the Manhattan ring of radius r around (tx, ty). */
+                    for (int dx = -r; dx <= r; ++dx) {
+                        const int rem = r - std::abs(dx);
+                        const int dy_opts[2] = {-rem, rem};
+                        const int n_opts = (rem == 0) ? 1 : 2;
+                        for (int oi = 0; oi < n_opts; ++oi) {
+                            const int cx = tx + dx;
+                            const int cy = ty + dy_opts[oi];
+                            if (cx < 2 || cy < 2 || cx > max_x_bound || cy > max_y_bound)
+                                continue;
+                            if (hits_component(cx, cy))
+                                continue;
+                            if (enforce_conn_spacing ? near_connector(cx, cy)
+                                                     : occupied_connectors.count({cx, cy}) > 0)
+                                continue;
+                            best_x = cx;
+                            best_y = cy;
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            };
+
+            found = try_search(/*enforce_conn_spacing=*/true, 20);
+            if (!found)
+                found = try_search(/*enforce_conn_spacing=*/false, 80);
+
+            if (!found) {
+                best_x = std::max(2, tx);
+                best_y = std::max(2, ty);
+                while (occupied_connectors.count({best_x, best_y}) || hits_component(best_x, best_y))
+                    best_y++;
+            }
+
+            occupied_connectors.insert({best_x, best_y});
+            elem->place(best_x, best_y);
+            elem->reseat();
+
+            if (pass == NUM_PASSES - 1) {
+                for (const auto &w : cp->get_wires()) {
+                    if (w) {
+                        w->reseat();
+                        w->clear_route();
+                    }
+                }
+                target_scene->sizeX = std::max(target_scene->sizeX, static_cast<float>(best_x + 6));
+                target_scene->sizeY = std::max(target_scene->sizeY, static_cast<float>(best_y + 6));
             }
         }
     }

@@ -76,6 +76,7 @@ public:
     void apply_vcd_value(const struct value &v);
 
     void set_label_table(std::shared_ptr<const std::map<uint64_t, std::string>> tbl) { label_table = std::move(tbl); };
+    const std::shared_ptr<const std::map<uint64_t, std::string>> &get_label_table(void) const { return label_table; };
     std::string get_label(uint64_t val) const;
     
     void calculate_drawpoints(void);

@@ -35,4 +35,11 @@ public:
 
     static void place(class scene *target_scene);
     static void place(class scene *target_scene, const options &opts);
+
+    /*
+     * Re-place all connector split junctions at clean, collision-free positions
+     * between their driving and sink ports (never overlapping components or ports),
+     * and reseat/clear routes on their attached wires.
+     */
+    static void place_connectors(class scene *target_scene);
 };

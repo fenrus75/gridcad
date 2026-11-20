@@ -14,6 +14,7 @@
 
 #include "gridcad.h"
 #include "scene.h"
+#include "placer.h"
 #include "element.h"
 #include "port.h"
 #include "wire.h"
@@ -86,6 +87,12 @@ void callback_reroute(class scene *scene)
 	scene->reroute_all_wires();
 }
 
+void callback_redo_connectors(class scene *scene)
+{
+	topological_placer::place_connectors(scene);
+	scene->reroute_all_wires();
+}
+
 void callback_validate(class scene *scene)
 {
 	scene->validate_ports();
@@ -102,6 +109,7 @@ scene::scene(std::string _name, std::string _parent)
 	menu->add_item("Select All", callback_select_all);
 	menu->add_item("Connect clocks", callback_autoclock);
 	menu->add_item("Reroute wires", callback_reroute);
+	menu->add_item("Redo connector placement", callback_redo_connectors);
 	menu->add_item("Validate routing", callback_validate);
 	menu->add_item("Reset all sequencers", callback_sequencer_reset);
 }

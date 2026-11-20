@@ -93,9 +93,9 @@ bool split_name_prefix_number(std::string_view name, std::string &out_prefix, in
  *  - Smooth straight-wire discount (up to 2x cheaper for pure horizontal/vertical)
  *  - Backward-edge / U-turn penalty when dx < 0 (right-to-left)
  */
-double wire_cost(const wire *w)
+double wire_cost(const wire *w, bool include_global = false)
 {
-    if (!w || is_global_control_wire(w))
+    if (!w || (!include_global && is_global_control_wire(w)))
         return 0.0;
 
     const auto &pts = w->get_ports();
@@ -452,6 +452,13 @@ struct opt_context {
                 total += wire_cost(segs[idx].w);
             total += CROSS_PENALTY * static_cast<double>(count_crossings_for(it->second));
         }
+        /* Allow clk/rst trunk connectors to optimize their own wire length without pulling logic blocks. */
+        if (e->class_id() == "connector:" && e->port_at(0)) {
+            for (const auto &w : e->port_at(0)->get_wires()) {
+                if (w && is_global_control_wire(w.get()))
+                    total += wire_cost(w.get(), /*include_global=*/true);
+            }
+        }
         return total;
     }
 
@@ -525,7 +532,7 @@ bool can_place_at(const scene *s, const element *myself, int new_x, int new_y,
         const int ow = std::max(1, static_cast<int>(std::ceil(other->get_width())));
         const int oh = std::max(1, static_cast<int>(std::ceil(other->get_height())));
         const bool other_conn = (other->class_id() == "connector:");
-        const int o_pad_x = other_conn ? 0 : 1;
+        const int o_pad_x = other_conn ? 0 : (self_conn ? 2 : 1);
         const int o_pad_y = other_conn ? 0 : 1;
 
         const int bx1 = ox - o_pad_x;

@@ -39,6 +39,7 @@
 #include "vcd_session.h"
 #include "timelinebar.h"
 #include "placement_optimizer.h"
+#include "placer.h"
 
 #include <cassert>
 #include <filesystem>
@@ -954,6 +955,59 @@ static void test_vcd_playback(void)
     {
         auto res = verilog_importer::import_file(top_path);
         assert(res.ok && res.imported_scene != nullptr);
+
+        // Verify connector placement invariants, trunk splitting, and wire colors on top.json
+        auto check_connectors_clear = [](scene *sc) {
+            for (const auto &conn : sc->elements) {
+                if (conn->class_id() != "connector:")
+                    continue;
+                // High-fanout connectors are split into trunks of degree <= 4
+                assert(conn->port_at(0)->get_wires().size() <= 4);
+                const float cx = conn->get_X();
+                const float cy = conn->get_Y();
+                for (const auto &other : sc->elements) {
+                    if (other.get() == conn.get() || other->is_background() ||
+                        other->class_id() == "connector:")
+                        continue;
+                    const float ox = other->get_X();
+                    const float oy = other->get_Y();
+                    const float ow = other->get_width();
+                    const float oh = other->get_height();
+                    // Connector must never overlap a component body or its left/right port columns
+                    const bool overlaps = (cx >= ox - 1.0f && cx <= ox + ow &&
+                                           cy >= oy && cy < oy + oh);
+                    assert(!overlaps);
+                }
+            }
+        };
+        check_connectors_clear(res.imported_scene.get());
+        topological_placer::place_connectors(res.imported_scene.get());
+        check_connectors_clear(res.imported_scene.get());
+
+        // Verify automatic wire coloring: clk=1, named signals=6, internal wire_*=0
+        bool saw_clk = false, saw_named = false, saw_internal = false;
+        for (const auto &elem : res.imported_scene->elements) {
+            for (unsigned int pi = 0;; ++pi) {
+                port *p = elem->port_at(pi);
+                if (!p)
+                    break;
+                for (const auto &w : p->get_wires()) {
+                    if (!w)
+                        continue;
+                    if (w->name == "clk") {
+                        assert(w->get_color() == 1);
+                        saw_clk = true;
+                    } else if (w->name == "rst_n" || w->name == "mem_read_data") {
+                        assert(w->get_color() == 6);
+                        saw_named = true;
+                    } else if (w->name.starts_with("wire_")) {
+                        assert(w->get_color() == 0);
+                        saw_internal = true;
+                    }
+                }
+            }
+        }
+        assert(saw_clk && saw_named && saw_internal);
 
         vcd_session sess;
         std::string err;
