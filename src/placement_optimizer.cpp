@@ -480,7 +480,7 @@ placement_optimizer::step_result placement_optimizer::optimize_all_slices_and_co
         target_scene,
         [](element *e) {
             const std::string cid = e->class_id();
-            return cid == "model_slice:" || cid == "model_concat:";
+            return cid == "model_slice:" || cid == "model_concat:" || cid == "model_split:";
         },
         "slices/concats",
         max_follow_steps);

@@ -51,6 +51,7 @@
 #include "model_mem.h"
 #include "model_slice.h"
 #include "model_concat.h"
+#include "model_split.h"
 #include "connector.h"
 #include "sequencer.h"
 
@@ -99,6 +100,7 @@ std::unique_ptr<class element> element_from_class_id(std::string_view classid)
     ELEMENT(model_mem);
     ELEMENT(model_slice);
     ELEMENT(model_concat);
+    ELEMENT(model_split);
     ELEMENT(sequencer);
     
     

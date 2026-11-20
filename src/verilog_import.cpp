@@ -35,6 +35,7 @@
 #include "model_mem.h"
 #include "model_slice.h"
 #include "model_concat.h"
+#include "model_split.h"
 #include "model_truth.h"
 #include "model_nest.h"
 
@@ -422,6 +423,35 @@ std::unique_ptr<scene> import_module_recursive(
                 for (int k = 0; k < num_in; ++k)
                     register_pin(std::format("in{}", k), el->port_at(static_cast<unsigned int>(k)));
                 register_pin("out", el->port_at(static_cast<unsigned int>(num_in)));
+                result_scene->add_element(std::move(el));
+                stats.components++;
+            } else if (ctype == "gridcad_split") {
+                const int in_w = parse_width_json(params, "IN_WIDTH", 8);
+                const int num_out = std::clamp(
+                    params.contains("OUTPUTS") ? static_cast<int>(parse_u64_json(params["OUTPUTS"], in_w)) : in_w,
+                    1, 64);
+                std::vector<int> offsets;
+                if (params.contains("OFFSETS") && params["OFFSETS"].is_array()) {
+                    for (const auto &v : params["OFFSETS"])
+                        offsets.push_back(static_cast<int>(parse_u64_json(v, 0)));
+                }
+                std::vector<int> out_widths;
+                out_widths.reserve(static_cast<size_t>(num_out));
+                const json pins = (comp.contains("pins") && comp["pins"].is_object())
+                                      ? comp["pins"]
+                                      : json::object();
+                for (int k = 0; k < num_out; ++k) {
+                    const std::string pkey = std::format("out{}", k);
+                    int w = 1;
+                    if (pins.contains(pkey) && pins[pkey].is_object())
+                        w = parse_width_json(pins[pkey], "width", 1);
+                    out_widths.push_back(w);
+                }
+                auto el = std::make_unique<model_split>(0, 0, in_w, num_out, offsets, out_widths);
+                el->update_name(cid);
+                register_pin("in", el->port_at(0));
+                for (int k = 0; k < num_out; ++k)
+                    register_pin(std::format("out{}", k), el->port_at(static_cast<unsigned int>(1 + k)));
                 result_scene->add_element(std::move(el));
                 stats.components++;
             } else if (ctype == "gridcad_lut") {

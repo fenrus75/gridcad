@@ -31,6 +31,7 @@
 #include "model_mem.h"
 #include "model_slice.h"
 #include "model_concat.h"
+#include "model_split.h"
 #include "model_truth.h"
 #include "verilog_import.h"
 #include "vcd_session.h"
@@ -706,6 +707,42 @@ static void test_verilog_import(void)
         in_p->update_value(&v_in, DEFAULT_TTL);
         run_queued_calculations();
         assert(out_p->get_value().intval == 0x3412);
+    }
+
+    // 7. model_split (4-bit bus -> 4 individual 1-bit outputs)
+    {
+        scene s("split_test");
+        auto in_bus = std::make_unique<model_toggle>(1, 2);
+        auto spl    = std::make_unique<model_split>(6, 2, 4, 4);
+        auto o0     = std::make_unique<model_output>(12, 1);
+        auto o2     = std::make_unique<model_output>(12, 5);
+        auto o3     = std::make_unique<model_output>(12, 9);
+        in_bus->set_width(4);
+
+        auto *in_p = in_bus.get();
+        auto *spl_p = spl.get();
+        auto *o0_p = o0.get();
+        auto *o2_p = o2.get();
+        auto *o3_p = o3.get();
+
+        s.add_element(std::move(in_bus));
+        s.add_element(std::move(spl));
+        s.add_element(std::move(o0));
+        s.add_element(std::move(o2));
+        s.add_element(std::move(o3));
+
+        connect_ports(in_p->port_at(0), spl_p->port_at(0));
+        connect_ports(spl_p->port_at(1), o0_p->port_at(0)); // bit 0
+        connect_ports(spl_p->port_at(3), o2_p->port_at(0)); // bit 2
+        connect_ports(spl_p->port_at(4), o3_p->port_at(0)); // bit 3
+        s.redo_nets();
+
+        auto v_a = make_int_val(0b1010);
+        in_p->update_value(&v_a, DEFAULT_TTL);
+        run_queued_calculations();
+        assert(o0_p->get_value().boolval == false);
+        assert(o2_p->get_value().boolval == false);
+        assert(o3_p->get_value().boolval == true);
     }
 }
 
