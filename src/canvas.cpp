@@ -473,18 +473,23 @@ bool canvas::handle_event(SDL_Event &event)
 		}
 
 		if (bX2 != 0 && bX2 != bX1) {
+			const int usable_h = std::max(1, main_area_rect.h -
+			                                     ((timeline_bar && timeline_bar->is_active())
+			                                          ? timelinebar::BAR_HEIGHT
+			                                          : 0));
 			from_offsetX = offsetX;
 			from_offsetY = offsetY;
 			from_scaleX = scaleX;
 			from_scaleY = scaleY;
 			animation_start = SDL_GetTicks64();
-			target_offsetX = bX1 - 3;
-			target_offsetY = bY1 - 3;
-			target_scaleX = main_area_rect.w / (bX2-bX1 + 6.0) ;
-			target_scaleY = main_area_rect.h / (bY2-bY1 + 6.0) ;
+			target_scaleX = main_area_rect.w / (bX2 - bX1 + 6.0f);
+			target_scaleY = usable_h / (bY2 - bY1 + 6.0f);
 			target_scaleX = std::min(target_scaleX, target_scaleY);
 			target_scaleY = target_scaleX;
-			
+			/* Shift past the left button bar so Column 0 inputs are never clipped behind it. */
+			target_offsetX = bX1 - (static_cast<float>(button_rect.w) / std::max(1.0f, target_scaleX)) - 2.0f;
+			target_offsetY = bY1 - 2.0f;
+
 			in_animation = true;
 		
 			if (event.user.code != 0) {
