@@ -56,6 +56,8 @@ port::~port()
 {
 	while (wires.size() > 0) {
 		auto wire = wires[0];
+		if (class net *n = wire->get_net())
+			n->remove_port(this);
 		wire->del_port(this);
 		remove_wire(wire.get());
 	}
@@ -479,8 +481,27 @@ void port::unsplice(void)
 	auto w1 = wires[0];
 	auto w2 = wires[1];
 	class port *p1, *p2;
+	class net *existing_net = w1->get_net() ? w1->get_net() : w2->get_net();
 
 	auto w3 = std::make_shared<class wire>(0,0,0,0);
+	w3->name = !w1->name.empty() ? w1->name : w2->name;
+	if (!w1->get_vcd_name().empty())
+		w3->set_vcd_name(w1->get_vcd_name());
+	else if (!w2->get_vcd_name().empty())
+		w3->set_vcd_name(w2->get_vcd_name());
+	if (w1->get_label_table())
+		w3->set_label_table(w1->get_label_table());
+	else if (w2->get_label_table())
+		w3->set_label_table(w2->get_label_table());
+	if (!w1->get_src_location().empty() || !w1->get_src_verilog().empty())
+		w3->set_src_info(w1->get_src_location(), w1->get_src_verilog());
+	else if (!w2->get_src_location().empty() || !w2->get_src_verilog().empty())
+		w3->set_src_info(w2->get_src_location(), w2->get_src_verilog());
+	if (w1->value.is_clock || w2->value.is_clock) {
+		w3->value.valid = true;
+		w3->value.is_clock = true;
+	}
+	w3->set_width(std::max(w1->get_width(), w2->get_width()));
 
 	p1 = w1->get_other_port(this);
 	p2 = w2->get_other_port(this);
@@ -499,6 +520,8 @@ void port::unsplice(void)
 	} else {
 		logger::get().warn("NO P3");
 	}
+	if (existing_net)
+		w3->add_net(existing_net);
 	w3->push_wire_color(w1->get_color());
 	w3->reseat();
 

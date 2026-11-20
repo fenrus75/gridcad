@@ -35,6 +35,7 @@
 #include "model_concat.h"
 #include "model_split.h"
 #include "model_truth.h"
+#include "connector.h"
 #include "verilog_import.h"
 #include "vcd_session.h"
 #include "timelinebar.h"
@@ -945,6 +946,50 @@ static void test_vcd_playback(void)
         a_p->update_value(&v_override_attempt, DEFAULT_TTL);
         run_queued_calculations();
         assert(y_p->get_value().intval == ((0x99 + 0x25) & 0xFF));
+    }
+
+    // 1b. Regression: unsplicing ("Join wire") a connector on a VCD net must not leave dangling pointers
+    {
+        scene s("unsplice_vcd_test");
+        auto in_a  = std::make_unique<model_toggle>(1, 2);
+        auto conn  = std::make_unique<connector>(6, 2);
+        auto out_y = std::make_unique<model_output>(12, 2);
+        in_a->set_width(8);
+        out_y->set_width(8);
+
+        auto *a_p = in_a.get();
+        auto *c_p = conn.get();
+        auto *y_p = out_y.get();
+        s.add_element(std::move(in_a));
+        s.add_element(std::move(conn));
+        s.add_element(std::move(out_y));
+
+        auto w1 = std::make_shared<wire>(0, 0, 0, 0);
+        w1->name = "bus_sig";
+        w1->set_vcd_name("bus_sig");
+        w1->set_width(8);
+        a_p->port_at(0)->add_wire(w1);
+        c_p->port_at(0)->add_wire(w1);
+
+        auto w2 = std::make_shared<wire>(0, 0, 0, 0);
+        w2->name = "bus_sig";
+        w2->set_vcd_name("bus_sig");
+        w2->set_width(8);
+        c_p->port_at(0)->add_wire(w2);
+        y_p->port_at(0)->add_wire(w2);
+
+        s.redo_nets();
+        assert(s.broadcast_vcd_value("bus_sig", make_int_val(0x42)) == 1);
+        assert(y_p->get_value().intval == 0x42);
+
+        // Unsplice connector and delete it WITHOUT calling redo_nets()
+        c_p->unsplice();
+        s.process_delete_requests();
+
+        // Subsequent VCD broadcast must cleanly update the joined wire with no UAF
+        assert(s.broadcast_vcd_value("bus_sig", make_int_val(0x7E)) == 1);
+        run_queued_calculations();
+        assert(y_p->get_value().intval == 0x7E);
     }
 
     // 2. Real test8080 top.json + dump_top_tb.vcd end-to-end binding & tick stepping

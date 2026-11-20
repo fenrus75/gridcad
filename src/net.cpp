@@ -155,11 +155,13 @@ void net::apply_vcd_value(const struct value &v)
 {
 	vcd_locked = true;
 	value = v;
-	for (auto *w : wires) {
+	auto wires_copy = wires;
+	for (auto *w : wires_copy) {
 		if (w)
 			w->set_vcd_value_direct(v);
 	}
-	for (auto *p : ports) {
+	auto ports_copy = ports;
+	for (auto *p : ports_copy) {
 		if (p)
 			p->update_value_final(&value, DEFAULT_TTL);
 	}

@@ -40,6 +40,14 @@ wire::wire(int x1, int y1, int x2, int y2, int _color)
 
 }
 
+wire::~wire(void)
+{
+	if (net) {
+		net->remove_wire(this);
+		net = nullptr;
+	}
+}
+
 void wire::set_new_name(void)
 {
 	name = generate_wire_name();
@@ -403,6 +411,17 @@ void wire::del_port(class port *port)
 		auto _port = ports[i];
 		if (port == _port) {
 			ports.erase(ports.begin() + i);
+			if (net && port) {
+				bool still_on_net = false;
+				for (const auto &pw : port->get_wires()) {
+					if (pw && pw.get() != this && pw->get_net() == net) {
+						still_on_net = true;
+						break;
+					}
+				}
+				if (!still_on_net)
+					net->remove_port(port);
+			}
 			return;
 		}
 	}
@@ -573,10 +592,28 @@ void wire::remove(void)
 	/* Hold a strong reference while detaching from both endpoints so `this`
 	 * cannot be destroyed before the loop finishes. */
 	auto self = shared_from_this();
+	class net *old_net = net;
+	if (old_net) {
+		old_net->remove_wire(this);
+		net = nullptr;
+	}
 	auto ports_copy = ports;
 	ports.clear();
 	for (auto port : ports_copy) {
+		if (!port)
+			continue;
 		port->remove_wire(this);
+		if (old_net) {
+			bool still_on_net = false;
+			for (const auto &pw : port->get_wires()) {
+				if (pw && pw->get_net() == old_net) {
+					still_on_net = true;
+					break;
+				}
+			}
+			if (!still_on_net)
+				old_net->remove_port(port);
+		}
 	}
 	points.reset();
 }
