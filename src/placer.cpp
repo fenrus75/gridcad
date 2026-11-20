@@ -204,34 +204,255 @@ void topological_placer::place(class scene *target_scene, const options &opts)
         std::sort(vec.begin(), vec.end());
         vec.erase(std::unique(vec.begin(), vec.end()), vec.end());
     };
-    std::vector<int> indegree(n, 0);
     for (size_t u = 0; u < n; ++u) {
         dedup(all_out[u]);
         dedup(all_in[u]);
         dedup(dag_out[u]);
-        for (size_t v : dag_out[u])
-            indegree[v]++;
+    }
+
+    /*
+     * Virtual hierarchy: group non-I/O, non-constant elements that share the
+     * same Verilog `src_location` AND are connected to each other into a
+     * temporary virtual super-block. Each multi-element virtual block runs a
+     * compact local left-to-right PnR to compute relative offsets and a bounding
+     * box; top-level PnR then places virtual blocks, after which the grouping
+     * is dissolved into real element coordinates.
+     */
+    struct vgroup {
+        std::vector<size_t> members; /* indices into target_scene->elements */
+        std::vector<int> rel_x;
+        std::vector<int> rel_y;
+        int width = 1;
+        int height = 1;
+        bool is_input = false;
+        bool is_output = false;
+        bool is_const = false;
+        bool is_slice_grp = false;
+        bool is_clock = false;
+        bool is_reset = false;
+    };
+
+    std::vector<size_t> elem_to_group(n, SIZE_MAX);
+    std::vector<vgroup> groups;
+    groups.reserve(n);
+
+    /* Bucket eligible elements by src_location. */
+    std::unordered_map<std::string, std::vector<size_t>> src_buckets;
+    for (size_t i = 0; i < n; ++i) {
+        element *e = target_scene->elements[i].get();
+        if (is_connector(e) || is_primary_input(e) || is_primary_output(e) || is_constant(e))
+            continue;
+        const std::string &src = e->get_src_location();
+        if (!src.empty())
+            src_buckets[src].push_back(i);
+    }
+
+    /* Find connected components inside each src_location bucket of size >= 2. */
+    std::vector<bool> grouped(n, false);
+    for (const auto &[src, bucket] : src_buckets) {
+        if (bucket.size() < 2)
+            continue;
+        std::unordered_set<size_t> in_bucket(bucket.begin(), bucket.end());
+        std::unordered_set<size_t> visited;
+
+        for (size_t start : bucket) {
+            if (visited.count(start))
+                continue;
+            std::vector<size_t> comp;
+            std::queue<size_t> bfs;
+            bfs.push(start);
+            visited.insert(start);
+            while (!bfs.empty()) {
+                size_t cur = bfs.front();
+                bfs.pop();
+                comp.push_back(cur);
+                for (size_t nb : all_out[cur]) {
+                    if (in_bucket.count(nb) && !visited.count(nb)) {
+                        visited.insert(nb);
+                        bfs.push(nb);
+                    }
+                }
+                for (size_t nb : all_in[cur]) {
+                    if (in_bucket.count(nb) && !visited.count(nb)) {
+                        visited.insert(nb);
+                        bfs.push(nb);
+                    }
+                }
+            }
+
+            if (comp.size() < 2)
+                continue;
+
+            /* Local left-to-right PnR inside this virtual block. */
+            const size_t k = comp.size();
+            std::unordered_map<size_t, size_t> local_idx;
+            local_idx.reserve(k);
+            for (size_t li = 0; li < k; ++li)
+                local_idx[comp[li]] = li;
+
+            std::vector<std::vector<size_t>> l_out(k);
+            std::vector<int> l_indeg(k, 0);
+            for (size_t li = 0; li < k; ++li) {
+                for (size_t dst : all_out[comp[li]]) {
+                    auto it = local_idx.find(dst);
+                    if (it != local_idx.end() && it->second != li) {
+                        l_out[li].push_back(it->second);
+                        l_indeg[it->second]++;
+                    }
+                }
+            }
+
+            std::vector<int> l_col(k, 0);
+            std::vector<bool> l_done(k, false);
+            std::queue<size_t> lq;
+            size_t l_done_cnt = 0;
+            for (size_t li = 0; li < k; ++li) {
+                if (l_indeg[li] == 0)
+                    lq.push(li);
+            }
+            auto drain_local = [&]() {
+                while (!lq.empty()) {
+                    size_t u = lq.front();
+                    lq.pop();
+                    if (l_done[u])
+                        continue;
+                    l_done[u] = true;
+                    l_done_cnt++;
+                    for (size_t v : l_out[u]) {
+                        if (l_col[v] < l_col[u] + 1)
+                            l_col[v] = l_col[u] + 1;
+                        if (--l_indeg[v] == 0)
+                            lq.push(v);
+                    }
+                }
+            };
+            drain_local();
+            while (l_done_cnt < k) {
+                size_t best = k;
+                int best_in = INT_MAX;
+                for (size_t li = 0; li < k; ++li) {
+                    if (!l_done[li] && l_indeg[li] < best_in) {
+                        best_in = l_indeg[li];
+                        best = li;
+                    }
+                }
+                if (best == k)
+                    break;
+                l_indeg[best] = 0;
+                lq.push(best);
+                drain_local();
+            }
+
+            int max_lc = 0;
+            for (int c : l_col)
+                max_lc = std::max(max_lc, c);
+            std::vector<std::vector<size_t>> l_cols(static_cast<size_t>(max_lc + 1));
+            for (size_t li = 0; li < k; ++li)
+                l_cols[static_cast<size_t>(l_col[li])].push_back(li);
+
+            vgroup vg;
+            vg.members = comp;
+            vg.rel_x.assign(k, 0);
+            vg.rel_y.assign(k, 0);
+
+            constexpr int INNER_COL_GAP = 5;
+            constexpr int INNER_ROW_GAP = 2;
+            int lx = 0;
+            int max_w = 1;
+            int max_h = 1;
+            for (int c = 0; c <= max_lc; ++c) {
+                const auto &col = l_cols[static_cast<size_t>(c)];
+                if (col.empty())
+                    continue;
+                int ly = 0;
+                int cw = 1;
+                for (size_t li : col) {
+                    element *e = target_scene->elements[comp[li]].get();
+                    const int ew = std::max(1, static_cast<int>(std::ceil(e->get_width())));
+                    const int eh = std::max(1, static_cast<int>(std::ceil(e->get_height())));
+                    vg.rel_x[li] = lx;
+                    vg.rel_y[li] = ly;
+                    cw = std::max(cw, ew);
+                    ly += eh + INNER_ROW_GAP;
+                }
+                max_w = std::max(max_w, lx + cw);
+                max_h = std::max(max_h, std::max(1, ly - INNER_ROW_GAP));
+                lx += cw + INNER_COL_GAP;
+            }
+            vg.width = max_w;
+            vg.height = max_h;
+
+            const size_t gid = groups.size();
+            for (size_t idx : comp) {
+                grouped[idx] = true;
+                elem_to_group[idx] = gid;
+            }
+            groups.push_back(std::move(vg));
+        }
+    }
+
+    /* Remaining non-connector elements become singleton virtual groups. */
+    for (size_t i = 0; i < n; ++i) {
+        element *e = target_scene->elements[i].get();
+        if (is_connector(e) || grouped[i])
+            continue;
+        vgroup vg;
+        vg.members.push_back(i);
+        vg.rel_x.push_back(0);
+        vg.rel_y.push_back(0);
+        vg.width = std::max(1, static_cast<int>(std::ceil(e->get_width())));
+        vg.height = std::max(1, static_cast<int>(std::ceil(e->get_height())));
+        vg.is_input = is_primary_input(e);
+        vg.is_output = is_primary_output(e);
+        vg.is_const = is_constant(e);
+        vg.is_slice_grp = is_slice(e);
+        vg.is_clock = is_clock_element(e);
+        vg.is_reset = is_reset_element(e);
+        elem_to_group[i] = groups.size();
+        groups.push_back(std::move(vg));
+    }
+
+    /* Contract element-level graphs onto virtual groups. */
+    const size_t ng = groups.size();
+    std::vector<std::vector<size_t>> g_all_out(ng), g_all_in(ng), g_dag_out(ng);
+    for (size_t u = 0; u < n; ++u) {
+        const size_t gu = elem_to_group[u];
+        if (gu == SIZE_MAX)
+            continue;
+        for (size_t v : all_out[u]) {
+            const size_t gv = elem_to_group[v];
+            if (gv != SIZE_MAX && gv != gu) {
+                g_all_out[gu].push_back(gv);
+                g_all_in[gv].push_back(gu);
+            }
+        }
+        for (size_t v : dag_out[u]) {
+            const size_t gv = elem_to_group[v];
+            if (gv != SIZE_MAX && gv != gu)
+                g_dag_out[gu].push_back(gv);
+        }
+    }
+    std::vector<int> indegree(ng, 0);
+    for (size_t gu = 0; gu < ng; ++gu) {
+        dedup(g_all_out[gu]);
+        dedup(g_all_in[gu]);
+        dedup(g_dag_out[gu]);
+        for (size_t gv : g_dag_out[gu])
+            indegree[gv]++;
     }
 
     /* Pass 1 (ASAP, left-to-right): longest-path topological layering via Kahn's + cyclic peel. */
-    std::vector<int> layer(n, 0);
-    std::vector<bool> processed(n, false);
+    std::vector<int> layer(ng, 0);
+    std::vector<bool> processed(ng, false);
     std::vector<size_t> topo_order;
-    topo_order.reserve(n);
+    topo_order.reserve(ng);
     std::queue<size_t> q;
-    size_t active_count = 0;
     size_t processed_count = 0;
 
-    for (size_t i = 0; i < n; ++i) {
-        element *e = target_scene->elements[i].get();
-        if (is_connector(e)) {
-            processed[i] = true;
-            continue;
-        }
-        active_count++;
-        if (is_primary_input(e)) {
+    for (size_t i = 0; i < ng; ++i) {
+        if (groups[i].is_input) {
             layer[i] = 0;
-        } else if (!is_constant(e) && !is_primary_output(e)) {
+        } else if (!groups[i].is_const && !groups[i].is_output) {
             layer[i] = 1;
         }
         if (indegree[i] == 0)
@@ -247,7 +468,7 @@ void topological_placer::place(class scene *target_scene, const options &opts)
             processed[u] = true;
             processed_count++;
             topo_order.push_back(u);
-            for (size_t v : dag_out[u]) {
+            for (size_t v : g_dag_out[u]) {
                 if (layer[v] < layer[u] + 1)
                     layer[v] = layer[u] + 1;
                 if (--indegree[v] == 0)
@@ -259,16 +480,16 @@ void topological_placer::place(class scene *target_scene, const options &opts)
     drain_queue();
 
     /* If any combinational/submodule cycle remained, greedily break the lowest-indegree node. */
-    while (processed_count < active_count) {
-        size_t best = n;
+    while (processed_count < ng) {
+        size_t best = ng;
         int best_in = INT_MAX;
-        for (size_t i = 0; i < n; ++i) {
+        for (size_t i = 0; i < ng; ++i) {
             if (!processed[i] && indegree[i] < best_in) {
                 best_in = indegree[i];
                 best = i;
             }
         }
-        if (best == n)
+        if (best == ng)
             break;
         indegree[best] = 0;
         q.push(best);
@@ -277,36 +498,34 @@ void topological_placer::place(class scene *target_scene, const options &opts)
 
     /* Pin primary outputs in the rightmost column before running the right-to-left ALAP pass. */
     int max_internal_layer = 0;
-    for (size_t i = 0; i < n; ++i) {
-        element *e = target_scene->elements[i].get();
-        if (!is_connector(e) && !is_primary_output(e))
+    for (size_t i = 0; i < ng; ++i) {
+        if (!groups[i].is_output)
             max_internal_layer = std::max(max_internal_layer, layer[i]);
     }
     const int output_layer = max_internal_layer + 1;
-    for (size_t i = 0; i < n; ++i) {
-        if (is_primary_output(target_scene->elements[i].get()))
+    for (size_t i = 0; i < ng; ++i) {
+        if (groups[i].is_output)
             layer[i] = output_layer;
     }
 
     /*
      * Pass 2 (ALAP, right-to-left): walk reverse topological order and pull
-     * internal elements rightward toward their earliest forward consumer so
+     * internal groups rightward toward their earliest forward consumer so
      * short combinational cones sit next to what consumes them instead of
      * piling up on the left edge.
      */
     for (auto it = topo_order.rbegin(); it != topo_order.rend(); ++it) {
         const size_t u = *it;
-        element *e = target_scene->elements[u].get();
-        if (is_connector(e) || is_primary_input(e) || is_primary_output(e) || is_constant(e))
+        if (groups[u].is_input || groups[u].is_output || groups[u].is_const)
             continue;
 
         int min_succ_layer = INT_MAX;
-        for (size_t v : dag_out[u]) {
+        for (size_t v : g_dag_out[u]) {
             if (layer[v] > layer[u])
                 min_succ_layer = std::min(min_succ_layer, layer[v]);
         }
-        for (size_t v : all_out[u]) {
-            if (is_primary_output(target_scene->elements[v].get()))
+        for (size_t v : g_all_out[u]) {
+            if (groups[v].is_output)
                 min_succ_layer = std::min(min_succ_layer, layer[v]);
         }
         if (min_succ_layer < INT_MAX)
@@ -314,12 +533,12 @@ void topological_placer::place(class scene *target_scene, const options &opts)
     }
 
     /* Place constants directly in the column preceding their earliest consumer. */
-    for (size_t i = 0; i < n; ++i) {
-        if (!is_constant(target_scene->elements[i].get()))
+    for (size_t i = 0; i < ng; ++i) {
+        if (!groups[i].is_const)
             continue;
         int min_sink_layer = 1;
         bool has_sink = false;
-        for (size_t v : all_out[i]) {
+        for (size_t v : g_all_out[i]) {
             if (!has_sink || layer[v] < min_sink_layer) {
                 min_sink_layer = layer[v];
                 has_sink = true;
@@ -333,12 +552,12 @@ void topological_placer::place(class scene *target_scene, const options &opts)
      * sit right in front of the LUTs/gates that consume them instead of
      * piling up on the far right and boomerang-routing wires across the layout.
      */
-    for (size_t i = 0; i < n; ++i) {
-        if (!is_slice(target_scene->elements[i].get()))
+    for (size_t i = 0; i < ng; ++i) {
+        if (!groups[i].is_slice_grp)
             continue;
         int min_sink_layer = INT_MAX;
-        for (size_t v : all_out[i]) {
-            if (!is_primary_output(target_scene->elements[v].get()))
+        for (size_t v : g_all_out[i]) {
+            if (!groups[v].is_output)
                 min_sink_layer = std::min(min_sink_layer, layer[v]);
         }
         if (min_sink_layer < INT_MAX)
@@ -347,10 +566,8 @@ void topological_placer::place(class scene *target_scene, const options &opts)
 
     int num_layers = output_layer + 1;
     std::vector<std::vector<size_t>> columns(static_cast<size_t>(num_layers));
-    for (size_t i = 0; i < n; ++i) {
-        if (!is_connector(target_scene->elements[i].get()))
-            columns[static_cast<size_t>(layer[i])].push_back(i);
-    }
+    for (size_t i = 0; i < ng; ++i)
+        columns[static_cast<size_t>(layer[i])].push_back(i);
 
     /*
      * Order Column 0 inputs so data inputs sit at the top, reset below them,
@@ -360,10 +577,9 @@ void topological_placer::place(class scene *target_scene, const options &opts)
         std::stable_sort(columns[0].begin(), columns[0].end(),
                          [&](size_t a, size_t b) {
                              auto rank = [&](size_t idx) -> int {
-                                 const element *e = target_scene->elements[idx].get();
-                                 if (is_clock_element(e))
+                                 if (groups[idx].is_clock)
                                      return 2;
-                                 if (is_reset_element(e))
+                                 if (groups[idx].is_reset)
                                      return 1;
                                  return 0;
                              };
@@ -373,9 +589,9 @@ void topological_placer::place(class scene *target_scene, const options &opts)
 
     /*
      * Two-pass barycenter ordering (forward then backward) to align connected
-     * slices, LUTs, and submodules vertically and minimize wire crossings.
+     * slices, LUTs, virtual groups, and submodules vertically and minimize crossings.
      */
-    std::vector<float> y_est(n, 0.0f);
+    std::vector<float> y_est(ng, 0.0f);
     for (size_t idx = 0; idx < columns[0].size(); ++idx)
         y_est[columns[0][idx]] = static_cast<float>(idx);
 
@@ -388,7 +604,7 @@ void topological_placer::place(class scene *target_scene, const options &opts)
             size_t u = col[idx];
             float sum = 0.0f;
             int cnt = 0;
-            for (size_t pred : all_in[u]) {
+            for (size_t pred : g_all_in[u]) {
                 if (layer[pred] < c) {
                     sum += y_est[pred];
                     cnt++;
@@ -417,7 +633,7 @@ void topological_placer::place(class scene *target_scene, const options &opts)
             size_t u = col[idx];
             float sum = 0.0f;
             int cnt = 0;
-            for (size_t succ : all_out[u]) {
+            for (size_t succ : g_all_out[u]) {
                 if (layer[succ] > c) {
                     sum += y_est[succ];
                     cnt++;
@@ -437,7 +653,8 @@ void topological_placer::place(class scene *target_scene, const options &opts)
     }
 
     /*
-     * Compute column X coordinates and element Y coordinates.
+     * Compute column X coordinates and virtual group Y coordinates, then
+     * dissolve each virtual group into real element coordinates.
      * Split tall columns (> max_elems_per_subcol) into multiple sub-columns and
      * stagger odd rows horizontally so large modules stay widescreen & fast to route.
      */
@@ -466,14 +683,17 @@ void topological_placer::place(class scene *target_scene, const options &opts)
                                     (c > 0) && (c < num_layers - 1);
 
             for (size_t idx = begin; idx < end; ++idx) {
-                element *elem = target_scene->elements[col[idx]].get();
-                int w = std::max(1, static_cast<int>(std::ceil(elem->get_width())));
-                int h = std::max(1, static_cast<int>(std::ceil(elem->get_height())));
+                const vgroup &vg = groups[col[idx]];
+                const int w = vg.width;
+                const int h = vg.height;
                 const int x_off = (do_stagger && ((idx - begin) % 2 == 1)) ? opts.stagger_x : 0;
                 col_width = std::max(col_width, w + x_off);
 
-                elem->place(cur_x + x_off, cur_y);
-                elem->reseat();
+                for (size_t mi = 0; mi < vg.members.size(); ++mi) {
+                    element *elem = target_scene->elements[vg.members[mi]].get();
+                    elem->place(cur_x + x_off + vg.rel_x[mi], cur_y + vg.rel_y[mi]);
+                    elem->reseat();
+                }
 
                 cur_y += h + opts.row_gap;
             }
