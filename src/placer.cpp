@@ -360,24 +360,72 @@ void topological_placer::place(class scene *target_scene, const options &opts)
             int lx = 0;
             int max_w = 1;
             int max_h = 1;
+            int min_rel_y = 0;
             for (int c = 0; c <= max_lc; ++c) {
                 const auto &col = l_cols[static_cast<size_t>(c)];
                 if (col.empty())
                     continue;
                 int ly = 0;
+                bool first_in_col = true;
                 int cw = 1;
                 for (size_t li : col) {
                     element *e = target_scene->elements[comp[li]].get();
                     const int ew = std::max(1, static_cast<int>(std::ceil(e->get_width())));
                     const int eh = std::max(1, static_cast<int>(std::ceil(e->get_height())));
+
+                    /* Align input pin Y to upstream local neighbor's output pin Y when possible. */
+                    int target_y = ly;
+                    if (c > 0) {
+                        std::vector<int> ideal_ys;
+                        for (unsigned int pi = 0;; ++pi) {
+                            port *in_p = e->port_at(pi);
+                            if (!in_p)
+                                break;
+                            if (in_p->direction != PORT_IN)
+                                continue;
+                            for (const auto &w : in_p->get_wires()) {
+                                if (!w)
+                                    continue;
+                                port *src_p = w->get_other_port(in_p);
+                                if (!src_p || !src_p->parent)
+                                    continue;
+                                auto eit = elem_index.find(src_p->parent);
+                                if (eit == elem_index.end())
+                                    continue;
+                                auto lit = local_idx.find(eit->second);
+                                if (lit != local_idx.end() && l_col[lit->second] < c) {
+                                    const int pred_pin_y = vg.rel_y[lit->second] + static_cast<int>(std::round(src_p->Y));
+                                    const int my_pin_y = static_cast<int>(std::round(in_p->Y));
+                                    ideal_ys.push_back(pred_pin_y - my_pin_y);
+                                }
+                            }
+                        }
+                        if (!ideal_ys.empty()) {
+                            std::sort(ideal_ys.begin(), ideal_ys.end());
+                            const int med_y = ideal_ys[ideal_ys.size() / 2];
+                            target_y = first_in_col ? med_y : std::max(ly, med_y);
+                        }
+                    }
+
                     vg.rel_x[li] = lx;
-                    vg.rel_y[li] = ly;
+                    vg.rel_y[li] = target_y;
+                    min_rel_y = std::min(min_rel_y, target_y);
                     cw = std::max(cw, ew);
-                    ly += eh + INNER_ROW_GAP;
+                    ly = target_y + eh + INNER_ROW_GAP;
+                    first_in_col = false;
                 }
                 max_w = std::max(max_w, lx + cw);
-                max_h = std::max(max_h, std::max(1, ly - INNER_ROW_GAP));
                 lx += cw + INNER_COL_GAP;
+            }
+            /* Normalize relative Y so top of virtual group starts at 0. */
+            if (min_rel_y != 0) {
+                for (size_t li = 0; li < k; ++li)
+                    vg.rel_y[li] -= min_rel_y;
+            }
+            for (size_t li = 0; li < k; ++li) {
+                element *e = target_scene->elements[comp[li]].get();
+                const int eh = std::max(1, static_cast<int>(std::ceil(e->get_height())));
+                max_h = std::max(max_h, vg.rel_y[li] + eh);
             }
             vg.width = max_w;
             vg.height = max_h;
@@ -884,6 +932,91 @@ void topological_placer::place(class scene *target_scene, const options &opts)
             const int density_bonus = std::min(16, static_cast<int>((end - begin) / 2));
             cur_x += col_width + opts.col_gap + density_bonus;
             max_x = std::max(max_x, cur_x);
+        }
+    }
+
+    /*
+     * Pin-alignment micro-nudge: nudge internal singleton elements by up to
+     * +/-3 grid cells vertically when doing so exact-aligns a direct horizontal
+     * wire (e.g. A+B output -> reg D input) without colliding with neighbors.
+     */
+    {
+        auto can_nudge_to = [&](element *myself, int new_y) -> bool {
+            if (new_y < 2)
+                return false;
+            const int mx = static_cast<int>(std::floor(myself->get_X()));
+            const int mw = std::max(1, static_cast<int>(std::ceil(myself->get_width())));
+            const int mh = std::max(1, static_cast<int>(std::ceil(myself->get_height())));
+            const int ax1 = mx - 1;
+            const int ay1 = new_y - 1;
+            const int ax2 = mx + mw;
+            const int ay2 = new_y + mh;
+            for (size_t i = 0; i < n; ++i) {
+                element *other = target_scene->elements[i].get();
+                if (!other || other == myself || other->is_background() ||
+                    is_connector(other) || tucked_const[i])
+                    continue;
+                const int ox = static_cast<int>(std::floor(other->get_X()));
+                const int oy = static_cast<int>(std::floor(other->get_Y()));
+                const int ow = std::max(1, static_cast<int>(std::ceil(other->get_width())));
+                const int oh = std::max(1, static_cast<int>(std::ceil(other->get_height())));
+                if (ax1 <= ox + ow && ax2 >= ox - 1 && ay1 <= oy + oh && ay2 >= oy - 1)
+                    return false;
+            }
+            return true;
+        };
+
+        /* Try aligning each internal singleton element with its direct downstream/upstream pin. */
+        for (int pass = 0; pass < 2; ++pass) {
+            for (size_t i = 0; i < n; ++i) {
+                element *e = target_scene->elements[i].get();
+                if (!e || e->is_background() || is_connector(e) || tucked_const[i] ||
+                    is_primary_input(e) || is_primary_output(e) || is_constant(e))
+                    continue;
+                if (elem_to_group[i] != SIZE_MAX && groups[elem_to_group[i]].members.size() > 1)
+                    continue;
+
+                /* Prefer aligning direct output -> sink pin (pass 0), then direct input <- src pin (pass 1). */
+                std::vector<int> deltas;
+                for (unsigned int pi = 0;; ++pi) {
+                    port *p = e->port_at(pi);
+                    if (!p)
+                        break;
+                    if (is_global_control_port(p))
+                        continue;
+                    if ((pass == 0 && p->direction != PORT_OUT) ||
+                        (pass == 1 && p->direction != PORT_IN))
+                        continue;
+                    if (p->get_wires().size() != 1)
+                        continue;
+                    const auto &w = p->get_wires()[0];
+                    if (!w)
+                        continue;
+                    port *other = w->get_other_port(p);
+                    if (!other || !other->parent || is_connector(other->parent) ||
+                        is_constant(other->parent))
+                        continue;
+                    /* Only align roughly horizontal forward wires. */
+                    const float dx = (p->direction == PORT_OUT)
+                                         ? (other->screenX - p->screenX)
+                                         : (p->screenX - other->screenX);
+                    if (dx <= 0.0f)
+                        continue;
+                    const int dy = static_cast<int>(std::round(other->screenY - p->screenY));
+                    if (dy != 0 && std::abs(dy) <= 3)
+                        deltas.push_back(dy);
+                }
+
+                if (deltas.size() == 1) {
+                    const int cur_y = static_cast<int>(std::floor(e->get_Y()));
+                    const int new_y = cur_y + deltas[0];
+                    if (can_nudge_to(e, new_y)) {
+                        e->place(static_cast<int>(std::floor(e->get_X())), new_y);
+                        e->reseat();
+                        max_y = std::max(max_y, new_y + static_cast<int>(std::ceil(e->get_height())) + 2);
+                    }
+                }
+            }
         }
     }
 
