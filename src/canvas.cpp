@@ -1203,7 +1203,6 @@ void canvas::draw_tooltip(float X, float Y, std::string_view tooltip)
 	fill_scale();
 
 	text = text_to_texture(tooltip);
-	sdl::TexturePtr shade = load_image("assets/gray.png");
 	if (!text)
 		return;
 
@@ -1227,7 +1226,8 @@ void canvas::draw_tooltip(float X, float Y, std::string_view tooltip)
 	rect.h = size.y/scale;
 
 	SDL_RenderSetClipRect(renderer.get(), nullptr);	
-	SDL_RenderCopy(renderer.get(), shade.get(), nullptr, &rect);
+	SDL_SetRenderDrawColor(renderer.get(), 45, 45, 45, 220);
+	SDL_RenderFillRect(renderer.get(), &rect);
 	SDL_RenderCopy(renderer.get(), text, nullptr, &rect);
 }
 

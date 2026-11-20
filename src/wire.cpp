@@ -673,37 +673,34 @@ std::shared_ptr<class wire> json_wire_factory(json &jwire)
 
 static void grid_line(class wiregrid *grid, float x1, float y1, float x2, float y2, bool is_clock)
 {
-	float dx, dy,d;
-	float self_cost = 2.25;
-	if (is_clock && grid->is_clock)
-		self_cost = -0.05; /* we don't mind clocks routing over clocks */
+	const float self_cost = (is_clock && grid->is_clock) ? -0.05f : 2.25f;
+	const float d = dist(x1, y1, x2, y2);
+	if (d < 0.01f)
+		return;
 
-	dx = x2-x1;
-	dy = y2-y1;
-	d = dist(x1,y1,x2,y2);;
-	dx = dx/d/12.0;
-	dy = dy/d/12.0;
+	/* Step once per integer grid cell along the segment (avoids 12x oversampling + inner sqrt). */
+	const int steps = std::max(1, static_cast<int>(std::ceil(d)));
+	const float dx = (x2 - x1) / static_cast<float>(steps);
+	const float dy = (y2 - y1) / static_cast<float>(steps);
 
-
-	while (dist(x1,y1,x2,y2) > 1/10.0) {
+	for (int s = 0; s <= steps; ++s) {
+		const int gx = static_cast<int>(x1);
+		const int gy = static_cast<int>(y1);
 		if (!is_clock)
-			grid->declare_part_of_wire(x1, y1);
-		if (grid->get_soft_cost(x1, y1) < 0.001)
-			grid->add_soft_cost(x1, y1, self_cost);
-		if (grid->get_soft_cost(x1 - 1, y1) < 0.001)
-			grid->add_soft_cost(x1 - 1, y1, -0.05);
-		if (grid->get_soft_cost(x1 + 1, y1) < 0.001)
-			grid->add_soft_cost(x1 + 1, y1, -0.05);
-		if (grid->get_soft_cost(x1, y1 - 1) < 0.001)
-			grid->add_soft_cost(x1, y1 - 1, -0.05);
-		if (grid->get_soft_cost(x1, y1 + 1) < 0.001)
-			grid->add_soft_cost(x1, y1 + 1, -0.05);
+			grid->declare_part_of_wire(gx, gy);
+		if (grid->get_soft_cost(gx, gy) < 0.001f)
+			grid->add_soft_cost(gx, gy, self_cost);
+		if (grid->get_soft_cost(gx - 1, gy) < 0.001f)
+			grid->add_soft_cost(gx - 1, gy, -0.05);
+		if (grid->get_soft_cost(gx + 1, gy) < 0.001f)
+			grid->add_soft_cost(gx + 1, gy, -0.05);
+		if (grid->get_soft_cost(gx, gy - 1) < 0.001f)
+			grid->add_soft_cost(gx, gy - 1, -0.05);
+		if (grid->get_soft_cost(gx, gy + 1) < 0.001f)
+			grid->add_soft_cost(gx, gy + 1, -0.05);
 		x1 += dx;
 		y1 += dy;
 	}
-
-
-
 }
 
 void wire::fill_grid(class wiregrid *grid)
