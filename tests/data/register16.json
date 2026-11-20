@@ -1,0 +1,777 @@
+{
+  "label_tables": {
+    "enum_0": {
+      "0x0": "FETCH",
+      "0x1": "DECODE",
+      "0x2": "LOAD8",
+      "0x3": "LOAD16_1",
+      "0x4": "LOAD16_2",
+      "0x5": "STORE8",
+      "0x6": "STORE16_1",
+      "0x7": "STORE16_2",
+      "0x8": "RETIRE",
+      "0xf": "HALT"
+    }
+  },
+  "modules": {
+    "register16": {
+      "components": [
+        {
+          "id": "gridcad_add_0",
+          "instance_name": "$/home/arjan/git/turbostar2/examples/test8080/src/register16.sv:31$add$2",
+          "is_submodule": false,
+          "parameters": {
+            "WIDTH": 16
+          },
+          "pins": {
+            "a": {
+              "direction": "input",
+              "width": 16,
+              "wire": "value"
+            },
+            "b": {
+              "direction": "input",
+              "width": 16,
+              "wire": "wire_const_1"
+            },
+            "y": {
+              "direction": "output",
+              "width": 16,
+              "wire": "wire_1"
+            }
+          },
+          "src": "src/register16.sv:31",
+          "src_verilog": "sp_plus_2  <= value_reg + 16'd2;",
+          "type": "gridcad_add"
+        },
+        {
+          "id": "gridcad_sub_1",
+          "instance_name": "$/home/arjan/git/turbostar2/examples/test8080/src/register16.sv:32$sub$3",
+          "is_submodule": false,
+          "parameters": {
+            "WIDTH": 16
+          },
+          "pins": {
+            "a": {
+              "direction": "input",
+              "width": 16,
+              "wire": "value"
+            },
+            "b": {
+              "direction": "input",
+              "width": 16,
+              "wire": "wire_const_2"
+            },
+            "y": {
+              "direction": "output",
+              "width": 16,
+              "wire": "wire_2"
+            }
+          },
+          "src": "src/register16.sv:32",
+          "src_verilog": "sp_minus_2 <= value_reg - 16'd2;",
+          "type": "gridcad_sub"
+        },
+        {
+          "id": "gridcad_mux_2",
+          "instance_name": "$/home/arjan/git/turbostar2/examples/test8080/src/register16.sv:36$ternary$4",
+          "is_submodule": false,
+          "parameters": {
+            "WIDTH": 16
+          },
+          "pins": {
+            "a": {
+              "direction": "input",
+              "width": 16,
+              "wire": "sp_plus_2"
+            },
+            "b": {
+              "direction": "input",
+              "width": 16,
+              "wire": "sp_minus_2"
+            },
+            "s": {
+              "direction": "input",
+              "width": 1,
+              "wire": "dec2"
+            },
+            "y": {
+              "direction": "output",
+              "width": 16,
+              "wire": "wire_3"
+            }
+          },
+          "src": "src/register16.sv:36",
+          "src_verilog": "wire [15:0] next_val = load ? load_value : (dec2 ? sp_minus_2 : sp_plus_2);",
+          "type": "gridcad_mux"
+        },
+        {
+          "id": "gridcad_mux_3",
+          "instance_name": "$/home/arjan/git/turbostar2/examples/test8080/src/register16.sv:36$ternary$5",
+          "is_submodule": false,
+          "parameters": {
+            "WIDTH": 16
+          },
+          "pins": {
+            "a": {
+              "direction": "input",
+              "width": 16,
+              "wire": "wire_3"
+            },
+            "b": {
+              "direction": "input",
+              "width": 16,
+              "wire": "load_value"
+            },
+            "s": {
+              "direction": "input",
+              "width": 1,
+              "wire": "load"
+            },
+            "y": {
+              "direction": "output",
+              "width": 16,
+              "wire": "next_val"
+            }
+          },
+          "src": "src/register16.sv:36",
+          "src_verilog": "wire [15:0] next_val = load ? load_value : (dec2 ? sp_minus_2 : sp_plus_2);",
+          "type": "gridcad_mux"
+        },
+        {
+          "id": "gridcad_lut_4",
+          "instance_name": "$abc$30$blif$30$0",
+          "is_submodule": false,
+          "parameters": {
+            "LUT": "11111110",
+            "WIDTH": 3
+          },
+          "pins": {
+            "A0": {
+              "direction": "input",
+              "width": 1,
+              "wire": "load"
+            },
+            "A1": {
+              "direction": "input",
+              "width": 1,
+              "wire": "dec2"
+            },
+            "A2": {
+              "direction": "input",
+              "width": 1,
+              "wire": "inc2"
+            },
+            "Y": {
+              "direction": "output",
+              "width": 1,
+              "wire": "enable"
+            }
+          },
+          "type": "gridcad_lut"
+        },
+        {
+          "id": "gridcad_reg_5",
+          "instance_name": "$auto$ff.cc:337:slice$20",
+          "is_submodule": false,
+          "parameters": {
+            "RESET_VAL": "0x0200",
+            "WIDTH": 16
+          },
+          "pins": {
+            "clk": {
+              "direction": "input",
+              "width": 1,
+              "wire": "clk"
+            },
+            "d": {
+              "direction": "input",
+              "width": 16,
+              "wire": "next_val"
+            },
+            "en": {
+              "direction": "input",
+              "width": 1,
+              "wire": "enable"
+            },
+            "q": {
+              "direction": "output",
+              "width": 16,
+              "wire": "value"
+            },
+            "rst": {
+              "direction": "input",
+              "width": 1,
+              "wire": "rst"
+            }
+          },
+          "src": "src/register16.sv:39-45",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nvalue_reg <= RESET_VAL;\nend else if (enable) begin\nvalue_reg <= next_val;\nend\nend",
+          "type": "gridcad_reg"
+        },
+        {
+          "id": "gridcad_reg_6",
+          "instance_name": "$procdff$16",
+          "is_submodule": false,
+          "parameters": {
+            "RESET_VAL": "0x0202",
+            "WIDTH": 16
+          },
+          "pins": {
+            "clk": {
+              "direction": "input",
+              "width": 1,
+              "wire": "clk"
+            },
+            "d": {
+              "direction": "input",
+              "width": 16,
+              "wire": "wire_1"
+            },
+            "en": {
+              "direction": "input",
+              "width": 1,
+              "wire": "wire_const_3"
+            },
+            "q": {
+              "direction": "output",
+              "width": 16,
+              "wire": "sp_plus_2"
+            },
+            "rst": {
+              "direction": "input",
+              "width": 1,
+              "wire": "rst"
+            }
+          },
+          "src": "src/register16.sv:26-34",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nsp_plus_2  <= RESET_VAL + 16'd2;\nsp_minus_2 <= RESET_VAL - 16'd2;\nend else begin\nsp_plus_2  <= value_reg + 16'd2;\nsp_minus_2 <= value_reg - 16'd2;\nend\nend",
+          "type": "gridcad_reg"
+        },
+        {
+          "id": "gridcad_reg_7",
+          "instance_name": "$procdff$19",
+          "is_submodule": false,
+          "parameters": {
+            "RESET_VAL": "0x01fe",
+            "WIDTH": 16
+          },
+          "pins": {
+            "clk": {
+              "direction": "input",
+              "width": 1,
+              "wire": "clk"
+            },
+            "d": {
+              "direction": "input",
+              "width": 16,
+              "wire": "wire_2"
+            },
+            "en": {
+              "direction": "input",
+              "width": 1,
+              "wire": "wire_const_4"
+            },
+            "q": {
+              "direction": "output",
+              "width": 16,
+              "wire": "sp_minus_2"
+            },
+            "rst": {
+              "direction": "input",
+              "width": 1,
+              "wire": "rst"
+            }
+          },
+          "src": "src/register16.sv:26-34",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nsp_plus_2  <= RESET_VAL + 16'd2;\nsp_minus_2 <= RESET_VAL - 16'd2;\nend else begin\nsp_plus_2  <= value_reg + 16'd2;\nsp_minus_2 <= value_reg - 16'd2;\nend\nend",
+          "type": "gridcad_reg"
+        }
+      ],
+      "constants": [
+        {
+          "id": "const_0",
+          "value": "0x0002",
+          "width": 16,
+          "wire": "wire_const_1"
+        },
+        {
+          "id": "const_1",
+          "value": "0x0002",
+          "width": 16,
+          "wire": "wire_const_2"
+        },
+        {
+          "id": "const_2",
+          "value": "0x1",
+          "width": 1,
+          "wire": "wire_const_3"
+        },
+        {
+          "id": "const_3",
+          "value": "0x1",
+          "width": 1,
+          "wire": "wire_const_4"
+        }
+      ],
+      "ports": [
+        {
+          "direction": "input",
+          "name": "clk",
+          "order": 0,
+          "src": "src/register16.sv:8",
+          "src_verilog": "(input logic        clk,         // [timing: clock]",
+          "width": 1,
+          "wire": "clk"
+        },
+        {
+          "direction": "input",
+          "name": "dec2",
+          "order": 3,
+          "src": "src/register16.sv:12",
+          "src_verilog": "input logic        dec2, // e.g. for PUSH/CALL/RST: SP <= SP - 2 [timing: 2 -> Reg]",
+          "width": 1,
+          "wire": "dec2"
+        },
+        {
+          "direction": "input",
+          "name": "inc2",
+          "order": 4,
+          "src": "src/register16.sv:13",
+          "src_verilog": "input logic        inc2, // e.g. for POP/RET:       SP <= SP + 2 [timing: 1 -> Reg]",
+          "width": 1,
+          "wire": "inc2"
+        },
+        {
+          "direction": "input",
+          "name": "load",
+          "order": 2,
+          "src": "src/register16.sv:11",
+          "src_verilog": "input logic        load,        // [timing: 2 -> Reg]",
+          "width": 1,
+          "wire": "load"
+        },
+        {
+          "direction": "input",
+          "name": "load_value",
+          "order": 5,
+          "src": "src/register16.sv:14",
+          "src_verilog": "input logic [15:0] load_value,  // [timing: 1 -> Reg]",
+          "width": 16,
+          "wire": "load_value"
+        },
+        {
+          "direction": "input",
+          "name": "rst",
+          "order": 1,
+          "src": "src/register16.sv:9",
+          "src_verilog": "input logic        rst,         // [timing: 0 -> Reg]",
+          "width": 1,
+          "wire": "rst"
+        },
+        {
+          "direction": "output",
+          "name": "value",
+          "order": 6,
+          "src": "src/register16.sv:15",
+          "src_verilog": "output logic [15:0] value);     // [timing: 0 <- Reg]",
+          "width": 16,
+          "wire": "value"
+        }
+      ],
+      "source_file": "src/register16.sv",
+      "wires": [
+        {
+          "driver": {
+            "id": "clk",
+            "kind": "port",
+            "pin": "clk"
+          },
+          "is_glue": false,
+          "name": "clk",
+          "sinks": [
+            {
+              "id": "gridcad_reg_5",
+              "kind": "component",
+              "pin": "clk"
+            },
+            {
+              "id": "gridcad_reg_6",
+              "kind": "component",
+              "pin": "clk"
+            },
+            {
+              "id": "gridcad_reg_7",
+              "kind": "component",
+              "pin": "clk"
+            }
+          ],
+          "src": "src/register16.sv:8",
+          "src_verilog": "(input logic        clk,         // [timing: clock]",
+          "vcd_signal": "clk",
+          "width": 1
+        },
+        {
+          "driver": {
+            "id": "dec2",
+            "kind": "port",
+            "pin": "dec2"
+          },
+          "is_glue": false,
+          "name": "dec2",
+          "sinks": [
+            {
+              "id": "gridcad_mux_2",
+              "kind": "component",
+              "pin": "s"
+            },
+            {
+              "id": "gridcad_lut_4",
+              "kind": "component",
+              "pin": "A1"
+            }
+          ],
+          "src": "src/register16.sv:12",
+          "src_verilog": "input logic        dec2, // e.g. for PUSH/CALL/RST: SP <= SP - 2 [timing: 2 -> Reg]",
+          "vcd_signal": "dec2",
+          "width": 1
+        },
+        {
+          "driver": {
+            "id": "inc2",
+            "kind": "port",
+            "pin": "inc2"
+          },
+          "is_glue": false,
+          "name": "inc2",
+          "sinks": [
+            {
+              "id": "gridcad_lut_4",
+              "kind": "component",
+              "pin": "A2"
+            }
+          ],
+          "src": "src/register16.sv:13",
+          "src_verilog": "input logic        inc2, // e.g. for POP/RET:       SP <= SP + 2 [timing: 1 -> Reg]",
+          "vcd_signal": "inc2",
+          "width": 1
+        },
+        {
+          "driver": {
+            "id": "load",
+            "kind": "port",
+            "pin": "load"
+          },
+          "is_glue": false,
+          "name": "load",
+          "sinks": [
+            {
+              "id": "gridcad_mux_3",
+              "kind": "component",
+              "pin": "s"
+            },
+            {
+              "id": "gridcad_lut_4",
+              "kind": "component",
+              "pin": "A0"
+            }
+          ],
+          "src": "src/register16.sv:11",
+          "src_verilog": "input logic        load,        // [timing: 2 -> Reg]",
+          "vcd_signal": "load",
+          "width": 1
+        },
+        {
+          "driver": {
+            "id": "load_value",
+            "kind": "port",
+            "pin": "load_value"
+          },
+          "is_glue": false,
+          "name": "load_value",
+          "sinks": [
+            {
+              "id": "gridcad_mux_3",
+              "kind": "component",
+              "pin": "b"
+            }
+          ],
+          "src": "src/register16.sv:14",
+          "src_verilog": "input logic [15:0] load_value,  // [timing: 1 -> Reg]",
+          "vcd_signal": "load_value",
+          "width": 16
+        },
+        {
+          "driver": {
+            "id": "rst",
+            "kind": "port",
+            "pin": "rst"
+          },
+          "is_glue": false,
+          "name": "rst",
+          "sinks": [
+            {
+              "id": "gridcad_reg_5",
+              "kind": "component",
+              "pin": "rst"
+            },
+            {
+              "id": "gridcad_reg_6",
+              "kind": "component",
+              "pin": "rst"
+            },
+            {
+              "id": "gridcad_reg_7",
+              "kind": "component",
+              "pin": "rst"
+            }
+          ],
+          "src": "src/register16.sv:9",
+          "src_verilog": "input logic        rst,         // [timing: 0 -> Reg]",
+          "vcd_signal": "rst",
+          "width": 1
+        },
+        {
+          "driver": {
+            "id": "gridcad_reg_5",
+            "kind": "component",
+            "pin": "q"
+          },
+          "is_glue": false,
+          "name": "value",
+          "sinks": [
+            {
+              "id": "value",
+              "kind": "port",
+              "pin": "value"
+            },
+            {
+              "id": "gridcad_add_0",
+              "kind": "component",
+              "pin": "a"
+            },
+            {
+              "id": "gridcad_sub_1",
+              "kind": "component",
+              "pin": "a"
+            }
+          ],
+          "src": "src/register16.sv:15",
+          "src_verilog": "output logic [15:0] value);     // [timing: 0 <- Reg]",
+          "vcd_signal": "value",
+          "width": 16
+        },
+        {
+          "driver": {
+            "id": "const_0",
+            "kind": "constant",
+            "pin": "out"
+          },
+          "is_const": true,
+          "is_glue": true,
+          "name": "wire_const_1",
+          "sinks": [
+            {
+              "id": "gridcad_add_0",
+              "kind": "component",
+              "pin": "b"
+            }
+          ],
+          "width": 16
+        },
+        {
+          "driver": {
+            "id": "gridcad_add_0",
+            "kind": "component",
+            "pin": "y"
+          },
+          "is_glue": true,
+          "name": "wire_1",
+          "sinks": [
+            {
+              "id": "gridcad_reg_6",
+              "kind": "component",
+              "pin": "d"
+            }
+          ],
+          "src": "src/register16.sv:31",
+          "src_verilog": "sp_plus_2  <= value_reg + 16'd2;",
+          "width": 16
+        },
+        {
+          "driver": {
+            "id": "const_1",
+            "kind": "constant",
+            "pin": "out"
+          },
+          "is_const": true,
+          "is_glue": true,
+          "name": "wire_const_2",
+          "sinks": [
+            {
+              "id": "gridcad_sub_1",
+              "kind": "component",
+              "pin": "b"
+            }
+          ],
+          "width": 16
+        },
+        {
+          "driver": {
+            "id": "gridcad_sub_1",
+            "kind": "component",
+            "pin": "y"
+          },
+          "is_glue": true,
+          "name": "wire_2",
+          "sinks": [
+            {
+              "id": "gridcad_reg_7",
+              "kind": "component",
+              "pin": "d"
+            }
+          ],
+          "src": "src/register16.sv:32",
+          "src_verilog": "sp_minus_2 <= value_reg - 16'd2;",
+          "width": 16
+        },
+        {
+          "driver": {
+            "id": "gridcad_reg_6",
+            "kind": "component",
+            "pin": "q"
+          },
+          "is_glue": false,
+          "name": "sp_plus_2",
+          "sinks": [
+            {
+              "id": "gridcad_mux_2",
+              "kind": "component",
+              "pin": "a"
+            }
+          ],
+          "src": "src/register16.sv:18",
+          "src_verilog": "logic [15:0] sp_plus_2;",
+          "vcd_signal": "sp_plus_2",
+          "width": 16
+        },
+        {
+          "driver": {
+            "id": "gridcad_reg_7",
+            "kind": "component",
+            "pin": "q"
+          },
+          "is_glue": false,
+          "name": "sp_minus_2",
+          "sinks": [
+            {
+              "id": "gridcad_mux_2",
+              "kind": "component",
+              "pin": "b"
+            }
+          ],
+          "src": "src/register16.sv:19",
+          "src_verilog": "logic [15:0] sp_minus_2;",
+          "vcd_signal": "sp_minus_2",
+          "width": 16
+        },
+        {
+          "driver": {
+            "id": "gridcad_mux_2",
+            "kind": "component",
+            "pin": "y"
+          },
+          "is_glue": true,
+          "name": "wire_3",
+          "sinks": [
+            {
+              "id": "gridcad_mux_3",
+              "kind": "component",
+              "pin": "a"
+            }
+          ],
+          "src": "src/register16.sv:36",
+          "src_verilog": "wire [15:0] next_val = load ? load_value : (dec2 ? sp_minus_2 : sp_plus_2);",
+          "width": 16
+        },
+        {
+          "driver": {
+            "id": "gridcad_mux_3",
+            "kind": "component",
+            "pin": "y"
+          },
+          "is_glue": false,
+          "name": "next_val",
+          "sinks": [
+            {
+              "id": "gridcad_reg_5",
+              "kind": "component",
+              "pin": "d"
+            }
+          ],
+          "src": "src/register16.sv:36",
+          "src_verilog": "wire [15:0] next_val = load ? load_value : (dec2 ? sp_minus_2 : sp_plus_2);",
+          "vcd_signal": "next_val",
+          "width": 16
+        },
+        {
+          "driver": {
+            "id": "gridcad_lut_4",
+            "kind": "component",
+            "pin": "Y"
+          },
+          "is_glue": false,
+          "name": "enable",
+          "sinks": [
+            {
+              "id": "gridcad_reg_5",
+              "kind": "component",
+              "pin": "en"
+            }
+          ],
+          "src": "src/register16.sv:37",
+          "src_verilog": "wire        enable   = load | dec2 | inc2;",
+          "vcd_signal": "enable",
+          "width": 1
+        },
+        {
+          "driver": {
+            "id": "const_2",
+            "kind": "constant",
+            "pin": "out"
+          },
+          "is_const": true,
+          "is_glue": true,
+          "name": "wire_const_3",
+          "sinks": [
+            {
+              "id": "gridcad_reg_6",
+              "kind": "component",
+              "pin": "en"
+            }
+          ],
+          "width": 1
+        },
+        {
+          "driver": {
+            "id": "const_3",
+            "kind": "constant",
+            "pin": "out"
+          },
+          "is_const": true,
+          "is_glue": true,
+          "name": "wire_const_4",
+          "sinks": [
+            {
+              "id": "gridcad_reg_7",
+              "kind": "component",
+              "pin": "en"
+            }
+          ],
+          "width": 1
+        }
+      ]
+    }
+  },
+  "top_module": "register16"
+}

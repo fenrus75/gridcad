@@ -189,6 +189,7 @@ extern unsigned int SDL_timer_event;
 #define EVENT_PROGRAM_FPGA (SDL_timer_event + 13)
 #define EVENT_REWIRE (SDL_timer_event + 14)
 #define EVENT_SEQUENCER_RESET (SDL_timer_event + 15)
+#define EVENT_VCD_WIRE_UPDATE (SDL_timer_event + 16)
 
 extern void callback_editname(class element *element);
 extern sdl::TexturePtr IMG_LoadTextureFromMem(SDL_Renderer *renderer, const char *filename);

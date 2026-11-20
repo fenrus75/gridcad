@@ -42,6 +42,7 @@ public:
     void to_json(json &j);
     void from_json(json &j);
     bool has_wires(void) { return wires.size() > 0; };
+    const std::vector<std::shared_ptr<class wire>> &get_wires(void) const { return wires; };
     void remove_wires(void);
     void remove_orphans(void);
     int get_width(void);

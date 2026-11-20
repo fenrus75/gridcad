@@ -141,12 +141,38 @@ void net::set_value(struct value *newval, int ttl)
 
 void net::update_value(struct value *newvalue, int ttl)
 {
+	if (vcd_locked)
+		return;
 	if (memcmp(&value, newvalue, sizeof(struct value)) == 0)
 		return;
 
 	value = *newvalue;
 	set_value(newvalue, ttl);
 	update_net_distances();
+}
+
+void net::apply_vcd_value(const struct value &v)
+{
+	vcd_locked = true;
+	value = v;
+	for (auto *w : wires) {
+		if (w)
+			w->set_vcd_value_direct(v);
+	}
+	for (auto *p : ports) {
+		if (p)
+			p->update_value_final(&value, DEFAULT_TTL);
+	}
+	update_net_distances();
+}
+
+void net::unlock_vcd(void)
+{
+	vcd_locked = false;
+	for (auto *w : wires) {
+		if (w)
+			w->unlock_vcd();
+	}
 }
 
 

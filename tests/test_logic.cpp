@@ -21,8 +21,19 @@
 #include "model_nor.h"
 #include "model_xor.h"
 #include "model_not.h"
+#include "model_const.h"
+#include "model_add.h"
+#include "model_sub.h"
+#include "model_mux.h"
+#include "model_reg.h"
+#include "model_eq.h"
+#include "model_ne.h"
+#include "model_mem.h"
+#include "verilog_import.h"
+#include "vcd_session.h"
 
 #include <cassert>
+#include <filesystem>
 #include <iostream>
 #include <memory>
 #include <nlohmann/json.hpp>
@@ -54,7 +65,9 @@ static void test_factory(void)
         "model_not:", "model_buffer:", "model_zero:", "model_one:",
         "model_toggle:", "model_output:", "model_dflipflop:", "model_deflipflop:",
         "model_memory:", "model_clock:", "model_label:", "model_truth:",
-        "model_nest:", "sequencer:", "connector:"
+        "model_nest:", "sequencer:", "connector:",
+        "model_const:", "model_add:", "model_sub:", "model_mux:",
+        "model_reg:", "model_eq:", "model_ne:"
     };
 
     for (const char *cid : known) {
@@ -207,6 +220,469 @@ static void test_scene_json_and_verilog(void)
     assert(loaded.elements.size() == 4);
 }
 
+static struct value make_int_val(uint64_t x)
+{
+    struct value v = {};
+    v.valid = true;
+    v.type = VALUE_TYPE_INT;
+    v.intval = x;
+    v.boolval = (x != 0);
+    return v;
+}
+
+static void test_parameterized_elements(void)
+{
+    // 1. model_const + model_add + model_sub + model_mux + model_eq + model_ne (16-bit)
+    {
+        scene s("param_alu");
+        auto in_a  = std::make_unique<model_toggle>(1, 2);
+        auto c_two = std::make_unique<model_const>(1, 6, 16, 2);
+        auto sel   = std::make_unique<model_toggle>(1, 10);
+        auto adder = std::make_unique<model_add>(8, 2, 16);
+        auto sub   = std::make_unique<model_sub>(8, 6, 16);
+        auto mux   = std::make_unique<model_mux>(14, 4, 16);
+        auto eq    = std::make_unique<model_eq>(14, 10, 16);
+        auto ne    = std::make_unique<model_ne>(14, 14, 16);
+        auto out_m = std::make_unique<model_output>(22, 4);
+        auto out_e = std::make_unique<model_output>(22, 10);
+        auto out_n = std::make_unique<model_output>(22, 14);
+
+        in_a->set_width(16);
+        out_m->set_width(16);
+
+        auto *a_p = in_a.get();
+        auto *c_p = c_two.get();
+        auto *s_p = sel.get();
+        auto *add_p = adder.get();
+        auto *sub_p = sub.get();
+        auto *mux_p = mux.get();
+        auto *eq_p  = eq.get();
+        auto *ne_p  = ne.get();
+        auto *om_p  = out_m.get();
+        auto *oe_p  = out_e.get();
+        auto *on_p  = out_n.get();
+
+        s.add_element(std::move(in_a));
+        s.add_element(std::move(c_two));
+        s.add_element(std::move(sel));
+        s.add_element(std::move(adder));
+        s.add_element(std::move(sub));
+        s.add_element(std::move(mux));
+        s.add_element(std::move(eq));
+        s.add_element(std::move(ne));
+        s.add_element(std::move(out_m));
+        s.add_element(std::move(out_e));
+        s.add_element(std::move(out_n));
+
+        connect_ports(a_p->port_at(0), add_p->port_at(0));
+        connect_ports(c_p->port_at(0), add_p->port_at(1));
+        connect_ports(a_p->port_at(0), sub_p->port_at(0));
+        connect_ports(c_p->port_at(0), sub_p->port_at(1));
+        connect_ports(add_p->port_at(2), mux_p->port_at(0));
+        connect_ports(sub_p->port_at(2), mux_p->port_at(1));
+        connect_ports(s_p->port_at(0), mux_p->port_at(2));
+        connect_ports(mux_p->port_at(3), om_p->port_at(0));
+
+        connect_ports(a_p->port_at(0), eq_p->port_at(0));
+        connect_ports(c_p->port_at(0), eq_p->port_at(1));
+        connect_ports(eq_p->port_at(2), oe_p->port_at(0));
+
+        connect_ports(a_p->port_at(0), ne_p->port_at(0));
+        connect_ports(c_p->port_at(0), ne_p->port_at(1));
+        connect_ports(ne_p->port_at(2), on_p->port_at(0));
+
+        s.redo_nets();
+        c_p->calculate(DEFAULT_TTL);
+
+        // a = 0x0200, s = 0 -> mux selects a + 2 = 0x0202
+        auto v_a = make_int_val(0x0200);
+        auto v_s0 = make_bool_val(false);
+        a_p->update_value(&v_a, DEFAULT_TTL);
+        s_p->update_value(&v_s0, DEFAULT_TTL);
+        run_queued_calculations();
+        assert(om_p->get_value().intval == 0x0202);
+        assert(oe_p->get_value().boolval == false);
+        assert(on_p->get_value().boolval == true);
+
+        // s = 1 -> mux selects a - 2 = 0x01FE
+        auto v_s1 = make_bool_val(true);
+        s_p->update_value(&v_s1, DEFAULT_TTL);
+        run_queued_calculations();
+        assert(om_p->get_value().intval == 0x01FE);
+
+        // a = 2 -> eq == true, ne == false, sub == 0
+        auto v_a2 = make_int_val(2);
+        a_p->update_value(&v_a2, DEFAULT_TTL);
+        run_queued_calculations();
+        assert(om_p->get_value().intval == 0);
+        assert(oe_p->get_value().boolval == true);
+        assert(on_p->get_value().boolval == false);
+
+        // 16-bit wraparound: a = 0, sub 2 -> 0xFFFE
+        auto v_a0 = make_int_val(0);
+        a_p->update_value(&v_a0, DEFAULT_TTL);
+        run_queued_calculations();
+        assert(om_p->get_value().intval == 0xFFFE);
+    }
+
+    // 2. model_reg (16-bit with async reset + RESET_VAL + enable + posedge clk)
+    {
+        scene s("param_reg");
+        auto in_d   = std::make_unique<model_toggle>(1, 2);
+        auto in_en  = std::make_unique<model_toggle>(1, 6);
+        auto in_clk = std::make_unique<model_toggle>(1, 10);
+        auto in_rst = std::make_unique<model_toggle>(1, 14);
+        auto reg    = std::make_unique<model_reg>(10, 6, 16, 0x0200);
+        auto out_q  = std::make_unique<model_output>(18, 6);
+
+        in_d->set_width(16);
+        out_q->set_width(16);
+
+        auto *d_p   = in_d.get();
+        auto *en_p  = in_en.get();
+        auto *clk_p = in_clk.get();
+        auto *rst_p = in_rst.get();
+        auto *reg_p = reg.get();
+        auto *q_p   = out_q.get();
+
+        s.add_element(std::move(in_d));
+        s.add_element(std::move(in_en));
+        s.add_element(std::move(in_clk));
+        s.add_element(std::move(in_rst));
+        s.add_element(std::move(reg));
+        s.add_element(std::move(out_q));
+
+        connect_ports(d_p->port_at(0),   reg_p->port_at(0));
+        connect_ports(en_p->port_at(0),  reg_p->port_at(1));
+        connect_ports(clk_p->port_at(0), reg_p->port_at(2));
+        connect_ports(rst_p->port_at(0), reg_p->port_at(3));
+        connect_ports(reg_p->port_at(4), q_p->port_at(0));
+        s.redo_nets();
+
+        auto v_lo = make_bool_val(false);
+        auto v_hi = make_bool_val(true);
+        auto v_d1 = make_int_val(0x1234);
+
+        // Assert reset -> Q = 0x0200
+        rst_p->update_value(&v_hi, DEFAULT_TTL);
+        clk_p->update_value(&v_lo, DEFAULT_TTL);
+        en_p->update_value(&v_lo, DEFAULT_TTL);
+        d_p->update_value(&v_d1, DEFAULT_TTL);
+        run_queued_calculations();
+        assert(q_p->get_value().intval == 0x0200);
+
+        // Deassert reset, clock edge with en=0 -> Q stays 0x0200
+        rst_p->update_value(&v_lo, DEFAULT_TTL);
+        clk_p->update_value(&v_hi, DEFAULT_TTL);
+        run_queued_calculations();
+        assert(q_p->get_value().intval == 0x0200);
+
+        // Falling edge, then rising edge with en=1 -> Q latches 0x1234
+        clk_p->update_value(&v_lo, DEFAULT_TTL);
+        en_p->update_value(&v_hi, DEFAULT_TTL);
+        run_queued_calculations();
+        clk_p->update_value(&v_hi, DEFAULT_TTL);
+        run_queued_calculations();
+        assert(q_p->get_value().intval == 0x1234);
+
+        // Async reset brings Q back to 0x0200
+        rst_p->update_value(&v_hi, DEFAULT_TTL);
+        run_queued_calculations();
+        assert(q_p->get_value().intval == 0x0200);
+    }
+}
+
+static void test_verilog_import(void)
+{
+    // 1. Inline Turbostar JSON fixture with fanout (connector split), mux, add, const
+    {
+        const json fixture = {
+            {"top_module", "mini_alu"},
+            {"modules", {
+                {"mini_alu", {
+                    {"ports", {
+                        {{"name", "a"}, {"direction", "input"}, {"width", 8}, {"order", 0}},
+                        {{"name", "sel"}, {"direction", "input"}, {"width", 1}, {"order", 1}},
+                        {{"name", "y"}, {"direction", "output"}, {"width", 8}, {"order", 2}}
+                    }},
+                    {"constants", {
+                        {{"id", "c0"}, {"value", "0x05"}, {"width", 8}}
+                    }},
+                    {"components", {
+                        {{"id", "add0"}, {"type", "gridcad_add"}, {"is_submodule", false},
+                         {"parameters", {{"WIDTH", 8}}}},
+                        {{"id", "sub0"}, {"type", "gridcad_sub"}, {"is_submodule", false},
+                         {"parameters", {{"WIDTH", 8}}}},
+                        {{"id", "mux0"}, {"type", "gridcad_mux"}, {"is_submodule", false},
+                         {"parameters", {{"WIDTH", 8}}}}
+                    }},
+                    {"wires", {
+                        {{"name", "a"}, {"width", 8},
+                         {"driver", {{"kind", "port"}, {"id", "a"}, {"pin", "a"}}},
+                         {"sinks", {
+                             {{"kind", "component"}, {"id", "add0"}, {"pin", "a"}},
+                             {{"kind", "component"}, {"id", "sub0"}, {"pin", "a"}}
+                         }}},
+                        {{"name", "k5"}, {"width", 8},
+                         {"driver", {{"kind", "constant"}, {"id", "c0"}, {"pin", "out"}}},
+                         {"sinks", {
+                             {{"kind", "component"}, {"id", "add0"}, {"pin", "b"}},
+                             {{"kind", "component"}, {"id", "sub0"}, {"pin", "b"}}
+                         }}},
+                        {{"name", "sum"}, {"width", 8},
+                         {"driver", {{"kind", "component"}, {"id", "add0"}, {"pin", "y"}}},
+                         {"sinks", {{{"kind", "component"}, {"id", "mux0"}, {"pin", "a"}}}}},
+                        {{"name", "diff"}, {"width", 8},
+                         {"driver", {{"kind", "component"}, {"id", "sub0"}, {"pin", "y"}}},
+                         {"sinks", {{{"kind", "component"}, {"id", "mux0"}, {"pin", "b"}}}}},
+                        {{"name", "sel"}, {"width", 1},
+                         {"driver", {{"kind", "port"}, {"id", "sel"}, {"pin", "sel"}}},
+                         {"sinks", {{{"kind", "component"}, {"id", "mux0"}, {"pin", "s"}}}}},
+                        {{"name", "y"}, {"width", 8},
+                         {"driver", {{"kind", "component"}, {"id", "mux0"}, {"pin", "y"}}},
+                         {"sinks", {{{"kind", "port"}, {"id", "y"}, {"pin", "y"}}}}}
+                    }}
+                }}
+            }}
+        };
+
+        verilog_importer::options opts;
+        opts.use_clock_element = false;
+        auto res = verilog_importer::import_json(fixture, opts);
+        assert(res.ok);
+        assert(res.imported_scene != nullptr);
+        assert(res.stats.ports == 3);
+        assert(res.stats.constants == 1);
+        assert(res.stats.components == 3);
+        assert(res.stats.missing_endpoints == 0);
+        assert(res.stats.warnings.empty());
+
+        // Find inputs/output and verify connector splits + simulation
+        model_toggle *a_tog = nullptr;
+        model_toggle *sel_tog = nullptr;
+        model_output *y_out = nullptr;
+        int connector_count = 0;
+        for (auto &e : res.imported_scene->elements) {
+            if (e->class_id() == "connector:")
+                connector_count++;
+            else if (e->class_id() == "model_toggle:" && e->get_name() == "a")
+                a_tog = static_cast<model_toggle *>(e.get());
+            else if (e->class_id() == "model_toggle:" && e->get_name() == "sel")
+                sel_tog = static_cast<model_toggle *>(e.get());
+            else if (e->class_id() == "model_output:" && e->get_name() == "y")
+                y_out = static_cast<model_output *>(e.get());
+        }
+        assert(connector_count == 2); // 'a' and 'k5' both fan out to 2 sinks
+        assert(a_tog && sel_tog && y_out);
+
+        auto v10 = make_int_val(10);
+        auto v_lo = make_bool_val(false);
+        auto v_hi = make_bool_val(true);
+
+        a_tog->update_value(&v10, DEFAULT_TTL);
+        sel_tog->update_value(&v_lo, DEFAULT_TTL);
+        run_queued_calculations();
+        assert(y_out->get_value().intval == 15); // 10 + 5
+
+        sel_tog->update_value(&v_hi, DEFAULT_TTL);
+        run_queued_calculations();
+        assert(y_out->get_value().intval == 5); // 10 - 5
+    }
+
+    // 2. Real Turbostar export simulation test (tests/data/register16.json)
+    const std::string reg16_path = "tests/data/register16.json";
+    assert(std::filesystem::exists(reg16_path));
+    {
+        verilog_importer::options opts;
+        opts.use_clock_element = false;
+        auto res = verilog_importer::import_file(reg16_path, opts);
+        assert(res.ok);
+        assert(res.imported_scene != nullptr);
+        assert(res.top_module == "register16");
+        assert(res.stats.ports == 7);
+        assert(res.stats.constants == 4);
+        assert(res.stats.components == 8);
+        assert(res.stats.missing_endpoints == 0);
+        assert(res.stats.warnings.empty());
+
+        auto find_toggle = [&](std::string_view nm) -> model_toggle * {
+            for (auto &e : res.imported_scene->elements) {
+                if (e->class_id() == "model_toggle:" && e->get_name() == nm)
+                    return static_cast<model_toggle *>(e.get());
+            }
+            return nullptr;
+        };
+        model_output *val_out = nullptr;
+        for (auto &e : res.imported_scene->elements) {
+            if (e->class_id() == "model_output:" && e->get_name() == "value")
+                val_out = static_cast<model_output *>(e.get());
+        }
+
+        auto *clk  = find_toggle("clk");
+        auto *rst  = find_toggle("rst");
+        auto *load = find_toggle("load");
+        auto *inc2 = find_toggle("inc2");
+        auto *dec2 = find_toggle("dec2");
+        auto *lval = find_toggle("load_value");
+        assert(clk && rst && load && inc2 && dec2 && lval && val_out);
+
+        auto v_lo = make_bool_val(false);
+        auto v_hi = make_bool_val(true);
+        auto tick = [&]() {
+            clk->update_value(&v_lo, DEFAULT_TTL);
+            run_queued_calculations();
+            clk->update_value(&v_hi, DEFAULT_TTL);
+            run_queued_calculations();
+        };
+
+        // Reset -> value = 0x0200, sp_plus_2 = 0x0202, sp_minus_2 = 0x01FE
+        rst->update_value(&v_hi, DEFAULT_TTL);
+        load->update_value(&v_lo, DEFAULT_TTL);
+        inc2->update_value(&v_lo, DEFAULT_TTL);
+        dec2->update_value(&v_lo, DEFAULT_TTL);
+        run_queued_calculations();
+        assert(val_out->get_value().intval == 0x0200);
+
+        // Release reset, assert inc2 -> next clock loads sp_plus_2 (0x0202)
+        rst->update_value(&v_lo, DEFAULT_TTL);
+        inc2->update_value(&v_hi, DEFAULT_TTL);
+        tick();
+        assert(val_out->get_value().intval == 0x0202);
+
+        // Assert load with 0x1234 -> next clock loads 0x1234
+        auto v_1234 = make_int_val(0x1234);
+        inc2->update_value(&v_lo, DEFAULT_TTL);
+        load->update_value(&v_hi, DEFAULT_TTL);
+        lval->update_value(&v_1234, DEFAULT_TTL);
+        tick();
+        assert(val_out->get_value().intval == 0x1234);
+    }
+
+    // 3. Self-contained full SoC import check (tests/data/top.json)
+    const std::string top_path = "tests/data/top.json";
+    assert(std::filesystem::exists(top_path));
+    {
+        verilog_importer::options opts;
+        opts.load_sibling_files = false; // Must succeed purely self-contained!
+        auto res = verilog_importer::import_file(top_path, opts);
+        assert(res.ok);
+        assert(res.imported_scene != nullptr);
+        assert(res.stats.unsupported_components == 0);
+        assert(res.stats.missing_endpoints == 0);
+        assert(res.stats.warnings.empty());
+    }
+
+    // 4. model_mem ROM hex INIT + RAM write/read check
+    {
+        model_mem rom(0, 0, 4, 8, 16, false, false, false);
+        rom.load_init_string("0x71795e397c776f7f077d6d664f5b063f");
+        assert(rom.read_word(0x0) == 0x3f);
+        assert(rom.read_word(0x1) == 0x06);
+        assert(rom.read_word(0xF) == 0x71);
+    }
+}
+
+static void test_vcd_playback(void)
+{
+    // 1. Wire VCD-lock prevents simulation overwrite while unlocked glue wires still simulate
+    {
+        scene s("vcd_lock_test");
+        auto in_a  = std::make_unique<model_toggle>(1, 2);
+        auto in_b  = std::make_unique<model_toggle>(1, 6);
+        auto adder = std::make_unique<model_add>(8, 4, 8);
+        auto out_y = std::make_unique<model_output>(16, 4);
+
+        in_a->set_width(8);
+        in_b->set_width(8);
+        out_y->set_width(8);
+
+        auto *a_p = in_a.get();
+        auto *b_p = in_b.get();
+        auto *add_p = adder.get();
+        auto *y_p = out_y.get();
+
+        s.add_element(std::move(in_a));
+        s.add_element(std::move(in_b));
+        s.add_element(std::move(adder));
+        s.add_element(std::move(out_y));
+
+        auto wa = std::make_shared<wire>(0, 0, 0, 0);
+        wa->set_vcd_name("a");
+        wa->set_width(8);
+        a_p->port_at(0)->add_wire(wa);
+        add_p->port_at(0)->add_wire(wa);
+
+        auto wb = std::make_shared<wire>(0, 0, 0, 0);
+        wb->set_vcd_name("b");
+        wb->set_width(8);
+        b_p->port_at(0)->add_wire(wb);
+        add_p->port_at(1)->add_wire(wb);
+
+        // Glue wire (no vcd_name) -> must remain unlocked and compute a + b
+        auto wy = std::make_shared<wire>(0, 0, 0, 0);
+        wy->set_width(8);
+        add_p->port_at(2)->add_wire(wy);
+        y_p->port_at(0)->add_wire(wy);
+
+        s.redo_nets();
+
+        // Broadcast VCD values a=0x10, b=0x25 -> locks a and b, glue wire y computes 0x35
+        assert(s.broadcast_vcd_value("a", make_int_val(0x10)) == 1);
+        assert(s.broadcast_vcd_value("b", make_int_val(0x25)) == 1);
+        run_queued_calculations();
+        assert(wa->is_vcd_locked());
+        assert(wb->is_vcd_locked());
+        assert(!wy->is_vcd_locked());
+        assert(y_p->get_value().intval == 0x35);
+
+        // Normal simulation write to locked wire 'a' must be ignored!
+        auto v_override_attempt = make_int_val(0x99);
+        a_p->update_value(&v_override_attempt, DEFAULT_TTL);
+        run_queued_calculations();
+        assert(wa->value.intval == 0x10);
+        assert(y_p->get_value().intval == 0x35);
+
+        // Updating VCD value on 'a' to 0x40 updates both 'a' and unlocked glue wire 'y' -> 0x65
+        assert(s.broadcast_vcd_value("a", make_int_val(0x40)) == 1);
+        run_queued_calculations();
+        assert(y_p->get_value().intval == 0x65);
+
+        // Unlocking restores normal simulation control
+        s.unlock_all_vcd();
+        assert(!wa->is_vcd_locked());
+        a_p->update_value(&v_override_attempt, DEFAULT_TTL);
+        run_queued_calculations();
+        assert(y_p->get_value().intval == ((0x99 + 0x25) & 0xFF));
+    }
+
+    // 2. Real test8080 top.json + dump_top_tb.vcd end-to-end binding & tick stepping
+    const std::string top_path = "tests/data/top.json";
+    const std::string vcd_path = "tests/data/dump_top_tb.vcd";
+    assert(std::filesystem::exists(top_path));
+    assert(std::filesystem::exists(vcd_path));
+    {
+        auto res = verilog_importer::import_file(top_path);
+        assert(res.ok && res.imported_scene != nullptr);
+
+        vcd_session sess;
+        std::string err;
+        assert(sess.load(vcd_path, err));
+        assert(sess.get_total_ticks() == 24);
+        assert(sess.get_clock_signal() == "top_tb.clk");
+
+        size_t bound = sess.bind_scene(res.imported_scene.get());
+        assert(sess.get_scope_prefix() == "top_tb.dut");
+        assert(bound >= 250);
+
+        size_t applied0 = sess.apply_tick(0, res.imported_scene.get());
+        assert(applied0 >= 250);
+
+        size_t applied10 = sess.apply_tick(10, res.imported_scene.get());
+        assert(applied10 >= 250);
+        assert(sess.get_current_tick() == 10);
+    }
+}
+
 int main(void)
 {
     start_time = std::chrono::steady_clock::now();
@@ -214,6 +690,9 @@ int main(void)
 
     test_factory();
     test_logic_gates();
+    test_parameterized_elements();
+    test_verilog_import();
+    test_vcd_playback();
     test_wirepath_routing();
     test_scene_json_and_verilog();
 

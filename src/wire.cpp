@@ -442,12 +442,16 @@ void wire::update_value(struct value *newvalue, int ttl)
 
 void wire::update_value_final(struct value *newvalue, int ttl)
 {
+	if (vcd_locked)
+		return;
 	value = *newvalue;
 	notify(ttl - 1);
 }
 
 void wire::update_value_net(struct value *newvalue, int ttl)
 {
+	if (vcd_locked)
+		return;
 	if (ttl <= 0)
 		return;
 
@@ -455,6 +459,27 @@ void wire::update_value_net(struct value *newvalue, int ttl)
 		return;
 
 	net->update_value(newvalue, ttl - 1);
+}
+
+void wire::set_vcd_value_direct(const struct value &v)
+{
+	vcd_locked = true;
+	value = v;
+}
+
+void wire::apply_vcd_value(const struct value &v)
+{
+	vcd_locked = true;
+	value = v;
+	if (net) {
+		net->apply_vcd_value(v);
+	} else {
+		struct value copy = v;
+		for (auto *p : ports) {
+			if (p)
+				p->update_value_final(&copy, DEFAULT_TTL);
+		}
+	}
 }
 
 void wire::notify(int ttl)

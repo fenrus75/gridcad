@@ -84,6 +84,10 @@ core_sources = files(
     'src/model_zero.cpp',
     'src/model_one.cpp',
     'src/iconbar.cpp',
+    'src/placer.cpp',
+    'src/verilog_import.cpp',
+    'src/vcd_parser.cpp',
+    'src/vcd_session.cpp',
     'lib/wirepath.cpp',
 )
 
@@ -119,6 +123,14 @@ model_sources = files(
     'src/model_8to1.cpp',
     'src/model_deflipflop.cpp',
     'src/model_clock.cpp',
+    'src/model_const.cpp',
+    'src/model_add.cpp',
+    'src/model_sub.cpp',
+    'src/model_mux.cpp',
+    'src/model_reg.cpp',
+    'src/model_eq.cpp',
+    'src/model_ne.cpp',
+    'src/model_mem.cpp',
 )
 
 # Sequencer sources
@@ -305,7 +317,23 @@ test_logic_exe = executable('test_logic',
     ],
 )
 
-test('logic_unit_tests', test_logic_exe)
+test('logic_unit_tests', test_logic_exe,
+    workdir: meson.project_source_root(),
+)
+
+test('smoke_import_register16', gridcad_exe,
+    args: ['--import', 'tests/data/register16.json', '--exit-immediately', '1'],
+    env: ['SDL_VIDEODRIVER=dummy'],
+    workdir: meson.project_source_root(),
+    timeout: 15,
+)
+
+test('smoke_vcd_top', gridcad_exe,
+    args: ['--import', 'tests/data/top.json', '--vcd', 'tests/data/dump_top_tb.vcd', '--exit-immediately', '1'],
+    env: ['SDL_VIDEODRIVER=dummy'],
+    workdir: meson.project_source_root(),
+    timeout: 20,
+)
 
 # ============================================================================
 # Installation

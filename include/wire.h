@@ -45,6 +45,7 @@ public:
     void set_new_name(void);
     
     bool is_empty(void) { return ports.size() == 0; };
+    const std::vector<class port *> &get_ports(void) const { return ports; };
     void redo_wires(void);
     int get_width(void) { return width; };
     void set_width(int _width) { if (_width) width = _width;};
@@ -66,6 +67,13 @@ public:
     class net *get_net(void) { return net ; };
     void set_is_z(bool z) { is_z  = z; };
     bool get_is_z(void) { return is_z; };
+
+    void set_vcd_name(std::string_view name) { vcd_name = std::string(name); };
+    const std::string &get_vcd_name(void) const { return vcd_name; };
+    bool is_vcd_locked(void) const { return vcd_locked; };
+    void unlock_vcd(void) { vcd_locked = false; };
+    void set_vcd_value_direct(const struct value &v);
+    void apply_vcd_value(const struct value &v);
     
     void calculate_drawpoints(void);
     
@@ -87,5 +95,7 @@ protected:
     bool is_z = false; /* nosave -- net recalculates this */
     bool in_animation = false; /* nosave */
     uint64_t points_timestamp = 0; /* nosave */
+    std::string vcd_name = ""; /* hierarchical VCD signal name */
+    bool vcd_locked = false;   /* true while driven/locked by VCD playback */
 };
 

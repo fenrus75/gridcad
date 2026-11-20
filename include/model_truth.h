@@ -31,6 +31,8 @@ public:
     void del_output(void);
     void add_input(void);
     void del_input(void);
+    /* Configure as a single-output LUT (num_inputs in [1, 6], MSB-first bitstring lut_bits). */
+    void configure_lut(int num_inputs, std::string_view lut_bits);
     void calculate(int ttl) override;
     void names_to_ports(void);
     void handle_event(class basecanvas *canvas, SDL_Event &event) override;

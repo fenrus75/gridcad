@@ -15,8 +15,13 @@
 #include "gridcad.h"
 #include "scene.h"
 #include "element.h"
+#include "port.h"
 #include "wire.h"
+#include "net.h"
+#include "model_nest.h"
 #include "contextmenu.h"
+
+#include <unordered_set>
 
 void callback_select_all(class scene *scene)
 {
@@ -474,4 +479,89 @@ void scene::validate_ports(void)
 {
 	for (auto &elem : elements)
 		elem->validate_ports();
+}
+
+size_t scene::broadcast_vcd_value(std::string_view vcd_name, const struct value &val)
+{
+	size_t updated = 0;
+	std::unordered_set<const wire *> visited_wires;
+	std::unordered_set<const net *> visited_nets;
+
+	for (auto &elem : elements) {
+		if (elem->class_id() == "model_nest:") {
+			auto *nest = static_cast<model_nest *>(elem.get());
+			if (scene *sub = nest->get_scene())
+				updated += sub->broadcast_vcd_value(vcd_name, val);
+		}
+		for (unsigned int pi = 0;; ++pi) {
+			port *p = elem->port_at(pi);
+			if (!p)
+				break;
+			for (const auto &w : p->get_wires()) {
+				if (!w || visited_wires.count(w.get()))
+					continue;
+				visited_wires.insert(w.get());
+				if (w->get_vcd_name() != vcd_name)
+					continue;
+				if (net *n = w->get_net()) {
+					if (visited_nets.count(n))
+						continue;
+					visited_nets.insert(n);
+				}
+				w->apply_vcd_value(val);
+				updated++;
+			}
+		}
+	}
+	return updated;
+}
+
+void scene::unlock_all_vcd(void)
+{
+	for (auto &elem : elements) {
+		if (elem->class_id() == "model_nest:") {
+			auto *nest = static_cast<model_nest *>(elem.get());
+			if (scene *sub = nest->get_scene())
+				sub->unlock_all_vcd();
+		}
+		for (unsigned int pi = 0;; ++pi) {
+			port *p = elem->port_at(pi);
+			if (!p)
+				break;
+			for (const auto &w : p->get_wires()) {
+				if (!w)
+					continue;
+				if (net *n = w->get_net())
+					n->unlock_vcd();
+				w->unlock_vcd();
+			}
+		}
+	}
+}
+
+void scene::collect_vcd_names(std::vector<std::string> &out_names) const
+{
+	std::unordered_set<std::string> seen(out_names.begin(), out_names.end());
+	for (const auto &elem : elements) {
+		if (elem->class_id() == "model_nest:") {
+			auto *nest = static_cast<model_nest *>(elem.get());
+			if (const scene *sub = nest->get_scene()) {
+				sub->collect_vcd_names(out_names);
+				for (const auto &nm : out_names)
+					seen.insert(nm);
+			}
+		}
+		for (unsigned int pi = 0;; ++pi) {
+			port *p = elem->port_at(pi);
+			if (!p)
+				break;
+			for (const auto &w : p->get_wires()) {
+				if (!w)
+					continue;
+				const std::string &vn = w->get_vcd_name();
+				if (!vn.empty() && seen.insert(vn).second)
+					out_names.push_back(vn);
+			}
+		}
+	}
 }

@@ -74,6 +74,12 @@ class scene *model_nest::active_scene(void) const
 	return canvas ? canvas->get_scene() : owned_scene.get();
 }
 
+void model_nest::set_scene(std::unique_ptr<class scene> new_scene)
+{
+	owned_scene = std::move(new_scene);
+	regen_ports();
+}
+
 model_nest::~model_nest(void) = default;
 
 

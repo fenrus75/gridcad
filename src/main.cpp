@@ -28,6 +28,9 @@ int main(int argc, char **argv)
 {	
 	start_time = std::chrono::steady_clock::now();
 	std::string name = "default";
+	std::string import_json_path = "";
+	std::string vcd_path = "";
+	std::string vcd_scope = "";
 	bool library_mode = false;
 
 	crash_handler::install_fallback_handler();
@@ -66,6 +69,15 @@ int main(int argc, char **argv)
 			}
 			exit_time = start_time + std::chrono::seconds(seconds);
 			has_exit_time = true;
+		} else if (arg == "--import" && i + 1 < argc) {
+			/* Untrusted CLI path to a Turbostar structural JSON netlist. */
+			import_json_path = argv[++i];
+		} else if (arg == "--vcd" && i + 1 < argc) {
+			/* Untrusted CLI path to a VCD waveform file. */
+			vcd_path = argv[++i];
+		} else if (arg == "--vcd-scope" && i + 1 < argc) {
+			/* Untrusted CLI VCD scope prefix override (e.g. "top_tb.dut"). */
+			vcd_scope = argv[++i];
 		} else {
 			positionals.push_back(arg);
 		}
@@ -73,7 +85,9 @@ int main(int argc, char **argv)
 	
 	sdl::Context sdl_ctx;
 
-	if (!positionals.empty()) {
+	if (!import_json_path.empty()) {
+		name = "import";
+	} else if (!positionals.empty()) {
 		name = positionals[0];
 		
 		if (name == "--library") {
@@ -95,14 +109,13 @@ int main(int argc, char **argv)
 	
 	populate_library("library/");
 
-	if (!library_mode) {	
+	if (!library_mode && import_json_path.empty()) {	
 		name = "projects/" + name;
+		/* project based library */
+		populate_library(name + "/library");
 	}
-	
-	/* project based library */
-	populate_library(name + "/library");
 
-	document doc(name, library_mode);
+	document doc(name, library_mode, import_json_path, vcd_path, vcd_scope);
 
 	doc.run();
 

@@ -58,6 +58,10 @@ public:
     void add_nets(void);
     void redo_nets(void);
     void validate_ports(void);
+
+    size_t broadcast_vcd_value(std::string_view vcd_name, const struct value &val);
+    void unlock_all_vcd(void);
+    void collect_vcd_names(std::vector<std::string> &out_names) const;
     
 protected:
     std::unique_ptr<class contextmenu> menu;

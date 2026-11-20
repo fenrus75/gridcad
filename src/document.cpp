@@ -17,6 +17,8 @@
 #include "library.h"
 #include "canvas.h"
 #include "scene.h"
+#include "verilog_import.h"
+#include "vcd_session.h"
 
 std::chrono::steady_clock::time_point start_time;
 std::chrono::steady_clock::time_point exit_time;
@@ -98,7 +100,10 @@ Context::~Context()
 } // namespace sdl
 
 extern std::string current_project;
-document::document(std::string _name, bool _library_mode)
+document::document(std::string _name, bool _library_mode,
+                   std::string import_json_path,
+                   std::string vcd_path,
+                   std::string vcd_scope)
 {
 	float d1,d2,d3;
 
@@ -106,6 +111,7 @@ document::document(std::string _name, bool _library_mode)
 
 
 	library_mode = _library_mode;
+	import_mode = !import_json_path.empty();
 
 	std::string filename;
 
@@ -115,18 +121,36 @@ document::document(std::string _name, bool _library_mode)
 
 	current_project = name;
 
-	if (std::filesystem::exists(name + "/verilog/Makefile") && !library_mode)
+	if (std::filesystem::exists(name + "/verilog/Makefile") && !library_mode && !import_mode)
 		cap.has_full_workflow = true;
 
 
 	SDL_GetDisplayDPI(0, &d1, &d2, &d3);
 	logger::get().info("DPI {:5.2f} {:5.2f} {:5.2f}", d1, d2, d3);
 
-	SDL_timer_event = SDL_RegisterEvents(16);
+	SDL_timer_event = SDL_RegisterEvents(32);
 
 	clock_timer = sdl::Timer(500, SDL_timer_func, nullptr);
 
-	auto _scene = std::make_unique<scene>("main");
+	std::unique_ptr<scene> _scene;
+	if (import_mode) {
+		auto res = verilog_importer::import_file(import_json_path);
+		if (res.ok && res.imported_scene) {
+			logger::get().info(
+			    "Imported '{}' (top '{}'): {} ports, {} consts, {} components, {} submodules, {} wires, {} warnings",
+			    import_json_path, res.top_module, res.stats.ports, res.stats.constants,
+			    res.stats.components, res.stats.submodules, res.stats.wires,
+			    res.stats.warnings.size());
+			for (const auto &w : res.stats.warnings)
+				logger::get().warn("import: {}", w);
+			_scene = std::move(res.imported_scene);
+		} else {
+			logger::get().error("Failed to import '{}': {}", import_json_path, res.error);
+			_scene = std::make_unique<scene>("main");
+		}
+	} else {
+		_scene = std::make_unique<scene>("main");
+	}
 	class scene *scene_ptr = _scene.get();
 
 	main_canvas = std::make_unique<canvas>(std::move(_scene), &cap);
@@ -135,18 +159,44 @@ document::document(std::string _name, bool _library_mode)
 
 	register_new_canvas(main_canvas.get());
 
-	filename = name;
-	if (!library_mode)
-		filename = filename + "/scene.json";
+	if (!import_mode) {
+		filename = name;
+		if (!library_mode)
+			filename = filename + "/scene.json";
 
-	if (access(filename.c_str(), R_OK) == 0) {
-		json j;
-		std::ifstream input(filename.c_str());
-		input >> j;
-		scene_ptr->from_json(j);
+		if (access(filename.c_str(), R_OK) == 0) {
+			json j;
+			std::ifstream input(filename.c_str());
+			input >> j;
+			scene_ptr->from_json(j);
+		}
 	}
 	clear_wire_factory();
 	scene_ptr->cycle_color();
+
+	if (!vcd_path.empty()) {
+		vcd = std::make_unique<vcd_session>();
+		std::string vcd_err;
+		if (vcd->load(vcd_path, vcd_err)) {
+			size_t bound = vcd->bind_scene(scene_ptr, vcd_scope);
+			logger::get().info(
+			    "Loaded VCD '{}' (clock '{}', {} ticks, scope '{}', {} bound signals)",
+			    vcd_path, vcd->get_clock_signal(), vcd->get_total_ticks(),
+			    vcd->get_scope_prefix(), bound);
+			vcd->push_tick_events(0);
+		} else {
+			logger::get().error("Failed to load VCD '{}': {}", vcd_path, vcd_err);
+			vcd.reset();
+		}
+	}
+
+	if (import_mode) {
+		SDL_Event ev = {};
+		ev.type = EVENT_ZOOM_TO_FIT;
+		ev.user.code = 0;
+		ev.user.data1 = scene_ptr;
+		SDL_PushEvent(&ev);
+	}
 }
 
 void document::save_verilog(std::string_view path, std::string_view filename)
@@ -190,13 +240,21 @@ document::~document(void)
 {
 	clock_timer.reset();
 
-	if (!library_mode)
-		std::filesystem::create_directory(name);
+	/* Drain any pending VCD wire update events so their payloads are freed cleanly. */
+	SDL_Event ev;
+	while (SDL_PeepEvents(&ev, 1, SDL_GETEVENT, EVENT_VCD_WIRE_UPDATE, EVENT_VCD_WIRE_UPDATE) > 0) {
+		std::unique_ptr<vcd_wire_update> upd(static_cast<vcd_wire_update *>(ev.user.data1));
+	}
 
-	save_json();
-	if (!library_mode) {	
-		std::filesystem::create_directory(name + "/verilog");
-		save_verilog(name + "/verilog", name + "/verilog//main.v");
+	if (!import_mode) {
+		if (!library_mode)
+			std::filesystem::create_directory(name);
+
+		save_json();
+		if (!library_mode) {
+			std::filesystem::create_directory(name + "/verilog");
+			save_verilog(name + "/verilog", name + "/verilog//main.v");
+		}
 	}
 	clear_png_maps();
 }
@@ -279,11 +337,45 @@ void document::run(void)
 				save_json();
 				save_verilog(name + "/verilog", name + "/verilog//main.v");
 			}
+			if (event.type == EVENT_VCD_WIRE_UPDATE) {
+				std::unique_ptr<vcd_wire_update> upd(
+				    static_cast<vcd_wire_update *>(event.user.data1));
+				if (upd && main_canvas && main_canvas->get_scene()) {
+					main_canvas->get_scene()->broadcast_vcd_value(
+					    upd->vcd_name, upd->val);
+				}
+			}
+			if (vcd && vcd->is_loaded() && event.type == SDL_KEYDOWN) {
+				if (event.key.keysym.sym == SDLK_RIGHTBRACKET) {
+					size_t next = (vcd->get_current_tick() + 1 < vcd->get_total_ticks())
+					                  ? (vcd->get_current_tick() + 1)
+					                  : 0;
+					vcd->push_tick_events(next);
+					logger::get().info("VCD tick {}/{} (t={})",
+					                   vcd->get_current_tick(), vcd->get_total_ticks(),
+					                   vcd->get_current_timestamp());
+				} else if (event.key.keysym.sym == SDLK_LEFTBRACKET) {
+					size_t prev = (vcd->get_current_tick() > 0)
+					                  ? (vcd->get_current_tick() - 1)
+					                  : (vcd->get_total_ticks() > 0 ? vcd->get_total_ticks() - 1 : 0);
+					vcd->push_tick_events(prev);
+					logger::get().info("VCD tick {}/{} (t={})",
+					                   vcd->get_current_tick(), vcd->get_total_ticks(),
+					                   vcd->get_current_timestamp());
+				}
+			}
 			if ((event.type == SDL_timer_event && clock_running) || event.type == EVENT_SINGLE_CLOCK) {
-				global_clock.valid = true;
-				global_clock.is_clock = true;
-				global_clock.boolval = !global_clock.boolval;
-				global_clock.arrayval++;
+				if (vcd && vcd->is_loaded() && vcd->get_total_ticks() > 0) {
+					size_t next = (vcd->get_current_tick() + 1 < vcd->get_total_ticks())
+					                  ? (vcd->get_current_tick() + 1)
+					                  : 0;
+					vcd->push_tick_events(next);
+				} else {
+					global_clock.valid = true;
+					global_clock.is_clock = true;
+					global_clock.boolval = !global_clock.boolval;
+					global_clock.arrayval++;
+				}
 			}
 			for (unsigned int i = 0; i < canvases.size(); i++)  {
 				auto canvas = canvases[i];

@@ -22,6 +22,8 @@ public:
     void handle_event(class basecanvas *canvas, SDL_Event&) override;
     bool in_edit_mode(void) override { return name_edit->get_edit_mode() && single && selected;};    
     void regen_ports(void);
+    void set_scene(std::unique_ptr<class scene> new_scene);
+    class scene *get_scene(void) const { return active_scene(); };
     
     void enter_edit_mode(void) override { name_edit->set_edit_mode(true); selected = true; single = true;};
     void update_parental_name(std::string _name) override;

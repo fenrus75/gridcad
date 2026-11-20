@@ -41,6 +41,14 @@
 #include "model_memory.h"
 #include "model_label.h"
 #include "model_buffer.h"
+#include "model_const.h"
+#include "model_add.h"
+#include "model_sub.h"
+#include "model_mux.h"
+#include "model_reg.h"
+#include "model_eq.h"
+#include "model_ne.h"
+#include "model_mem.h"
 #include "connector.h"
 #include "sequencer.h"
 
@@ -79,6 +87,14 @@ std::unique_ptr<class element> element_from_class_id(std::string_view classid)
     ELEMENT(model_clock);
     ELEMENT(model_label);
     ELEMENT(model_buffer);
+    ELEMENT(model_const);
+    ELEMENT(model_add);
+    ELEMENT(model_sub);
+    ELEMENT(model_mux);
+    ELEMENT(model_reg);
+    ELEMENT(model_eq);
+    ELEMENT(model_ne);
+    ELEMENT(model_mem);
     ELEMENT(sequencer);
     
     

@@ -316,6 +316,39 @@ void model_truth::turn_from_X(unsigned int X, unsigned int Y)
 	std::sort(values.begin(), values.end(), compare_line);	
 }
 
+void model_truth::configure_lut(int num_inputs, std::string_view lut_bits)
+{
+	int target_inputs = std::clamp(num_inputs, 1, 6);
+	while (static_cast<int>(inputs) < target_inputs)
+		add_input();
+	while (static_cast<int>(inputs) > target_inputs)
+		del_input();
+
+	for (unsigned int k = 0; k < inputs; ++k)
+		names[k] = std::format("A{}", k);
+	if (outputs >= 1)
+		names[inputs] = "Y";
+	names_to_ports();
+
+	/*
+	 * Yosys/Turbostar LUT parameter is MSB-first: bit `idx` from the right
+	 * gives the output when {A_{W-1}, ..., A_0} == idx.
+	 */
+	for (auto &row : values) {
+		if (row.size() < inputs + 1)
+			continue;
+		size_t lut_idx = 0;
+		for (unsigned int k = 0; k < inputs; ++k) {
+			if (row[k] == '1')
+				lut_idx |= (size_t{1} << k);
+		}
+		char out_bit = '0';
+		if (lut_idx < lut_bits.size())
+			out_bit = (lut_bits[lut_bits.size() - 1 - lut_idx] == '1') ? '1' : '0';
+		row[inputs] = out_bit;
+	}
+}
+
 void model_truth::calculate(int ttl)
 {
 	std::vector<char> inp;

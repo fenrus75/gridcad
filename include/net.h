@@ -20,6 +20,9 @@ public:
 
 	void set_value(class value *newval, int ttl);
 	void update_value(class value *newval, int ttl);
+	void apply_vcd_value(const struct value &v);
+	void unlock_vcd(void);
+	bool is_vcd_locked(void) const { return vcd_locked; };
 	void update_net_distances(void);
 
 	void update_color(int color);
@@ -40,6 +43,7 @@ protected:
 	std::vector<class port *> ports;
 
 	bool has_z = false;
+	bool vcd_locked = false;
 	struct value value = {};
 	int color = 0;
 	
