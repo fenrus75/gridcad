@@ -1044,7 +1044,9 @@ static void test_vcd_playback(void)
                         assert(!w->get_src_location().empty());
                         assert(!w->get_src_verilog().empty());
                         saw_clk = true;
-                    } else if (w->name == "rst_n" || w->name == "mem_read_data") {
+                    } else if (w->name == "rst_n") {
+                        assert(w->get_color() == 2);
+                    } else if (w->name == "mem_read_data") {
                         assert(w->get_color() == 6);
                         saw_named = true;
                     } else if (w->name.starts_with("wire_")) {

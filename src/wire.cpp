@@ -298,6 +298,11 @@ void wire::clear_route(void)
 	oldpoints = std::move(points);
 }
 
+static bool is_rail_wire(const class wire *w)
+{
+	return w->value.is_clock || w->name == "clk" || w->name == "rst" || w->name == "rst_n";
+}
+
 void wire::route(class scene *scene)
 {
 	being_routed = true;
@@ -311,11 +316,12 @@ void wire::route(class scene *scene)
 
 	wiregrid grid(scene->sizeX, scene->sizeY);
 
-	grid.is_clock = value.is_clock;
+	const bool rail = is_rail_wire(this);
+	grid.is_clock = rail;
 
 	scene->fill_grid(&grid);
 
-	points = grid.path_walk(X1, Y1, X2, Y2, value.is_clock);
+	points = grid.path_walk(X1, Y1, X2, Y2, rail);
 
 	bool want_reverse = false;
 
@@ -758,7 +764,7 @@ void wire::fill_grid(class wiregrid *grid)
 			first = false;
 			continue;
 		}
-		grid_line(grid, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, value.is_clock);
+		grid_line(grid, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, is_rail_wire(this));
 		prevX = point.X;
 		prevY = point.Y;
 	}

@@ -395,10 +395,34 @@ void topological_placer::place(class scene *target_scene, const options &opts)
         }
     }
 
+    /*
+     * Identify single-sink constants (directly feeding one input port with no
+     * connector split). These will be tucked directly beside their consumer's
+     * input pin after main placement instead of occupying column slots.
+     */
+    std::vector<bool> tucked_const(n, false);
+    std::vector<std::pair<size_t, port *>> single_sink_consts;
+    for (size_t i = 0; i < n; ++i) {
+        element *e = target_scene->elements[i].get();
+        if (!is_constant(e))
+            continue;
+        port *cp = e->port_at(0);
+        if (!cp || cp->get_wires().size() != 1)
+            continue;
+        const auto &w = cp->get_wires()[0];
+        if (!w)
+            continue;
+        port *other = w->get_other_port(cp);
+        if (other && other->parent && !is_connector(other->parent)) {
+            tucked_const[i] = true;
+            single_sink_consts.emplace_back(i, other);
+        }
+    }
+
     /* Remaining non-connector elements become singleton virtual groups. */
     for (size_t i = 0; i < n; ++i) {
         element *e = target_scene->elements[i].get();
-        if (is_connector(e) || grouped[i])
+        if (is_connector(e) || grouped[i] || tucked_const[i])
             continue;
         vgroup vg;
         vg.members.push_back(i);
@@ -860,6 +884,110 @@ void topological_placer::place(class scene *target_scene, const options &opts)
     /* Ensure the scene grid comfortably encloses all elements and their ports. */
     target_scene->sizeX = std::max(200.0f, static_cast<float>(max_x + opts.margin_x));
     target_scene->sizeY = std::max(200.0f, static_cast<float>(max_y + opts.margin_y));
+
+    /*
+     * Tuck single-sink constants directly beside the specific input pin they
+     * feed (left of left-side pins, upper-left of top pins like reg E / mux S),
+     * searching outward for the closest collision-free cell.
+     */
+    if (!single_sink_consts.empty()) {
+        struct cbox {
+            int x1, y1, x2, y2; /* inclusive */
+        };
+        std::vector<cbox> occupied;
+        occupied.reserve(n);
+        for (size_t i = 0; i < n; ++i) {
+            element *e = target_scene->elements[i].get();
+            if (!e || e->is_background() || is_connector(e) || tucked_const[i])
+                continue;
+            const int ox = static_cast<int>(std::floor(e->get_X()));
+            const int oy = static_cast<int>(std::floor(e->get_Y()));
+            const int ow = std::max(1, static_cast<int>(std::ceil(e->get_width())));
+            const int oh = std::max(1, static_cast<int>(std::ceil(e->get_height())));
+            occupied.push_back({ox - 1, oy - 1, ox + ow, oy + oh});
+        }
+
+        auto overlaps_any = [&](int x, int y, int w, int h) -> bool {
+            const int ax1 = x;
+            const int ay1 = y;
+            const int ax2 = x + w; /* include right output pin */
+            const int ay2 = y + h - 1;
+            for (const auto &b : occupied) {
+                if (ax1 <= b.x2 && ax2 >= b.x1 && ay1 <= b.y2 && ay2 >= b.y1)
+                    return true;
+            }
+            return false;
+        };
+
+        const int max_cx = std::max(200, static_cast<int>(target_scene->sizeX) - 4);
+        const int max_cy = std::max(200, static_cast<int>(target_scene->sizeY) - 4);
+
+        for (const auto &[ci, sp] : single_sink_consts) {
+            element *ce = target_scene->elements[ci].get();
+            const int cw = std::max(1, static_cast<int>(std::ceil(ce->get_width())));
+            const int ch = std::max(1, static_cast<int>(std::ceil(ce->get_height())));
+            const int px = static_cast<int>(std::round(sp->screenX));
+            const int py = static_cast<int>(std::round(sp->screenY));
+
+            int tx = px - cw - 2;
+            int ty = py;
+            if (sp->parent) {
+                const float parent_y = sp->parent->get_Y();
+                const float parent_h = sp->parent->get_height();
+                if (sp->screenY < parent_y) {
+                    /* Top pin (e.g. reg E, mux S): tuck just above & left. */
+                    tx = px - cw - 2;
+                    ty = py - 1;
+                } else if (sp->screenY >= parent_y + parent_h) {
+                    /* Bottom pin: tuck just below & left. */
+                    tx = px - cw - 2;
+                    ty = py + 1;
+                }
+            }
+            tx = std::clamp(tx, 2, max_cx - cw);
+            ty = std::clamp(ty, 2, max_cy - ch);
+
+            int best_x = tx;
+            int best_y = ty;
+            bool found = false;
+            for (int r = 0; r <= 30 && !found; ++r) {
+                if (r == 0) {
+                    if (!overlaps_any(tx, ty, cw, ch)) {
+                        best_x = tx;
+                        best_y = ty;
+                        found = true;
+                    }
+                    continue;
+                }
+                for (int dx = -r; dx <= r && !found; ++dx) {
+                    const int rem = r - std::abs(dx);
+                    const int dy_opts[2] = {-rem, rem};
+                    const int n_opts = (rem == 0) ? 1 : 2;
+                    for (int oi = 0; oi < n_opts; ++oi) {
+                        const int cx = tx + dx;
+                        const int cy = ty + dy_opts[oi];
+                        if (cx < 2 || cy < 2 || cx + cw > max_cx || cy + ch > max_cy)
+                            continue;
+                        if (!overlaps_any(cx, cy, cw, ch)) {
+                            best_x = cx;
+                            best_y = cy;
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            ce->place(best_x, best_y);
+            ce->reseat();
+            occupied.push_back({best_x - 1, best_y - 1, best_x + cw + 1, best_y + ch});
+            max_x = std::max(max_x, best_x + cw + 2);
+            max_y = std::max(max_y, best_y + ch + 2);
+        }
+
+        target_scene->sizeX = std::max(target_scene->sizeX, static_cast<float>(max_x + opts.margin_x));
+        target_scene->sizeY = std::max(target_scene->sizeY, static_cast<float>(max_y + opts.margin_y));
+    }
 
     /*
      * Split high-fanout connectors (e.g. clk, rst, wide shared buses) into a
