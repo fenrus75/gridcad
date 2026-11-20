@@ -30,8 +30,11 @@ constexpr int DIR_Y[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
 constexpr double CROSS_PENALTY = 8.0;
 constexpr double SIBLING_DIST_WEIGHT = 0.75;
 constexpr double SIBLING_ALIGN_PENALTY = 6.0;
-constexpr double REPULSION_STRENGTH = 60.0;
-constexpr double REPULSION_RADIUS2 = 24.0 * 24.0;
+constexpr double REPULSION_STRENGTH = 140.0;
+constexpr double REPULSION_RADIUS2 = 28.0 * 28.0;
+constexpr int GRID_SNAP_STEP = 16;
+constexpr double GRID_SNAP_DIST_WEIGHT = 0.15;
+constexpr double GRID_SNAP_PENALTY = 2.5;
 
 bool is_pinned_element(const element *elem)
 {
@@ -217,6 +220,26 @@ bool is_repelling_block(const element *elem)
     return cid != "connector:" && cid != "model_const:";
 }
 
+/* Gentle grid-snap cost: rewards X or Y being a multiple of 16 (double bonus for both). */
+double grid_snap_cost(const element *e)
+{
+    if (!e || !is_repelling_block(e) || is_pinned_element(e))
+        return 0.0;
+    const int x = static_cast<int>(std::floor(const_cast<element *>(e)->get_X()));
+    const int y = static_cast<int>(std::floor(const_cast<element *>(e)->get_Y()));
+    const int rx = ((x % GRID_SNAP_STEP) + GRID_SNAP_STEP) % GRID_SNAP_STEP;
+    const int ry = ((y % GRID_SNAP_STEP) + GRID_SNAP_STEP) % GRID_SNAP_STEP;
+    const int dx = std::min(rx, GRID_SNAP_STEP - rx);
+    const int dy = std::min(ry, GRID_SNAP_STEP - ry);
+
+    double c = GRID_SNAP_DIST_WEIGHT * static_cast<double>(dx + dy);
+    if (dx != 0)
+        c += GRID_SNAP_PENALTY;
+    if (dy != 0)
+        c += GRID_SNAP_PENALTY;
+    return c;
+}
+
 /* Inverse-square Coulomb repulsion energy between two unrelated blocks within cutoff radius. */
 double repulsion_pair_cost(const element *a, const element *b)
 {
@@ -342,6 +365,14 @@ struct opt_context {
         return c;
     }
 
+    double all_grid_snap_cost(void) const
+    {
+        double c = 0.0;
+        for (const element *e : repelling_blocks)
+            c += grid_snap_cost(e);
+        return c;
+    }
+
     void refresh_element(const element *e)
     {
         auto it = elem_segs.find(e);
@@ -414,7 +445,7 @@ struct opt_context {
 
     double local_cost(element *e) const
     {
-        double total = sibling_cost_for(e) + repulsion_cost_for(e);
+        double total = sibling_cost_for(e) + repulsion_cost_for(e) + grid_snap_cost(e);
         auto it = elem_segs.find(e);
         if (it != elem_segs.end()) {
             for (size_t idx : it->second)
@@ -454,6 +485,7 @@ struct opt_context {
         total += repulsion_cost_for(a) + repulsion_cost_for(b);
         if (is_repelling_block(a) && is_repelling_block(b) && !are_related(a, b))
             total -= repulsion_pair_cost(a, b);
+        total += grid_snap_cost(a) + grid_snap_cost(b);
         return total;
     }
 };
@@ -733,6 +765,7 @@ double placement_optimizer::compute_scene_cost(class scene *target_scene)
     total += CROSS_PENALTY * static_cast<double>(ctx.count_all_crossings());
     total += ctx.all_sibling_cost();
     total += ctx.all_repulsion_cost();
+    total += ctx.all_grid_snap_cost();
     return total;
 }
 
@@ -760,6 +793,7 @@ placement_optimizer::step_result placement_optimizer::optimize_all_elements(
     res.cost_before += CROSS_PENALTY * static_cast<double>(res.crossings_before);
     res.cost_before += ctx.all_sibling_cost();
     res.cost_before += ctx.all_repulsion_cost();
+    res.cost_before += ctx.all_grid_snap_cost();
 
     static std::mt19937 rng{std::random_device{}()};
     std::shuffle(movable.begin(), movable.end(), rng);
@@ -781,6 +815,7 @@ placement_optimizer::step_result placement_optimizer::optimize_all_elements(
     res.cost_after += CROSS_PENALTY * static_cast<double>(res.crossings_after);
     res.cost_after += ctx.all_sibling_cost();
     res.cost_after += ctx.all_repulsion_cost();
+    res.cost_after += ctx.all_grid_snap_cost();
     return res;
 }
 
