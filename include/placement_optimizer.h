@@ -57,6 +57,10 @@ public:
     /* Run one 8-direction hill-climbing round over every connector split junction in the scene. */
     static step_result optimize_all_connectors(class scene *target_scene,
                                                int max_follow_steps = 5);
+
+    /* Run one 8-direction hill-climbing round over every model_const in the scene. */
+    static step_result optimize_all_constants(class scene *target_scene,
+                                              int max_follow_steps = 5);
 };
 
 /* Tracks whether gridcad is running in imported-Verilog view mode (for UI button behavior). */

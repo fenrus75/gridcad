@@ -386,10 +386,14 @@ bool canvas::handle_event(SDL_Event &event)
 	if (event.type == EVENT_AUTOCLOCK && event.user.data1 == current_scene.get()) {
 		if (is_import_view_mode()) {
 			static unsigned int opt_click_count = 0;
-			const bool connector_pass = (opt_click_count++ % 2 == 0);
-			if (connector_pass) {
+			const unsigned int phase = (opt_click_count++ % 3);
+			if (phase == 0) {
 				auto res = placement_optimizer::optimize_all_connectors(current_scene.get());
 				logger::get().info("Optimize [connectors]: moved {} connectors (cost {:.1f} -> {:.1f})",
+				                   res.steps_taken, res.cost_before, res.cost_after);
+			} else if (phase == 1) {
+				auto res = placement_optimizer::optimize_all_constants(current_scene.get());
+				logger::get().info("Optimize [constants]: moved {} constants (cost {:.1f} -> {:.1f})",
 				                   res.steps_taken, res.cost_before, res.cost_after);
 			} else {
 				auto res = placement_optimizer::optimize_one_round(current_scene.get());

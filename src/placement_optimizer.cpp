@@ -302,25 +302,28 @@ placement_optimizer::step_result placement_optimizer::optimize_one_round(
     return res;
 }
 
-placement_optimizer::step_result placement_optimizer::optimize_all_connectors(
-    class scene *target_scene, int max_follow_steps)
+namespace {
+
+template <typename Pred>
+placement_optimizer::step_result optimize_matching_elements(
+    class scene *target_scene, Pred &&matches, std::string_view label, int max_follow_steps)
 {
-    step_result res;
+    placement_optimizer::step_result res;
     if (!target_scene || target_scene->elements.empty())
         return res;
 
-    res.cost_before = compute_scene_cost(target_scene);
+    res.cost_before = placement_optimizer::compute_scene_cost(target_scene);
     double total_saved = 0.0;
-    int moved_connectors = 0;
+    int moved_count = 0;
 
     for (auto &e : target_scene->elements) {
         element *elem = e.get();
-        if (elem->class_id() != "connector:")
+        if (!matches(elem))
             continue;
 
         const int orig_x = static_cast<int>(std::floor(elem->get_X()));
         const int orig_y = static_cast<int>(std::floor(elem->get_Y()));
-        const double before_local = compute_element_cost(elem);
+        const double before_local = placement_optimizer::compute_element_cost(elem);
 
         int best_dir = -1;
         double best_local = before_local;
@@ -331,7 +334,7 @@ placement_optimizer::step_result placement_optimizer::optimize_all_connectors(
                 continue;
             elem->place(cand_x, cand_y);
             elem->reseat();
-            const double after_local = compute_element_cost(elem);
+            const double after_local = placement_optimizer::compute_element_cost(elem);
             if (after_local + 1e-6 < best_local) {
                 best_local = after_local;
                 best_dir = dir;
@@ -355,7 +358,7 @@ placement_optimizer::step_result placement_optimizer::optimize_all_connectors(
                     break;
                 elem->place(nx, ny);
                 elem->reseat();
-                const double next_local = compute_element_cost(elem);
+                const double next_local = placement_optimizer::compute_element_cost(elem);
                 if (next_local + 1e-6 < cur_local) {
                     cur_x = nx;
                     cur_y = ny;
@@ -369,18 +372,40 @@ placement_optimizer::step_result placement_optimizer::optimize_all_connectors(
 
             reseat_element_wires(elem, /*clear_routes=*/true);
             total_saved += (before_local - cur_local);
-            moved_connectors++;
+            moved_count++;
         } else {
             elem->place(orig_x, orig_y);
             elem->reseat();
         }
     }
 
-    res.moved = (moved_connectors > 0);
-    res.steps_taken = moved_connectors;
-    res.moved_element = "connectors";
+    res.moved = (moved_count > 0);
+    res.steps_taken = moved_count;
+    res.moved_element = std::string(label);
     res.cost_after = res.cost_before - total_saved;
     return res;
+}
+
+} // namespace
+
+placement_optimizer::step_result placement_optimizer::optimize_all_connectors(
+    class scene *target_scene, int max_follow_steps)
+{
+    return optimize_matching_elements(
+        target_scene,
+        [](element *e) { return e->class_id() == "connector:"; },
+        "connectors",
+        max_follow_steps);
+}
+
+placement_optimizer::step_result placement_optimizer::optimize_all_constants(
+    class scene *target_scene, int max_follow_steps)
+{
+    return optimize_matching_elements(
+        target_scene,
+        [](element *e) { return e->class_id() == "model_const:"; },
+        "constants",
+        max_follow_steps);
 }
 
 static bool g_import_view_mode = false;
