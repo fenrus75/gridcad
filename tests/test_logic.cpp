@@ -873,6 +873,55 @@ static void test_verilog_import(void)
         assert(ogt_p->get_value().boolval == false);
         assert(oge_p->get_value().boolval == false);
     }
+
+    // 10. Packed vector LUT (mixed-width inputs: A0=2-bit, A1=1-bit -> 3-bit index, 2 outputs)
+    {
+        scene s("packed_lut_test");
+        auto in_a0 = std::make_unique<model_toggle>(1, 1);
+        auto in_a1 = std::make_unique<model_toggle>(1, 5);
+        auto lut   = std::make_unique<model_truth>(7, 2);
+        auto o0    = std::make_unique<model_output>(14, 1);
+        auto o1    = std::make_unique<model_output>(14, 5);
+
+        in_a0->set_width(2);
+        // idx = (A1 << 2) | A0 in [0..7]; MSB-first bitstring has idx=5 at pos (7-5)=2
+        // Y0 = 1 only for idx == 5 (A1=1, A0=1); Y1 = 1 only for idx == 2 (A1=0, A0=2)
+        lut->configure_lut_packed({2, 1}, {"A0", "A1"}, {"00100000", "00000100"});
+
+        auto *a0_p = in_a0.get();
+        auto *a1_p = in_a1.get();
+        auto *lut_p = lut.get();
+        auto *o0_p = o0.get();
+        auto *o1_p = o1.get();
+
+        s.add_element(std::move(in_a0));
+        s.add_element(std::move(in_a1));
+        s.add_element(std::move(lut));
+        s.add_element(std::move(o0));
+        s.add_element(std::move(o1));
+
+        connect_ports(a0_p->port_at(0), lut_p->port_at(0));
+        connect_ports(a1_p->port_at(0), lut_p->port_at(1));
+        connect_ports(lut_p->port_at(2), o0_p->port_at(0));
+        connect_ports(lut_p->port_at(3), o1_p->port_at(0));
+        s.redo_nets();
+
+        auto v1 = make_int_val(1);
+        auto b1 = make_bool_val(true);
+        a0_p->update_value(&v1, DEFAULT_TTL);
+        a1_p->update_value(&b1, DEFAULT_TTL);
+        run_queued_calculations();
+        assert(o0_p->get_value().boolval == true);
+        assert(o1_p->get_value().boolval == false);
+
+        auto v2 = make_int_val(2);
+        auto b0 = make_bool_val(false);
+        a0_p->update_value(&v2, DEFAULT_TTL);
+        a1_p->update_value(&b0, DEFAULT_TTL);
+        run_queued_calculations();
+        assert(o0_p->get_value().boolval == false);
+        assert(o1_p->get_value().boolval == true);
+    }
 }
 
 static void test_vcd_playback(void)

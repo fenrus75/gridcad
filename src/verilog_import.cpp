@@ -513,18 +513,54 @@ std::unique_ptr<scene> import_module_recursive(
                 if (lut_outputs.empty())
                     lut_outputs.emplace_back(size_t{1} << width, '0');
 
+                /* Detect single vector input ("A") or mixed-width inputs ("A0".."Ak"). */
+                std::vector<int> in_widths;
+                std::vector<std::string> in_names;
+                const json pins = (comp.contains("pins") && comp["pins"].is_object())
+                                      ? comp["pins"]
+                                      : json::object();
+                if (pins.contains("A") && pins["A"].is_object()) {
+                    in_names.push_back("A");
+                    in_widths.push_back(parse_width_json(pins["A"], "width", width));
+                } else {
+                    for (int k = 0; k < 8; ++k) {
+                        const std::string pk = std::format("A{}", k);
+                        if (pins.contains(pk) && pins[pk].is_object()) {
+                            in_names.push_back(pk);
+                            in_widths.push_back(parse_width_json(pins[pk], "width", 1));
+                        }
+                    }
+                    if (in_names.empty()) {
+                        for (int k = 0; k < width; ++k) {
+                            in_names.push_back(std::format("A{}", k));
+                            in_widths.push_back(1);
+                        }
+                    }
+                }
+
+                bool is_packed = (in_names.size() == 1 && in_names[0] == "A");
+                for (int w : in_widths) {
+                    if (w > 1)
+                        is_packed = true;
+                }
+
                 auto el = std::make_unique<model_truth>(0, 0);
                 el->update_name(cid);
-                el->configure_lut(width, lut_outputs);
-                for (int k = 0; k < width; ++k)
-                    register_pin(std::format("A{}", k), el->port_at(static_cast<unsigned int>(k)));
+                if (is_packed)
+                    el->configure_lut_packed(in_widths, in_names, lut_outputs);
+                else
+                    el->configure_lut(static_cast<int>(in_names.size()), lut_outputs);
+
+                const unsigned int num_in_ports = static_cast<unsigned int>(in_names.size());
+                for (unsigned int k = 0; k < num_in_ports; ++k)
+                    register_pin(in_names[k], el->port_at(k));
                 if (lut_outputs.size() == 1) {
-                    register_pin("Y", el->port_at(static_cast<unsigned int>(width)));
-                    register_pin("Y0", el->port_at(static_cast<unsigned int>(width)));
+                    register_pin("Y", el->port_at(num_in_ports));
+                    register_pin("Y0", el->port_at(num_in_ports));
                 } else {
                     for (size_t o = 0; o < lut_outputs.size(); ++o) {
                         register_pin(std::format("Y{}", o),
-                                     el->port_at(static_cast<unsigned int>(width + o)));
+                                     el->port_at(num_in_ports + static_cast<unsigned int>(o)));
                     }
                 }
                 result_scene->add_element(std::move(el));

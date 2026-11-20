@@ -34,6 +34,10 @@ public:
     /* Configure as a 1- or multi-output LUT (num_inputs in [1, 8], MSB-first bitstrings). */
     void configure_lut(int num_inputs, std::string_view lut_bits);
     void configure_lut(int num_inputs, const std::vector<std::string> &lut_outputs);
+    /* Configure as a vector/mixed-width LUT whose input port widths sum to total_bits in [1, 8]. */
+    void configure_lut_packed(const std::vector<int> &in_widths,
+                              const std::vector<std::string> &in_names,
+                              const std::vector<std::string> &lut_outputs);
     void calculate(int ttl) override;
     void names_to_ports(void);
     void handle_event(class basecanvas *canvas, SDL_Event &event) override;
@@ -52,4 +56,6 @@ private:
     long int previous_click = -1;
     float mouseX = -100, mouseY = -100;     /* no save */
     std::string verilog_module_name = "";
+    std::vector<int> input_port_widths;     /* non-empty when configured with vector/mixed-width LUT inputs */
+    std::vector<std::string> packed_lut_outputs;
 };

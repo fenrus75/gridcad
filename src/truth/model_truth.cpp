@@ -324,6 +324,9 @@ void model_truth::configure_lut(int num_inputs, std::string_view lut_bits)
 
 void model_truth::configure_lut(int num_inputs, const std::vector<std::string> &lut_outputs)
 {
+	input_port_widths.clear();
+	packed_lut_outputs.clear();
+
 	const int target_inputs = std::clamp(num_inputs, 1, 8);
 	const int target_outputs = std::clamp(static_cast<int>(lut_outputs.size()), 1, 16);
 
@@ -365,13 +368,78 @@ void model_truth::configure_lut(int num_inputs, const std::vector<std::string> &
 	}
 }
 
+void model_truth::configure_lut_packed(const std::vector<int> &in_widths,
+                                       const std::vector<std::string> &in_names,
+                                       const std::vector<std::string> &lut_outputs)
+{
+	if (in_widths.empty())
+		return;
+
+	const int target_inputs = std::clamp(static_cast<int>(in_widths.size()), 1, 8);
+	const int target_outputs = std::clamp(static_cast<int>(lut_outputs.size()), 1, 16);
+
+	while (static_cast<int>(inputs) < target_inputs)
+		add_input();
+	while (static_cast<int>(inputs) > target_inputs)
+		del_input();
+
+	while (static_cast<int>(outputs) < target_outputs)
+		add_output();
+	while (static_cast<int>(outputs) > target_outputs)
+		del_output();
+
+	input_port_widths.clear();
+	input_port_widths.reserve(inputs);
+	for (unsigned int k = 0; k < inputs; ++k) {
+		const int w = std::clamp(in_widths[k], 1, 8);
+		input_port_widths.push_back(w);
+		if (k < ports.size() && ports[k])
+			ports[k]->set_width(w);
+		names[k] = (k < in_names.size() && !in_names[k].empty())
+		               ? in_names[k]
+		               : std::format("A{}", k);
+	}
+	for (unsigned int o = 0; o < outputs; ++o)
+		names[inputs + o] = (outputs == 1) ? "Y" : std::format("Y{}", o);
+
+	packed_lut_outputs.assign(lut_outputs.begin(),
+	                          lut_outputs.begin() + std::min<size_t>(lut_outputs.size(), outputs));
+	names_to_ports();
+	reseat();
+}
+
 void model_truth::calculate(int ttl)
 {
-	std::vector<char> inp;
-	unsigned int x, y;
-
 	if (ttl < 1)
 		return;
+
+	if (!packed_lut_outputs.empty() && input_port_widths.size() == inputs) {
+		size_t lut_idx = 0;
+		int bit_pos = 0;
+		for (unsigned int k = 0; k < inputs; ++k) {
+			const int w = input_port_widths[k];
+			const struct value &v = ports[k]->value;
+			const uint64_t raw = (v.type == VALUE_TYPE_BOOL) ? (v.boolval ? 1ULL : 0ULL) : v.intval;
+			const uint64_t mask = (w >= 64) ? ~uint64_t{0} : ((uint64_t{1} << w) - 1);
+			lut_idx |= static_cast<size_t>(raw & mask) << bit_pos;
+			bit_pos += w;
+		}
+		for (unsigned int o = 0; o < outputs; ++o) {
+			const std::string &bits = (o < packed_lut_outputs.size()) ? packed_lut_outputs[o] : std::string();
+			const bool out_bit = (lut_idx < bits.size()) &&
+			                     (bits[bits.size() - 1 - lut_idx] == '1');
+			struct value out = {};
+			out.valid = true;
+			out.type = VALUE_TYPE_BOOL;
+			out.boolval = out_bit;
+			out.intval = out_bit ? 1 : 0;
+			update_value_net(&out, inputs + o, ttl - 1);
+		}
+		return;
+	}
+
+	std::vector<char> inp;
+	unsigned int x, y;
 
 	inp.resize(inputs);
 	for (x = 0; x < inputs; x++) {
