@@ -213,9 +213,11 @@ void topological_placer::place(class scene *target_scene, const options &opts)
             indegree[v]++;
     }
 
-    /* Longest-path topological layering via Kahn's algorithm + cyclic fallback peel. */
+    /* Pass 1 (ASAP, left-to-right): longest-path topological layering via Kahn's + cyclic peel. */
     std::vector<int> layer(n, 0);
     std::vector<bool> processed(n, false);
+    std::vector<size_t> topo_order;
+    topo_order.reserve(n);
     std::queue<size_t> q;
     size_t active_count = 0;
     size_t processed_count = 0;
@@ -244,6 +246,7 @@ void topological_placer::place(class scene *target_scene, const options &opts)
                 continue;
             processed[u] = true;
             processed_count++;
+            topo_order.push_back(u);
             for (size_t v : dag_out[u]) {
                 if (layer[v] < layer[u] + 1)
                     layer[v] = layer[u] + 1;
@@ -270,6 +273,44 @@ void topological_placer::place(class scene *target_scene, const options &opts)
         indegree[best] = 0;
         q.push(best);
         drain_queue();
+    }
+
+    /* Pin primary outputs in the rightmost column before running the right-to-left ALAP pass. */
+    int max_internal_layer = 0;
+    for (size_t i = 0; i < n; ++i) {
+        element *e = target_scene->elements[i].get();
+        if (!is_connector(e) && !is_primary_output(e))
+            max_internal_layer = std::max(max_internal_layer, layer[i]);
+    }
+    const int output_layer = max_internal_layer + 1;
+    for (size_t i = 0; i < n; ++i) {
+        if (is_primary_output(target_scene->elements[i].get()))
+            layer[i] = output_layer;
+    }
+
+    /*
+     * Pass 2 (ALAP, right-to-left): walk reverse topological order and pull
+     * internal elements rightward toward their earliest forward consumer so
+     * short combinational cones sit next to what consumes them instead of
+     * piling up on the left edge.
+     */
+    for (auto it = topo_order.rbegin(); it != topo_order.rend(); ++it) {
+        const size_t u = *it;
+        element *e = target_scene->elements[u].get();
+        if (is_connector(e) || is_primary_input(e) || is_primary_output(e) || is_constant(e))
+            continue;
+
+        int min_succ_layer = INT_MAX;
+        for (size_t v : dag_out[u]) {
+            if (layer[v] > layer[u])
+                min_succ_layer = std::min(min_succ_layer, layer[v]);
+        }
+        for (size_t v : all_out[u]) {
+            if (is_primary_output(target_scene->elements[v].get()))
+                min_succ_layer = std::min(min_succ_layer, layer[v]);
+        }
+        if (min_succ_layer < INT_MAX)
+            layer[u] = std::max(layer[u], min_succ_layer - 1);
     }
 
     /* Place constants directly in the column preceding their earliest consumer. */
@@ -302,19 +343,6 @@ void topological_placer::place(class scene *target_scene, const options &opts)
         }
         if (min_sink_layer < INT_MAX)
             layer[i] = std::max(1, min_sink_layer - 1);
-    }
-
-    /* Place primary outputs in the rightmost column. */
-    int max_internal_layer = 0;
-    for (size_t i = 0; i < n; ++i) {
-        element *e = target_scene->elements[i].get();
-        if (!is_connector(e) && !is_primary_output(e))
-            max_internal_layer = std::max(max_internal_layer, layer[i]);
-    }
-    const int output_layer = max_internal_layer + 1;
-    for (size_t i = 0; i < n; ++i) {
-        if (is_primary_output(target_scene->elements[i].get()))
-            layer[i] = output_layer;
     }
 
     int num_layers = output_layer + 1;
