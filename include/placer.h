@@ -29,6 +29,7 @@ public:
         int margin_y = 6;
         int col_gap = 12;
         int row_gap = 4;
+        int stagger_x = 6;             /* Horizontal offset for odd rows within a column */
         int max_elems_per_subcol = 14; /* Split tall columns so layouts stay widescreen & fast to route */
     };
 

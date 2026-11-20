@@ -279,14 +279,17 @@ void topological_placer::place(class scene *target_scene, const options &opts)
 
             int col_width = 1;
             int cur_y = opts.margin_y;
+            const bool do_stagger = (opts.stagger_x > 0) && ((end - begin) >= 2) &&
+                                    (c > 0) && (c < num_layers - 1);
 
             for (size_t idx = begin; idx < end; ++idx) {
                 element *elem = target_scene->elements[col[idx]].get();
                 int w = std::max(1, static_cast<int>(std::ceil(elem->get_width())));
                 int h = std::max(1, static_cast<int>(std::ceil(elem->get_height())));
-                col_width = std::max(col_width, w);
+                const int x_off = (do_stagger && ((idx - begin) % 2 == 1)) ? opts.stagger_x : 0;
+                col_width = std::max(col_width, w + x_off);
 
-                elem->place(cur_x, cur_y);
+                elem->place(cur_x + x_off, cur_y);
                 elem->reseat();
 
                 cur_y += h + opts.row_gap;
