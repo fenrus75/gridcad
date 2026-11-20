@@ -366,24 +366,9 @@ void canvas::run_optimize_phase(void)
 {
 	if (!current_scene)
 		return;
-	const unsigned int phase = (opt_phase++ % 4);
-	if (phase == 0) {
-		auto res = placement_optimizer::optimize_all_connectors(current_scene.get());
-		logger::get().info("Optimize [connectors]: moved {} connectors (cost {:.1f} -> {:.1f})",
-		                   res.steps_taken, res.cost_before, res.cost_after);
-	} else if (phase == 1) {
-		auto res = placement_optimizer::optimize_all_constants(current_scene.get());
-		logger::get().info("Optimize [constants]: moved {} constants (cost {:.1f} -> {:.1f})",
-		                   res.steps_taken, res.cost_before, res.cost_after);
-	} else if (phase == 2) {
-		auto res = placement_optimizer::optimize_all_slices_and_concats(current_scene.get());
-		logger::get().info("Optimize [slices/concats]: moved {} slices/concats (cost {:.1f} -> {:.1f})",
-		                   res.steps_taken, res.cost_before, res.cost_after);
-	} else {
-		auto res = placement_optimizer::optimize_all_elements(current_scene.get());
-		logger::get().info("Optimize [all]: moved {} elements (cost {:.1f} -> {:.1f})",
-		                   res.steps_taken, res.cost_before, res.cost_after);
-	}
+	auto res = placement_optimizer::optimize_all_elements(current_scene.get());
+	logger::get().info("Optimize: moved {} elements (cost {:.1f} -> {:.1f})",
+	                   res.steps_taken, res.cost_before, res.cost_after);
 }
 
 bool canvas::handle_event(SDL_Event &event)

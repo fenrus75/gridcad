@@ -43,30 +43,9 @@ public:
     static double compute_element_cost(class element *elem);
 
     /*
-     * Perform one interactive optimization round:
-     * Pick a random movable element and one of the 8 directions (straight or
-     * diagonal). If moving 1 grid unit is collision-free and strictly improves
-     * the cost, repeat the same element + direction up to max_follow_steps more
-     * times while cost keeps improving. Retries up to max_attempts random
-     * (element, direction) pairs so a single UI click visibly makes progress.
+     * Run one shuffled 8-direction (+ jump/swap + 1% opposite-move escape)
+     * optimization sweep over every movable element in the scene.
      */
-    static step_result optimize_one_round(class scene *target_scene,
-                                          int max_follow_steps = 5,
-                                          int max_attempts = 200);
-
-    /* Run one 8-direction hill-climbing round over every connector split junction in the scene. */
-    static step_result optimize_all_connectors(class scene *target_scene,
-                                               int max_follow_steps = 5);
-
-    /* Run one 8-direction hill-climbing round over every model_const in the scene. */
-    static step_result optimize_all_constants(class scene *target_scene,
-                                              int max_follow_steps = 5);
-
-    /* Run one 8-direction hill-climbing round over every model_slice and model_concat. */
-    static step_result optimize_all_slices_and_concats(class scene *target_scene,
-                                                       int max_follow_steps = 5);
-
-    /* Run one 8-direction (+ jump/swap) hill-climbing round over every movable element. */
     static step_result optimize_all_elements(class scene *target_scene,
                                              int max_follow_steps = 5);
 };

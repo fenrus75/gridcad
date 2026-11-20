@@ -299,6 +299,22 @@ double try_improve_element(scene *target_scene, element *elem, int max_follow_st
     if (best_dir >= 0) {
         const int dx = DIR_X[best_dir];
         const int dy = DIR_Y[best_dir];
+
+        /* 1-in-100 opposite-direction perturbation to escape local minima. */
+        static std::mt19937 perturb_rng{std::random_device{}()};
+        if ((perturb_rng() % 100) == 0) {
+            const int ox = orig_x - dx;
+            const int oy = orig_y - dy;
+            if (can_place_at(target_scene, elem, ox, oy)) {
+                elem->place(ox, oy);
+                reseat_element_wires(elem, /*clear_routes=*/true);
+                out_dx = -dx;
+                out_dy = -dy;
+                out_steps = 1;
+                return 1e-6; /* Counted as an intentional perturbation move. */
+            }
+        }
+
         int cur_x = best_x;
         int cur_y = best_y;
         double cur_local = best_local;
@@ -336,37 +352,6 @@ double try_improve_element(scene *target_scene, element *elem, int max_follow_st
     }
 
     return 0.0;
-}
-
-template <typename Pred>
-placement_optimizer::step_result optimize_matching_elements(
-    class scene *target_scene, Pred &&matches, std::string_view label, int max_follow_steps)
-{
-    placement_optimizer::step_result res;
-    if (!target_scene || target_scene->elements.empty())
-        return res;
-
-    res.cost_before = placement_optimizer::compute_scene_cost(target_scene);
-    double total_saved = 0.0;
-    int moved_count = 0;
-
-    for (auto &e : target_scene->elements) {
-        element *elem = e.get();
-        if (!matches(elem))
-            continue;
-        int dx = 0, dy = 0, steps = 0;
-        const double saved = try_improve_element(target_scene, elem, max_follow_steps, dx, dy, steps);
-        if (saved > 0.0) {
-            total_saved += saved;
-            moved_count++;
-        }
-    }
-
-    res.moved = (moved_count > 0);
-    res.steps_taken = moved_count;
-    res.moved_element = std::string(label);
-    res.cost_after = res.cost_before - total_saved;
-    return res;
 }
 
 } // namespace
@@ -413,79 +398,6 @@ double placement_optimizer::compute_scene_cost(class scene *target_scene)
     return total;
 }
 
-placement_optimizer::step_result placement_optimizer::optimize_one_round(
-    class scene *target_scene, int max_follow_steps, int max_attempts)
-{
-    step_result res;
-    if (!target_scene || target_scene->elements.empty())
-        return res;
-
-    std::vector<element *> movable;
-    movable.reserve(target_scene->elements.size());
-    for (auto &elem : target_scene->elements) {
-        if (!elem->is_background() && !is_pinned_element(elem.get()))
-            movable.push_back(elem.get());
-    }
-    if (movable.empty())
-        return res;
-
-    res.cost_before = compute_scene_cost(target_scene);
-    res.cost_after = res.cost_before;
-
-    static std::mt19937 rng{std::random_device{}()};
-    std::uniform_int_distribution<size_t> elem_dist(0, movable.size() - 1);
-
-    for (int attempt = 0; attempt < max_attempts; ++attempt) {
-        element *elem = movable[elem_dist(rng)];
-        int dx = 0, dy = 0, steps = 0;
-        const double saved = try_improve_element(target_scene, elem, max_follow_steps, dx, dy, steps);
-        if (saved > 0.0) {
-            res.moved = true;
-            res.steps_taken = steps;
-            res.moved_element = elem->get_name().empty() ? elem->class_id() : elem->get_name();
-            res.dx = dx;
-            res.dy = dy;
-            res.cost_after = res.cost_before - saved;
-            return res;
-        }
-    }
-
-    return res;
-}
-
-placement_optimizer::step_result placement_optimizer::optimize_all_connectors(
-    class scene *target_scene, int max_follow_steps)
-{
-    return optimize_matching_elements(
-        target_scene,
-        [](element *e) { return e->class_id() == "connector:"; },
-        "connectors",
-        max_follow_steps);
-}
-
-placement_optimizer::step_result placement_optimizer::optimize_all_constants(
-    class scene *target_scene, int max_follow_steps)
-{
-    return optimize_matching_elements(
-        target_scene,
-        [](element *e) { return e->class_id() == "model_const:"; },
-        "constants",
-        max_follow_steps);
-}
-
-placement_optimizer::step_result placement_optimizer::optimize_all_slices_and_concats(
-    class scene *target_scene, int max_follow_steps)
-{
-    return optimize_matching_elements(
-        target_scene,
-        [](element *e) {
-            const std::string cid = e->class_id();
-            return cid == "model_slice:" || cid == "model_concat:" || cid == "model_split:";
-        },
-        "slices/concats",
-        max_follow_steps);
-}
-
 placement_optimizer::step_result placement_optimizer::optimize_all_elements(
     class scene *target_scene, int max_follow_steps)
 {
@@ -507,22 +419,18 @@ placement_optimizer::step_result placement_optimizer::optimize_all_elements(
     std::shuffle(movable.begin(), movable.end(), rng);
 
     res.cost_before = compute_scene_cost(target_scene);
-    double total_saved = 0.0;
     int moved_count = 0;
 
     for (element *elem : movable) {
         int dx = 0, dy = 0, steps = 0;
-        const double saved = try_improve_element(target_scene, elem, max_follow_steps, dx, dy, steps);
-        if (saved > 0.0) {
-            total_saved += saved;
+        if (try_improve_element(target_scene, elem, max_follow_steps, dx, dy, steps) > 0.0)
             moved_count++;
-        }
     }
 
     res.moved = (moved_count > 0);
     res.steps_taken = moved_count;
     res.moved_element = "all_elements";
-    res.cost_after = res.cost_before - total_saved;
+    res.cost_after = compute_scene_cost(target_scene);
     return res;
 }
 

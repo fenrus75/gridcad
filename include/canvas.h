@@ -86,7 +86,6 @@ protected:
     bool show_toolchain = false;
     bool auto_optimize = false;
     uint64_t last_optimize_ms = 0;
-    unsigned int opt_phase = 0;
     void run_optimize_phase(void);
     
     void zap_autocomplete(void);
