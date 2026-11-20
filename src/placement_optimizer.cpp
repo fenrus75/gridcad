@@ -410,6 +410,19 @@ placement_optimizer::step_result placement_optimizer::optimize_all_constants(
         max_follow_steps);
 }
 
+placement_optimizer::step_result placement_optimizer::optimize_all_slices_and_concats(
+    class scene *target_scene, int max_follow_steps)
+{
+    return optimize_matching_elements(
+        target_scene,
+        [](element *e) {
+            const std::string cid = e->class_id();
+            return cid == "model_slice:" || cid == "model_concat:";
+        },
+        "slices/concats",
+        max_follow_steps);
+}
+
 static bool g_import_view_mode = false;
 
 bool is_import_view_mode(void)
