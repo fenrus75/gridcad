@@ -172,7 +172,6 @@ void topological_placer::place(class scene *target_scene, const options &opts)
         if (is_connector(src_elem))
             continue;
 
-        const bool src_breaks_cycle = is_cycle_breaker(src_elem);
         const bool src_is_const = is_constant(src_elem);
 
         for (unsigned int pi = 0;; ++pi) {
@@ -192,8 +191,8 @@ void topological_placer::place(class scene *target_scene, const options &opts)
                 all_out[u].push_back(v);
                 all_in[v].push_back(u);
 
-                if (!src_breaks_cycle && !src_is_const &&
-                    !is_primary_output(target_scene->elements[v].get())) {
+                /* Keep sequential forward edges; true cycles are broken selectively via SCC below. */
+                if (!src_is_const && !is_primary_output(target_scene->elements[v].get())) {
                     dag_out[u].push_back(v);
                 }
             }
@@ -230,6 +229,7 @@ void topological_placer::place(class scene *target_scene, const options &opts)
         bool is_slice_grp = false;
         bool is_clock = false;
         bool is_reset = false;
+        bool is_seq = false;
     };
 
     std::vector<size_t> elem_to_group(n, SIZE_MAX);
@@ -381,6 +381,10 @@ void topological_placer::place(class scene *target_scene, const options &opts)
             }
             vg.width = max_w;
             vg.height = max_h;
+            for (size_t idx : comp) {
+                if (is_cycle_breaker(target_scene->elements[idx].get()))
+                    vg.is_seq = true;
+            }
 
             const size_t gid = groups.size();
             for (size_t idx : comp) {
@@ -408,6 +412,7 @@ void topological_placer::place(class scene *target_scene, const options &opts)
         vg.is_slice_grp = is_slice(e);
         vg.is_clock = is_clock_element(e);
         vg.is_reset = is_reset_element(e);
+        vg.is_seq = is_cycle_breaker(e);
         elem_to_group[i] = groups.size();
         groups.push_back(std::move(vg));
     }
@@ -432,11 +437,158 @@ void topological_placer::place(class scene *target_scene, const options &opts)
                 g_dag_out[gu].push_back(gv);
         }
     }
-    std::vector<int> indegree(ng, 0);
     for (size_t gu = 0; gu < ng; ++gu) {
         dedup(g_all_out[gu]);
         dedup(g_all_in[gu]);
         dedup(g_dag_out[gu]);
+    }
+
+    /*
+     * Smart cycle breaking: instead of cutting every register's output (which
+     * reverses feed-forward pipelines like add -> reg -> mux -> reg -> out),
+     * find actual Strongly Connected Components (Tarjan's SCC) and break each
+     * cycle by cutting only the SCC-internal outgoing edges of the sequential
+     * node closest to a primary output.
+     */
+    std::vector<int> dist_to_out(ng, INT_MAX);
+    {
+        std::queue<size_t> rq;
+        for (size_t i = 0; i < ng; ++i) {
+            if (groups[i].is_output) {
+                dist_to_out[i] = 0;
+                rq.push(i);
+            }
+        }
+        while (!rq.empty()) {
+            size_t v = rq.front();
+            rq.pop();
+            for (size_t u : g_all_in[v]) {
+                if (dist_to_out[u] == INT_MAX) {
+                    dist_to_out[u] = dist_to_out[v] + 1;
+                    rq.push(u);
+                }
+            }
+        }
+    }
+
+    {
+        /* Iterative Tarjan's SCC + selective back-edge cutting until acyclic. */
+        std::vector<int> disc(ng, -1);
+        std::vector<int> low(ng, 0);
+        std::vector<bool> on_stack(ng, false);
+        std::vector<size_t> tarjan_stack;
+        tarjan_stack.reserve(ng);
+        std::vector<bool> in_scc(ng, false);
+
+        for (size_t guard = 0; guard < ng; ++guard) {
+            std::fill(disc.begin(), disc.end(), -1);
+            std::fill(on_stack.begin(), on_stack.end(), false);
+            tarjan_stack.clear();
+            int timer = 0;
+            std::vector<std::vector<size_t>> cyclic_sccs;
+
+            /* Iterative DFS for Tarjan's SCC to avoid deep recursion on large netlists. */
+            struct frame {
+                size_t u;
+                size_t edge_idx;
+            };
+            std::vector<frame> call_stack;
+            call_stack.reserve(ng);
+
+            for (size_t start = 0; start < ng; ++start) {
+                if (disc[start] != -1)
+                    continue;
+                disc[start] = low[start] = timer++;
+                tarjan_stack.push_back(start);
+                on_stack[start] = true;
+                call_stack.push_back({start, 0});
+
+                while (!call_stack.empty()) {
+                    auto &top = call_stack.back();
+                    size_t u = top.u;
+                    if (top.edge_idx < g_dag_out[u].size()) {
+                        size_t v = g_dag_out[u][top.edge_idx++];
+                        if (disc[v] == -1) {
+                            disc[v] = low[v] = timer++;
+                            tarjan_stack.push_back(v);
+                            on_stack[v] = true;
+                            call_stack.push_back({v, 0});
+                        } else if (on_stack[v]) {
+                            low[u] = std::min(low[u], disc[v]);
+                        }
+                    } else {
+                        if (low[u] == disc[u]) {
+                            std::vector<size_t> scc;
+                            while (true) {
+                                size_t w = tarjan_stack.back();
+                                tarjan_stack.pop_back();
+                                on_stack[w] = false;
+                                scc.push_back(w);
+                                if (w == u)
+                                    break;
+                            }
+                            if (scc.size() > 1)
+                                cyclic_sccs.push_back(std::move(scc));
+                        }
+                        call_stack.pop_back();
+                        if (!call_stack.empty()) {
+                            size_t parent = call_stack.back().u;
+                            low[parent] = std::min(low[parent], low[u]);
+                        }
+                    }
+                }
+            }
+
+            if (cyclic_sccs.empty())
+                break;
+
+            for (const auto &scc : cyclic_sccs) {
+                for (size_t u : scc)
+                    in_scc[u] = true;
+
+                /* Prefer sequential node closest to a primary output, breaking ties by min SCC out-degree. */
+                size_t best_u = scc[0];
+                bool best_seq = false;
+                int best_dist = INT_MAX;
+                size_t best_deg = SIZE_MAX;
+
+                for (size_t u : scc) {
+                    size_t scc_out_deg = 0;
+                    for (size_t v : g_dag_out[u]) {
+                        if (in_scc[v])
+                            scc_out_deg++;
+                    }
+                    const bool is_s = groups[u].is_seq;
+                    const int d = dist_to_out[u];
+                    bool better = false;
+                    if (is_s != best_seq)
+                        better = is_s;
+                    else if (d != best_dist)
+                        better = (d < best_dist);
+                    else if (scc_out_deg != best_deg)
+                        better = (scc_out_deg < best_deg);
+                    if (better) {
+                        best_u = u;
+                        best_seq = is_s;
+                        best_dist = d;
+                        best_deg = scc_out_deg;
+                    }
+                }
+
+                /* Cut all SCC-internal outgoing edges from best_u. */
+                auto &outs = g_dag_out[best_u];
+                outs.erase(std::remove_if(outs.begin(), outs.end(),
+                                          [&](size_t v) { return in_scc[v]; }),
+                           outs.end());
+
+                for (size_t u : scc)
+                    in_scc[u] = false;
+            }
+        }
+    }
+
+    std::vector<int> indegree(ng, 0);
+    for (size_t gu = 0; gu < ng; ++gu) {
         for (size_t gv : g_dag_out[gu])
             indegree[gv]++;
     }
