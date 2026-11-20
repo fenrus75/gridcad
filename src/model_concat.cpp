@@ -56,9 +56,11 @@ model_concat::model_concat(float _X, float _Y, const std::vector<int> &in_widths
 
 void model_concat::drawAt(class basecanvas *canvas, float _X, float _Y, int type)
 {
-    canvas->draw_image("assets/buttonbox.png", _X, _Y, sizeX, sizeY, Alpha(type));
-    const std::string lbl = std::format("{{:{}}}", out_width);
-    canvas->draw_text(lbl, _X + 0.1f, _Y + 0.2f, sizeX - 0.2f, std::min(1.0f, static_cast<float>(sizeY) - 0.4f));
+    const bool large = (input_widths.size() > 4);
+    const char *img = selected
+                          ? (large ? "assets/1to8_selected.png" : "assets/1to4_selected.png")
+                          : (large ? "assets/1to8.png" : "assets/1to4.png");
+    canvas->draw_image(img, _X, _Y, sizeX, sizeY, Alpha(type));
 
     for (auto &port : ports) {
         port->draw_wires(canvas);

@@ -72,8 +72,8 @@ void model_split::drawAt(class basecanvas *canvas, float _X, float _Y, int type)
 {
     const bool large = (output_widths.size() > 4);
     const char *img = selected
-                          ? (large ? "assets/1to8_selected.png" : "assets/1to4_selected.png")
-                          : (large ? "assets/1to8.png" : "assets/1to4.png");
+                          ? (large ? "assets/8to1_selected.png" : "assets/4to1_selected.png")
+                          : (large ? "assets/8to1.png" : "assets/4to1.png");
     canvas->draw_image(img, _X, _Y, sizeX, sizeY, Alpha(type));
 
     for (auto &port : ports) {
