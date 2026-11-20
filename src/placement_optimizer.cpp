@@ -87,10 +87,12 @@ double wire_cost(const wire *w)
 
     double cost = weight * (adx + ady);
 
-    /* Pure horizontal (dy == 0, dx > 0) or pure vertical (dx == 0) gets 0 bend penalty. */
+    /* Pure horizontal (dy == 0, dx >= 0) or pure vertical (dx == 0) gets a 10x discount (not 0). */
     const bool pure_horiz = (ady < 0.01 && dx >= 0.0);
     const bool pure_vert = (adx < 0.01);
-    if (!pure_horiz && !pure_vert)
+    if (pure_horiz || pure_vert)
+        cost *= 0.1;
+    else
         cost += 4.0 * weight;
 
     /* Backward-edge penalty (lighter for sequential/submodule feedback loops). */
