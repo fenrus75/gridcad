@@ -855,11 +855,17 @@ void topological_placer::place(class scene *target_scene, const options &opts)
 
             int col_width = 1;
             int cur_y = opts.margin_y;
+            bool inserted_ctrl_gap = false;
             const bool do_stagger = (opts.stagger_x > 0) && ((end - begin) >= 2) &&
                                     (c > 0) && (c < num_layers - 1);
 
             for (size_t idx = begin; idx < end; ++idx) {
                 const vgroup &vg = groups[col[idx]];
+                /* Leave ~2 input heights of vertical clearance above rst/clk rails. */
+                if (c == 0 && !inserted_ctrl_gap && idx > begin && (vg.is_reset || vg.is_clock)) {
+                    cur_y += 2 * (3 + opts.row_gap);
+                    inserted_ctrl_gap = true;
+                }
                 const int w = vg.width;
                 const int h = vg.height;
                 const int x_off = (do_stagger && ((idx - begin) % 2 == 1)) ? opts.stagger_x : 0;
