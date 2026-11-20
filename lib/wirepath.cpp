@@ -272,7 +272,7 @@ std::unique_ptr<std::vector<struct waypoint>> wiregrid::walk_back(void)
 static const int DX[9] = {-1, 0, 1, -1, 0, 1, -1, 0, 1};
 static const int DY[9] = {-1, -1, -1, 0, 0, 0, 1, 1, 1};
 static const float COST[9] = {SQRT2, 1, SQRT2, 1, 0, 1, SQRT2, 1, SQRT2 };
-static const float COST2[9] = {1.4 * SQRT2, 1, 1.4 * SQRT2, 1, 0, 1, 1.4 * SQRT2, 1, 1.4 * SQRT2 };
+static const float COST2[9] = {1.6 * SQRT2, 1, 1.6 * SQRT2, 1, 0, 1, 1.6 * SQRT2, 1, 1.6 * SQRT2 };
 static const int order[8] = {1,3,5,7,0,2,6,8};
 
 void wiregrid::visit(struct point *p)
@@ -314,7 +314,7 @@ void wiregrid::visit(struct point *p)
 
 		if (p->dirX != -DX[i] || p->dirY != -DY[i]) {
 			if (is_clock)
-				newdist += 0.3;
+				newdist += 2.4;
 			newdist += 0.1;
 		}
 		//        printf("Looking at %i %i for newdist %5.2f\n", newX,newY, newdist);
