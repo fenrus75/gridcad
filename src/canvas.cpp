@@ -30,6 +30,7 @@
 #include "buttonbar.h"
 #include "timelinebar.h"
 #include "vcd_session.h"
+#include "placement_optimizer.h"
 #include "dialog.h"
 #include "synth.h"
 
@@ -100,7 +101,8 @@ canvas::canvas(std::unique_ptr<class scene> _scene, struct capabilities *cap)
 	timeline_bar->set_session(get_active_vcd_session());
 	button_bar->add_button("Save design to file", "assets/save_icon.png", EVENT_SAVE);
 	button_bar->add_button("Fit to screen", "assets/icon_fit_to_screen.png", EVENT_ZOOM_TO_FIT);
-	button_bar->add_button("Wire all clock signals", "assets/autoclock.png", EVENT_AUTOCLOCK);
+	button_bar->add_button(is_import_view_mode() ? "Optimize layout (1 step)" : "Wire all clock signals",
+	                       "assets/autoclock.png", EVENT_AUTOCLOCK);
 	button_bar->add_button("Redo all wiring", "assets/icon_rewire.png", EVENT_REWIRE);
 	if (show_toolchain) {
 		button_bar->add_button("Compile verilog", "assets/icon_compile_verilog.png", EVENT_RUN_VERILOG);
@@ -382,8 +384,20 @@ bool canvas::handle_event(SDL_Event &event)
 
 
 	if (event.type == EVENT_AUTOCLOCK && event.user.data1 == current_scene.get()) {
-		take_undo_snapshot(current_scene.get());
-		callback_autoclock(current_scene.get());
+		if (is_import_view_mode()) {
+			auto res = placement_optimizer::optimize_one_round(current_scene.get());
+			if (res.moved) {
+				logger::get().info("Optimize step: moved '{}' by ({},{}) x{} (cost {:.1f} -> {:.1f})",
+				                   res.moved_element, res.dx, res.dy, res.steps_taken,
+				                   res.cost_before, res.cost_after);
+			} else {
+				logger::get().info("Optimize step: no improving move found (cost {:.1f})",
+				                   res.cost_before);
+			}
+		} else {
+			take_undo_snapshot(current_scene.get());
+			callback_autoclock(current_scene.get());
+		}
 	}
 
 

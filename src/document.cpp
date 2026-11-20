@@ -19,6 +19,7 @@
 #include "scene.h"
 #include "verilog_import.h"
 #include "vcd_session.h"
+#include "placement_optimizer.h"
 
 std::chrono::steady_clock::time_point start_time;
 std::chrono::steady_clock::time_point exit_time;
@@ -112,6 +113,7 @@ document::document(std::string _name, bool _library_mode,
 
 	library_mode = _library_mode;
 	import_mode = !import_json_path.empty();
+	set_import_view_mode(import_mode);
 
 	std::string filename;
 
@@ -242,6 +244,7 @@ document::~document(void)
 {
 	clock_timer.reset();
 	set_active_vcd_session(nullptr);
+	set_import_view_mode(false);
 
 	/* Drain any pending VCD wire update events so their payloads are freed cleanly. */
 	SDL_Event ev;

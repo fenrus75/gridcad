@@ -86,6 +86,7 @@ core_sources = files(
     'src/model_one.cpp',
     'src/iconbar.cpp',
     'src/placer.cpp',
+    'src/placement_optimizer.cpp',
     'src/verilog_import.cpp',
     'src/vcd_parser.cpp',
     'src/vcd_session.cpp',
