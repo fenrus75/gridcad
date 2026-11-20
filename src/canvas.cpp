@@ -29,6 +29,7 @@
 #include "contextmenu.h"
 #include "buttonbar.h"
 #include "timelinebar.h"
+#include "vcd_session.h"
 #include "dialog.h"
 #include "synth.h"
 
@@ -96,6 +97,7 @@ canvas::canvas(std::unique_ptr<class scene> _scene, struct capabilities *cap)
 	icon_bar = std::make_unique<iconbar>(renderer.get(), ui_area_rect, this);
 	button_bar = std::make_unique<buttonbar>(this, button_rect.w);
 	timeline_bar = std::make_unique<timelinebar>();
+	timeline_bar->set_session(get_active_vcd_session());
 	button_bar->add_button("Save design to file", "assets/save_icon.png", EVENT_SAVE);
 	button_bar->add_button("Fit to screen", "assets/icon_fit_to_screen.png", EVENT_ZOOM_TO_FIT);
 	button_bar->add_button("Wire all clock signals", "assets/autoclock.png", EVENT_AUTOCLOCK);

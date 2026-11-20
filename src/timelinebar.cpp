@@ -91,7 +91,8 @@ size_t timelinebar::tick_from_x(int screen_x, const SDL_Rect &bar_rect) const
 
 void timelinebar::emit_seek(size_t tick)
 {
-    vcd_unlocked_ = false;
+    if (session_)
+        session_->set_unlocked(false);
     SDL_Event ev = {};
     ev.type = EVENT_VCD_SEEK;
     ev.user.code = static_cast<Sint32>(tick);
@@ -145,8 +146,8 @@ bool timelinebar::handle_event(const SDL_Event &event, const SDL_Rect &bar_rect)
         } else if (point_in_rect(mx, my, l.btn_end)) {
             emit_seek(total - 1);
         } else if (point_in_rect(mx, my, l.btn_lock)) {
-            if (!vcd_unlocked_) {
-                vcd_unlocked_ = true;
+            if (!session_->is_unlocked()) {
+                session_->set_unlocked(true);
                 SDL_Event ev = {};
                 ev.type = EVENT_VCD_UNLOCK;
                 SDL_PushEvent(&ev);
@@ -226,5 +227,6 @@ void timelinebar::draw(class basecanvas *canvas, const SDL_Rect &bar_rect)
     draw_screen_text(canvas, info, l.readout, 6);
 
     /* VCD lock / free-sim toggle button. */
-    draw_btn(l.btn_lock, vcd_unlocked_ ? "SIM" : "VCD", !vcd_unlocked_);
+    const bool unlocked = session_->is_unlocked();
+    draw_btn(l.btn_lock, unlocked ? "SIM" : "VCD", !unlocked);
 }

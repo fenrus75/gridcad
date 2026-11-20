@@ -40,9 +40,6 @@ public:
     /* Maps a screen X coordinate inside the scrubber track to a clamped tick index. */
     size_t tick_from_x(int screen_x, const SDL_Rect &bar_rect) const;
 
-    void set_vcd_unlocked(bool unlocked) { vcd_unlocked_ = unlocked; }
-    bool is_vcd_unlocked(void) const { return vcd_unlocked_; }
-
 private:
     struct layout {
         SDL_Rect btn_start{};
@@ -60,7 +57,6 @@ private:
 
     class vcd_session *session_ = nullptr;
     bool scrubbing_ = false;
-    bool vcd_unlocked_ = false;
     int hover_x_ = -1;
     int hover_y_ = -1;
 };

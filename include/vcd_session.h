@@ -56,6 +56,8 @@ public:
     size_t step_backward(class scene *root_scene);
 
     bool is_loaded(void) const noexcept { return loaded_; }
+    bool is_unlocked(void) const noexcept { return unlocked_; }
+    void set_unlocked(bool u) noexcept { unlocked_ = u; }
     size_t get_current_tick(void) const noexcept { return current_tick_; }
     size_t get_total_ticks(void) const noexcept { return clock_ticks_.size(); }
     uint64_t get_current_timestamp(void) const noexcept;
@@ -80,4 +82,9 @@ private:
     std::vector<binding> bindings_;
     size_t current_tick_ = 0;
     bool loaded_ = false;
+    bool unlocked_ = false;
 };
+
+/* Global active VCD session shared across all open schematic windows. */
+vcd_session *get_active_vcd_session(void);
+void set_active_vcd_session(vcd_session *sess);

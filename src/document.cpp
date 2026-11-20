@@ -183,6 +183,7 @@ document::document(std::string _name, bool _library_mode,
 			    "Loaded VCD '{}' (clock '{}', {} ticks, scope '{}', {} bound signals)",
 			    vcd_path, vcd->get_clock_signal(), vcd->get_total_ticks(),
 			    vcd->get_scope_prefix(), bound);
+			set_active_vcd_session(vcd.get());
 			main_canvas->set_vcd_session(vcd.get());
 			vcd->push_tick_events(0);
 		} else {
@@ -240,6 +241,7 @@ void document::save_json(void)
 document::~document(void)
 {
 	clock_timer.reset();
+	set_active_vcd_session(nullptr);
 
 	/* Drain any pending VCD wire update events so their payloads are freed cleanly. */
 	SDL_Event ev;
@@ -355,6 +357,8 @@ void document::run(void)
 			}
 			if (event.type == EVENT_VCD_UNLOCK && main_canvas && main_canvas->get_scene()) {
 				clock_running = false;
+				if (vcd)
+					vcd->set_unlocked(true);
 				main_canvas->get_scene()->unlock_all_vcd();
 				logger::get().info("VCD wires unlocked; free simulation active");
 			}

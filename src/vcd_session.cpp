@@ -169,6 +169,7 @@ size_t vcd_session::apply_tick(size_t tick_idx, class scene *root_scene)
         return 0;
 
     current_tick_ = std::min(tick_idx, clock_ticks_.size() - 1);
+    unlocked_ = false;
     const uint64_t t = clock_ticks_[current_tick_];
 
     size_t updated = 0;
@@ -191,6 +192,7 @@ size_t vcd_session::push_tick_events(size_t tick_idx)
         return 0;
 
     current_tick_ = std::min(tick_idx, clock_ticks_.size() - 1);
+    unlocked_ = false;
     const uint64_t t = clock_ticks_[current_tick_];
 
     size_t pushed = 0;
@@ -230,4 +232,16 @@ size_t vcd_session::step_backward(class scene *root_scene)
         return 0;
     size_t prev = (current_tick_ > 0) ? (current_tick_ - 1) : (clock_ticks_.size() - 1);
     return apply_tick(prev, root_scene);
+}
+
+static vcd_session *g_active_vcd_session = nullptr;
+
+vcd_session *get_active_vcd_session(void)
+{
+    return g_active_vcd_session;
+}
+
+void set_active_vcd_session(vcd_session *sess)
+{
+    g_active_vcd_session = sess;
 }
