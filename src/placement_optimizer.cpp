@@ -517,6 +517,21 @@ bool can_place_at(const scene *s, const element *myself, int new_x, int new_y,
     }
 
     const bool self_conn = (const_cast<element *>(myself)->class_id() == "connector:");
+    if (self_conn) {
+        /* Keep a net's first connector to the right of its driving output pin. */
+        if (port *cp = const_cast<element *>(myself)->port_at(0)) {
+            for (const auto &w : cp->get_wires()) {
+                if (!w)
+                    continue;
+                port *other = w->get_other_port(cp);
+                if (other && other->direction == PORT_OUT &&
+                    (!other->parent || other->parent->class_id() != "connector:")) {
+                    if (new_x < static_cast<int>(std::round(other->screenX)) + 1)
+                        return false;
+                }
+            }
+        }
+    }
     const int m_pad_x = self_conn ? 0 : 2;
     const int m_pad_y = self_conn ? 0 : 1;
     const int ax1 = new_x - m_pad_x;

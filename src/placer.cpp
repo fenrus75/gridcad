@@ -1161,7 +1161,12 @@ void topological_placer::place_connectors(class scene *target_scene)
                 ty = static_cast<int>(std::round(ys[ys.size() / 2]));
             }
 
-            tx = std::clamp(tx, 2, max_x_bound);
+            const int min_x_bound = drv_port
+                                        ? std::min(max_x_bound,
+                                                   std::max(2, static_cast<int>(std::round(drv_port->screenX)) + 1))
+                                        : 2;
+
+            tx = std::clamp(tx, drv_port ? std::min(max_x_bound, min_x_bound + 1) : min_x_bound, max_x_bound);
             ty = std::clamp(ty, 2, max_y_bound);
 
             /* Spiral search outward for the nearest valid, non-overlapping grid cell. */
@@ -1172,7 +1177,7 @@ void topological_placer::place_connectors(class scene *target_scene)
             auto try_search = [&](bool enforce_conn_spacing, int max_radius) -> bool {
                 for (int r = 0; r <= max_radius; ++r) {
                     if (r == 0) {
-                        if (!hits_component(tx, ty) &&
+                        if (tx >= min_x_bound && !hits_component(tx, ty) &&
                             !(enforce_conn_spacing ? near_connector(tx, ty)
                                                    : occupied_connectors.count({tx, ty}) > 0)) {
                             best_x = tx;
@@ -1189,7 +1194,7 @@ void topological_placer::place_connectors(class scene *target_scene)
                         for (int oi = 0; oi < n_opts; ++oi) {
                             const int cx = tx + dx;
                             const int cy = ty + dy_opts[oi];
-                            if (cx < 2 || cy < 2 || cx > max_x_bound || cy > max_y_bound)
+                            if (cx < min_x_bound || cy < 2 || cx > max_x_bound || cy > max_y_bound)
                                 continue;
                             if (hits_component(cx, cy))
                                 continue;
@@ -1210,7 +1215,7 @@ void topological_placer::place_connectors(class scene *target_scene)
                 found = try_search(/*enforce_conn_spacing=*/false, 80);
 
             if (!found) {
-                best_x = std::max(2, tx);
+                best_x = std::max(min_x_bound, tx);
                 best_y = std::max(2, ty);
                 while (occupied_connectors.count({best_x, best_y}) || hits_component(best_x, best_y))
                     best_y++;
