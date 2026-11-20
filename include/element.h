@@ -96,6 +96,13 @@ public:
     int has_port(class port *port); /* true if this element has this port */
     class port * port_at(unsigned int i) { if (i < ports.size()) return ports[i].get(); else return nullptr; };
     void validate_ports(void);
+
+    void set_src_info(std::string_view loc, std::string_view verilog) {
+        src_location = std::string(loc);
+        src_verilog = std::string(verilog);
+    }
+    const std::string &get_src_location(void) const { return src_location; }
+    const std::string &get_src_verilog(void) const { return src_verilog; }
     
 protected:
     std::unique_ptr<class contextmenu> menu; /* nosave */
@@ -103,6 +110,8 @@ protected:
     std::string name = "";
     std::string parental_name = "";    
     std::string verilog_name = "";
+    std::string src_location = ""; /* imported Verilog file:line (nosave) */
+    std::string src_verilog = "";  /* imported Verilog source snippet (nosave) */
     int sizeX = 1;
     int sizeY = 1;
     int angle = 0;

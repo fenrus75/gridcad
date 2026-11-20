@@ -531,6 +531,8 @@ void topological_placer::place(class scene *target_scene, const options &opts)
                     trunk->set_vcd_name(tmpl->get_vcd_name());
                 if (tmpl->get_label_table())
                     trunk->set_label_table(tmpl->get_label_table());
+                if (!tmpl->get_src_location().empty() || !tmpl->get_src_verilog().empty())
+                    trunk->set_src_info(tmpl->get_src_location(), tmpl->get_src_verilog());
                 if (tmpl->value.is_clock) {
                     trunk->value.valid = true;
                     trunk->value.is_clock = true;

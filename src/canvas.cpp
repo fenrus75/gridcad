@@ -1194,6 +1194,8 @@ void canvas::draw(void)
 		timeline_bar->draw(this, bar_rect);
 	}
 
+	draw_hover_inspector();
+
 	if (tooltip_eligable) {
 		std::string tooltip = "";
 		if (X_to_scr(mouseX) > main_area_rect.x + main_area_rect.w) {
@@ -1271,6 +1273,206 @@ void canvas::draw_tooltip(float X, float Y, std::string_view tooltip)
 	SDL_SetRenderDrawColor(renderer.get(), 45, 45, 45, 220);
 	SDL_RenderFillRect(renderer.get(), &rect);
 	SDL_RenderCopy(renderer.get(), text, nullptr, &rect);
+}
+
+void canvas::draw_hover_inspector(void)
+{
+	if (!current_scene || active_menu || dialogbox || dragging || in_area_select)
+		return;
+
+	const int scr_x = X_to_scr(mouseX);
+	const int scr_y = Y_to_scr(mouseY);
+	const int bottom_limit = (timeline_bar && timeline_bar->is_active())
+	                             ? (main_area_rect.h - timelinebar::BAR_HEIGHT)
+	                             : main_area_rect.h;
+	if (scr_x < main_area_rect.x || scr_x >= main_area_rect.x + main_area_rect.w ||
+	    scr_y < main_area_rect.y || scr_y >= bottom_limit) {
+		return;
+	}
+
+	/* Priority: hovered non-connector element first, then hovered named wire. */
+	element *hovered_elem = nullptr;
+	for (auto &elem : current_scene->elements) {
+		if (!elem || elem->is_background() || elem->class_id() == "connector:")
+			continue;
+		if (elem->intersect(mouseX, mouseY)) {
+			hovered_elem = elem.get();
+			break;
+		}
+	}
+
+	std::string top_text;
+	std::string verilog_text;
+
+	if (hovered_elem) {
+		std::string label = hovered_elem->get_name();
+		if (label.empty())
+			label = hovered_elem->class_id();
+		top_text = label;
+		if (!hovered_elem->get_src_location().empty())
+			top_text += "   [" + hovered_elem->get_src_location() + "]";
+		verilog_text = hovered_elem->get_src_verilog();
+	} else if (auto hw = hover_wire.lock()) {
+		const bool is_named = !hw->get_vcd_name().empty() ||
+		                      (!hw->name.empty() && !hw->name.starts_with("wire_"));
+		if (is_named) {
+			const std::string wlabel = !hw->name.empty() ? hw->name : hw->get_vcd_name();
+			const int w = hw->get_width();
+			if (w > 1) {
+				top_text = std::format("{} [{}:0]", wlabel, w - 1);
+				if (hw->value.valid) {
+					top_text += std::format(" = 0x{:X}", hw->value.intval);
+					const std::string enum_lbl = hw->get_label(hw->value.intval);
+					if (!enum_lbl.empty())
+						top_text += " (" + enum_lbl + ")";
+				}
+			} else {
+				top_text = wlabel;
+				if (hw->value.valid)
+					top_text += hw->value.boolval ? " = 1" : " = 0";
+			}
+			if (!hw->get_src_location().empty())
+				top_text += "   [" + hw->get_src_location() + "]";
+			verilog_text = hw->get_src_verilog();
+		}
+	}
+
+	if (top_text.empty() && verilog_text.empty())
+		return;
+
+	fill_scale();
+	SDL_RenderSetClipRect(renderer.get(), nullptr);
+
+	/* 1. Top single-line name + file:line banner. */
+	if (!top_text.empty()) {
+		SDL_Texture *tex = text_to_texture(top_text);
+		if (tex) {
+			int tw = 0, th = 0;
+			SDL_QueryTexture(tex, nullptr, nullptr, &tw, &th);
+			const int draw_w = std::max(1, static_cast<int>(tw / scale));
+			const int draw_h = std::max(1, static_cast<int>(th / scale));
+			constexpr int pad_x = 12;
+			constexpr int pad_y = 6;
+
+			SDL_Rect bg = {main_area_rect.x, main_area_rect.y,
+			               main_area_rect.w, draw_h + 2 * pad_y};
+			SDL_SetRenderDrawColor(renderer.get(), 18, 20, 24, 210);
+			SDL_RenderFillRect(renderer.get(), &bg);
+			SDL_SetRenderDrawColor(renderer.get(), 90, 100, 115, 220);
+			SDL_RenderDrawLine(renderer.get(), bg.x, bg.y + bg.h - 1,
+			                   bg.x + bg.w - 1, bg.y + bg.h - 1);
+
+			SDL_Rect clip = {bg.x + pad_x, bg.y + pad_y,
+			                 std::max(1, bg.w - 2 * pad_x), draw_h};
+			SDL_RenderSetClipRect(renderer.get(), &clip);
+			SDL_Rect dst = {bg.x + pad_x, bg.y + pad_y, draw_w, draw_h};
+			SDL_RenderCopy(renderer.get(), tex, nullptr, &dst);
+			SDL_RenderSetClipRect(renderer.get(), nullptr);
+		}
+	}
+
+	/* 2. Bottom-right multi-line Verilog snippet box (just above timeline bar, right-aligned to element bar). */
+	if (!verilog_text.empty()) {
+		constexpr size_t MAX_LINES = 18;
+		std::vector<std::string> lines;
+		size_t pos = 0;
+		bool truncated = false;
+		while (pos <= verilog_text.size()) {
+			size_t nl = verilog_text.find('\n', pos);
+			std::string raw = (nl == std::string::npos)
+			                      ? verilog_text.substr(pos)
+			                      : verilog_text.substr(pos, nl - pos);
+			if (!raw.empty() && raw.back() == '\r')
+				raw.pop_back();
+
+			/* Expand tabs to 4 spaces so alignment is readable. */
+			std::string expanded;
+			expanded.reserve(raw.size());
+			for (char ch : raw) {
+				if (ch == '\t')
+					expanded.append("    ");
+				else
+					expanded.push_back(ch);
+			}
+			if (lines.size() >= MAX_LINES) {
+				truncated = true;
+				break;
+			}
+			lines.push_back(std::move(expanded));
+			if (nl == std::string::npos)
+				break;
+			pos = nl + 1;
+		}
+		if (truncated && !lines.empty())
+			lines.back() = "...";
+
+		const float code_scale = scale * 1.15f;
+		constexpr int pad_x = 12;
+		constexpr int pad_y = 8;
+		constexpr int line_gap = 2;
+		constexpr int margin = 8;
+
+		struct line_tex {
+			SDL_Texture *tex = nullptr;
+			int w = 0;
+			int h = 0;
+		};
+		std::vector<line_tex> rendered;
+		rendered.reserve(lines.size());
+
+		int max_w = 0;
+		int default_h = 16;
+		int total_h = 0;
+		for (const auto &ln : lines) {
+			line_tex lt;
+			if (!ln.empty()) {
+				lt.tex = text_to_texture(ln);
+				if (lt.tex) {
+					int tw = 0, th = 0;
+					SDL_QueryTexture(lt.tex, nullptr, nullptr, &tw, &th);
+					lt.w = std::max(1, static_cast<int>(tw / code_scale));
+					lt.h = std::max(1, static_cast<int>(th / code_scale));
+					default_h = lt.h;
+					max_w = std::max(max_w, lt.w);
+				}
+			}
+			if (lt.h == 0)
+				lt.h = default_h;
+			total_h += lt.h + line_gap;
+			rendered.push_back(lt);
+		}
+		if (!rendered.empty())
+			total_h -= line_gap;
+
+		if (max_w > 0 && total_h > 0) {
+			const int max_box_w = std::max(100, main_area_rect.w - 2 * margin);
+			const int box_w = std::min(max_w + 2 * pad_x, max_box_w);
+			const int box_h = total_h + 2 * pad_y;
+			const int box_x = main_area_rect.x + main_area_rect.w - margin - box_w;
+			const int box_y = std::max(main_area_rect.y + 40, bottom_limit - margin - box_h);
+
+			SDL_Rect bg = {box_x, box_y, box_w, box_h};
+			SDL_SetRenderDrawColor(renderer.get(), 18, 20, 24, 215);
+			SDL_RenderFillRect(renderer.get(), &bg);
+			SDL_SetRenderDrawColor(renderer.get(), 90, 100, 115, 220);
+			SDL_RenderDrawRect(renderer.get(), &bg);
+
+			SDL_Rect clip = {bg.x + pad_x, bg.y + pad_y,
+			                 std::max(1, bg.w - 2 * pad_x),
+			                 std::max(1, bg.h - 2 * pad_y)};
+			SDL_RenderSetClipRect(renderer.get(), &clip);
+
+			int cur_y = bg.y + pad_y;
+			for (const auto &lt : rendered) {
+				if (lt.tex) {
+					SDL_Rect dst = {bg.x + pad_x, cur_y, lt.w, lt.h};
+					SDL_RenderCopy(renderer.get(), lt.tex, nullptr, &dst);
+				}
+				cur_y += lt.h + line_gap;
+			}
+			SDL_RenderSetClipRect(renderer.get(), nullptr);
+		}
+	}
 }
 
 

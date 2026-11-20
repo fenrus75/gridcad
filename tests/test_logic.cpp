@@ -996,6 +996,8 @@ static void test_vcd_playback(void)
                         continue;
                     if (w->name == "clk") {
                         assert(w->get_color() == 1);
+                        assert(!w->get_src_location().empty());
+                        assert(!w->get_src_verilog().empty());
                         saw_clk = true;
                     } else if (w->name == "rst_n" || w->name == "mem_read_data") {
                         assert(w->get_color() == 6);
@@ -1008,6 +1010,16 @@ static void test_vcd_playback(void)
             }
         }
         assert(saw_clk && saw_named && saw_internal);
+
+        // Verify imported elements carry src_location & src_verilog metadata
+        bool saw_elem_src = false;
+        for (const auto &elem : res.imported_scene->elements) {
+            if (!elem->get_src_location().empty() && !elem->get_src_verilog().empty()) {
+                saw_elem_src = true;
+                break;
+            }
+        }
+        assert(saw_elem_src);
 
         vcd_session sess;
         std::string err;

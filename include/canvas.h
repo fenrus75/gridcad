@@ -80,6 +80,7 @@ protected:
     bool handle_event_iconarea(SDL_Event &event);
     bool handle_event_drawingarea(SDL_Event &event);
     void draw_tooltip(float X, float Y, std::string_view tooltip);
+    void draw_hover_inspector(void);
     bool fittoscreen = false;
     float DPI = 96;    
     

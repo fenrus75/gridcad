@@ -78,6 +78,13 @@ public:
     void set_label_table(std::shared_ptr<const std::map<uint64_t, std::string>> tbl) { label_table = std::move(tbl); };
     const std::shared_ptr<const std::map<uint64_t, std::string>> &get_label_table(void) const { return label_table; };
     std::string get_label(uint64_t val) const;
+
+    void set_src_info(std::string_view loc, std::string_view verilog) {
+        src_location = std::string(loc);
+        src_verilog = std::string(verilog);
+    }
+    const std::string &get_src_location(void) const { return src_location; }
+    const std::string &get_src_verilog(void) const { return src_verilog; }
     
     void calculate_drawpoints(void);
     
@@ -102,5 +109,7 @@ protected:
     std::string vcd_name = ""; /* hierarchical VCD signal name */
     bool vcd_locked = false;   /* true while driven/locked by VCD playback */
     std::shared_ptr<const std::map<uint64_t, std::string>> label_table;
+    std::string src_location = ""; /* imported Verilog file:line (nosave) */
+    std::string src_verilog = "";  /* imported Verilog source snippet (nosave) */
 };
 

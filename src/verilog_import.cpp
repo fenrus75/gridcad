@@ -202,9 +202,12 @@ std::unique_ptr<scene> import_module_recursive(
             const std::string pname = p->value("name", "");
             const std::string dir = p->value("direction", "input");
             const int width = parse_width_json(*p, "width", 1);
+            const std::string p_src = p->value("src", "");
+            const std::string p_verilog = p->value("src_verilog", "");
             if (pname.empty())
                 continue;
 
+            const size_t before_port_el = result_scene->elements.size();
             if (dir == "input") {
                 if (is_top && opts.use_clock_element && pname == "clk" && width == 1) {
                     auto clk = std::make_unique<model_clock>(0, 0);
@@ -248,6 +251,10 @@ std::unique_ptr<scene> import_module_recursive(
                 result_scene->add_element(std::move(tog));
                 stats.ports++;
             }
+            if (result_scene->elements.size() > before_port_el &&
+                (!p_src.empty() || !p_verilog.empty())) {
+                result_scene->elements.back()->set_src_info(p_src, p_verilog);
+            }
         }
     }
 
@@ -290,6 +297,10 @@ std::unique_ptr<scene> import_module_recursive(
                 if (p)
                     port_map[make_endpoint_key("component", cid, pin_name)] = p;
             };
+
+            const std::string comp_src = comp.value("src", "");
+            const std::string comp_verilog = comp.value("src_verilog", "");
+            const size_t before_comp_el = result_scene->elements.size();
 
             if (ctype == "AND2" || ctype == "OR2" || ctype == "NAND2" ||
                 ctype == "NOR2" || ctype == "XOR2" ||
@@ -630,6 +641,10 @@ std::unique_ptr<scene> import_module_recursive(
                 }
                 result_scene->add_element(std::move(nest));
             }
+            if (result_scene->elements.size() > before_comp_el &&
+                (!comp_src.empty() || !comp_verilog.empty())) {
+                result_scene->elements.back()->set_src_info(comp_src, comp_verilog);
+            }
         }
     }
 
@@ -646,6 +661,8 @@ std::unique_ptr<scene> import_module_recursive(
             const std::string wname = wobj.value("name", "");
             const std::string vcd_local = wobj.value("vcd_signal", "");
             const std::string lbl_key = wobj.value("label_table", "");
+            const std::string wire_src = wobj.value("src", "");
+            const std::string wire_verilog = wobj.value("src_verilog", "");
             std::shared_ptr<const std::map<uint64_t, std::string>> wire_lbl_tbl;
             if (!lbl_key.empty()) {
                 auto lit = label_tables.find(lbl_key);
@@ -706,6 +723,8 @@ std::unique_ptr<scene> import_module_recursive(
                     w->set_vcd_name(full_vcd_name);
                 if (wire_lbl_tbl)
                     w->set_label_table(wire_lbl_tbl);
+                if (!wire_src.empty() || !wire_verilog.empty())
+                    w->set_src_info(wire_src, wire_verilog);
                 int wire_color = 0;
                 if (wname == "clk" || vcd_local == "clk") {
                     w->value.valid = true;
