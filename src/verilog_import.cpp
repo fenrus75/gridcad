@@ -455,7 +455,7 @@ std::unique_ptr<scene> import_module_recursive(
                 result_scene->add_element(std::move(el));
                 stats.components++;
             } else if (ctype == "gridcad_lut") {
-                const int width = std::clamp(parse_width_json(params, "WIDTH", 2), 1, 6);
+                const int width = std::clamp(parse_width_json(params, "WIDTH", 2), 1, 8);
                 std::vector<std::string> lut_outputs;
                 if (params.contains("LUT")) {
                     if (params["LUT"].is_array()) {

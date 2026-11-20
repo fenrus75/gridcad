@@ -31,7 +31,7 @@ public:
     void del_output(void);
     void add_input(void);
     void del_input(void);
-    /* Configure as a 1- or multi-output LUT (num_inputs in [1, 6], MSB-first bitstrings). */
+    /* Configure as a 1- or multi-output LUT (num_inputs in [1, 8], MSB-first bitstrings). */
     void configure_lut(int num_inputs, std::string_view lut_bits);
     void configure_lut(int num_inputs, const std::vector<std::string> &lut_outputs);
     void calculate(int ttl) override;

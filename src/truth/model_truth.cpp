@@ -324,7 +324,7 @@ void model_truth::configure_lut(int num_inputs, std::string_view lut_bits)
 
 void model_truth::configure_lut(int num_inputs, const std::vector<std::string> &lut_outputs)
 {
-	const int target_inputs = std::clamp(num_inputs, 1, 6);
+	const int target_inputs = std::clamp(num_inputs, 1, 8);
 	const int target_outputs = std::clamp(static_cast<int>(lut_outputs.size()), 1, 16);
 
 	while (static_cast<int>(inputs) < target_inputs)
