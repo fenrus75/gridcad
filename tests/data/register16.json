@@ -139,38 +139,6 @@
           "type": "gridcad_mux"
         },
         {
-          "id": "gridcad_lut_4",
-          "instance_name": "$abc$30$blif$30$0",
-          "is_submodule": false,
-          "parameters": {
-            "LUT": "11111110",
-            "WIDTH": 3
-          },
-          "pins": {
-            "A0": {
-              "direction": "input",
-              "width": 1,
-              "wire": "dec2"
-            },
-            "A1": {
-              "direction": "input",
-              "width": 1,
-              "wire": "inc2"
-            },
-            "A2": {
-              "direction": "input",
-              "width": 1,
-              "wire": "load"
-            },
-            "Y": {
-              "direction": "output",
-              "width": 1,
-              "wire": "enable"
-            }
-          },
-          "type": "gridcad_lut"
-        },
-        {
           "id": "gridcad_reg_5",
           "instance_name": "$auto$ff.cc:337:slice$20",
           "is_submodule": false,
@@ -286,6 +254,38 @@
           "src": "src/register16.sv:26-34",
           "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nsp_plus_2  <= RESET_VAL + 16'd2;\nsp_minus_2 <= RESET_VAL - 16'd2;\nend else begin\nsp_plus_2  <= value_reg + 16'd2;\nsp_minus_2 <= value_reg - 16'd2;\nend\nend",
           "type": "gridcad_reg"
+        },
+        {
+          "id": "gridcad_lut_4",
+          "instance_name": "$abc$30$blif$30$0",
+          "is_submodule": false,
+          "parameters": {
+            "LUT": "11111110",
+            "WIDTH": 3
+          },
+          "pins": {
+            "A0": {
+              "direction": "input",
+              "width": 1,
+              "wire": "dec2"
+            },
+            "A1": {
+              "direction": "input",
+              "width": 1,
+              "wire": "inc2"
+            },
+            "A2": {
+              "direction": "input",
+              "width": 1,
+              "wire": "load"
+            },
+            "Y": {
+              "direction": "output",
+              "width": 1,
+              "wire": "enable"
+            }
+          },
+          "type": "gridcad_lut"
         }
       ],
       "constants": [

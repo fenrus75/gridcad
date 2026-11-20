@@ -25,8 +25,14 @@ void model_nor::calculate(int ttl)
     if (ttl <= 0)
         return;
     
-    result.type = VALUE_TYPE_BOOL;
-    result.boolval = !(ports[0]->value.boolval || ports[1]->value.boolval);
+    if (bus_width > 1) {
+        result.type = VALUE_TYPE_INT;
+        result.intval = (~(read_port_u64(0) | read_port_u64(1))) & bus_mask();
+        result.boolval = (result.intval != 0);
+    } else {
+        result.type = VALUE_TYPE_BOOL;
+        result.boolval = !(ports[0]->value.boolval || ports[1]->value.boolval);
+    }
     result.valid = true;
     
     update_value_net(&result, 2, ttl - 1);

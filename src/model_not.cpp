@@ -32,11 +32,19 @@ void model_not::drawAt(class basecanvas *canvas, float X, float Y, int type)
         canvas->draw_image_rotated("assets/inverter_selected.png", X, Y, sizeX, sizeY, Alpha(type), angle);
     else
         canvas->draw_image_rotated("assets/inverter.png", X, Y, sizeX, sizeY, Alpha(type), angle);
+    if (bus_width > 1)
+        canvas->draw_text(std::format("{}", bus_width), X + 0.5f, Y + 1.0f, 1.2f, 1.0f);
     for (auto &port : ports) {
         port->drawAt(canvas, X, Y, type);
     }
 }
 
+void model_not::set_bus_width(int width)
+{
+    bus_width = std::clamp(width, 1, 64);
+    for (auto &p : ports)
+        p->set_width(bus_width);
+}
 
 void model_not::calculate(int ttl)
 {
@@ -45,8 +53,18 @@ void model_not::calculate(int ttl)
     if (ttl <= 0)
         return;
     
-    result.type = VALUE_TYPE_BOOL;
-    result.boolval = !(ports[0]->value.boolval);
+    if (bus_width > 1) {
+        const uint64_t mask = (bus_width >= 64) ? ~uint64_t{0} : ((uint64_t{1} << bus_width) - 1);
+        const uint64_t raw = (ports[0]->value.type == VALUE_TYPE_BOOL)
+                                 ? (ports[0]->value.boolval ? 1ULL : 0ULL)
+                                 : ports[0]->value.intval;
+        result.type = VALUE_TYPE_INT;
+        result.intval = (~raw) & mask;
+        result.boolval = (result.intval != 0);
+    } else {
+        result.type = VALUE_TYPE_BOOL;
+        result.boolval = !(ports[0]->value.boolval);
+    }
     result.valid = true;
     
     update_value_net(&result, 1, ttl - 1);

@@ -28,6 +28,8 @@
 #include "model_reg.h"
 #include "model_eq.h"
 #include "model_ne.h"
+#include "model_gt.h"
+#include "model_ge.h"
 #include "model_mem.h"
 #include "model_slice.h"
 #include "model_concat.h"
@@ -736,6 +738,138 @@ static void test_verilog_import(void)
         assert(o0_p->get_value().boolval == false);
         assert(o2_p->get_value().boolval == false);
         assert(o3_p->get_value().boolval == true);
+    }
+
+    // 8. Wide bitwise gates (8-bit AND, OR, XOR, NOT)
+    {
+        scene s("wide_bitwise_test");
+        auto in_a  = std::make_unique<model_toggle>(1, 1);
+        auto in_b  = std::make_unique<model_toggle>(1, 6);
+        auto g_and = std::make_unique<model_and>(7, 1);
+        auto g_or  = std::make_unique<model_or>(7, 5);
+        auto g_xor = std::make_unique<model_xor>(7, 9);
+        auto g_not = std::make_unique<model_not>(7, 13);
+        auto o_and = std::make_unique<model_output>(14, 1);
+        auto o_or  = std::make_unique<model_output>(14, 5);
+        auto o_xor = std::make_unique<model_output>(14, 9);
+        auto o_not = std::make_unique<model_output>(14, 13);
+
+        in_a->set_width(8);
+        in_b->set_width(8);
+        g_and->set_bus_width(8);
+        g_or->set_bus_width(8);
+        g_xor->set_bus_width(8);
+        g_not->set_bus_width(8);
+        o_and->set_width(8);
+        o_or->set_width(8);
+        o_xor->set_width(8);
+        o_not->set_width(8);
+
+        auto *a_p = in_a.get();
+        auto *b_p = in_b.get();
+        auto *and_p = g_and.get();
+        auto *or_p = g_or.get();
+        auto *xor_p = g_xor.get();
+        auto *not_p = g_not.get();
+        auto *oa_p = o_and.get();
+        auto *oo_p = o_or.get();
+        auto *ox_p = o_xor.get();
+        auto *on_p = o_not.get();
+
+        s.add_element(std::move(in_a));
+        s.add_element(std::move(in_b));
+        s.add_element(std::move(g_and));
+        s.add_element(std::move(g_or));
+        s.add_element(std::move(g_xor));
+        s.add_element(std::move(g_not));
+        s.add_element(std::move(o_and));
+        s.add_element(std::move(o_or));
+        s.add_element(std::move(o_xor));
+        s.add_element(std::move(o_not));
+
+        connect_ports(a_p->port_at(0), and_p->port_at(0));
+        connect_ports(b_p->port_at(0), and_p->port_at(1));
+        connect_ports(and_p->port_at(2), oa_p->port_at(0));
+
+        connect_ports(a_p->port_at(0), or_p->port_at(0));
+        connect_ports(b_p->port_at(0), or_p->port_at(1));
+        connect_ports(or_p->port_at(2), oo_p->port_at(0));
+
+        connect_ports(a_p->port_at(0), xor_p->port_at(0));
+        connect_ports(b_p->port_at(0), xor_p->port_at(1));
+        connect_ports(xor_p->port_at(2), ox_p->port_at(0));
+
+        connect_ports(a_p->port_at(0), not_p->port_at(0));
+        connect_ports(not_p->port_at(1), on_p->port_at(0));
+        s.redo_nets();
+
+        auto va = make_int_val(0xA5);
+        auto vb = make_int_val(0x3C);
+        a_p->update_value(&va, DEFAULT_TTL);
+        b_p->update_value(&vb, DEFAULT_TTL);
+        run_queued_calculations();
+
+        assert(oa_p->get_value().intval == (0xA5 & 0x3C));
+        assert(oo_p->get_value().intval == (0xA5 | 0x3C));
+        assert(ox_p->get_value().intval == (0xA5 ^ 0x3C));
+        assert(on_p->get_value().intval == ((~0xA5u) & 0xFFu));
+    }
+
+    // 9. model_gt and model_ge (4-bit unsigned comparators)
+    {
+        scene s("cmp_gt_ge_test");
+        auto in_a = std::make_unique<model_toggle>(1, 1);
+        auto in_b = std::make_unique<model_toggle>(1, 5);
+        auto gt   = std::make_unique<model_gt>(7, 1, 4);
+        auto ge   = std::make_unique<model_ge>(7, 5, 4);
+        auto o_gt = std::make_unique<model_output>(13, 1);
+        auto o_ge = std::make_unique<model_output>(13, 5);
+
+        in_a->set_width(4);
+        in_b->set_width(4);
+
+        auto *a_p = in_a.get();
+        auto *b_p = in_b.get();
+        auto *gt_p = gt.get();
+        auto *ge_p = ge.get();
+        auto *ogt_p = o_gt.get();
+        auto *oge_p = o_ge.get();
+
+        s.add_element(std::move(in_a));
+        s.add_element(std::move(in_b));
+        s.add_element(std::move(gt));
+        s.add_element(std::move(ge));
+        s.add_element(std::move(o_gt));
+        s.add_element(std::move(o_ge));
+
+        connect_ports(a_p->port_at(0), gt_p->port_at(0));
+        connect_ports(b_p->port_at(0), gt_p->port_at(1));
+        connect_ports(gt_p->port_at(2), ogt_p->port_at(0));
+
+        connect_ports(a_p->port_at(0), ge_p->port_at(0));
+        connect_ports(b_p->port_at(0), ge_p->port_at(1));
+        connect_ports(ge_p->port_at(2), oge_p->port_at(0));
+        s.redo_nets();
+
+        auto v9 = make_int_val(9);
+        auto v9b = make_int_val(9);
+        a_p->update_value(&v9, DEFAULT_TTL);
+        b_p->update_value(&v9b, DEFAULT_TTL);
+        run_queued_calculations();
+        assert(ogt_p->get_value().boolval == false);
+        assert(oge_p->get_value().boolval == true);
+
+        auto v10 = make_int_val(10);
+        a_p->update_value(&v10, DEFAULT_TTL);
+        run_queued_calculations();
+        assert(ogt_p->get_value().boolval == true);
+        assert(oge_p->get_value().boolval == true);
+
+        auto v5 = make_int_val(5);
+        a_p->update_value(&v5, DEFAULT_TTL);
+        run_queued_calculations();
+        assert(ogt_p->get_value().boolval == false);
+        assert(oge_p->get_value().boolval == false);
     }
 }
 

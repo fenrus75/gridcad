@@ -14,6 +14,9 @@ public:
     void calculate(int ttl) override;
     void rotate_ports(void) override;
     std::string get_verilog_main(void) override;
+    void set_bus_width(int width);
+    int get_bus_width(void) const { return bus_width; }
 protected:
+    int bus_width = 1;
 };
 

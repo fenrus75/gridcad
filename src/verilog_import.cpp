@@ -33,6 +33,8 @@
 #include "model_reg.h"
 #include "model_eq.h"
 #include "model_ne.h"
+#include "model_gt.h"
+#include "model_ge.h"
 #include "model_mem.h"
 #include "model_slice.h"
 #include "model_concat.h"
@@ -290,30 +292,41 @@ std::unique_ptr<scene> import_module_recursive(
             };
 
             if (ctype == "AND2" || ctype == "OR2" || ctype == "NAND2" ||
-                ctype == "NOR2" || ctype == "XOR2") {
-                std::unique_ptr<element> gate;
-                if (ctype == "AND2")
+                ctype == "NOR2" || ctype == "XOR2" ||
+                ctype == "gridcad_and" || ctype == "gridcad_or" ||
+                ctype == "gridcad_nand" || ctype == "gridcad_nor" ||
+                ctype == "gridcad_xor") {
+                const int width = parse_width_json(params, "WIDTH", 1);
+                std::unique_ptr<model_logic2> gate;
+                if (ctype == "AND2" || ctype == "gridcad_and")
                     gate = std::make_unique<model_and>(0, 0);
-                else if (ctype == "OR2")
+                else if (ctype == "OR2" || ctype == "gridcad_or")
                     gate = std::make_unique<model_or>(0, 0);
-                else if (ctype == "NAND2")
+                else if (ctype == "NAND2" || ctype == "gridcad_nand")
                     gate = std::make_unique<model_nand>(0, 0);
-                else if (ctype == "NOR2")
+                else if (ctype == "NOR2" || ctype == "gridcad_nor")
                     gate = std::make_unique<model_nor>(0, 0);
                 else
                     gate = std::make_unique<model_xor>(0, 0);
 
+                if (width > 1)
+                    gate->set_bus_width(width);
                 gate->update_name(cid);
-                register_pin("A", gate->port_at(0));
-                register_pin("B", gate->port_at(1));
-                register_pin("Y", gate->port_at(2));
+                const bool lower_pins = ctype.starts_with("gridcad_");
+                register_pin(lower_pins ? "a" : "A", gate->port_at(0));
+                register_pin(lower_pins ? "b" : "B", gate->port_at(1));
+                register_pin(lower_pins ? "y" : "Y", gate->port_at(2));
                 result_scene->add_element(std::move(gate));
                 stats.components++;
-            } else if (ctype == "INV") {
+            } else if (ctype == "INV" || ctype == "gridcad_not") {
+                const int width = parse_width_json(params, "WIDTH", 1);
                 auto inv = std::make_unique<model_not>(0, 0);
+                if (width > 1)
+                    inv->set_bus_width(width);
                 inv->update_name(cid);
-                register_pin("A", inv->port_at(0));
-                register_pin("Y", inv->port_at(1));
+                const bool lower_pins = (ctype == "gridcad_not");
+                register_pin(lower_pins ? "a" : "A", inv->port_at(0));
+                register_pin(lower_pins ? "y" : "Y", inv->port_at(1));
                 result_scene->add_element(std::move(inv));
                 stats.components++;
             } else if (ctype == "BUF") {
@@ -384,6 +397,24 @@ std::unique_ptr<scene> import_module_recursive(
             } else if (ctype == "gridcad_ne") {
                 const int width = parse_width_json(params, "WIDTH", 8);
                 auto el = std::make_unique<model_ne>(0, 0, width);
+                el->update_name(cid);
+                register_pin("a", el->port_at(0));
+                register_pin("b", el->port_at(1));
+                register_pin("y", el->port_at(2));
+                result_scene->add_element(std::move(el));
+                stats.components++;
+            } else if (ctype == "gridcad_gt") {
+                const int width = parse_width_json(params, "WIDTH", 8);
+                auto el = std::make_unique<model_gt>(0, 0, width);
+                el->update_name(cid);
+                register_pin("a", el->port_at(0));
+                register_pin("b", el->port_at(1));
+                register_pin("y", el->port_at(2));
+                result_scene->add_element(std::move(el));
+                stats.components++;
+            } else if (ctype == "gridcad_ge") {
+                const int width = parse_width_json(params, "WIDTH", 8);
+                auto el = std::make_unique<model_ge>(0, 0, width);
                 el->update_name(cid);
                 register_pin("a", el->port_at(0));
                 register_pin("b", el->port_at(1));

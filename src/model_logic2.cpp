@@ -38,10 +38,34 @@ void model_logic2::drawAt(class basecanvas *canvas, float X, float Y, int type)
     } else {	
         canvas->draw_image_rotated(filename, X, Y, sizeX , sizeY, alpha, angle);
     }
+    if (bus_width > 1) {
+        canvas->draw_text(std::format("{}", bus_width), X + 0.8f, Y + 1.0f, 1.4f, 1.0f);
+    }
     for (auto &port : ports) {
         port->draw_wires(canvas);
         port->drawAt(canvas, X, Y, type);
     }
+}
+
+void model_logic2::set_bus_width(int width)
+{
+    bus_width = std::clamp(width, 1, 64);
+    for (auto &p : ports)
+        p->set_width(bus_width);
+}
+
+uint64_t model_logic2::bus_mask(void) const
+{
+    if (bus_width >= 64)
+        return ~uint64_t{0};
+    return (uint64_t{1} << bus_width) - 1;
+}
+
+uint64_t model_logic2::read_port_u64(unsigned int idx) const
+{
+    const auto &v = ports[idx]->value;
+    uint64_t raw = (v.type == VALUE_TYPE_BOOL) ? (v.boolval ? 1ULL : 0ULL) : v.intval;
+    return raw & bus_mask();
 }
 
 
