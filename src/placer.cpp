@@ -35,20 +35,74 @@ bool is_constant(const element *elem)
     return const_cast<element *>(elem)->class_id() == "model_const:";
 }
 
+bool is_slice(const element *elem)
+{
+    return const_cast<element *>(elem)->class_id() == "model_slice:";
+}
+
 bool is_primary_output(const element *elem)
 {
     return const_cast<element *>(elem)->class_id() == "model_output:";
 }
 
-bool is_sequential(const element *elem)
-{
-    const std::string cid = const_cast<element *>(elem)->class_id();
-    return cid == "model_reg:" || cid == "model_dflipflop:" || cid == "model_deflipflop:";
-}
-
 bool is_connector(const element *elem)
 {
     return const_cast<element *>(elem)->class_id() == "connector:";
+}
+
+bool is_clock_element(const element *elem)
+{
+    const std::string cid = const_cast<element *>(elem)->class_id();
+    if (cid == "model_clock:")
+        return true;
+    if (cid == "model_toggle:") {
+        const std::string nm = const_cast<element *>(elem)->get_name();
+        return nm == "clk";
+    }
+    return false;
+}
+
+bool is_reset_element(const element *elem)
+{
+    const std::string cid = const_cast<element *>(elem)->class_id();
+    if (cid == "model_toggle:") {
+        const std::string nm = const_cast<element *>(elem)->get_name();
+        return nm == "rst" || nm == "rst_n";
+    }
+    return false;
+}
+
+/* Global broadcast control signals (clk/rst) should not distort dataflow layering or Y-ordering. */
+bool is_global_control_port(const port *p)
+{
+    if (!p)
+        return false;
+    if (p->value.is_clock)
+        return true;
+    if (p->name == "clk" || p->name == "rst" || p->name == "rst_n")
+        return true;
+    if (p->parent && (is_clock_element(p->parent) || is_reset_element(p->parent)))
+        return true;
+    return false;
+}
+
+/* Sequential elements (registers and clocked submodules) break feedback cycles. */
+bool is_cycle_breaker(const element *elem)
+{
+    const std::string cid = const_cast<element *>(elem)->class_id();
+    if (cid == "model_reg:" || cid == "model_dflipflop:" || cid == "model_deflipflop:")
+        return true;
+    if (cid == "model_nest:") {
+        element *e = const_cast<element *>(elem);
+        for (unsigned int pi = 0;; ++pi) {
+            port *p = e->port_at(pi);
+            if (!p)
+                break;
+            if (p->direction == PORT_IN && p->name == "clk")
+                return true;
+        }
+    }
+    return false;
 }
 
 /* Follow wires from an output port, traversing through connector split junctions. */
@@ -103,10 +157,11 @@ void topological_placer::place(class scene *target_scene, const options &opts)
 
     /*
      * Build directed connectivity graphs over non-connector elements, tracing
-     * transparently through connector split junctions:
-     * - all_out/all_in: full netlist edges (used for barycenter ordering)
-     * - dag_out: combinational edges with register-output edges omitted so
-     *   sequential feedback loops (reg.q -> add -> reg.d) don't form cycles.
+     * transparently through connector split junctions and ignoring global
+     * clk/rst broadcast nets:
+     * - all_out/all_in: dataflow edges (used for barycenter Y-ordering)
+     * - dag_out: combinational dataflow edges with cycle-breaker outputs
+     *   omitted so sequential loops don't collapse layering.
      */
     std::vector<std::vector<size_t>> all_out(n), all_in(n);
     std::vector<std::vector<size_t>> dag_out(n);
@@ -116,7 +171,7 @@ void topological_placer::place(class scene *target_scene, const options &opts)
         if (is_connector(src_elem))
             continue;
 
-        const bool src_is_seq = is_sequential(src_elem);
+        const bool src_breaks_cycle = is_cycle_breaker(src_elem);
         const bool src_is_const = is_constant(src_elem);
 
         for (unsigned int pi = 0;; ++pi) {
@@ -124,6 +179,8 @@ void topological_placer::place(class scene *target_scene, const options &opts)
             if (!p)
                 break;
             if (p->direction != PORT_OUT)
+                continue;
+            if (is_global_control_port(p))
                 continue;
 
             std::vector<size_t> sinks;
@@ -134,7 +191,7 @@ void topological_placer::place(class scene *target_scene, const options &opts)
                 all_out[u].push_back(v);
                 all_in[v].push_back(u);
 
-                if (!src_is_seq && !src_is_const &&
+                if (!src_breaks_cycle && !src_is_const &&
                     !is_primary_output(target_scene->elements[v].get())) {
                     dag_out[u].push_back(v);
                 }
@@ -155,13 +212,20 @@ void topological_placer::place(class scene *target_scene, const options &opts)
             indegree[v]++;
     }
 
-    /* Longest-path topological layering via Kahn's algorithm. */
+    /* Longest-path topological layering via Kahn's algorithm + cyclic fallback peel. */
     std::vector<int> layer(n, 0);
+    std::vector<bool> processed(n, false);
     std::queue<size_t> q;
+    size_t active_count = 0;
+    size_t processed_count = 0;
+
     for (size_t i = 0; i < n; ++i) {
         element *e = target_scene->elements[i].get();
-        if (is_connector(e))
+        if (is_connector(e)) {
+            processed[i] = true;
             continue;
+        }
+        active_count++;
         if (is_primary_input(e)) {
             layer[i] = 0;
         } else if (!is_constant(e) && !is_primary_output(e)) {
@@ -171,15 +235,40 @@ void topological_placer::place(class scene *target_scene, const options &opts)
             q.push(i);
     }
 
-    while (!q.empty()) {
-        size_t u = q.front();
-        q.pop();
-        for (size_t v : dag_out[u]) {
-            if (layer[v] < layer[u] + 1)
-                layer[v] = layer[u] + 1;
-            if (--indegree[v] == 0)
-                q.push(v);
+    auto drain_queue = [&]() {
+        while (!q.empty()) {
+            size_t u = q.front();
+            q.pop();
+            if (processed[u])
+                continue;
+            processed[u] = true;
+            processed_count++;
+            for (size_t v : dag_out[u]) {
+                if (layer[v] < layer[u] + 1)
+                    layer[v] = layer[u] + 1;
+                if (--indegree[v] == 0)
+                    q.push(v);
+            }
         }
+    };
+
+    drain_queue();
+
+    /* If any combinational/submodule cycle remained, greedily break the lowest-indegree node. */
+    while (processed_count < active_count) {
+        size_t best = n;
+        int best_in = INT_MAX;
+        for (size_t i = 0; i < n; ++i) {
+            if (!processed[i] && indegree[i] < best_in) {
+                best_in = indegree[i];
+                best = i;
+            }
+        }
+        if (best == n)
+            break;
+        indegree[best] = 0;
+        q.push(best);
+        drain_queue();
     }
 
     /* Place constants directly in the column preceding their earliest consumer. */
@@ -195,6 +284,23 @@ void topological_placer::place(class scene *target_scene, const options &opts)
             }
         }
         layer[i] = std::max(0, min_sink_layer - 1);
+    }
+
+    /*
+     * Pull model_slice blocks adjacent to their earliest consumer so bit-taps
+     * sit right in front of the LUTs/gates that consume them instead of
+     * piling up on the far right and boomerang-routing wires across the layout.
+     */
+    for (size_t i = 0; i < n; ++i) {
+        if (!is_slice(target_scene->elements[i].get()))
+            continue;
+        int min_sink_layer = INT_MAX;
+        for (size_t v : all_out[i]) {
+            if (!is_primary_output(target_scene->elements[v].get()))
+                min_sink_layer = std::min(min_sink_layer, layer[v]);
+        }
+        if (min_sink_layer < INT_MAX)
+            layer[i] = std::max(1, min_sink_layer - 1);
     }
 
     /* Place primary outputs in the rightmost column. */
@@ -218,8 +324,27 @@ void topological_placer::place(class scene *target_scene, const options &opts)
     }
 
     /*
-     * Order nodes within each column using predecessor barycenter (average Y
-     * position of already-assigned predecessors) to reduce wire crossings.
+     * Order Column 0 inputs so data inputs sit at the top, reset below them,
+     * and clk at the very bottom (best routing geometry for clock trees).
+     */
+    if (!columns.empty()) {
+        std::stable_sort(columns[0].begin(), columns[0].end(),
+                         [&](size_t a, size_t b) {
+                             auto rank = [&](size_t idx) -> int {
+                                 const element *e = target_scene->elements[idx].get();
+                                 if (is_clock_element(e))
+                                     return 2;
+                                 if (is_reset_element(e))
+                                     return 1;
+                                 return 0;
+                             };
+                             return rank(a) < rank(b);
+                         });
+    }
+
+    /*
+     * Two-pass barycenter ordering (forward then backward) to align connected
+     * slices, LUTs, and submodules vertically and minimize wire crossings.
      */
     std::vector<float> y_est(n, 0.0f);
     for (size_t idx = 0; idx < columns[0].size(); ++idx)
@@ -253,10 +378,39 @@ void topological_placer::place(class scene *target_scene, const options &opts)
         }
     }
 
+    /* Backward barycenter pass on internal columns so slices/gates align with their sinks. */
+    for (int c = num_layers - 2; c >= 1; --c) {
+        auto &col = columns[static_cast<size_t>(c)];
+        std::vector<std::pair<float, size_t>> keyed;
+        keyed.reserve(col.size());
+
+        for (size_t idx = 0; idx < col.size(); ++idx) {
+            size_t u = col[idx];
+            float sum = 0.0f;
+            int cnt = 0;
+            for (size_t succ : all_out[u]) {
+                if (layer[succ] > c) {
+                    sum += y_est[succ];
+                    cnt++;
+                }
+            }
+            float key = (cnt > 0) ? (sum / static_cast<float>(cnt)) : y_est[u];
+            keyed.emplace_back(key, u);
+        }
+
+        std::stable_sort(keyed.begin(), keyed.end(),
+                         [](const auto &a, const auto &b) { return a.first < b.first; });
+
+        for (size_t idx = 0; idx < keyed.size(); ++idx) {
+            col[idx] = keyed[idx].second;
+            y_est[col[idx]] = static_cast<float>(idx);
+        }
+    }
+
     /*
      * Compute column X coordinates and element Y coordinates.
-     * Split tall columns (> max_elems_per_subcol) into multiple sub-columns so
-     * large modules stay widescreen and give A* routing generous horizontal channels.
+     * Split tall columns (> max_elems_per_subcol) into multiple sub-columns and
+     * stagger odd rows horizontally so large modules stay widescreen & fast to route.
      */
     int cur_x = opts.margin_x;
     int max_x = opts.margin_x;
@@ -296,7 +450,6 @@ void topological_placer::place(class scene *target_scene, const options &opts)
             }
 
             max_y = std::max(max_y, cur_y);
-            /* Scale horizontal routing channel width with column density. */
             const int density_bonus = std::min(16, static_cast<int>((end - begin) / 2));
             cur_x += col_width + opts.col_gap + density_bonus;
             max_x = std::max(max_x, cur_x);
