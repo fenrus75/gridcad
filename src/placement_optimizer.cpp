@@ -30,6 +30,8 @@ constexpr int DIR_Y[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
 constexpr double CROSS_PENALTY = 8.0;
 constexpr double SIBLING_DIST_WEIGHT = 0.75;
 constexpr double SIBLING_ALIGN_PENALTY = 6.0;
+constexpr double REPULSION_STRENGTH = 60.0;
+constexpr double REPULSION_RADIUS2 = 24.0 * 24.0;
 
 bool is_pinned_element(const element *elem)
 {
@@ -206,12 +208,38 @@ double sibling_pair_cost(const element *a, const element *b)
     return cost;
 }
 
-/* Precomputed scene-wide index for O(degree * W) incremental crossing & sibling evaluation. */
+bool is_repelling_block(const element *elem)
+{
+    if (!elem || const_cast<element *>(elem)->is_background())
+        return false;
+    const std::string cid = const_cast<element *>(elem)->class_id();
+    /* Connectors and constants are tiny helpers that should hug their neighbors, not repel. */
+    return cid != "connector:" && cid != "model_const:";
+}
+
+/* Inverse-square Coulomb repulsion energy between two unrelated blocks within cutoff radius. */
+double repulsion_pair_cost(const element *a, const element *b)
+{
+    const double ax = const_cast<element *>(a)->get_X() + 0.5 * const_cast<element *>(a)->get_width();
+    const double ay = const_cast<element *>(a)->get_Y() + 0.5 * const_cast<element *>(a)->get_height();
+    const double bx = const_cast<element *>(b)->get_X() + 0.5 * const_cast<element *>(b)->get_width();
+    const double by = const_cast<element *>(b)->get_Y() + 0.5 * const_cast<element *>(b)->get_height();
+    const double dx = ax - bx;
+    const double dy = ay - by;
+    const double d2 = dx * dx + dy * dy;
+    if (d2 >= REPULSION_RADIUS2)
+        return 0.0;
+    return REPULSION_STRENGTH / std::max(4.0, d2);
+}
+
+/* Precomputed scene-wide index for O(degree * W) incremental crossing, sibling & repulsion evaluation. */
 struct opt_context {
     std::vector<wire_seg> segs;
     std::unordered_map<const element *, std::vector<size_t>> elem_segs;
     std::unordered_map<const element *, const element *> prev_sibling;
     std::unordered_map<const element *, const element *> next_sibling;
+    std::vector<const element *> repelling_blocks;
+    std::unordered_map<const element *, std::unordered_set<const element *>> connected_neighbors;
 
     explicit opt_context(scene *s)
     {
@@ -221,6 +249,9 @@ struct opt_context {
         /* 1. Build flat list of non-clock wire segments and element -> segment index map. */
         std::unordered_map<const wire *, size_t> wire_to_idx;
         for (const auto &elem : s->elements) {
+            if (is_repelling_block(elem.get()))
+                repelling_blocks.push_back(elem.get());
+
             for (unsigned int pi = 0;; ++pi) {
                 port *p = elem->port_at(pi);
                 if (!p)
@@ -243,8 +274,13 @@ struct opt_context {
                         wire_to_idx[w.get()] = idx;
                         if (seg.p1->parent)
                             elem_segs[seg.p1->parent].push_back(idx);
-                        if (seg.p2->parent && seg.p2->parent != seg.p1->parent)
+                        if (seg.p2->parent && seg.p2->parent != seg.p1->parent) {
                             elem_segs[seg.p2->parent].push_back(idx);
+                            if (seg.p1->parent) {
+                                connected_neighbors[seg.p1->parent].insert(seg.p2->parent);
+                                connected_neighbors[seg.p2->parent].insert(seg.p1->parent);
+                            }
+                        }
                     }
                 }
             }
@@ -266,9 +302,44 @@ struct opt_context {
                 if (nit != by_num.end()) {
                     next_sibling[elem] = nit->second;
                     prev_sibling[nit->second] = elem;
+                    /* Siblings attract rather than repel each other. */
+                    connected_neighbors[elem].insert(nit->second);
+                    connected_neighbors[nit->second].insert(elem);
                 }
             }
         }
+    }
+
+    bool are_related(const element *a, const element *b) const
+    {
+        auto it = connected_neighbors.find(a);
+        return it != connected_neighbors.end() && it->second.count(b) > 0;
+    }
+
+    double repulsion_cost_for(const element *e) const
+    {
+        if (!is_repelling_block(e))
+            return 0.0;
+        double c = 0.0;
+        for (const element *other : repelling_blocks) {
+            if (other == e || are_related(e, other))
+                continue;
+            c += repulsion_pair_cost(e, other);
+        }
+        return c;
+    }
+
+    double all_repulsion_cost(void) const
+    {
+        double c = 0.0;
+        const size_t n = repelling_blocks.size();
+        for (size_t i = 0; i < n; ++i) {
+            for (size_t j = i + 1; j < n; ++j) {
+                if (!are_related(repelling_blocks[i], repelling_blocks[j]))
+                    c += repulsion_pair_cost(repelling_blocks[i], repelling_blocks[j]);
+            }
+        }
+        return c;
     }
 
     void refresh_element(const element *e)
@@ -343,7 +414,7 @@ struct opt_context {
 
     double local_cost(element *e) const
     {
-        double total = sibling_cost_for(e);
+        double total = sibling_cost_for(e) + repulsion_cost_for(e);
         auto it = elem_segs.find(e);
         if (it != elem_segs.end()) {
             for (size_t idx : it->second)
@@ -378,6 +449,11 @@ struct opt_context {
         auto pit = next_sibling.find(b);
         if (pit != next_sibling.end() && pit->second == a)
             total -= sibling_pair_cost(b, a);
+
+        /* Repulsion cost without double-counting the (a, b) pair itself. */
+        total += repulsion_cost_for(a) + repulsion_cost_for(b);
+        if (is_repelling_block(a) && is_repelling_block(b) && !are_related(a, b))
+            total -= repulsion_pair_cost(a, b);
         return total;
     }
 };
@@ -656,6 +732,7 @@ double placement_optimizer::compute_scene_cost(class scene *target_scene)
         total += wire_cost(seg.w);
     total += CROSS_PENALTY * static_cast<double>(ctx.count_all_crossings());
     total += ctx.all_sibling_cost();
+    total += ctx.all_repulsion_cost();
     return total;
 }
 
@@ -682,6 +759,7 @@ placement_optimizer::step_result placement_optimizer::optimize_all_elements(
         res.cost_before += wire_cost(seg.w);
     res.cost_before += CROSS_PENALTY * static_cast<double>(res.crossings_before);
     res.cost_before += ctx.all_sibling_cost();
+    res.cost_before += ctx.all_repulsion_cost();
 
     static std::mt19937 rng{std::random_device{}()};
     std::shuffle(movable.begin(), movable.end(), rng);
@@ -702,6 +780,7 @@ placement_optimizer::step_result placement_optimizer::optimize_all_elements(
         res.cost_after += wire_cost(seg.w);
     res.cost_after += CROSS_PENALTY * static_cast<double>(res.crossings_after);
     res.cost_after += ctx.all_sibling_cost();
+    res.cost_after += ctx.all_repulsion_cost();
     return res;
 }
 
