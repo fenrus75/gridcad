@@ -253,41 +253,59 @@ void topological_placer::place(class scene *target_scene, const options &opts)
         }
     }
 
-    /* Compute column X coordinates and element Y coordinates. */
+    /*
+     * Compute column X coordinates and element Y coordinates.
+     * Split tall columns (> max_elems_per_subcol) into multiple sub-columns so
+     * large modules stay widescreen and give A* routing generous horizontal channels.
+     */
     int cur_x = opts.margin_x;
     int max_x = opts.margin_x;
     int max_y = opts.margin_y;
+    const size_t max_per_sub = static_cast<size_t>(std::max(1, opts.max_elems_per_subcol));
 
     for (int c = 0; c < num_layers; ++c) {
         const auto &col = columns[static_cast<size_t>(c)];
         if (col.empty())
             continue;
 
-        int col_width = 1;
-        int cur_y = opts.margin_y;
+        const size_t num_subcols = (col.size() + max_per_sub - 1) / max_per_sub;
+        const size_t per_sub = (col.size() + num_subcols - 1) / num_subcols;
 
-        for (size_t u : col) {
-            element *elem = target_scene->elements[u].get();
-            int w = std::max(1, static_cast<int>(std::ceil(elem->get_width())));
-            int h = std::max(1, static_cast<int>(std::ceil(elem->get_height())));
-            col_width = std::max(col_width, w);
+        for (size_t sc = 0; sc < num_subcols; ++sc) {
+            const size_t begin = sc * per_sub;
+            const size_t end = std::min(col.size(), begin + per_sub);
+            if (begin >= end)
+                break;
 
-            elem->place(cur_x, cur_y);
-            elem->reseat();
+            int col_width = 1;
+            int cur_y = opts.margin_y;
 
-            cur_y += h + opts.row_gap;
+            for (size_t idx = begin; idx < end; ++idx) {
+                element *elem = target_scene->elements[col[idx]].get();
+                int w = std::max(1, static_cast<int>(std::ceil(elem->get_width())));
+                int h = std::max(1, static_cast<int>(std::ceil(elem->get_height())));
+                col_width = std::max(col_width, w);
+
+                elem->place(cur_x, cur_y);
+                elem->reseat();
+
+                cur_y += h + opts.row_gap;
+            }
+
+            max_y = std::max(max_y, cur_y);
+            /* Scale horizontal routing channel width with column density. */
+            const int density_bonus = std::min(16, static_cast<int>((end - begin) / 2));
+            cur_x += col_width + opts.col_gap + density_bonus;
+            max_x = std::max(max_x, cur_x);
         }
-
-        max_y = std::max(max_y, cur_y);
-        cur_x += col_width + opts.col_gap;
-        max_x = std::max(max_x, cur_x);
     }
 
     /*
-     * Place connector split junctions in the routing channel just to the right
-     * of their driving port, vertically centered near their sinks.
+     * Place connector split junctions staggered across the horizontal routing
+     * channel to the right of their driving port so they never form a wall.
      */
     std::set<std::pair<int, int>> occupied_connectors;
+    std::unordered_map<int, int> channel_stagger;
     for (size_t i = 0; i < n; ++i) {
         element *elem = target_scene->elements[i].get();
         if (!is_connector(elem))
@@ -319,7 +337,9 @@ void topological_placer::place(class scene *target_scene, const options &opts)
         int cx = opts.margin_x;
         int cy = opts.margin_y;
         if (drv_port) {
-            cx = static_cast<int>(std::round(drv_port->screenX)) + 2;
+            const int base_x = static_cast<int>(std::round(drv_port->screenX));
+            const int lane = (channel_stagger[base_x]++) % std::max(1, opts.col_gap - 4);
+            cx = base_x + 2 + lane;
             cy = (sink_cnt > 0) ? static_cast<int>(std::round(sink_y_sum / sink_cnt))
                                 : static_cast<int>(std::round(drv_port->screenY));
         }

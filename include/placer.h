@@ -25,10 +25,11 @@ class topological_placer
 {
 public:
     struct options {
-        int margin_x = 4;
-        int margin_y = 4;
-        int col_gap = 6;
-        int row_gap = 3;
+        int margin_x = 6;
+        int margin_y = 6;
+        int col_gap = 12;
+        int row_gap = 4;
+        int max_elems_per_subcol = 14; /* Split tall columns so layouts stay widescreen & fast to route */
     };
 
     static void place(class scene *target_scene);
