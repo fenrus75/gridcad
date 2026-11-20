@@ -3,6 +3,9 @@
 
 
 
+class timelinebar;
+class vcd_session;
+
 class autocomplete_element {
 public:
     autocomplete_element(void) = default;
@@ -41,6 +44,7 @@ public:
     
     void set_dialog(std::unique_ptr<class dialog> D);
     void set_project_name(std::string _projectname) { projectname = _projectname;};
+    void set_vcd_session(class vcd_session *sess);
     
          
 protected:
@@ -56,6 +60,7 @@ protected:
     std::unique_ptr<class iconbar> icon_bar;
     class icon *active_icon = nullptr;
     std::unique_ptr<class buttonbar> button_bar;
+    std::unique_ptr<class timelinebar> timeline_bar;
     class contextmenu *active_menu = nullptr;
     std::unique_ptr<class dialog> dialogbox;
     bool left_mouse_down = false;

@@ -59,6 +59,7 @@ public:
     size_t get_current_tick(void) const noexcept { return current_tick_; }
     size_t get_total_ticks(void) const noexcept { return clock_ticks_.size(); }
     uint64_t get_current_timestamp(void) const noexcept;
+    const std::string &get_timescale(void) const noexcept { return parser_.get_timescale(); }
     const std::string &get_clock_signal(void) const noexcept { return clock_signal_; }
     const std::string &get_scope_prefix(void) const noexcept { return scope_prefix_; }
     size_t get_bound_signal_count(void) const noexcept { return bindings_.size(); }

@@ -190,6 +190,8 @@ extern unsigned int SDL_timer_event;
 #define EVENT_REWIRE (SDL_timer_event + 14)
 #define EVENT_SEQUENCER_RESET (SDL_timer_event + 15)
 #define EVENT_VCD_WIRE_UPDATE (SDL_timer_event + 16)
+#define EVENT_VCD_SEEK (SDL_timer_event + 17)
+#define EVENT_VCD_UNLOCK (SDL_timer_event + 18)
 
 extern void callback_editname(class element *element);
 extern sdl::TexturePtr IMG_LoadTextureFromMem(SDL_Renderer *renderer, const char *filename);

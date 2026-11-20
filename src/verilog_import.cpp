@@ -147,10 +147,13 @@ std::unique_ptr<scene> build_stub_scene(const std::string &mod_name, const json 
     return sub;
 }
 
+using LabelTableMap = std::map<std::string, std::shared_ptr<const std::map<uint64_t, std::string>>>;
+
 std::unique_ptr<scene> import_module_recursive(
     const json &modules_obj,
     const std::string &module_name,
     const std::string &instance_path,
+    const LabelTableMap &label_tables,
     const verilog_importer::options &opts,
     const std::filesystem::path &base_dir,
     bool is_top,
@@ -443,8 +446,8 @@ std::unique_ptr<scene> import_module_recursive(
                                                  : (instance_path + "." + sub_inst_name);
 
                 if (modules_obj.contains(ctype)) {
-                    sub_scene = import_module_recursive(modules_obj, ctype, sub_path, opts, base_dir,
-                                                        false, depth + 1, stats, sub_err);
+                    sub_scene = import_module_recursive(modules_obj, ctype, sub_path, label_tables,
+                                                        opts, base_dir, false, depth + 1, stats, sub_err);
                 } else if (opts.load_sibling_files && !base_dir.empty()) {
                     const std::filesystem::path sibling = base_dir / (ctype + ".json");
                     std::error_code ec;
@@ -457,7 +460,7 @@ std::unique_ptr<scene> import_module_recursive(
                                 if (sj.is_object() && sj.contains("modules") &&
                                     sj["modules"].is_object() && sj["modules"].contains(ctype)) {
                                     sub_scene = import_module_recursive(
-                                        sj["modules"], ctype, sub_path, opts, base_dir,
+                                        sj["modules"], ctype, sub_path, label_tables, opts, base_dir,
                                         false, depth + 1, stats, sub_err);
                                 }
                             } catch (const std::exception &e) {
@@ -523,6 +526,13 @@ std::unique_ptr<scene> import_module_recursive(
 
             const std::string wname = wobj.value("name", "");
             const std::string vcd_local = wobj.value("vcd_signal", "");
+            const std::string lbl_key = wobj.value("label_table", "");
+            std::shared_ptr<const std::map<uint64_t, std::string>> wire_lbl_tbl;
+            if (!lbl_key.empty()) {
+                auto lit = label_tables.find(lbl_key);
+                if (lit != label_tables.end())
+                    wire_lbl_tbl = lit->second;
+            }
             const std::string full_vcd_name =
                 vcd_local.empty()
                     ? std::string("")
@@ -575,6 +585,12 @@ std::unique_ptr<scene> import_module_recursive(
                     w->name = wname;
                 if (!full_vcd_name.empty())
                     w->set_vcd_name(full_vcd_name);
+                if (wire_lbl_tbl)
+                    w->set_label_table(wire_lbl_tbl);
+                if (wname == "clk" || vcd_local == "clk") {
+                    w->value.valid = true;
+                    w->value.is_clock = true;
+                }
                 w->set_width(width);
                 a->add_wire(w);
                 b->add_wire(w);
@@ -675,7 +691,8 @@ verilog_importer::result verilog_importer::import_json(const json &root,
         }
     }
 
-    /* Parse optional enum/state label tables for future waveform/wire annotation. */
+    /* Parse optional enum/state label tables for waveform/wire annotation. */
+    LabelTableMap shared_label_tables;
     if (root.contains("label_tables") && root["label_tables"].is_object()) {
         for (auto it = root["label_tables"].begin(); it != root["label_tables"].end(); ++it) {
             if (!it.value().is_object())
@@ -687,11 +704,13 @@ verilog_importer::result verilog_importer::import_json(const json &root,
                     tbl[code] = kv.value().get<std::string>();
                 }
             }
+            shared_label_tables[it.key()] =
+                std::make_shared<std::map<uint64_t, std::string>>(tbl);
         }
     }
 
     res.imported_scene = import_module_recursive(
-        root["modules"], res.top_module, "", opts, base_dir, true, 0, res.stats, res.error);
+        root["modules"], res.top_module, "", shared_label_tables, opts, base_dir, true, 0, res.stats, res.error);
     res.ok = (res.imported_scene != nullptr);
     return res;
 }

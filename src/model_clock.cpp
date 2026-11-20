@@ -82,8 +82,11 @@ model_clock::model_clock(float _X, float _Y)  : element(1, 1, "clk")
     Y = floorf(_Y);
     
     global_clock.valid = true;
+    global_clock.is_clock = true;
     
-    add_port(1, sizeY, "clk", PORT_OUT, 1);    
+    add_port(1, sizeY, "clk", PORT_OUT, 1);
+    ports[0]->value.valid = true;
+    ports[0]->value.is_clock = true;
     ports[0]->allow_fancy_verilog();
     menu->add_item("Stop clock", callback_stop_clock);
     menu->add_item("Start clock", callback_start_clock);

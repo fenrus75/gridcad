@@ -70,6 +70,7 @@ core_sources = files(
     'src/port.cpp',
     'src/dialog.cpp',
     'src/buttonbar.cpp',
+    'src/timelinebar.cpp',
     'src/synth.cpp',
     'src/net.cpp',
     'src/basecanvas.cpp',

@@ -175,6 +175,8 @@ size_t vcd_session::apply_tick(size_t tick_idx, class scene *root_scene)
     for (const auto &b : bindings_) {
         const std::string raw = parser_.get_raw_value_at_time(*b.signal, t);
         struct value v = parse_vcd_raw_value(raw, b.signal->bit_width);
+        if (b.signal->full_name == clock_signal_ || b.signal->short_name == "clk")
+            v.is_clock = true;
         updated += root_scene->broadcast_vcd_value(b.wire_vcd_name, v);
     }
 
@@ -197,6 +199,8 @@ size_t vcd_session::push_tick_events(size_t tick_idx)
         auto payload = std::make_unique<vcd_wire_update>();
         payload->vcd_name = b.wire_vcd_name;
         payload->val = parse_vcd_raw_value(raw, b.signal->bit_width);
+        if (b.signal->full_name == clock_signal_ || b.signal->short_name == "clk")
+            payload->val.is_clock = true;
 
         SDL_Event ev = {};
         ev.type = EVENT_VCD_WIRE_UPDATE;

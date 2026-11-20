@@ -31,6 +31,7 @@
 #include "model_mem.h"
 #include "verilog_import.h"
 #include "vcd_session.h"
+#include "timelinebar.h"
 
 #include <cassert>
 #include <filesystem>
@@ -680,6 +681,16 @@ static void test_vcd_playback(void)
         size_t applied10 = sess.apply_tick(10, res.imported_scene.get());
         assert(applied10 >= 250);
         assert(sess.get_current_tick() == 10);
+
+        // Verify timelinebar scrubber coordinate -> tick mapping
+        timelinebar tb;
+        tb.set_session(&sess);
+        assert(tb.is_active());
+        SDL_Rect bar = {50, 716, 900, timelinebar::BAR_HEIGHT};
+        assert(tb.tick_from_x(0, bar) == 0);
+        assert(tb.tick_from_x(1000, bar) == 23);
+        size_t mid = tb.tick_from_x(bar.x + bar.w / 2, bar);
+        assert(mid > 5 && mid < 18);
     }
 }
 

@@ -183,6 +183,7 @@ document::document(std::string _name, bool _library_mode,
 			    "Loaded VCD '{}' (clock '{}', {} ticks, scope '{}', {} bound signals)",
 			    vcd_path, vcd->get_clock_signal(), vcd->get_total_ticks(),
 			    vcd->get_scope_prefix(), bound);
+			main_canvas->set_vcd_session(vcd.get());
 			vcd->push_tick_events(0);
 		} else {
 			logger::get().error("Failed to load VCD '{}': {}", vcd_path, vcd_err);
@@ -344,6 +345,18 @@ void document::run(void)
 					main_canvas->get_scene()->broadcast_vcd_value(
 					    upd->vcd_name, upd->val);
 				}
+			}
+			if (event.type == EVENT_VCD_SEEK && vcd && vcd->is_loaded() &&
+			    vcd->get_total_ticks() > 0) {
+				size_t target = (event.user.code >= 0)
+				                    ? static_cast<size_t>(event.user.code)
+				                    : 0;
+				vcd->push_tick_events(target);
+			}
+			if (event.type == EVENT_VCD_UNLOCK && main_canvas && main_canvas->get_scene()) {
+				clock_running = false;
+				main_canvas->get_scene()->unlock_all_vcd();
+				logger::get().info("VCD wires unlocked; free simulation active");
 			}
 			if (vcd && vcd->is_loaded() && event.type == SDL_KEYDOWN) {
 				if (event.key.keysym.sym == SDLK_RIGHTBRACKET) {

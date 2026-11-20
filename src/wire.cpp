@@ -152,15 +152,25 @@ void draw_snake_line(class basecanvas *canvas, float x1, float y1, float x2, flo
 				const float size = 0.24 * cursormag;
 				const float size2 = 0.20 * cursormag;
 				std::string s;
+				bool has_enum_label = false;
 				if (wire->get_is_z())
 					s = "Z";
 				else if (wire_debug_mode)
 					s = std::format("{}", wire->get_distance_from_outport());
-				else
-					s = std::format("{}", value->intval);
-				canvas->draw_box(x1-size, y1-size, x1+size, y1+size, COLOR_WIRE_MOTION);
-				canvas->draw_box(x1-size2, y1-size2, x1+size2, y1+size2, COLOR_BACKGROUND_MAIN);
-				canvas->draw_text(s, x1+0.05-size, y1+0.05-size, 2 * size - 0.1, 2 * size - 0.1);
+				else {
+					std::string lbl = wire->get_label(value->intval);
+					if (!lbl.empty()) {
+						s = std::move(lbl);
+						has_enum_label = true;
+					} else {
+						s = std::format("{}", value->intval);
+					}
+				}
+				const float half_w = has_enum_label ? std::max(size, size * 0.45f * static_cast<float>(s.size())) : size;
+				const float half_w2 = half_w - (size - size2);
+				canvas->draw_box(x1-half_w, y1-size, x1+half_w, y1+size, COLOR_WIRE_MOTION);
+				canvas->draw_box(x1-half_w2, y1-size2, x1+half_w2, y1+size2, COLOR_BACKGROUND_MAIN);
+				canvas->draw_text(s, x1+0.05-half_w, y1+0.05-size, 2 * half_w - 0.1, 2 * size - 0.1);
 			} else if (value->is_clock) {
 				const float size = 0.24;
 				float f;
@@ -465,6 +475,16 @@ void wire::set_vcd_value_direct(const struct value &v)
 {
 	vcd_locked = true;
 	value = v;
+}
+
+std::string wire::get_label(uint64_t val) const
+{
+	if (!label_table)
+		return "";
+	auto it = label_table->find(val);
+	if (it != label_table->end())
+		return it->second;
+	return "";
 }
 
 void wire::apply_vcd_value(const struct value &v)

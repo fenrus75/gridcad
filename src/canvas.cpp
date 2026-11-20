@@ -28,6 +28,7 @@
 #include "iconbar.h"
 #include "contextmenu.h"
 #include "buttonbar.h"
+#include "timelinebar.h"
 #include "dialog.h"
 #include "synth.h"
 
@@ -94,6 +95,7 @@ canvas::canvas(std::unique_ptr<class scene> _scene, struct capabilities *cap)
 	dragging_wire.reset();
 	icon_bar = std::make_unique<iconbar>(renderer.get(), ui_area_rect, this);
 	button_bar = std::make_unique<buttonbar>(this, button_rect.w);
+	timeline_bar = std::make_unique<timelinebar>();
 	button_bar->add_button("Save design to file", "assets/save_icon.png", EVENT_SAVE);
 	button_bar->add_button("Fit to screen", "assets/icon_fit_to_screen.png", EVENT_ZOOM_TO_FIT);
 	button_bar->add_button("Wire all clock signals", "assets/autoclock.png", EVENT_AUTOCLOCK);
@@ -113,6 +115,12 @@ autocomplete_element::~autocomplete_element(void) = default;
 void canvas::set_dialog(std::unique_ptr<class dialog> D)
 {
 	dialogbox = std::move(D);
+}
+
+void canvas::set_vcd_session(class vcd_session *sess)
+{
+	if (timeline_bar)
+		timeline_bar->set_session(sess);
 }
 
 canvas::~canvas(void)
@@ -359,6 +367,13 @@ bool canvas::handle_event(SDL_Event &event)
 		tooltip_eligable = true;
 	else
 		tooltip_eligable = false;
+
+	if (timeline_bar && timeline_bar->is_active()) {
+		SDL_Rect bar_rect = {main_area_rect.x, main_area_rect.h - timelinebar::BAR_HEIGHT,
+		                     main_area_rect.w, timelinebar::BAR_HEIGHT};
+		if (timeline_bar->handle_event(event, bar_rect))
+			return false;
+	}
 
 	if (event.type == EVENT_RELOAD_ICONBAR)
 		icon_bar->create_menu();
@@ -1130,6 +1145,12 @@ void canvas::draw(void)
 	if (fps > 0)
 		button_bar->set_fps(fps);
 	button_bar->draw_at(this, button_rect.w, button_rect.h);
+
+	if (timeline_bar && timeline_bar->is_active()) {
+		SDL_Rect bar_rect = {main_area_rect.x, main_area_rect.h - timelinebar::BAR_HEIGHT,
+		                     main_area_rect.w, timelinebar::BAR_HEIGHT};
+		timeline_bar->draw(this, bar_rect);
+	}
 
 	if (tooltip_eligable) {
 		std::string tooltip = "";

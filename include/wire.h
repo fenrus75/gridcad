@@ -74,6 +74,9 @@ public:
     void unlock_vcd(void) { vcd_locked = false; };
     void set_vcd_value_direct(const struct value &v);
     void apply_vcd_value(const struct value &v);
+
+    void set_label_table(std::shared_ptr<const std::map<uint64_t, std::string>> tbl) { label_table = std::move(tbl); };
+    std::string get_label(uint64_t val) const;
     
     void calculate_drawpoints(void);
     
@@ -97,5 +100,6 @@ protected:
     uint64_t points_timestamp = 0; /* nosave */
     std::string vcd_name = ""; /* hierarchical VCD signal name */
     bool vcd_locked = false;   /* true while driven/locked by VCD playback */
+    std::shared_ptr<const std::map<uint64_t, std::string>> label_table;
 };
 
