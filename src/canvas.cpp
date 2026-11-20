@@ -101,7 +101,7 @@ canvas::canvas(std::unique_ptr<class scene> _scene, struct capabilities *cap)
 	timeline_bar->set_session(get_active_vcd_session());
 	button_bar->add_button("Save design to file", "assets/save_icon.png", EVENT_SAVE);
 	button_bar->add_button("Fit to screen", "assets/icon_fit_to_screen.png", EVENT_ZOOM_TO_FIT);
-	button_bar->add_button(is_import_view_mode() ? "Optimize layout (1 step)" : "Wire all clock signals",
+	button_bar->add_button(is_import_view_mode() ? "Toggle auto-optimize layout (1 round/sec)" : "Wire all clock signals",
 	                       "assets/autoclock.png", EVENT_AUTOCLOCK);
 	button_bar->add_button("Redo all wiring", "assets/icon_rewire.png", EVENT_REWIRE);
 	if (show_toolchain) {
@@ -362,6 +362,36 @@ bool canvas::handle_event_iconarea(SDL_Event &event)
 }
 
 
+void canvas::run_optimize_phase(void)
+{
+	if (!current_scene)
+		return;
+	const unsigned int phase = (opt_phase++ % 4);
+	if (phase == 0) {
+		auto res = placement_optimizer::optimize_all_connectors(current_scene.get());
+		logger::get().info("Optimize [connectors]: moved {} connectors (cost {:.1f} -> {:.1f})",
+		                   res.steps_taken, res.cost_before, res.cost_after);
+	} else if (phase == 1) {
+		auto res = placement_optimizer::optimize_all_constants(current_scene.get());
+		logger::get().info("Optimize [constants]: moved {} constants (cost {:.1f} -> {:.1f})",
+		                   res.steps_taken, res.cost_before, res.cost_after);
+	} else if (phase == 2) {
+		auto res = placement_optimizer::optimize_all_slices_and_concats(current_scene.get());
+		logger::get().info("Optimize [slices/concats]: moved {} slices/concats (cost {:.1f} -> {:.1f})",
+		                   res.steps_taken, res.cost_before, res.cost_after);
+	} else {
+		auto res = placement_optimizer::optimize_one_round(current_scene.get());
+		if (res.moved) {
+			logger::get().info("Optimize [element]: moved '{}' by ({},{}) x{} (cost {:.1f} -> {:.1f})",
+			                   res.moved_element, res.dx, res.dy, res.steps_taken,
+			                   res.cost_before, res.cost_after);
+		} else {
+			logger::get().info("Optimize [element]: no improving move found (cost {:.1f})",
+			                   res.cost_before);
+		}
+	}
+}
+
 bool canvas::handle_event(SDL_Event &event)
 {
 	bool leave = false;
@@ -383,32 +413,23 @@ bool canvas::handle_event(SDL_Event &event)
 		icon_bar->create_menu();
 
 
+	if (event.type == SDL_timer_event && auto_optimize && is_import_view_mode()) {
+		const uint64_t now = SDL_GetTicks64();
+		if (now - last_optimize_ms >= 950) {
+			last_optimize_ms = now;
+			run_optimize_phase();
+		}
+	}
+
 	if (event.type == EVENT_AUTOCLOCK && event.user.data1 == current_scene.get()) {
 		if (is_import_view_mode()) {
-			static unsigned int opt_click_count = 0;
-			const unsigned int phase = (opt_click_count++ % 4);
-			if (phase == 0) {
-				auto res = placement_optimizer::optimize_all_connectors(current_scene.get());
-				logger::get().info("Optimize [connectors]: moved {} connectors (cost {:.1f} -> {:.1f})",
-				                   res.steps_taken, res.cost_before, res.cost_after);
-			} else if (phase == 1) {
-				auto res = placement_optimizer::optimize_all_constants(current_scene.get());
-				logger::get().info("Optimize [constants]: moved {} constants (cost {:.1f} -> {:.1f})",
-				                   res.steps_taken, res.cost_before, res.cost_after);
-			} else if (phase == 2) {
-				auto res = placement_optimizer::optimize_all_slices_and_concats(current_scene.get());
-				logger::get().info("Optimize [slices/concats]: moved {} slices/concats (cost {:.1f} -> {:.1f})",
-				                   res.steps_taken, res.cost_before, res.cost_after);
+			auto_optimize = !auto_optimize;
+			if (auto_optimize) {
+				logger::get().info("Auto-optimize ON (1 round/sec)");
+				last_optimize_ms = SDL_GetTicks64();
+				run_optimize_phase();
 			} else {
-				auto res = placement_optimizer::optimize_one_round(current_scene.get());
-				if (res.moved) {
-					logger::get().info("Optimize [element]: moved '{}' by ({},{}) x{} (cost {:.1f} -> {:.1f})",
-					                   res.moved_element, res.dx, res.dy, res.steps_taken,
-					                   res.cost_before, res.cost_after);
-				} else {
-					logger::get().info("Optimize [element]: no improving move found (cost {:.1f})",
-					                   res.cost_before);
-				}
+				logger::get().info("Auto-optimize OFF");
 			}
 		} else {
 			take_undo_snapshot(current_scene.get());
