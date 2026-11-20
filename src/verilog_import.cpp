@@ -33,6 +33,8 @@
 #include "model_eq.h"
 #include "model_ne.h"
 #include "model_mem.h"
+#include "model_slice.h"
+#include "model_concat.h"
 #include "model_truth.h"
 #include "model_nest.h"
 
@@ -384,6 +386,42 @@ std::unique_ptr<scene> import_module_recursive(
                 register_pin("a", el->port_at(0));
                 register_pin("b", el->port_at(1));
                 register_pin("y", el->port_at(2));
+                result_scene->add_element(std::move(el));
+                stats.components++;
+            } else if (ctype == "gridcad_slice") {
+                const int in_w = parse_width_json(params, "IN_WIDTH", 8);
+                const int out_w = parse_width_json(params, "OUT_WIDTH", 1);
+                const int offset = params.contains("OFFSET")
+                                       ? static_cast<int>(parse_u64_json(params["OFFSET"], 0))
+                                       : 0;
+                auto el = std::make_unique<model_slice>(0, 0, in_w, out_w, offset);
+                el->update_name(cid);
+                register_pin("in", el->port_at(0));
+                register_pin("out", el->port_at(1));
+                result_scene->add_element(std::move(el));
+                stats.components++;
+            } else if (ctype == "gridcad_concat") {
+                const int out_w = parse_width_json(params, "OUT_WIDTH", 2);
+                const int num_in = std::clamp(
+                    params.contains("INPUTS") ? static_cast<int>(parse_u64_json(params["INPUTS"], 2)) : 2,
+                    1, 64);
+                std::vector<int> in_widths;
+                in_widths.reserve(static_cast<size_t>(num_in));
+                const json pins = (comp.contains("pins") && comp["pins"].is_object())
+                                      ? comp["pins"]
+                                      : json::object();
+                for (int k = 0; k < num_in; ++k) {
+                    const std::string pkey = std::format("in{}", k);
+                    int w = 1;
+                    if (pins.contains(pkey) && pins[pkey].is_object())
+                        w = parse_width_json(pins[pkey], "width", 1);
+                    in_widths.push_back(w);
+                }
+                auto el = std::make_unique<model_concat>(0, 0, in_widths, out_w);
+                el->update_name(cid);
+                for (int k = 0; k < num_in; ++k)
+                    register_pin(std::format("in{}", k), el->port_at(static_cast<unsigned int>(k)));
+                register_pin("out", el->port_at(static_cast<unsigned int>(num_in)));
                 result_scene->add_element(std::move(el));
                 stats.components++;
             } else if (ctype == "gridcad_lut") {

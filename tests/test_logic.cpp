@@ -29,6 +29,8 @@
 #include "model_eq.h"
 #include "model_ne.h"
 #include "model_mem.h"
+#include "model_slice.h"
+#include "model_concat.h"
 #include "model_truth.h"
 #include "verilog_import.h"
 #include "vcd_session.h"
@@ -643,6 +645,44 @@ static void test_verilog_import(void)
         run_queued_calculations();
         assert(y0->get_value().boolval == true);
         assert(y1->get_value().boolval == false);
+    }
+
+    // 6. model_slice + model_concat (16-bit byte swap: {in[7:0], in[15:8]})
+    {
+        scene s("slice_concat_test");
+        auto in_bus = std::make_unique<model_toggle>(1, 2);
+        auto lo_slc = std::make_unique<model_slice>(6, 1, 16, 8, 0);
+        auto hi_slc = std::make_unique<model_slice>(6, 4, 16, 8, 8);
+        auto cat    = std::make_unique<model_concat>(12, 2, std::vector<int>{8, 8}, 16);
+        auto out_y  = std::make_unique<model_output>(18, 2);
+
+        in_bus->set_width(16);
+        out_y->set_width(16);
+
+        auto *in_p = in_bus.get();
+        auto *lo_p = lo_slc.get();
+        auto *hi_p = hi_slc.get();
+        auto *cat_p = cat.get();
+        auto *out_p = out_y.get();
+
+        s.add_element(std::move(in_bus));
+        s.add_element(std::move(lo_slc));
+        s.add_element(std::move(hi_slc));
+        s.add_element(std::move(cat));
+        s.add_element(std::move(out_y));
+
+        connect_ports(in_p->port_at(0), lo_p->port_at(0));
+        connect_ports(in_p->port_at(0), hi_p->port_at(0));
+        // in0 (LSB) = hi byte, in1 (MSB) = lo byte -> swaps bytes
+        connect_ports(hi_p->port_at(1), cat_p->port_at(0));
+        connect_ports(lo_p->port_at(1), cat_p->port_at(1));
+        connect_ports(cat_p->port_at(2), out_p->port_at(0));
+        s.redo_nets();
+
+        auto v_in = make_int_val(0x1234);
+        in_p->update_value(&v_in, DEFAULT_TTL);
+        run_queued_calculations();
+        assert(out_p->get_value().intval == 0x3412);
     }
 }
 

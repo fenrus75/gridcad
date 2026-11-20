@@ -132,6 +132,8 @@ model_sources = files(
     'src/model_eq.cpp',
     'src/model_ne.cpp',
     'src/model_mem.cpp',
+    'src/model_slice.cpp',
+    'src/model_concat.cpp',
 )
 
 # Sequencer sources
