@@ -45,6 +45,7 @@
 #include "model_add.h"
 #include "model_sub.h"
 #include "model_mux.h"
+#include "model_pmux.h"
 #include "model_reg.h"
 #include "model_eq.h"
 #include "model_ne.h"
@@ -96,6 +97,7 @@ std::unique_ptr<class element> element_from_class_id(std::string_view classid)
     ELEMENT(model_add);
     ELEMENT(model_sub);
     ELEMENT(model_mux);
+    ELEMENT(model_pmux);
     ELEMENT(model_reg);
     ELEMENT(model_eq);
     ELEMENT(model_ne);

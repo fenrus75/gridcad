@@ -25,6 +25,7 @@
 #include "model_add.h"
 #include "model_sub.h"
 #include "model_mux.h"
+#include "model_pmux.h"
 #include "model_reg.h"
 #include "model_eq.h"
 #include "model_ne.h"
@@ -921,6 +922,78 @@ static void test_verilog_import(void)
         run_queued_calculations();
         assert(o0_p->get_value().boolval == false);
         assert(o1_p->get_value().boolval == true);
+    }
+
+    // 11. model_pmux (16-bit 3-way priority/one-hot mux)
+    {
+        scene s("pmux_test");
+        auto in_a  = std::make_unique<model_toggle>(1, 1);
+        auto in_b0 = std::make_unique<model_toggle>(1, 4);
+        auto in_b1 = std::make_unique<model_toggle>(1, 7);
+        auto in_b2 = std::make_unique<model_toggle>(1, 10);
+        auto s0    = std::make_unique<model_toggle>(1, 14);
+        auto s1    = std::make_unique<model_toggle>(1, 17);
+        auto s2    = std::make_unique<model_toggle>(1, 20);
+        auto pmux  = std::make_unique<model_pmux>(10, 4, 16, 3);
+        auto out_y = std::make_unique<model_output>(18, 6);
+
+        in_a->set_width(16);
+        in_b0->set_width(16);
+        in_b1->set_width(16);
+        in_b2->set_width(16);
+        out_y->set_width(16);
+
+        auto *a_p = in_a.get();
+        auto *b0_p = in_b0.get();
+        auto *b1_p = in_b1.get();
+        auto *b2_p = in_b2.get();
+        auto *s0_p = s0.get();
+        auto *s1_p = s1.get();
+        auto *s2_p = s2.get();
+        auto *pm_p = pmux.get();
+        auto *y_p = out_y.get();
+
+        s.add_element(std::move(in_a));
+        s.add_element(std::move(in_b0));
+        s.add_element(std::move(in_b1));
+        s.add_element(std::move(in_b2));
+        s.add_element(std::move(s0));
+        s.add_element(std::move(s1));
+        s.add_element(std::move(s2));
+        s.add_element(std::move(pmux));
+        s.add_element(std::move(out_y));
+
+        connect_ports(a_p->port_at(0),  pm_p->port_at(0));
+        connect_ports(b0_p->port_at(0), pm_p->port_at(1));
+        connect_ports(b1_p->port_at(0), pm_p->port_at(2));
+        connect_ports(b2_p->port_at(0), pm_p->port_at(3));
+        connect_ports(s0_p->port_at(0), pm_p->port_at(4));
+        connect_ports(s1_p->port_at(0), pm_p->port_at(5));
+        connect_ports(s2_p->port_at(0), pm_p->port_at(6));
+        connect_ports(pm_p->port_at(7), y_p->port_at(0));
+        s.redo_nets();
+
+        auto va = make_int_val(0xAAAA), vb0 = make_int_val(0x1111),
+             vb1 = make_int_val(0x2222), vb2 = make_int_val(0x3333);
+        auto v0 = make_bool_val(false), v1 = make_bool_val(true);
+        a_p->update_value(&va, DEFAULT_TTL);
+        b0_p->update_value(&vb0, DEFAULT_TTL);
+        b1_p->update_value(&vb1, DEFAULT_TTL);
+        b2_p->update_value(&vb2, DEFAULT_TTL);
+        s0_p->update_value(&v0, DEFAULT_TTL);
+        s1_p->update_value(&v0, DEFAULT_TTL);
+        s2_p->update_value(&v0, DEFAULT_TTL);
+        run_queued_calculations();
+        assert(y_p->get_value().intval == 0xAAAA);
+
+        s1_p->update_value(&v1, DEFAULT_TTL);
+        run_queued_calculations();
+        assert(y_p->get_value().intval == 0x2222);
+
+        s1_p->update_value(&v0, DEFAULT_TTL);
+        s2_p->update_value(&v1, DEFAULT_TTL);
+        run_queued_calculations();
+        assert(y_p->get_value().intval == 0x3333);
     }
 }
 

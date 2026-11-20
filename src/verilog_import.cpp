@@ -30,6 +30,7 @@
 #include "model_add.h"
 #include "model_sub.h"
 #include "model_mux.h"
+#include "model_pmux.h"
 #include "model_reg.h"
 #include "model_eq.h"
 #include "model_ne.h"
@@ -380,6 +381,21 @@ std::unique_ptr<scene> import_module_recursive(
                 register_pin("b", el->port_at(1));
                 register_pin("s", el->port_at(2));
                 register_pin("y", el->port_at(3));
+                result_scene->add_element(std::move(el));
+                stats.components++;
+            } else if (ctype == "gridcad_pmux") {
+                const int width = parse_width_json(params, "WIDTH", 8);
+                const int s_width = std::clamp(
+                    params.contains("S_WIDTH") ? static_cast<int>(parse_u64_json(params["S_WIDTH"], 2)) : 2,
+                    2, 64);
+                auto el = std::make_unique<model_pmux>(0, 0, width, s_width);
+                el->update_name(cid);
+                register_pin("a", el->port_at(0));
+                for (int k = 0; k < s_width; ++k) {
+                    register_pin(std::format("b{}", k), el->port_at(static_cast<unsigned int>(1 + k)));
+                    register_pin(std::format("s{}", k), el->port_at(static_cast<unsigned int>(1 + s_width + k)));
+                }
+                register_pin("y", el->port_at(static_cast<unsigned int>(1 + 2 * s_width)));
                 result_scene->add_element(std::move(el));
                 stats.components++;
             } else if (ctype == "gridcad_reg") {

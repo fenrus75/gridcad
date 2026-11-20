@@ -129,6 +129,7 @@ model_sources = files(
     'src/model_add.cpp',
     'src/model_sub.cpp',
     'src/model_mux.cpp',
+    'src/model_pmux.cpp',
     'src/model_reg.cpp',
     'src/model_eq.cpp',
     'src/model_ne.cpp',
