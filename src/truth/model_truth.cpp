@@ -318,34 +318,50 @@ void model_truth::turn_from_X(unsigned int X, unsigned int Y)
 
 void model_truth::configure_lut(int num_inputs, std::string_view lut_bits)
 {
-	int target_inputs = std::clamp(num_inputs, 1, 6);
+	std::vector<std::string> single{std::string(lut_bits)};
+	configure_lut(num_inputs, single);
+}
+
+void model_truth::configure_lut(int num_inputs, const std::vector<std::string> &lut_outputs)
+{
+	const int target_inputs = std::clamp(num_inputs, 1, 6);
+	const int target_outputs = std::clamp(static_cast<int>(lut_outputs.size()), 1, 16);
+
 	while (static_cast<int>(inputs) < target_inputs)
 		add_input();
 	while (static_cast<int>(inputs) > target_inputs)
 		del_input();
 
+	while (static_cast<int>(outputs) < target_outputs)
+		add_output();
+	while (static_cast<int>(outputs) > target_outputs)
+		del_output();
+
 	for (unsigned int k = 0; k < inputs; ++k)
 		names[k] = std::format("A{}", k);
-	if (outputs >= 1)
-		names[inputs] = "Y";
+	for (unsigned int o = 0; o < outputs; ++o)
+		names[inputs + o] = (outputs == 1) ? "Y" : std::format("Y{}", o);
 	names_to_ports();
 
 	/*
-	 * Yosys/Turbostar LUT parameter is MSB-first: bit `idx` from the right
+	 * Yosys/Turbostar LUT strings are MSB-first: bit `idx` from the right
 	 * gives the output when {A_{W-1}, ..., A_0} == idx.
 	 */
 	for (auto &row : values) {
-		if (row.size() < inputs + 1)
+		if (row.size() < inputs + outputs)
 			continue;
 		size_t lut_idx = 0;
 		for (unsigned int k = 0; k < inputs; ++k) {
 			if (row[k] == '1')
 				lut_idx |= (size_t{1} << k);
 		}
-		char out_bit = '0';
-		if (lut_idx < lut_bits.size())
-			out_bit = (lut_bits[lut_bits.size() - 1 - lut_idx] == '1') ? '1' : '0';
-		row[inputs] = out_bit;
+		for (unsigned int o = 0; o < outputs; ++o) {
+			const std::string &bits = (o < lut_outputs.size()) ? lut_outputs[o] : std::string();
+			char out_bit = '0';
+			if (lut_idx < bits.size())
+				out_bit = (bits[bits.size() - 1 - lut_idx] == '1') ? '1' : '0';
+			row[inputs + o] = out_bit;
+		}
 	}
 }
 

@@ -388,15 +388,34 @@ std::unique_ptr<scene> import_module_recursive(
                 stats.components++;
             } else if (ctype == "gridcad_lut") {
                 const int width = std::clamp(parse_width_json(params, "WIDTH", 2), 1, 6);
-                const std::string lut_bits = params.contains("LUT") && params["LUT"].is_string()
-                                                 ? params["LUT"].get<std::string>()
-                                                 : std::string(size_t{1} << width, '0');
+                std::vector<std::string> lut_outputs;
+                if (params.contains("LUT")) {
+                    if (params["LUT"].is_array()) {
+                        for (const auto &entry : params["LUT"]) {
+                            if (entry.is_string())
+                                lut_outputs.push_back(entry.get<std::string>());
+                        }
+                    } else if (params["LUT"].is_string()) {
+                        lut_outputs.push_back(params["LUT"].get<std::string>());
+                    }
+                }
+                if (lut_outputs.empty())
+                    lut_outputs.emplace_back(size_t{1} << width, '0');
+
                 auto el = std::make_unique<model_truth>(0, 0);
                 el->update_name(cid);
-                el->configure_lut(width, lut_bits);
+                el->configure_lut(width, lut_outputs);
                 for (int k = 0; k < width; ++k)
                     register_pin(std::format("A{}", k), el->port_at(static_cast<unsigned int>(k)));
-                register_pin("Y", el->port_at(static_cast<unsigned int>(width)));
+                if (lut_outputs.size() == 1) {
+                    register_pin("Y", el->port_at(static_cast<unsigned int>(width)));
+                    register_pin("Y0", el->port_at(static_cast<unsigned int>(width)));
+                } else {
+                    for (size_t o = 0; o < lut_outputs.size(); ++o) {
+                        register_pin(std::format("Y{}", o),
+                                     el->port_at(static_cast<unsigned int>(width + o)));
+                    }
+                }
                 result_scene->add_element(std::move(el));
                 stats.components++;
             } else if (ctype == "gridcad_mem") {

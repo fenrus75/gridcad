@@ -29,6 +29,7 @@
 #include "model_eq.h"
 #include "model_ne.h"
 #include "model_mem.h"
+#include "model_truth.h"
 #include "verilog_import.h"
 #include "vcd_session.h"
 #include "timelinebar.h"
@@ -580,6 +581,68 @@ static void test_verilog_import(void)
         assert(rom.read_word(0x0) == 0x3f);
         assert(rom.read_word(0x1) == 0x06);
         assert(rom.read_word(0xF) == 0x71);
+    }
+
+    // 5. Multi-output gridcad_lut (model_truth with 2 inputs, 2 outputs)
+    {
+        const json multi_lut = {
+            {"top_module", "mlut"},
+            {"modules", {
+                {"mlut", {
+                    {"ports", {
+                        {{"name", "a0"}, {"direction", "input"}, {"width", 1}, {"order", 0}},
+                        {{"name", "a1"}, {"direction", "input"}, {"width", 1}, {"order", 1}},
+                        {{"name", "y0"}, {"direction", "output"}, {"width", 1}, {"order", 2}},
+                        {{"name", "y1"}, {"direction", "output"}, {"width", 1}, {"order", 3}}
+                    }},
+                    {"constants", json::array()},
+                    {"components", {
+                        {{"id", "lut0"}, {"type", "gridcad_lut"}, {"is_submodule", false},
+                         {"parameters", {{"WIDTH", 2}, {"OUTPUTS", 2}, {"LUT", {"1001", "0100"}}}}}
+                    }},
+                    {"wires", {
+                        {{"name", "a0"}, {"width", 1},
+                         {"driver", {{"kind", "port"}, {"id", "a0"}, {"pin", "a0"}}},
+                         {"sinks", {{{"kind", "component"}, {"id", "lut0"}, {"pin", "A0"}}}}},
+                        {{"name", "a1"}, {"width", 1},
+                         {"driver", {{"kind", "port"}, {"id", "a1"}, {"pin", "a1"}}},
+                         {"sinks", {{{"kind", "component"}, {"id", "lut0"}, {"pin", "A1"}}}}},
+                        {{"name", "y0"}, {"width", 1},
+                         {"driver", {{"kind", "component"}, {"id", "lut0"}, {"pin", "Y0"}}},
+                         {"sinks", {{{"kind", "port"}, {"id", "y0"}, {"pin", "y0"}}}}},
+                        {{"name", "y1"}, {"width", 1},
+                         {"driver", {{"kind", "component"}, {"id", "lut0"}, {"pin", "Y1"}}},
+                         {"sinks", {{{"kind", "port"}, {"id", "y1"}, {"pin", "y1"}}}}}
+                    }}
+                }}
+            }}
+        };
+        auto res = verilog_importer::import_json(multi_lut);
+        assert(res.ok && res.stats.missing_endpoints == 0 && res.stats.warnings.empty());
+
+        model_toggle *a0 = nullptr, *a1 = nullptr;
+        model_output *y0 = nullptr, *y1 = nullptr;
+        for (auto &e : res.imported_scene->elements) {
+            if (e->class_id() == "model_toggle:" && e->get_name() == "a0") a0 = static_cast<model_toggle *>(e.get());
+            if (e->class_id() == "model_toggle:" && e->get_name() == "a1") a1 = static_cast<model_toggle *>(e.get());
+            if (e->class_id() == "model_output:" && e->get_name() == "y0") y0 = static_cast<model_output *>(e.get());
+            if (e->class_id() == "model_output:" && e->get_name() == "y1") y1 = static_cast<model_output *>(e.get());
+        }
+        assert(a0 && a1 && y0 && y1);
+
+        auto v0 = make_bool_val(false), v1 = make_bool_val(true);
+        // a1=1, a0=0 -> idx=2 -> y0=("1001")[1]=0, y1=("0100")[1]=1
+        a0->update_value(&v0, DEFAULT_TTL);
+        a1->update_value(&v1, DEFAULT_TTL);
+        run_queued_calculations();
+        assert(y0->get_value().boolval == false);
+        assert(y1->get_value().boolval == true);
+
+        // a1=1, a0=1 -> idx=3 -> y0=("1001")[0]=1, y1=("0100")[0]=0
+        a0->update_value(&v1, DEFAULT_TTL);
+        run_queued_calculations();
+        assert(y0->get_value().boolval == true);
+        assert(y1->get_value().boolval == false);
     }
 }
 

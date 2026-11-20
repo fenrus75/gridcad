@@ -150,17 +150,17 @@
             "A0": {
               "direction": "input",
               "width": 1,
-              "wire": "load"
+              "wire": "dec2"
             },
             "A1": {
               "direction": "input",
               "width": 1,
-              "wire": "dec2"
+              "wire": "inc2"
             },
             "A2": {
               "direction": "input",
               "width": 1,
-              "wire": "inc2"
+              "wire": "load"
             },
             "Y": {
               "direction": "output",
@@ -428,7 +428,7 @@
             {
               "id": "gridcad_lut_4",
               "kind": "component",
-              "pin": "A1"
+              "pin": "A0"
             }
           ],
           "src": "src/register16.sv:12",
@@ -448,7 +448,7 @@
             {
               "id": "gridcad_lut_4",
               "kind": "component",
-              "pin": "A2"
+              "pin": "A1"
             }
           ],
           "src": "src/register16.sv:13",
@@ -473,7 +473,7 @@
             {
               "id": "gridcad_lut_4",
               "kind": "component",
-              "pin": "A0"
+              "pin": "A2"
             }
           ],
           "src": "src/register16.sv:11",
