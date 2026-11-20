@@ -35,4 +35,5 @@ private:
     uint64_t reset_value = 0;
     struct value stored_value = {};
     struct value previous_clock = {};
+    bool prev_rst = false;
 };

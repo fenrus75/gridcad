@@ -78,47 +78,105 @@ void basecanvas::draw_box(float X1, float Y1, float X2, float Y2, int color, int
 	SDL_RenderFillRect(renderer.get(), &rect);
 }
 
+/*
+ * Draw a thick line segment as a single 2-triangle quad via SDL_RenderGeometry,
+ * culling segments whose bounding box lies outside the current render target.
+ * Avoids SDL2_gfx thickLineRGBA(), which decomposes lines into per-scanline
+ * hline() calls and explodes SDL's command buffer on large schematics.
+ */
+static void draw_thick_quad(SDL_Renderer *ren, float x1, float y1, float x2, float y2,
+                            float thickness, Uint8 r, Uint8 g, Uint8 b, Uint8 a)
+{
+	int out_w = 0, out_h = 0;
+	if (SDL_GetRendererOutputSize(ren, &out_w, &out_h) == 0 && out_w > 0 && out_h > 0) {
+		const float pad = thickness + 2.0f;
+		const float min_x = std::min(x1, x2) - pad;
+		const float max_x = std::max(x1, x2) + pad;
+		const float min_y = std::min(y1, y2) - pad;
+		const float max_y = std::max(y1, y2) + pad;
+		if (max_x < 0.0f || min_x > static_cast<float>(out_w) ||
+		    max_y < 0.0f || min_y > static_cast<float>(out_h))
+			return;
+	}
+
+	const float half = std::max(0.5f, thickness * 0.5f);
+	const float dx = x2 - x1;
+	const float dy = y2 - y1;
+	const float len = std::hypot(dx, dy);
+
+	float nx = 0.0f, ny = half;
+	if (len > 1e-4f) {
+		nx = (-dy / len) * half;
+		ny = (dx / len) * half;
+	}
+
+	const SDL_Color col = {r, g, b, a};
+	const SDL_Vertex verts[4] = {
+		{{x1 + nx, y1 + ny}, col, {0.0f, 0.0f}},
+		{{x1 - nx, y1 - ny}, col, {0.0f, 0.0f}},
+		{{x2 - nx, y2 - ny}, col, {0.0f, 0.0f}},
+		{{x2 + nx, y2 + ny}, col, {0.0f, 0.0f}},
+	};
+	const int indices[6] = {0, 1, 2, 0, 2, 3};
+	SDL_RenderGeometry(ren, nullptr, verts, 4, indices, 6);
+}
+
+static bool point_visible(SDL_Renderer *ren, float x, float y, float radius)
+{
+	int out_w = 0, out_h = 0;
+	if (SDL_GetRendererOutputSize(ren, &out_w, &out_h) != 0 || out_w <= 0 || out_h <= 0)
+		return true;
+	return x + radius >= 0.0f && x - radius <= static_cast<float>(out_w) &&
+	       y + radius >= 0.0f && y - radius <= static_cast<float>(out_h);
+}
+
 void basecanvas::draw_line(float X1, float Y1, float X2, float Y2, int color)
 {
-	/* TODO: clip boxes that are fully outside of the visible window */
+	const float sx1 = static_cast<float>(X_to_scr(X1));
+	const float sy1 = static_cast<float>(Y_to_scr(Y1));
+	const float sx2 = static_cast<float>(X_to_scr(X2));
+	const float sy2 = static_cast<float>(Y_to_scr(Y2));
+	const Uint8 r = R(color), g = G(color), b = B(color), a = Alpha(color);
 
-	thickLineRGBA(renderer.get(), X_to_scr(X1), Y_to_scr(Y1), X_to_scr(X2),
-			Y_to_scr(Y2), 0.2 * scaleX, R(color), G(color), B(color),
-			Alpha(color));
-	if (Alpha(color) > 250) {
-		filledCircleRGBA(renderer.get(), X_to_scr(X1), Y_to_scr(Y1), 0.1 * scaleX, R(color), G(color),
-				B(color), Alpha(color));
-		filledCircleRGBA(renderer.get(), X_to_scr(X2), Y_to_scr(Y2), 0.1 * scaleX, R(color), G(color),
-				B(color), Alpha(color));
+	draw_thick_quad(renderer.get(), sx1, sy1, sx2, sy2, 0.2f * scaleX, r, g, b, a);
+	if (a > 250) {
+		const float cap_r = 0.1f * scaleX;
+		if (cap_r >= 1.0f && point_visible(renderer.get(), sx1, sy1, cap_r))
+			filledCircleRGBA(renderer.get(), sx1, sy1, cap_r, r, g, b, a);
+		if (cap_r >= 1.0f && point_visible(renderer.get(), sx2, sy2, cap_r))
+			filledCircleRGBA(renderer.get(), sx2, sy2, cap_r, r, g, b, a);
 	}
 }
 
 void basecanvas::draw_thick_line(float X1, float Y1, float X2, float Y2, int color)
 {
-	/* TODO: clip boxes that are fully outside of the visible window */
+	const float sx1 = static_cast<float>(X_to_scr(X1));
+	const float sy1 = static_cast<float>(Y_to_scr(Y1));
+	const float sx2 = static_cast<float>(X_to_scr(X2));
+	const float sy2 = static_cast<float>(Y_to_scr(Y2));
+	const Uint8 r = R(color), g = G(color), b = B(color), a = Alpha(color);
 
-	thickLineRGBA(renderer.get(), X_to_scr(X1), Y_to_scr(Y1), X_to_scr(X2),
-			Y_to_scr(Y2), 0.3 * scaleX, R(color), G(color), B(color),
-			Alpha(color));
-	if (Alpha(color) > 250) {
-		filledCircleRGBA(renderer.get(), X_to_scr(X1), Y_to_scr(Y1), 0.15 * scaleX, R(color), G(color),
-				B(color), Alpha(color));
-		filledCircleRGBA(renderer.get(), X_to_scr(X2), Y_to_scr(Y2), 0.15 * scaleX, R(color), G(color),
-				B(color), Alpha(color));
+	draw_thick_quad(renderer.get(), sx1, sy1, sx2, sy2, 0.3f * scaleX, r, g, b, a);
+	if (a > 250) {
+		const float cap_r = 0.15f * scaleX;
+		if (cap_r >= 1.0f && point_visible(renderer.get(), sx1, sy1, cap_r))
+			filledCircleRGBA(renderer.get(), sx1, sy1, cap_r, r, g, b, a);
+		if (cap_r >= 1.0f && point_visible(renderer.get(), sx2, sy2, cap_r))
+			filledCircleRGBA(renderer.get(), sx2, sy2, cap_r, r, g, b, a);
 	}
 }
+
 void basecanvas::draw_shadow_Line(float X1, float Y1, float X2, float Y2, int color)
 {
-	int r = 0,g = 0,b = 0;
-	
+	Uint8 r = 0, g = 0, b = 0;
+
 	if (color == COLOR_VALUE_RED)
 		r = 255;
-	
-	/* TODO: clip boxes that are fully outside of the visible window */
 
-	thickLineRGBA(renderer.get(), X_to_scr(X1), Y_to_scr(Y1), X_to_scr(X2),
-			Y_to_scr(Y2), 0.25 * scaleX, r, g, b, 
-			64);
+	draw_thick_quad(renderer.get(),
+	                static_cast<float>(X_to_scr(X1)), static_cast<float>(Y_to_scr(Y1)),
+	                static_cast<float>(X_to_scr(X2)), static_cast<float>(Y_to_scr(Y2)),
+	                0.25f * scaleX, r, g, b, 64);
 }
 
 void basecanvas::draw_circle(float X, float Y, float _R, int color, int color2)

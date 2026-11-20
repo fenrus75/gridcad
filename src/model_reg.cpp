@@ -77,11 +77,17 @@ void model_reg::calculate(int ttl)
         rst_v.intval = reset_value;
         rst_v.boolval = (reset_value != 0);
 
-        stored_value = rst_v;
-        queue_calculate(this);
+        if (!prev_rst || !stored_value.valid || stored_value.intval != rst_v.intval) {
+            stored_value = rst_v;
+            queue_calculate(this);
+        } else {
+            stored_value = rst_v;
+        }
+        prev_rst = true;
         previous_clock = ports[2]->value;
         return;
     }
+    prev_rst = false;
 
     struct value newclock = ports[2]->value;
     if (newclock.boolval == previous_clock.boolval)
