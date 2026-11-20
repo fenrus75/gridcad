@@ -565,6 +565,8 @@ static void test_verilog_import(void)
         // Placement optimizer monotonically reduces geometric cost without moving pinned I/O
         const double init_cost = placement_optimizer::compute_scene_cost(res.imported_scene.get());
         const float orig_clk_x = clk->get_X(), orig_clk_y = clk->get_Y();
+        auto conn_res = placement_optimizer::optimize_all_connectors(res.imported_scene.get());
+        assert(conn_res.cost_after <= conn_res.cost_before);
         int moved_rounds = 0;
         for (int r = 0; r < 25; ++r) {
             auto sr = placement_optimizer::optimize_one_round(res.imported_scene.get());

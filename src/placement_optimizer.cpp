@@ -302,6 +302,87 @@ placement_optimizer::step_result placement_optimizer::optimize_one_round(
     return res;
 }
 
+placement_optimizer::step_result placement_optimizer::optimize_all_connectors(
+    class scene *target_scene, int max_follow_steps)
+{
+    step_result res;
+    if (!target_scene || target_scene->elements.empty())
+        return res;
+
+    res.cost_before = compute_scene_cost(target_scene);
+    double total_saved = 0.0;
+    int moved_connectors = 0;
+
+    for (auto &e : target_scene->elements) {
+        element *elem = e.get();
+        if (elem->class_id() != "connector:")
+            continue;
+
+        const int orig_x = static_cast<int>(std::floor(elem->get_X()));
+        const int orig_y = static_cast<int>(std::floor(elem->get_Y()));
+        const double before_local = compute_element_cost(elem);
+
+        int best_dir = -1;
+        double best_local = before_local;
+        for (int dir = 0; dir < 8; ++dir) {
+            const int cand_x = orig_x + DIR_X[dir];
+            const int cand_y = orig_y + DIR_Y[dir];
+            if (!can_place_at(target_scene, elem, cand_x, cand_y))
+                continue;
+            elem->place(cand_x, cand_y);
+            elem->reseat();
+            const double after_local = compute_element_cost(elem);
+            if (after_local + 1e-6 < best_local) {
+                best_local = after_local;
+                best_dir = dir;
+            }
+        }
+
+        if (best_dir >= 0) {
+            const int dx = DIR_X[best_dir];
+            const int dy = DIR_Y[best_dir];
+            int cur_x = orig_x + dx;
+            int cur_y = orig_y + dy;
+            double cur_local = best_local;
+
+            elem->place(cur_x, cur_y);
+            elem->reseat();
+
+            for (int f = 0; f < max_follow_steps; ++f) {
+                const int nx = cur_x + dx;
+                const int ny = cur_y + dy;
+                if (!can_place_at(target_scene, elem, nx, ny))
+                    break;
+                elem->place(nx, ny);
+                elem->reseat();
+                const double next_local = compute_element_cost(elem);
+                if (next_local + 1e-6 < cur_local) {
+                    cur_x = nx;
+                    cur_y = ny;
+                    cur_local = next_local;
+                } else {
+                    elem->place(cur_x, cur_y);
+                    elem->reseat();
+                    break;
+                }
+            }
+
+            reseat_element_wires(elem, /*clear_routes=*/true);
+            total_saved += (before_local - cur_local);
+            moved_connectors++;
+        } else {
+            elem->place(orig_x, orig_y);
+            elem->reseat();
+        }
+    }
+
+    res.moved = (moved_connectors > 0);
+    res.steps_taken = moved_connectors;
+    res.moved_element = "connectors";
+    res.cost_after = res.cost_before - total_saved;
+    return res;
+}
+
 static bool g_import_view_mode = false;
 
 bool is_import_view_mode(void)

@@ -385,14 +385,22 @@ bool canvas::handle_event(SDL_Event &event)
 
 	if (event.type == EVENT_AUTOCLOCK && event.user.data1 == current_scene.get()) {
 		if (is_import_view_mode()) {
-			auto res = placement_optimizer::optimize_one_round(current_scene.get());
-			if (res.moved) {
-				logger::get().info("Optimize step: moved '{}' by ({},{}) x{} (cost {:.1f} -> {:.1f})",
-				                   res.moved_element, res.dx, res.dy, res.steps_taken,
-				                   res.cost_before, res.cost_after);
+			static unsigned int opt_click_count = 0;
+			const bool connector_pass = (opt_click_count++ % 2 == 0);
+			if (connector_pass) {
+				auto res = placement_optimizer::optimize_all_connectors(current_scene.get());
+				logger::get().info("Optimize [connectors]: moved {} connectors (cost {:.1f} -> {:.1f})",
+				                   res.steps_taken, res.cost_before, res.cost_after);
 			} else {
-				logger::get().info("Optimize step: no improving move found (cost {:.1f})",
-				                   res.cost_before);
+				auto res = placement_optimizer::optimize_one_round(current_scene.get());
+				if (res.moved) {
+					logger::get().info("Optimize [element]: moved '{}' by ({},{}) x{} (cost {:.1f} -> {:.1f})",
+					                   res.moved_element, res.dx, res.dy, res.steps_taken,
+					                   res.cost_before, res.cost_after);
+				} else {
+					logger::get().info("Optimize [element]: no improving move found (cost {:.1f})",
+					                   res.cost_before);
+				}
 			}
 		} else {
 			take_undo_snapshot(current_scene.get());
