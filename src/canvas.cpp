@@ -380,15 +380,9 @@ void canvas::run_optimize_phase(void)
 		logger::get().info("Optimize [slices/concats]: moved {} slices/concats (cost {:.1f} -> {:.1f})",
 		                   res.steps_taken, res.cost_before, res.cost_after);
 	} else {
-		auto res = placement_optimizer::optimize_one_round(current_scene.get());
-		if (res.moved) {
-			logger::get().info("Optimize [element]: moved '{}' by ({},{}) x{} (cost {:.1f} -> {:.1f})",
-			                   res.moved_element, res.dx, res.dy, res.steps_taken,
-			                   res.cost_before, res.cost_after);
-		} else {
-			logger::get().info("Optimize [element]: no improving move found (cost {:.1f})",
-			                   res.cost_before);
-		}
+		auto res = placement_optimizer::optimize_all_elements(current_scene.get());
+		logger::get().info("Optimize [all]: moved {} elements (cost {:.1f} -> {:.1f})",
+		                   res.steps_taken, res.cost_before, res.cost_after);
 	}
 }
 

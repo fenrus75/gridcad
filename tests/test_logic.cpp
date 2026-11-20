@@ -572,6 +572,8 @@ static void test_verilog_import(void)
         assert(const_res.cost_after <= const_res.cost_before);
         auto slice_res = placement_optimizer::optimize_all_slices_and_concats(res.imported_scene.get());
         assert(slice_res.cost_after <= slice_res.cost_before);
+        auto all_res = placement_optimizer::optimize_all_elements(res.imported_scene.get());
+        assert(all_res.cost_after <= all_res.cost_before);
         int moved_rounds = 0;
         for (int r = 0; r < 25; ++r) {
             auto sr = placement_optimizer::optimize_one_round(res.imported_scene.get());

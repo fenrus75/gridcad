@@ -486,6 +486,46 @@ placement_optimizer::step_result placement_optimizer::optimize_all_slices_and_co
         max_follow_steps);
 }
 
+placement_optimizer::step_result placement_optimizer::optimize_all_elements(
+    class scene *target_scene, int max_follow_steps)
+{
+    step_result res;
+    if (!target_scene || target_scene->elements.empty())
+        return res;
+
+    std::vector<element *> movable;
+    movable.reserve(target_scene->elements.size());
+    for (auto &e : target_scene->elements) {
+        if (!e->is_background() && !is_pinned_element(e.get()))
+            movable.push_back(e.get());
+    }
+    if (movable.empty())
+        return res;
+
+    /* Shuffle order each pass so no single direction or element index dominates. */
+    static std::mt19937 rng{std::random_device{}()};
+    std::shuffle(movable.begin(), movable.end(), rng);
+
+    res.cost_before = compute_scene_cost(target_scene);
+    double total_saved = 0.0;
+    int moved_count = 0;
+
+    for (element *elem : movable) {
+        int dx = 0, dy = 0, steps = 0;
+        const double saved = try_improve_element(target_scene, elem, max_follow_steps, dx, dy, steps);
+        if (saved > 0.0) {
+            total_saved += saved;
+            moved_count++;
+        }
+    }
+
+    res.moved = (moved_count > 0);
+    res.steps_taken = moved_count;
+    res.moved_element = "all_elements";
+    res.cost_after = res.cost_before - total_saved;
+    return res;
+}
+
 static bool g_import_view_mode = false;
 
 bool is_import_view_mode(void)
