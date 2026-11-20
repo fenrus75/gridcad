@@ -15,8 +15,11 @@
 #include "wire.h"
 
 #include <algorithm>
+#include <cctype>
+#include <charconv>
 #include <cmath>
 #include <random>
+#include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
@@ -24,6 +27,9 @@ namespace {
 
 constexpr int DIR_X[8] = {-1, 0, 1, -1, 1, -1, 0, 1};
 constexpr int DIR_Y[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
+constexpr double CROSS_PENALTY = 8.0;
+constexpr double SIBLING_DIST_WEIGHT = 0.75;
+constexpr double SIBLING_ALIGN_PENALTY = 6.0;
 
 bool is_pinned_element(const element *elem)
 {
@@ -55,11 +61,31 @@ bool is_global_control_wire(const wire *w)
     return false;
 }
 
+/* Split a name like "gridcad_lut_4" into ("gridcad_lut_", 4). Returns false if no trailing digits. */
+bool split_name_prefix_number(std::string_view name, std::string &out_prefix, int &out_num)
+{
+    if (name.empty())
+        return false;
+    size_t pos = name.size();
+    while (pos > 0 && std::isdigit(static_cast<unsigned char>(name[pos - 1])))
+        --pos;
+    if (pos == name.size() || pos == 0)
+        return false;
+
+    int parsed = 0;
+    auto [ptr, ec] = std::from_chars(name.data() + pos, name.data() + name.size(), parsed);
+    if (ec != std::errc{} || ptr != name.data() + name.size())
+        return false;
+
+    out_prefix.assign(name.substr(0, pos));
+    out_num = parsed;
+    return true;
+}
+
 /*
  * Fast geometric cost for a single wire segment between its two endpoint ports:
  *  - Base Manhattan wirelength (weighted by bus width; 3x for model_const)
- *  - Smooth straight-wire discount (up to 2x cheaper for pure horizontal/vertical,
- *    tapering smoothly with offset so elements aren't trapped on a 10x rail cliff)
+ *  - Smooth straight-wire discount (up to 2x cheaper for pure horizontal/vertical)
  *  - Backward-edge / U-turn penalty when dx < 0 (right-to-left)
  */
 double wire_cost(const wire *w)
@@ -105,10 +131,260 @@ double wire_cost(const wire *w)
     return cost;
 }
 
+/* Flat, cache-friendly wire segment representation for fast incremental crossing counts. */
+struct wire_seg {
+    float x1 = 0.0f, y1 = 0.0f;
+    float x2 = 0.0f, y2 = 0.0f;
+    const port *p1 = nullptr;
+    const port *p2 = nullptr;
+    const wire *w = nullptr;
+};
+
+void refresh_seg(wire_seg &s)
+{
+    if (s.p1 && s.p2) {
+        s.x1 = s.p1->screenX;
+        s.y1 = s.p1->screenY;
+        s.x2 = s.p2->screenX;
+        s.y2 = s.p2->screenY;
+    }
+}
+
+/* Fast AABB-rejected 2D segment intersection test (strict interior crossing; ignores shared endpoints). */
+inline bool segments_cross(const wire_seg &a, const wire_seg &b)
+{
+    if (a.p1 == b.p1 || a.p1 == b.p2 || a.p2 == b.p1 || a.p2 == b.p2)
+        return false;
+
+    const float ax_min = std::min(a.x1, a.x2), ax_max = std::max(a.x1, a.x2);
+    const float bx_min = std::min(b.x1, b.x2), bx_max = std::max(b.x1, b.x2);
+    if (ax_max <= bx_min || bx_max <= ax_min)
+        return false;
+
+    const float ay_min = std::min(a.y1, a.y2), ay_max = std::max(a.y1, a.y2);
+    const float by_min = std::min(b.y1, b.y2), by_max = std::max(b.y1, b.y2);
+    if (ay_max <= by_min || by_max <= ay_min)
+        return false;
+
+    const float abx = a.x2 - a.x1, aby = a.y2 - a.y1;
+    const float o1 = abx * (b.y1 - a.y1) - aby * (b.x1 - a.x1);
+    const float o2 = abx * (b.y2 - a.y1) - aby * (b.x2 - a.x1);
+    if ((o1 >= 0.0f && o2 >= 0.0f) || (o1 <= 0.0f && o2 <= 0.0f))
+        return false;
+
+    const float cdx = b.x2 - b.x1, cdy = b.y2 - b.y1;
+    const float o3 = cdx * (a.y1 - b.y1) - cdy * (a.x1 - b.x1);
+    const float o4 = cdx * (a.y2 - b.y1) - cdy * (a.x2 - b.x1);
+    if ((o3 >= 0.0f && o4 >= 0.0f) || (o3 <= 0.0f && o4 <= 0.0f))
+        return false;
+
+    return true;
+}
+
+/*
+ * Consecutive-numbered sibling alignment cost:
+ * Rewards placing elem_b (e.g. "gridcad_lut_1") directly below elem_a ("gridcad_lut_0")
+ * at the same X with 1 free space between their port footprints (y_b == y_a + h_a + 2).
+ */
+double sibling_pair_cost(const element *a, const element *b)
+{
+    if (!a || !b)
+        return 0.0;
+    const double ax = std::floor(const_cast<element *>(a)->get_X());
+    const double ay = std::floor(const_cast<element *>(a)->get_Y());
+    const double ah = std::max(1.0, std::ceil(static_cast<double>(const_cast<element *>(a)->get_height())));
+    const double bx = std::floor(const_cast<element *>(b)->get_X());
+    const double by = std::floor(const_cast<element *>(b)->get_Y());
+
+    const double target_y = ay + ah + 2.0;
+    const double dx = std::abs(bx - ax);
+    const double dy = std::abs(by - target_y);
+
+    double cost = SIBLING_DIST_WEIGHT * (dx + dy);
+    if (dx > 0.01 || dy > 0.01)
+        cost += SIBLING_ALIGN_PENALTY;
+    return cost;
+}
+
+/* Precomputed scene-wide index for O(degree * W) incremental crossing & sibling evaluation. */
+struct opt_context {
+    std::vector<wire_seg> segs;
+    std::unordered_map<const element *, std::vector<size_t>> elem_segs;
+    std::unordered_map<const element *, const element *> prev_sibling;
+    std::unordered_map<const element *, const element *> next_sibling;
+
+    explicit opt_context(scene *s)
+    {
+        if (!s)
+            return;
+
+        /* 1. Build flat list of non-clock wire segments and element -> segment index map. */
+        std::unordered_map<const wire *, size_t> wire_to_idx;
+        for (const auto &elem : s->elements) {
+            for (unsigned int pi = 0;; ++pi) {
+                port *p = elem->port_at(pi);
+                if (!p)
+                    break;
+                for (const auto &w : p->get_wires()) {
+                    if (!w || is_global_control_wire(w.get()))
+                        continue;
+                    auto it = wire_to_idx.find(w.get());
+                    if (it == wire_to_idx.end()) {
+                        const auto &pts = w->get_ports();
+                        if (pts.size() < 2 || !pts[0] || !pts[1])
+                            continue;
+                        wire_seg seg;
+                        seg.p1 = pts[0];
+                        seg.p2 = pts[1];
+                        seg.w = w.get();
+                        refresh_seg(seg);
+                        const size_t idx = segs.size();
+                        segs.push_back(seg);
+                        wire_to_idx[w.get()] = idx;
+                        if (seg.p1->parent)
+                            elem_segs[seg.p1->parent].push_back(idx);
+                        if (seg.p2->parent && seg.p2->parent != seg.p1->parent)
+                            elem_segs[seg.p2->parent].push_back(idx);
+                    }
+                }
+            }
+        }
+
+        /* 2. Link consecutive-numbered same-prefix siblings (e.g. gridcad_lut_0 -> gridcad_lut_1). */
+        std::unordered_map<std::string, std::unordered_map<int, const element *>> groups;
+        for (const auto &elem : s->elements) {
+            if (elem->is_background() || is_pinned_element(elem.get()))
+                continue;
+            std::string prefix;
+            int num = 0;
+            if (split_name_prefix_number(elem->get_name(), prefix, num))
+                groups[prefix][num] = elem.get();
+        }
+        for (const auto &[prefix, by_num] : groups) {
+            for (const auto &[num, elem] : by_num) {
+                auto nit = by_num.find(num + 1);
+                if (nit != by_num.end()) {
+                    next_sibling[elem] = nit->second;
+                    prev_sibling[nit->second] = elem;
+                }
+            }
+        }
+    }
+
+    void refresh_element(const element *e)
+    {
+        auto it = elem_segs.find(e);
+        if (it == elem_segs.end())
+            return;
+        for (size_t idx : it->second)
+            refresh_seg(segs[idx]);
+    }
+
+    /* Count crossings involving any segment in `indices` against all other segments. */
+    int count_crossings_for(const std::vector<size_t> &indices) const
+    {
+        int crossings = 0;
+        const size_t total = segs.size();
+        for (size_t k = 0; k < indices.size(); ++k) {
+            const size_t i = indices[k];
+            const wire_seg &sa = segs[i];
+            for (size_t j = 0; j < total; ++j) {
+                if (j == i)
+                    continue;
+                /* Avoid double-counting pairs where both segments are in `indices`. */
+                bool j_in_set = false;
+                for (size_t m = 0; m < indices.size(); ++m) {
+                    if (indices[m] == j) {
+                        j_in_set = true;
+                        break;
+                    }
+                }
+                if (j_in_set && j < i)
+                    continue;
+                if (segments_cross(sa, segs[j]))
+                    crossings++;
+            }
+        }
+        return crossings;
+    }
+
+    int count_all_crossings(void) const
+    {
+        int crossings = 0;
+        const size_t total = segs.size();
+        for (size_t i = 0; i < total; ++i) {
+            for (size_t j = i + 1; j < total; ++j) {
+                if (segments_cross(segs[i], segs[j]))
+                    crossings++;
+            }
+        }
+        return crossings;
+    }
+
+    double sibling_cost_for(const element *e) const
+    {
+        double c = 0.0;
+        auto pit = prev_sibling.find(e);
+        if (pit != prev_sibling.end())
+            c += sibling_pair_cost(pit->second, e);
+        auto nit = next_sibling.find(e);
+        if (nit != next_sibling.end())
+            c += sibling_pair_cost(e, nit->second);
+        return c;
+    }
+
+    double all_sibling_cost(void) const
+    {
+        double c = 0.0;
+        for (const auto &[a, b] : next_sibling)
+            c += sibling_pair_cost(a, b);
+        return c;
+    }
+
+    double local_cost(element *e) const
+    {
+        double total = sibling_cost_for(e);
+        auto it = elem_segs.find(e);
+        if (it != elem_segs.end()) {
+            for (size_t idx : it->second)
+                total += wire_cost(segs[idx].w);
+            total += CROSS_PENALTY * static_cast<double>(count_crossings_for(it->second));
+        }
+        return total;
+    }
+
+    double pair_local_cost(element *a, element *b) const
+    {
+        std::vector<size_t> merged;
+        auto ia = elem_segs.find(a);
+        if (ia != elem_segs.end())
+            merged.insert(merged.end(), ia->second.begin(), ia->second.end());
+        auto ib = elem_segs.find(b);
+        if (ib != elem_segs.end())
+            merged.insert(merged.end(), ib->second.begin(), ib->second.end());
+        std::sort(merged.begin(), merged.end());
+        merged.erase(std::unique(merged.begin(), merged.end()), merged.end());
+
+        double total = 0.0;
+        for (size_t idx : merged)
+            total += wire_cost(segs[idx].w);
+        total += CROSS_PENALTY * static_cast<double>(count_crossings_for(merged));
+
+        /* Sibling cost without double-counting if a and b are direct siblings. */
+        total += sibling_cost_for(a) + sibling_cost_for(b);
+        auto nit = next_sibling.find(a);
+        if (nit != next_sibling.end() && nit->second == b)
+            total -= sibling_pair_cost(a, b);
+        auto pit = next_sibling.find(b);
+        if (pit != next_sibling.end() && pit->second == a)
+            total -= sibling_pair_cost(b, a);
+        return total;
+    }
+};
+
 /*
  * Fast AABB collision check with port-clearance padding (pad_x = 2, pad_y = 1
  * for non-connectors) so elements keep an open routing lane between ports.
- * Optionally ignores a second element (for swap validation) and reports a blocker.
  */
 bool can_place_at(const scene *s, const element *myself, int new_x, int new_y,
                   const element *ignore_other = nullptr, element **out_blocker = nullptr)
@@ -175,37 +451,12 @@ void reseat_element_wires(element *elem, bool clear_routes)
     }
 }
 
-/* Compute combined cost of all unique wires incident to two elements (for swap evaluation). */
-double compute_pair_cost(element *a, element *b)
-{
-    double total = 0.0;
-    std::unordered_set<const wire *> seen;
-    for (element *e : {a, b}) {
-        if (!e)
-            continue;
-        for (unsigned int pi = 0;; ++pi) {
-            port *p = e->port_at(pi);
-            if (!p)
-                break;
-            for (const auto &w : p->get_wires()) {
-                if (!w || !seen.insert(w.get()).second)
-                    continue;
-                total += wire_cost(w.get());
-            }
-        }
-    }
-    return total;
-}
-
 /*
- * Try moving a single element using:
- *  1. 1-cell steps in all 8 directions (+ up to max_follow_steps in the best direction)
- *  2. Leap-over jumps of 3 or 5 cells in any of the 8 directions (to jump over jams)
- *  3. Swapping with an adjacent blocking non-pinned element if that strictly lowers cost
- * Returns the positive cost saved (0.0 if no improving move was found).
+ * Try moving a single element using 8-direction steps, jump-over strides (3, 5),
+ * adjacent-blocker swaps, and 1-in-100 opposite-direction logjam escape.
  */
-double try_improve_element(scene *target_scene, element *elem, int max_follow_steps,
-                           int &out_dx, int &out_dy, int &out_steps)
+double try_improve_element(scene *target_scene, opt_context &ctx, element *elem,
+                           int max_follow_steps, int &out_dx, int &out_dy, int &out_steps)
 {
     out_dx = 0;
     out_dy = 0;
@@ -213,7 +464,7 @@ double try_improve_element(scene *target_scene, element *elem, int max_follow_st
 
     const int orig_x = static_cast<int>(std::floor(elem->get_X()));
     const int orig_y = static_cast<int>(std::floor(elem->get_Y()));
-    const double before_local = placement_optimizer::compute_element_cost(elem);
+    const double before_local = ctx.local_cost(elem);
 
     int best_x = orig_x;
     int best_y = orig_y;
@@ -222,7 +473,6 @@ double try_improve_element(scene *target_scene, element *elem, int max_follow_st
     double best_local = before_local;
     std::vector<element *> blockers;
 
-    /* Evaluate 1-cell steps and jump-over strides (3, 5) in all 8 directions. */
     static constexpr int STRIDES[3] = {1, 3, 5};
     for (int dir = 0; dir < 8; ++dir) {
         for (int stride : STRIDES) {
@@ -236,7 +486,8 @@ double try_improve_element(scene *target_scene, element *elem, int max_follow_st
             }
             elem->place(cand_x, cand_y);
             elem->reseat();
-            const double after_local = placement_optimizer::compute_element_cost(elem);
+            ctx.refresh_element(elem);
+            const double after_local = ctx.local_cost(elem);
             if (after_local + 1e-6 < best_local) {
                 best_local = after_local;
                 best_x = cand_x;
@@ -249,8 +500,9 @@ double try_improve_element(scene *target_scene, element *elem, int max_follow_st
 
     elem->place(orig_x, orig_y);
     elem->reseat();
+    ctx.refresh_element(elem);
 
-    /* Also check swapping with any adjacent blocking element to break traffic jams. */
+    /* Also check swapping with any adjacent blocking element to untangle crossings & jams. */
     element *best_swap = nullptr;
     double best_swap_saving = before_local - best_local;
     std::sort(blockers.begin(), blockers.end());
@@ -263,18 +515,21 @@ double try_improve_element(scene *target_scene, element *elem, int max_follow_st
             !can_place_at(target_scene, other, orig_x, orig_y, elem)) {
             continue;
         }
-        const double pair_before = compute_pair_cost(elem, other);
+        const double pair_before = ctx.pair_local_cost(elem, other);
         elem->place(ox, oy);
         elem->reseat();
         other->place(orig_x, orig_y);
         other->reseat();
-        const double pair_after = compute_pair_cost(elem, other);
+        ctx.refresh_element(elem);
+        ctx.refresh_element(other);
+        const double pair_after = ctx.pair_local_cost(elem, other);
 
-        /* Revert for now. */
         elem->place(orig_x, orig_y);
         elem->reseat();
         other->place(ox, oy);
         other->reseat();
+        ctx.refresh_element(elem);
+        ctx.refresh_element(other);
 
         const double saving = pair_before - pair_after;
         if (saving > best_swap_saving + 1e-6) {
@@ -290,6 +545,8 @@ double try_improve_element(scene *target_scene, element *elem, int max_follow_st
         best_swap->place(orig_x, orig_y);
         reseat_element_wires(elem, /*clear_routes=*/true);
         reseat_element_wires(best_swap, /*clear_routes=*/true);
+        ctx.refresh_element(elem);
+        ctx.refresh_element(best_swap);
         out_dx = ox - orig_x;
         out_dy = oy - orig_y;
         out_steps = 1;
@@ -300,7 +557,7 @@ double try_improve_element(scene *target_scene, element *elem, int max_follow_st
         const int dx = DIR_X[best_dir];
         const int dy = DIR_Y[best_dir];
 
-        /* 1-in-100 opposite-direction perturbation to escape local minima. */
+        /* 1-in-100 opposite-direction perturbation to escape local logjams. */
         static std::mt19937 perturb_rng{std::random_device{}()};
         if ((perturb_rng() % 100) == 0) {
             const int ox = orig_x - dx;
@@ -308,10 +565,11 @@ double try_improve_element(scene *target_scene, element *elem, int max_follow_st
             if (can_place_at(target_scene, elem, ox, oy)) {
                 elem->place(ox, oy);
                 reseat_element_wires(elem, /*clear_routes=*/true);
+                ctx.refresh_element(elem);
                 out_dx = -dx;
                 out_dy = -dy;
                 out_steps = 1;
-                return 1e-6; /* Counted as an intentional perturbation move. */
+                return 1e-6;
             }
         }
 
@@ -322,8 +580,8 @@ double try_improve_element(scene *target_scene, element *elem, int max_follow_st
 
         elem->place(cur_x, cur_y);
         elem->reseat();
+        ctx.refresh_element(elem);
 
-        /* Follow the winning direction up to max_follow_steps more unit steps while improving. */
         for (int f = 0; f < max_follow_steps; ++f) {
             const int nx = cur_x + dx;
             const int ny = cur_y + dy;
@@ -331,7 +589,8 @@ double try_improve_element(scene *target_scene, element *elem, int max_follow_st
                 break;
             elem->place(nx, ny);
             elem->reseat();
-            const double next_local = placement_optimizer::compute_element_cost(elem);
+            ctx.refresh_element(elem);
+            const double next_local = ctx.local_cost(elem);
             if (next_local + 1e-6 < cur_local) {
                 cur_x = nx;
                 cur_y = ny;
@@ -340,11 +599,13 @@ double try_improve_element(scene *target_scene, element *elem, int max_follow_st
             } else {
                 elem->place(cur_x, cur_y);
                 elem->reseat();
+                ctx.refresh_element(elem);
                 break;
             }
         }
 
         reseat_element_wires(elem, /*clear_routes=*/true);
+        ctx.refresh_element(elem);
         out_dx = dx;
         out_dy = dy;
         out_steps = steps;
@@ -376,25 +637,25 @@ double placement_optimizer::compute_element_cost(class element *elem)
     return total;
 }
 
+int placement_optimizer::count_scene_crossings(class scene *target_scene)
+{
+    if (!target_scene)
+        return 0;
+    opt_context ctx(target_scene);
+    return ctx.count_all_crossings();
+}
+
 double placement_optimizer::compute_scene_cost(class scene *target_scene)
 {
     if (!target_scene)
         return 0.0;
 
+    opt_context ctx(target_scene);
     double total = 0.0;
-    std::unordered_set<const wire *> seen;
-    for (const auto &elem : target_scene->elements) {
-        for (unsigned int pi = 0;; ++pi) {
-            port *p = elem->port_at(pi);
-            if (!p)
-                break;
-            for (const auto &w : p->get_wires()) {
-                if (!w || !seen.insert(w.get()).second)
-                    continue;
-                total += wire_cost(w.get());
-            }
-        }
-    }
+    for (const auto &seg : ctx.segs)
+        total += wire_cost(seg.w);
+    total += CROSS_PENALTY * static_cast<double>(ctx.count_all_crossings());
+    total += ctx.all_sibling_cost();
     return total;
 }
 
@@ -414,23 +675,33 @@ placement_optimizer::step_result placement_optimizer::optimize_all_elements(
     if (movable.empty())
         return res;
 
-    /* Shuffle order each pass so no single direction or element index dominates. */
+    opt_context ctx(target_scene);
+    res.crossings_before = ctx.count_all_crossings();
+    res.cost_before = 0.0;
+    for (const auto &seg : ctx.segs)
+        res.cost_before += wire_cost(seg.w);
+    res.cost_before += CROSS_PENALTY * static_cast<double>(res.crossings_before);
+    res.cost_before += ctx.all_sibling_cost();
+
     static std::mt19937 rng{std::random_device{}()};
     std::shuffle(movable.begin(), movable.end(), rng);
 
-    res.cost_before = compute_scene_cost(target_scene);
     int moved_count = 0;
-
     for (element *elem : movable) {
         int dx = 0, dy = 0, steps = 0;
-        if (try_improve_element(target_scene, elem, max_follow_steps, dx, dy, steps) > 0.0)
+        if (try_improve_element(target_scene, ctx, elem, max_follow_steps, dx, dy, steps) > 0.0)
             moved_count++;
     }
 
     res.moved = (moved_count > 0);
     res.steps_taken = moved_count;
     res.moved_element = "all_elements";
-    res.cost_after = compute_scene_cost(target_scene);
+    res.crossings_after = ctx.count_all_crossings();
+    res.cost_after = 0.0;
+    for (const auto &seg : ctx.segs)
+        res.cost_after += wire_cost(seg.w);
+    res.cost_after += CROSS_PENALTY * static_cast<double>(res.crossings_after);
+    res.cost_after += ctx.all_sibling_cost();
     return res;
 }
 

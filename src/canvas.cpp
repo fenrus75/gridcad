@@ -367,8 +367,9 @@ void canvas::run_optimize_phase(void)
 	if (!current_scene)
 		return;
 	auto res = placement_optimizer::optimize_all_elements(current_scene.get());
-	logger::get().info("Optimize: moved {} elements (cost {:.1f} -> {:.1f})",
-	                   res.steps_taken, res.cost_before, res.cost_after);
+	logger::get().info("Optimize: moved {} elements (cost {:.1f} -> {:.1f}, crossings {} -> {})",
+	                   res.steps_taken, res.cost_before, res.cost_after,
+	                   res.crossings_before, res.crossings_after);
 }
 
 bool canvas::handle_event(SDL_Event &event)

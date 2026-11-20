@@ -34,12 +34,17 @@ public:
         int dy = 0;
         double cost_before = 0.0;
         double cost_after = 0.0;
+        int crossings_before = 0;
+        int crossings_after = 0;
     };
 
-    /* Compute total geometric placement cost for a scene. */
+    /* Compute total geometric placement cost (wirelength + crossings + sibling alignment). */
     static double compute_scene_cost(class scene *target_scene);
 
-    /* Compute cost contribution of wires incident to a single element. */
+    /* Count total non-clock straight-line wire crossings in the scene. */
+    static int count_scene_crossings(class scene *target_scene);
+
+    /* Compute wirelength cost contribution of wires incident to a single element. */
     static double compute_element_cost(class element *elem);
 
     /*
