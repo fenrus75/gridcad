@@ -90,6 +90,11 @@ std::string first_out_wire_name(element *e)
     return "";
 }
 
+bool is_real_verilog_wire_name(std::string_view nm)
+{
+    return !nm.empty() && !nm.starts_with("wire_") && !nm.starts_with("Wire-");
+}
+
 /*
  * Compute a stable key for a wire's net:
  *   - Named Verilog wire: "sig:<name>" (or "vcd:<vcd_name>")
@@ -118,18 +123,23 @@ std::string compute_net_key_from_port(port *start_port)
                 continue;
             if (vcd_sig.empty() && !w->get_vcd_name().empty())
                 vcd_sig = w->get_vcd_name();
-            if (named_sig.empty() && !w->name.empty() && !w->name.starts_with("wire_"))
+            if (named_sig.empty() && is_real_verilog_wire_name(w->name))
                 named_sig = w->name;
             for (port *ep : w->get_ports()) {
                 if (!ep || !seen_ports.insert(ep).second)
                     continue;
                 if (ep->parent && ep->parent->class_id() == "connector:") {
                     q.push(ep);
-                } else if (drv_key.empty() && ep->direction == PORT_OUT && ep->parent) {
-                    drv_key = std::format("drv:{}:{}:{}",
-                                          ep->parent->class_id(),
-                                          ep->parent->get_name(),
-                                          ep->name);
+                } else {
+                    if (drv_key.empty() && ep->direction == PORT_OUT && ep->parent) {
+                        drv_key = std::format("drv:{}:{}:{}",
+                                              ep->parent->class_id(),
+                                              ep->parent->get_name(),
+                                              ep->name);
+                    }
+                    /* Also continue through a non-connector port (e.g. scope wired directly to a pin). */
+                    if (ep->parent && ep->parent->class_id() != "model_datascope:")
+                        q.push(ep);
                 }
             }
         }
@@ -146,7 +156,7 @@ std::string compute_net_key_from_wire(wire *w)
 {
     if (!w)
         return "";
-    if (!w->name.empty() && !w->name.starts_with("wire_"))
+    if (is_real_verilog_wire_name(w->name))
         return "sig:" + w->name;
     if (!w->get_vcd_name().empty())
         return "vcd:" + w->get_vcd_name();

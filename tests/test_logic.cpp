@@ -1263,10 +1263,8 @@ static void test_vcd_playback(void)
         model_datascope *ds_p = ds.get();
         s1->add_element(std::move(ds));
 
-        // Tap datascope onto 'value' wire
-        auto vw = val_port->get_wires()[0];
+        // Tap datascope onto 'value' net using a manually-drawn default-named ("Wire-...") wire
         auto tap_w = std::make_shared<wire>(0, 0, 0, 0, 4);
-        tap_w->name = vw->name;
         tap_w->set_width(16);
         val_port->get_wires()[0]->get_other_port(val_port)->add_wire(tap_w);
         ds_p->port_at(0)->add_wire(tap_w);
