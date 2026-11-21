@@ -15,6 +15,7 @@
 #include <SDL2/SDL2_gfxPrimitives.h>
 #include <SDL2/SDL_ttf.h>
 #include <map>
+#include <unordered_map>
 
 extern std::map<std::string, const unsigned char *> datamap;
 extern std::map<std::string, unsigned int> sizemap;
@@ -252,19 +253,32 @@ void basecanvas::draw_circle2(float X, float Y, float _R, int color, int color2)
 
 sdl::TexturePtr IMG_LoadTextureFromMem(SDL_Renderer *renderer, const char *filename)
 {
-	std::string s;
+	if (!renderer || !filename || filename[0] == '\0')
+		return nullptr;
 
-	s = filename;
-	if (datamap.find(s) == datamap.end()) {
-		logger::get().debug("PNGMAP miss for '{}'", filename);
-		return sdl::TexturePtr(IMG_LoadTexture(renderer, filename));
+	/* Cache decoded PNG surfaces once globally so opening new windows never re-runs libpng/zlib. */
+	static std::unordered_map<std::string, sdl::SurfacePtr> surface_cache;
+
+	std::string key(filename);
+	auto it = surface_cache.find(key);
+	if (it == surface_cache.end()) {
+		sdl::SurfacePtr surf;
+		auto dm = datamap.find(key);
+		if (dm == datamap.end()) {
+			logger::get().debug("PNGMAP miss for '{}'", filename);
+			surf.reset(IMG_Load(filename));
+		} else {
+			SDL_RWops *ops = SDL_RWFromConstMem(dm->second, sizemap[key]);
+			if (ops)
+				surf.reset(IMG_Load_RW(ops, 1));
+		}
+		it = surface_cache.emplace(std::move(key), std::move(surf)).first;
 	}
 
-	SDL_RWops* ops;
+	if (!it->second)
+		return nullptr;
 
-	ops = SDL_RWFromConstMem(datamap[filename], sizemap[filename]);
-
-	return sdl::TexturePtr(IMG_LoadTexture_RW(renderer, ops, 1));
+	return sdl::TexturePtr(SDL_CreateTextureFromSurface(renderer, it->second.get()));
 }
 
 sdl::TexturePtr basecanvas::load_image(std::string_view filename)
