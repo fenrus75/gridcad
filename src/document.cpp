@@ -30,10 +30,14 @@ bool has_exit_time = false;
 #include <SDL2/SDL_ttf.h>
 #include <iostream>
 #include <fstream>
+#include <random>
 #include <string>
 #include <regex>
+#include <unordered_map>
 #include <sys/time.h>
 #include <unistd.h>
+
+static std::unordered_map<class basecanvas *, uint64_t> next_slow_draw_ms;
 
 #include "imgui.h"
 #include "backends/imgui_impl_sdl2.h"
@@ -433,17 +437,26 @@ void document::run(void)
 		if (!ret && !leave) {
 			struct timeval now;
 			gettimeofday(&now, nullptr);
-			const bool do_slow_draw = (tv_delta_msec(&previous_slow_draw, &now) > 500);
+			/* Stagger unfocused window redraws independently (500 + [0..99] ms) to avoid frame spikes. */
+			const uint64_t now_ms = SDL_GetTicks64();
+			static std::mt19937 slow_draw_rng(std::random_device{}());
+			static std::uniform_int_distribution<uint64_t> slow_draw_jitter(0, 99);
 			std::vector<basecanvas *> drawn_canvases;
 			drawn_canvases.reserve(canvases.size());
 			for (auto canvas: canvases) {
-				if (canvas->canvas_has_focus() || do_slow_draw) {
+				if (canvas->canvas_has_focus()) {
 					canvas->draw();
 					drawn_canvases.push_back(canvas);
+					next_slow_draw_ms[canvas] = now_ms + 500 + slow_draw_jitter(slow_draw_rng);
+				} else {
+					auto [it, inserted] = next_slow_draw_ms.try_emplace(
+					    canvas, now_ms + 500 + slow_draw_jitter(slow_draw_rng));
+					if (!inserted && now_ms >= it->second) {
+						canvas->draw();
+						drawn_canvases.push_back(canvas);
+						it->second = now_ms + 500 + slow_draw_jitter(slow_draw_rng);
+					}
 				}
-			}
-			if (do_slow_draw) {
-				previous_slow_draw = now;
 			}
 			fast_draw_counter++;
 			if (fast_draw_counter >= 60) {
@@ -477,6 +490,7 @@ void register_new_canvas(class basecanvas *canvas)
 
 void unregister_canvas(class basecanvas *canvas)
 {
+	next_slow_draw_ms.erase(canvas);
 	for (unsigned int i = 0; i < canvases.size(); i++) {
 		if (canvases[i] == canvas) {
 			canvases.erase(canvases.begin() + i);
