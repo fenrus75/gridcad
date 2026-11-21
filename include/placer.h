@@ -43,3 +43,6 @@ public:
      */
     static void place_connectors(class scene *target_scene);
 };
+
+bool is_import_view_mode(void);
+void set_import_view_mode(bool enabled);

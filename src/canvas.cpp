@@ -30,7 +30,6 @@
 #include "buttonbar.h"
 #include "timelinebar.h"
 #include "vcd_session.h"
-#include "placement_optimizer.h"
 #include "placer.h"
 #include "dialog.h"
 #include "synth.h"
@@ -102,8 +101,7 @@ canvas::canvas(std::unique_ptr<class scene> _scene, struct capabilities *cap)
 	timeline_bar->set_session(get_active_vcd_session());
 	button_bar->add_button("Save design to file", "assets/save_icon.png", EVENT_SAVE);
 	button_bar->add_button("Fit to screen", "assets/icon_fit_to_screen.png", EVENT_ZOOM_TO_FIT);
-	button_bar->add_button(is_import_view_mode() ? "Toggle auto-optimize layout (1 round/sec)" : "Wire all clock signals",
-	                       "assets/autoclock.png", EVENT_AUTOCLOCK);
+	button_bar->add_button("Wire all clock signals", "assets/autoclock.png", EVENT_AUTOCLOCK);
 	button_bar->add_button(is_import_view_mode() ? "Redo connectors & all wiring" : "Redo all wiring",
 	                       "assets/icon_rewire.png", EVENT_REWIRE);
 	if (show_toolchain) {
@@ -366,16 +364,6 @@ bool canvas::handle_event_iconarea(SDL_Event &event)
 }
 
 
-void canvas::run_optimize_phase(void)
-{
-	if (!current_scene)
-		return;
-	auto res = placement_optimizer::optimize_all_elements(current_scene.get());
-	logger::get().info("Optimize: moved {} elements (cost {:.1f} -> {:.1f}, crossings {} -> {})",
-	                   res.steps_taken, res.cost_before, res.cost_after,
-	                   res.crossings_before, res.crossings_after);
-}
-
 bool canvas::handle_event(SDL_Event &event)
 {
 	bool leave = false;
@@ -396,29 +384,9 @@ bool canvas::handle_event(SDL_Event &event)
 	if (event.type == EVENT_RELOAD_ICONBAR)
 		icon_bar->create_menu();
 
-
-	if (event.type == SDL_timer_event && auto_optimize && is_import_view_mode()) {
-		const uint64_t now = SDL_GetTicks64();
-		if (now - last_optimize_ms >= 950) {
-			last_optimize_ms = now;
-			run_optimize_phase();
-		}
-	}
-
 	if (event.type == EVENT_AUTOCLOCK && event.user.data1 == current_scene.get()) {
-		if (is_import_view_mode()) {
-			auto_optimize = !auto_optimize;
-			if (auto_optimize) {
-				logger::get().info("Auto-optimize ON (1 round/sec)");
-				last_optimize_ms = SDL_GetTicks64();
-				run_optimize_phase();
-			} else {
-				logger::get().info("Auto-optimize OFF");
-			}
-		} else {
-			take_undo_snapshot(current_scene.get());
-			callback_autoclock(current_scene.get());
-		}
+		take_undo_snapshot(current_scene.get());
+		callback_autoclock(current_scene.get());
 	}
 
 

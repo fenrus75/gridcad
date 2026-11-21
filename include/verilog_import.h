@@ -31,7 +31,6 @@ public:
     struct options {
         bool use_clock_element = true;  /* Use model_clock for top-level "clk" port */
         bool run_placer = true;         /* Run topological_placer after building netlist */
-        int optimize_rounds = 0;        /* Optional automatic placement_optimizer rounds on import */
         bool load_sibling_files = true; /* Resolve missing submodules from <dir>/<type>.json */
         int max_recursion_depth = 32;
     };

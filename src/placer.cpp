@@ -1510,3 +1510,15 @@ void topological_placer::place_connectors(class scene *target_scene)
         }
     }
 }
+
+static bool g_import_view_mode = false;
+
+bool is_import_view_mode(void)
+{
+    return g_import_view_mode;
+}
+
+void set_import_view_mode(bool enabled)
+{
+    g_import_view_mode = enabled;
+}

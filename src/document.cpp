@@ -19,7 +19,7 @@
 #include "scene.h"
 #include "verilog_import.h"
 #include "vcd_session.h"
-#include "placement_optimizer.h"
+#include "placer.h"
 
 std::chrono::steady_clock::time_point start_time;
 std::chrono::steady_clock::time_point exit_time;
