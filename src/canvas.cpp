@@ -427,6 +427,21 @@ bool canvas::handle_event(SDL_Event &event)
 		callback_reroute(current_scene.get());
 	}
 
+	if (event.type == EVENT_REDO_NET && event.user.data1 != nullptr && current_scene) {
+		auto *seed_elem = static_cast<class element *>(event.user.data1);
+		bool in_this_scene = false;
+		for (const auto &el : current_scene->elements) {
+			if (el.get() == seed_elem) {
+				in_this_scene = true;
+				break;
+			}
+		}
+		if (in_this_scene) {
+			take_undo_snapshot(current_scene.get());
+			current_scene->redo_net(seed_elem);
+		}
+	}
+
 	if (event.type == EVENT_RUN_VERILOG && event.user.data1 == current_scene.get()) {
 		set_dialog(std::make_unique<class synth>(main_area_rect.w + ui_area_rect.w + button_rect.w, main_area_rect.h, projectname, ""));
 	}

@@ -16,12 +16,18 @@
 #include "scene.h"
 #include "placer.h"
 #include "element.h"
+#include "connector.h"
 #include "port.h"
 #include "wire.h"
+#include "wirepath.h"
 #include "net.h"
 #include "model_nest.h"
 #include "contextmenu.h"
 
+#include <algorithm>
+#include <cmath>
+#include <map>
+#include <queue>
 #include <unordered_set>
 
 void callback_select_all(class scene *scene)
@@ -481,6 +487,329 @@ void scene::redo_nets(void)
 {
 	remove_nets();
 	add_nets();
+}
+
+void scene::redo_net(class element *seed_elem)
+{
+	if (!seed_elem)
+		return;
+	port *seed_port = seed_elem->port_at(0);
+	if (!seed_port)
+		return;
+
+	/* 1. BFS across wires & connectors to collect every wire and real endpoint on this net. */
+	std::unordered_set<const wire *> seen_wires;
+	std::unordered_set<const port *> seen_ports;
+	std::vector<std::shared_ptr<wire>> old_wires;
+	std::vector<port *> drv_ports;
+	std::vector<port *> sink_ports;
+	std::queue<port *> pq;
+
+	pq.push(seed_port);
+	seen_ports.insert(seed_port);
+
+	while (!pq.empty()) {
+		port *cur = pq.front();
+		pq.pop();
+		const bool is_conn_port = cur->parent && (cur->parent->class_id() == "connector:");
+		if (!is_conn_port) {
+			if (cur->direction == PORT_OUT)
+				drv_ports.push_back(cur);
+			else
+				sink_ports.push_back(cur);
+		}
+		for (const auto &w : cur->get_wires()) {
+			if (!w || !seen_wires.insert(w.get()).second)
+				continue;
+			old_wires.push_back(w);
+			for (port *ep : w->get_ports()) {
+				if (ep && seen_ports.insert(ep).second) {
+					const bool ep_conn = ep->parent && (ep->parent->class_id() == "connector:");
+					if (ep_conn) {
+						pq.push(ep);
+					} else {
+						if (ep->direction == PORT_OUT)
+							drv_ports.push_back(ep);
+						else
+							sink_ports.push_back(ep);
+					}
+				}
+			}
+		}
+	}
+
+	if (old_wires.empty() || (drv_ports.size() + sink_ports.size()) < 2)
+		return;
+
+	/* Snapshot net metadata from the richest wire before tearing down old wires/connectors. */
+	std::shared_ptr<wire> tmpl = old_wires[0];
+	for (const auto &w : old_wires) {
+		if (!w->get_vcd_name().empty() || !w->get_src_location().empty()) {
+			tmpl = w;
+			break;
+		}
+	}
+	const std::string meta_name = tmpl->name;
+	const int meta_color = tmpl->get_color();
+	const int meta_width = std::max(1, tmpl->get_width());
+	const std::string meta_vcd = tmpl->get_vcd_name();
+	const bool meta_vcd_locked = tmpl->is_vcd_locked();
+	const struct value meta_value = tmpl->value;
+	const auto meta_lbl = tmpl->get_label_table();
+	const std::string meta_src_loc = tmpl->get_src_location();
+	const std::string meta_src_v = tmpl->get_src_verilog();
+	const bool is_rail = meta_value.is_clock || meta_name == "clk" ||
+	                     meta_name == "rst" || meta_name == "rst_n";
+
+	/* 2. Choose root (driver) and targets (all other real endpoints). */
+	port *root = nullptr;
+	std::vector<port *> targets;
+	if (!drv_ports.empty()) {
+		root = drv_ports[0];
+		for (size_t i = 1; i < drv_ports.size(); ++i)
+			targets.push_back(drv_ports[i]);
+		for (port *sp : sink_ports)
+			targets.push_back(sp);
+	} else {
+		root = sink_ports[0];
+		for (size_t i = 1; i < sink_ports.size(); ++i)
+			targets.push_back(sink_ports[i]);
+	}
+
+	/* 3. Remove all old wires and orphaned connectors on this net. */
+	for (auto &w : old_wires)
+		w->remove();
+	old_wires.clear();
+	process_delete_requests();
+
+	/* Build forbidden bounding boxes for non-connector elements so connectors stay clear. */
+	struct bbox {
+		int x1, y1, x2, y2;
+	};
+	std::vector<bbox> blocked_boxes;
+	std::unordered_set<int64_t> pin_cells;
+	auto cell_key = [](int x, int y) -> int64_t {
+		return (static_cast<int64_t>(x) << 32) | static_cast<uint32_t>(y);
+	};
+	for (const auto &elem : elements) {
+		if (!elem || elem->is_background() || elem->class_id() == "connector:")
+			continue;
+		const int ox = static_cast<int>(std::floor(elem->get_X()));
+		const int oy = static_cast<int>(std::floor(elem->get_Y()));
+		const int ow = std::max(1, static_cast<int>(std::ceil(elem->get_width())));
+		const int oh = std::max(1, static_cast<int>(std::ceil(elem->get_height())));
+		blocked_boxes.push_back({ox - 1, oy - 1, ox + ow, oy + oh});
+		for (unsigned int pi = 0;; ++pi) {
+			port *p = elem->port_at(pi);
+			if (!p)
+				break;
+			pin_cells.insert(cell_key(static_cast<int>(std::round(p->screenX)),
+			                          static_cast<int>(std::round(p->screenY))));
+		}
+	}
+	auto is_valid_tap = [&](int x, int y) -> bool {
+		if (x < 1 || y < 1 || x >= static_cast<int>(sizeX) - 1 || y >= static_cast<int>(sizeY) - 1)
+			return false;
+		if (pin_cells.count(cell_key(x, y)))
+			return false;
+		for (const auto &b : blocked_boxes) {
+			if (x >= b.x1 && x <= b.x2 && y >= b.y1 && y <= b.y2)
+				return false;
+		}
+		return true;
+	};
+
+	auto make_net_wire = [&](port *a, port *b,
+	                         std::unique_ptr<std::vector<struct waypoint>> routed_pts) {
+		auto w = std::make_shared<wire>(
+		    static_cast<int>(std::round(a->screenX)), static_cast<int>(std::round(a->screenY)),
+		    static_cast<int>(std::round(b->screenX)), static_cast<int>(std::round(b->screenY)),
+		    meta_color);
+		w->name = meta_name;
+		if (!meta_vcd.empty())
+			w->set_vcd_name(meta_vcd);
+		if (meta_lbl)
+			w->set_label_table(meta_lbl);
+		if (!meta_src_loc.empty() || !meta_src_v.empty())
+			w->set_src_info(meta_src_loc, meta_src_v);
+		w->value = meta_value;
+		w->set_width(meta_width);
+		a->add_wire(w);
+		b->add_wire(w);
+		w->push_wire_color(meta_color);
+		if (routed_pts && !routed_pts->empty())
+			w->set_routed_points(std::move(routed_pts));
+		else
+			w->route(this);
+		return w;
+	};
+
+	/* 4. Score targets: farthest first + large bonus for pure horizontal / vertical alignment. */
+	auto target_score = [&](port *t) -> double {
+		const double dx = std::abs(t->screenX - root->screenX);
+		const double dy = std::abs(t->screenY - root->screenY);
+		double score = dx + dy;
+		if (dy < 0.5)
+			score += 500.0;
+		if (dx < 0.5)
+			score += 500.0;
+		return score;
+	};
+	std::stable_sort(targets.begin(), targets.end(),
+	                 [&](port *a, port *b) { return target_score(a) > target_score(b); });
+
+	/* 5. Route primary backbone wire: root -> top-scored target. */
+	std::vector<std::shared_ptr<wire>> net_wires;
+	std::vector<connector *> net_connectors;
+	net_wires.push_back(make_net_wire(root, targets[0], nullptr));
+
+	/* 6. For each remaining target, run one multi-source A* from all valid cells on the net. */
+	struct tap_info {
+		wire *owner_wire = nullptr;
+		size_t seg_idx = 0;
+		connector *existing_conn = nullptr;
+	};
+
+	for (size_t ti = 1; ti < targets.size(); ++ti) {
+		port *tgt = targets[ti];
+		const int tx = static_cast<int>(std::round(tgt->screenX));
+		const int ty = static_cast<int>(std::round(tgt->screenY));
+
+		std::map<std::pair<int, int>, tap_info> tap_map;
+		std::vector<wiregrid::seed_point> seeds;
+
+		/* Seed existing connectors on this net with cost 0.0 (prefer reusing nearby junctions). */
+		for (connector *ec : net_connectors) {
+			const int cx = static_cast<int>(std::round(ec->get_X()));
+			const int cy = static_cast<int>(std::round(ec->get_Y()));
+			tap_map[{cx, cy}] = {nullptr, 0, ec};
+			seeds.push_back({cx, cy, 0.0});
+		}
+
+		/* Seed every clear integer cell along already-routed wires of this net with cost 0.25. */
+		for (const auto &nw : net_wires) {
+			const auto *pts = nw->get_points();
+			if (!pts || pts->size() < 2)
+				continue;
+			for (size_t s = 0; s + 1 < pts->size(); ++s) {
+				const float x0 = (*pts)[s].X;
+				const float y0 = (*pts)[s].Y;
+				const float x1 = (*pts)[s + 1].X;
+				const float y1 = (*pts)[s + 1].Y;
+				const int steps = std::max(1, static_cast<int>(std::ceil(
+				                                  std::max(std::abs(x1 - x0), std::abs(y1 - y0)))));
+				for (int k = 0; k <= steps; ++k) {
+					const float t = static_cast<float>(k) / static_cast<float>(steps);
+					const int gx = static_cast<int>(std::round(x0 + (x1 - x0) * t));
+					const int gy = static_cast<int>(std::round(y0 + (y1 - y0) * t));
+					if (!is_valid_tap(gx, gy))
+						continue;
+					if (tap_map.find({gx, gy}) == tap_map.end()) {
+						tap_map[{gx, gy}] = {nw.get(), s, nullptr};
+						seeds.push_back({gx, gy, 0.25});
+					}
+				}
+			}
+		}
+
+		/* Fallback if all trunk cells were adjacent to components: seed root or midpoint. */
+		if (seeds.empty()) {
+			const int rx = static_cast<int>(std::round(root->screenX));
+			const int ry = static_cast<int>(std::round(root->screenY));
+			seeds.push_back({rx, ry, 0.25});
+		}
+
+		wiregrid grid(static_cast<int>(sizeX), static_cast<int>(sizeY));
+		grid.is_clock = is_rail;
+		fill_grid(&grid);
+		auto branch_pts = grid.path_walk_multi(seeds, tx, ty, is_rail);
+		if (!branch_pts || branch_pts->empty()) {
+			/* Safety fallback: direct route from root if multi-source failed. */
+			net_wires.push_back(make_net_wire(root, tgt, nullptr));
+			continue;
+		}
+
+		const int tap_x = static_cast<int>(std::round(branch_pts->front().X));
+		const int tap_y = static_cast<int>(std::round(branch_pts->front().Y));
+		auto it = tap_map.find({tap_x, tap_y});
+
+		if (it != tap_map.end() && it->second.existing_conn) {
+			/* Reuse existing connector at (tap_x, tap_y). */
+			connector *ec = it->second.existing_conn;
+			net_wires.push_back(make_net_wire(ec->port_at(0), tgt, std::move(branch_pts)));
+		} else if (it != tap_map.end() && it->second.owner_wire) {
+			/* Split owner_wire at (tap_x, tap_y) and insert a new connector. */
+			wire *w_hit = it->second.owner_wire;
+			const size_t seg_idx = it->second.seg_idx;
+
+			const auto &eps = w_hit->get_ports();
+			port *p_a = (eps.size() >= 1) ? eps[0] : nullptr;
+			port *p_b = (eps.size() >= 2) ? eps[1] : nullptr;
+
+			std::unique_ptr<std::vector<struct waypoint>> pts_a;
+			std::unique_ptr<std::vector<struct waypoint>> pts_b;
+			if (const auto *orig_pts = w_hit->get_points(); orig_pts && orig_pts->size() >= 2 && p_a && p_b) {
+				/* Ensure p_a corresponds to orig_pts->front() and p_b to orig_pts->back(). */
+				const float da = std::abs(p_a->screenX - orig_pts->front().X) +
+				                 std::abs(p_a->screenY - orig_pts->front().Y);
+				const float db = std::abs(p_b->screenX - orig_pts->front().X) +
+				                 std::abs(p_b->screenY - orig_pts->front().Y);
+				if (db < da)
+					std::swap(p_a, p_b);
+
+				pts_a = std::make_unique<std::vector<struct waypoint>>();
+				for (size_t k = 0; k <= seg_idx && k < orig_pts->size(); ++k)
+					pts_a->push_back((*orig_pts)[k]);
+				if (pts_a->empty() ||
+				    std::abs(pts_a->back().X - tap_x) > 0.1f ||
+				    std::abs(pts_a->back().Y - tap_y) > 0.1f) {
+					pts_a->push_back({static_cast<float>(tap_x), static_cast<float>(tap_y)});
+				}
+
+				pts_b = std::make_unique<std::vector<struct waypoint>>();
+				pts_b->push_back({static_cast<float>(tap_x), static_cast<float>(tap_y)});
+				for (size_t k = seg_idx + 1; k < orig_pts->size(); ++k) {
+					if (k == seg_idx + 1 &&
+					    std::abs((*orig_pts)[k].X - tap_x) < 0.1f &&
+					    std::abs((*orig_pts)[k].Y - tap_y) < 0.1f) {
+						continue;
+					}
+					pts_b->push_back((*orig_pts)[k]);
+				}
+			}
+
+			/* Detach and remove w_hit from net_wires. */
+			std::shared_ptr<wire> keep_hit;
+			for (size_t wi = 0; wi < net_wires.size(); ++wi) {
+				if (net_wires[wi].get() == w_hit) {
+					keep_hit = net_wires[wi];
+					net_wires.erase(net_wires.begin() + static_cast<ptrdiff_t>(wi));
+					break;
+				}
+			}
+			w_hit->remove();
+
+			auto conn = std::make_unique<connector>(static_cast<float>(tap_x), static_cast<float>(tap_y));
+			connector *conn_raw = conn.get();
+			conn_raw->port_at(0)->set_width(meta_width);
+			add_element(std::move(conn));
+			net_connectors.push_back(conn_raw);
+
+			if (p_a)
+				net_wires.push_back(make_net_wire(p_a, conn_raw->port_at(0), std::move(pts_a)));
+			if (p_b)
+				net_wires.push_back(make_net_wire(conn_raw->port_at(0), p_b, std::move(pts_b)));
+			net_wires.push_back(make_net_wire(conn_raw->port_at(0), tgt, std::move(branch_pts)));
+		} else {
+			/* Fallback: tap at root if no wire cell matched. */
+			net_wires.push_back(make_net_wire(root, tgt, nullptr));
+		}
+	}
+
+	/* 7. Rebuild nets and restore VCD lock if active. */
+	redo_nets();
+	if (meta_vcd_locked && !net_wires.empty() && net_wires[0]->get_net())
+		net_wires[0]->get_net()->apply_vcd_value(meta_value);
 }
 
 void scene::validate_ports(void)

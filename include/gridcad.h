@@ -192,6 +192,7 @@ extern unsigned int SDL_timer_event;
 #define EVENT_VCD_WIRE_UPDATE (SDL_timer_event + 16)
 #define EVENT_VCD_SEEK (SDL_timer_event + 17)
 #define EVENT_VCD_UNLOCK (SDL_timer_event + 18)
+#define EVENT_REDO_NET (SDL_timer_event + 19)
 
 extern void callback_editname(class element *element);
 extern sdl::TexturePtr IMG_LoadTextureFromMem(SDL_Renderer *renderer, const char *filename);

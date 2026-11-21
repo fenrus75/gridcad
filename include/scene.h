@@ -57,6 +57,7 @@ public:
     void remove_nets(void);
     void add_nets(void);
     void redo_nets(void);
+    void redo_net(class element *seed_elem);
     void validate_ports(void);
 
     size_t broadcast_vcd_value(std::string_view vcd_name, const struct value &val);

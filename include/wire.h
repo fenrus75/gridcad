@@ -88,6 +88,8 @@ public:
     const std::string &get_src_verilog(void) const { return src_verilog; }
     
     void calculate_drawpoints(void);
+    const std::vector<struct waypoint> *get_points(void) const { return points.get(); }
+    void set_routed_points(std::unique_ptr<std::vector<struct waypoint>> pts);
     
 protected:
     bool dead = false;

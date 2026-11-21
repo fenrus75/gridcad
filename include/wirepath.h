@@ -49,7 +49,16 @@ public:
     bool is_blocked(int x, int y);
     float get_soft_cost(int x, int y);
     
+    struct seed_point {
+        int x;
+        int y;
+        double initial_cost = 0.0;
+    };
+
     std::unique_ptr<std::vector<struct waypoint>> path_walk(int x1, int y1, int x2, int y2, bool is_clock = false);
+    /* Multi-source A-star/Dijkstra: finds the optimal seed in sources and path to (x2, y2) in one walk. */
+    std::unique_ptr<std::vector<struct waypoint>> path_walk_multi(const std::vector<seed_point> &sources,
+                                                                  int x2, int y2, bool is_clock = false);
 
     bool is_clock = false;
 private:

@@ -1179,6 +1179,64 @@ static void test_vcd_playback(void)
         assert(y_p->get_value().intval == 0x7E);
     }
 
+    // 1c. scene::redo_net() multi-source Steiner net rebuild preserves metadata & connectivity
+    {
+        scene s("redo_net_test");
+        auto in_a  = std::make_unique<model_toggle>(4, 20);
+        auto bad_c = std::make_unique<connector>(2, 2); // deliberately bad corner
+        auto o1    = std::make_unique<model_output>(40, 20); // pure horizontal far sink
+        auto o2    = std::make_unique<model_output>(20, 10); // middle-top sink
+        auto o3    = std::make_unique<model_output>(30, 30); // middle-bottom sink
+        in_a->set_width(8);
+        o1->set_width(8);
+        o2->set_width(8);
+        o3->set_width(8);
+
+        auto *a_p = in_a.get();
+        auto *c_p = bad_c.get();
+        auto *o1_p = o1.get(), *o2_p = o2.get(), *o3_p = o3.get();
+        s.add_element(std::move(in_a));
+        s.add_element(std::move(bad_c));
+        s.add_element(std::move(o1));
+        s.add_element(std::move(o2));
+        s.add_element(std::move(o3));
+
+        auto add_sig_wire = [&](port *p1, port *p2) {
+            auto w = std::make_shared<wire>(0, 0, 0, 0, 6);
+            w->name = "data_bus";
+            w->set_vcd_name("dut.data_bus");
+            w->set_src_info("src/foo.sv:42", "logic [7:0] data_bus;");
+            w->set_width(8);
+            p1->add_wire(w);
+            p2->add_wire(w);
+            w->push_wire_color(6);
+        };
+        add_sig_wire(a_p->port_at(0), c_p->port_at(0));
+        add_sig_wire(c_p->port_at(0), o1_p->port_at(0));
+        add_sig_wire(c_p->port_at(0), o2_p->port_at(0));
+        add_sig_wire(c_p->port_at(0), o3_p->port_at(0));
+        s.redo_nets();
+
+        s.redo_net(c_p);
+
+        // Verify all 3 outputs receive VCD broadcast and retain wire metadata
+        assert(s.broadcast_vcd_value("dut.data_bus", make_int_val(0xB5)) == 1);
+        run_queued_calculations();
+        assert(o1_p->get_value().intval == 0xB5);
+        assert(o2_p->get_value().intval == 0xB5);
+        assert(o3_p->get_value().intval == 0xB5);
+
+        for (port *op : {o1_p->port_at(0), o2_p->port_at(0), o3_p->port_at(0)}) {
+            assert(!op->get_wires().empty());
+            auto w = op->get_wires()[0];
+            assert(w->name == "data_bus");
+            assert(w->get_color() == 6);
+            assert(w->get_vcd_name() == "dut.data_bus");
+            assert(w->get_src_location() == "src/foo.sv:42");
+            assert(w->get_src_verilog() == "logic [7:0] data_bus;");
+        }
+    }
+
     // 2. Real test8080 top.json + dump_top_tb.vcd end-to-end binding & tick stepping
     const std::string top_path = "tests/data/top.json";
     const std::string vcd_path = "tests/data/dump_top_tb.vcd";

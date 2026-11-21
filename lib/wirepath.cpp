@@ -390,3 +390,54 @@ std::unique_ptr<std::vector<struct waypoint>> wiregrid::path_walk(int x1, int y1
 	//   debug_display();
 	return walk_back();
 }
+
+std::unique_ptr<std::vector<struct waypoint>> wiregrid::path_walk_multi(
+    const std::vector<seed_point> &sources, int x2, int y2, bool _is_clock)
+{
+	if (sources.empty())
+		return std::make_unique<std::vector<struct waypoint>>();
+
+	is_clock = _is_clock;
+	x2 = std::clamp(x2, 0, width - 1);
+	y2 = std::clamp(y2, 0, height - 1);
+	targetX = x2;
+	targetY = y2;
+
+	/* Fallback origin if target is completely unreachable. */
+	originX = std::clamp(sources[0].x, 0, width - 1);
+	originY = std::clamp(sources[0].y, 0, height - 1);
+
+	abort_all_walks = false;
+	update_destination(targetX, targetY);
+
+	recursecount = 0;
+	found_solution = false;
+	best_path = 3.0 * width * height;
+
+	unblock_point(x2, y2);
+
+	for (const auto &s : sources) {
+		const int sx = std::clamp(s.x, 0, width - 1);
+		const int sy = std::clamp(s.y, 0, height - 1);
+		unblock_point(sx, sy);
+		const double cost = std::max(0.0, s.initial_cost);
+		if (cost < grid[sy][sx].distance_from_start) {
+			grid[sy][sx].distance_from_start = cost;
+			grid[sy][sx].dirX = 0;
+			grid[sy][sx].dirY = 0;
+			if (!grid[sy][sx].queued) {
+				grid[sy][sx].queued = true;
+				queue.push(&grid[sy][sx]);
+			}
+		}
+	}
+
+	while (!queue.empty()) {
+		struct point *p = queue.top();
+		queue.pop();
+		visit(p);
+		p->queued = false;
+	}
+
+	return walk_back();
+}

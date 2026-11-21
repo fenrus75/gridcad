@@ -298,6 +298,21 @@ void wire::clear_route(void)
 	oldpoints = std::move(points);
 }
 
+void wire::set_routed_points(std::unique_ptr<std::vector<struct waypoint>> pts)
+{
+	points = std::move(pts);
+	oldpoints.reset();
+	in_animation = false;
+	if (points && !points->empty()) {
+		X1 = static_cast<int>(std::round(points->front().X));
+		Y1 = static_cast<int>(std::round(points->front().Y));
+		X2 = static_cast<int>(std::round(points->back().X));
+		Y2 = static_cast<int>(std::round(points->back().Y));
+		check_reverse();
+		calculate_drawpoints();
+	}
+}
+
 static bool is_rail_wire(const class wire *w)
 {
 	return w->value.is_clock || w->name == "clk" || w->name == "rst" || w->name == "rst_n";

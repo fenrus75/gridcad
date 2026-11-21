@@ -22,6 +22,15 @@ static void splice_wire_callback(class element *element)
 	connector->unsplice();
 }
 
+static void redo_net_callback(class element *element)
+{
+	SDL_Event ev = {};
+	ev.type = EVENT_REDO_NET;
+	ev.user.code = 0;
+	ev.user.data1 = element;
+	SDL_PushEvent(&ev);
+}
+
 
 connector::connector(float _X, float _Y)  : element(3, 3, "")
 {
@@ -34,6 +43,7 @@ connector::connector(float _X, float _Y)  : element(3, 3, "")
 	ports[0]->is_connector = true;
 	reseat();;
 	menu->add_item("Join wire", splice_wire_callback);
+	menu->add_item("Redo net", redo_net_callback);
 }
 
 void connector::drawAt(class basecanvas *canvas, float X, float Y, int type)
