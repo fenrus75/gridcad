@@ -134,8 +134,15 @@ protected:
     sdl::RendererPtr renderer;
     sdl::FontPtr font;
     sdl::TexturePtr render_text_to_texture(const char *text);
-    std::map<std::string, sdl::TexturePtr, std::less<>> texture_cache;
-    std::map<std::string, sdl::TexturePtr, std::less<>> text_cache;
+    struct cached_texture {
+        sdl::TexturePtr tex;
+        int w = 0;
+        int h = 0;
+    };
+    std::map<std::string, cached_texture, std::less<>> texture_cache;
+    std::map<std::string, cached_texture, std::less<>> text_cache;
+    const cached_texture &get_cached_texture(std::string_view filename);
+    const cached_texture &get_cached_text(std::string_view text);
     bool has_focus = true;
     float fps = -1.0;
     uint64_t frame_id = 0;

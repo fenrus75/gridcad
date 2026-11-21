@@ -277,23 +277,20 @@ void basecanvas::draw_image(SDL_Texture *image, float X, float Y, float W, float
 {
 	flush_line_batch();
 	SDL_Rect rect;
-	SDL_Point size;
 	float w, h;
 
 	if (!image) {
-		//		printf("Attempting to draw a null texture\n");
 		return;
 	}
 
-
-	SDL_QueryTexture(image, nullptr, nullptr, &size.x, &size.y);
-
-	if (keep_aspect) { 
+	if (keep_aspect) {
+		SDL_Point size = {1, 1};
+		SDL_QueryTexture(image, nullptr, nullptr, &size.x, &size.y);
 		h = H;
-		w = 1.0 * size.x / size.y * h;
+		w = 1.0f * size.x / std::max(1, size.y) * h;
 		if (w > W) {
 			w = W;
-			h = 1.0 * size.y / size.x * w;
+			h = 1.0f * size.y / std::max(1, size.x) * w;
 		}
 	} else {
 		w = W;
@@ -304,7 +301,10 @@ void basecanvas::draw_image(SDL_Texture *image, float X, float Y, float W, float
 	rect.w = w * scaleX;
 	rect.h = h * scaleY;
 
-
+	if (cached_out_w > 0 && cached_out_h > 0 &&
+	    (rect.x + rect.w < 0 || rect.x > cached_out_w ||
+	     rect.y + rect.h < 0 || rect.y > cached_out_h))
+		return;
 
 	SDL_SetTextureAlphaMod(image, alpha);
 
@@ -320,11 +320,15 @@ void basecanvas::draw_image_fragment(SDL_Texture *image, float X, float Y, float
 		return;
 	}
 
-
 	rect.x = X_to_scr(X);
 	rect.y = Y_to_scr(Y);
 	rect.w = W * scaleX;
 	rect.h = H * scaleY;
+
+	if (cached_out_w > 0 && cached_out_h > 0 &&
+	    (rect.x + rect.w < 0 || rect.x > cached_out_w ||
+	     rect.y + rect.h < 0 || rect.y > cached_out_h))
+		return;
 
 	src.x = fromX;
 	src.y = fromY;
@@ -333,7 +337,6 @@ void basecanvas::draw_image_fragment(SDL_Texture *image, float X, float Y, float
 
 	SDL_SetTextureAlphaMod(image, 255);
 
-	//	SDL_RenderCopy(renderer, image, &src, &rect);
 	SDL_RenderCopyEx(renderer.get(), image, &src, &rect, angle, nullptr, SDL_FLIP_NONE);
 }
 
@@ -341,15 +344,10 @@ void basecanvas::draw_image_rotated(SDL_Texture *image, float X, float Y, float 
 {
 	flush_line_batch();
 	SDL_Rect rect;
-	SDL_Point size;
 
 	if (!image) {
-		//		printf("Attempting to draw a null texture\n");
 		return;
 	}
-
-
-	SDL_QueryTexture(image, nullptr, nullptr, &size.x, &size.y);
 
 	/* if we rotate something that isn't square, the "top left" point afterwards is no longer at (0,0)
 	   Adjust to move it back to 0,0 by half-of-the-shape-difference
@@ -364,54 +362,62 @@ void basecanvas::draw_image_rotated(SDL_Texture *image, float X, float Y, float 
 		rect.h = W * scaleY;
 	}
 
+	if (cached_out_w > 0 && cached_out_h > 0 &&
+	    (rect.x + rect.w < 0 || rect.x > cached_out_w ||
+	     rect.y + rect.h < 0 || rect.y > cached_out_h))
+		return;
+
 	SDL_SetTextureAlphaMod(image, alpha);
 
 	SDL_RenderCopyEx(renderer.get(), image, nullptr, &rect, angle, nullptr, SDL_FLIP_NONE);
 }
 
-void basecanvas::draw_image(std::string_view filename, float X, float Y, float W, float H, int alpha, bool keep_aspect) 
+const basecanvas::cached_texture &basecanvas::get_cached_texture(std::string_view filename)
 {
 	auto it = texture_cache.find(filename);
 	if (it == texture_cache.end()) {
-		sdl::TexturePtr loaded = load_image(filename);
-		if (!loaded) {
+		cached_texture entry;
+		entry.tex = load_image(filename);
+		if (entry.tex) {
+			SDL_QueryTexture(entry.tex.get(), nullptr, nullptr, &entry.w, &entry.h);
+		} else {
 			logger::get().error("Failure to load {}", filename);
 		}
-		it = texture_cache.emplace(std::string(filename), std::move(loaded)).first;
+		it = texture_cache.emplace(std::string(filename), std::move(entry)).first;
 		if ((texture_cache.size() % 100) == 0)
 			logger::get().debug("Texture cache reaches {}", texture_cache.size());
 	}
-	draw_image(it->second.get(), X, Y, W, H, alpha, keep_aspect);
+	return it->second;
+}
+
+void basecanvas::draw_image(std::string_view filename, float X, float Y, float W, float H, int alpha, bool keep_aspect) 
+{
+	const auto &ct = get_cached_texture(filename);
+	if (!ct.tex)
+		return;
+	if (keep_aspect && ct.w > 0 && ct.h > 0) {
+		float h = H;
+		float w = 1.0f * ct.w / ct.h * h;
+		if (w > W) {
+			w = W;
+			h = 1.0f * ct.h / ct.w * w;
+		}
+		draw_image(ct.tex.get(), X + (W - w) / 2.0f, Y + (H - h) / 2.0f, w, h, alpha, false);
+		return;
+	}
+	draw_image(ct.tex.get(), X, Y, W, H, alpha, false);
 }
 
 void basecanvas::draw_image_rotated(std::string_view filename, float X, float Y, float W, float H, int alpha, int angle) 
 {
-	auto it = texture_cache.find(filename);
-	if (it == texture_cache.end()) {
-		sdl::TexturePtr loaded = load_image(filename);
-		if (!loaded) {
-			logger::get().error("Failure to load {}", filename);
-		}
-		it = texture_cache.emplace(std::string(filename), std::move(loaded)).first;
-		if ((texture_cache.size() % 100) == 0)
-			logger::get().debug("Texture cache reaches {}", texture_cache.size());
-	}
-	draw_image_rotated(it->second.get(), X, Y, W, H, alpha, angle);
+	const auto &ct = get_cached_texture(filename);
+	draw_image_rotated(ct.tex.get(), X, Y, W, H, alpha, angle);
 }
 
 void basecanvas::draw_image_fragment(std::string_view filename, float X, float Y, float W, float H, int fromX, int fromY, int w, int h, int angle)  
 {
-	auto it = texture_cache.find(filename);
-	if (it == texture_cache.end()) {
-		sdl::TexturePtr loaded = load_image(filename);
-		if (!loaded) {
-			logger::get().error("Failure to load {}", filename);
-		}
-		it = texture_cache.emplace(std::string(filename), std::move(loaded)).first;
-		if ((texture_cache.size() % 100) == 0)
-			logger::get().debug("Texture cache reaches {}", texture_cache.size());
-	}
-	draw_image_fragment(it->second.get(), X, Y, W, H, fromX, fromY, w, h, angle);
+	const auto &ct = get_cached_texture(filename);
+	draw_image_fragment(ct.tex.get(), X, Y, W, H, fromX, fromY, w, h, angle);
 }
 
 
@@ -435,64 +441,65 @@ sdl::TexturePtr basecanvas::render_text_to_texture(const char *text)
 	return sdl::TexturePtr(SDL_CreateTextureFromSurface(renderer.get(), surface.get()));
 }
 
-void basecanvas::draw_text(std::string_view text, float X, float Y, float W, float H)
-{
-	SDL_Texture *texture;
-	double w,h;
-	SDL_Point size;
-	
-	if (text.empty())
-		return;
-
-	texture = text_to_texture(text);
-	SDL_QueryTexture(texture, nullptr, nullptr, &size.x, &size.y);
-
-	h = H;
-	w = 1.0 * size.x / size.y * h;
-	if (w > W) {
-		w = W;
-		h = 1.0 * size.y / size.x * w;
-	}
-
-	draw_image(texture, X + (W - w)/2, Y + (H - h)/2, w, h); 
-}
-void basecanvas::draw_text_left(std::string_view text, float X, float Y, float W, float H)
-{
-	SDL_Texture *texture;
-	double w,h;
-	SDL_Point size;
-	
-	if (text.empty())
-		return;
-
-	texture = text_to_texture(text);
-	SDL_QueryTexture(texture, nullptr, nullptr, &size.x, &size.y);
-
-	h = H;
-	w = 1.0 * size.x / size.y * h;
-	if (w > W) {
-		w = W;
-		h = 1.0 * size.y / size.x * w;
-	}
-
-	draw_image(texture, X, Y + (H - h), w, h); 
-}
-
-SDL_Texture *basecanvas::text_to_texture(std::string_view text)
+const basecanvas::cached_texture &basecanvas::get_cached_text(std::string_view text)
 {
 	auto it = text_cache.find(text);
 	if (it == text_cache.end()) {
 		std::string key(text);
-		sdl::TexturePtr rendered = render_text_to_texture(key.c_str());
-		if (!rendered) {
+		cached_texture entry;
+		entry.tex = render_text_to_texture(key.c_str());
+		if (entry.tex) {
+			SDL_QueryTexture(entry.tex.get(), nullptr, nullptr, &entry.w, &entry.h);
+		} else {
 			logger::get().error("Failure to render {}", text);
 		}
-		it = text_cache.emplace(std::move(key), std::move(rendered)).first;
+		it = text_cache.emplace(std::move(key), std::move(entry)).first;
 		if ((text_cache.size() % 100) == 0)
 			logger::get().debug("Text cache reaches {}", text_cache.size());
 	}
+	return it->second;
+}
 
-	return it->second.get();
+void basecanvas::draw_text(std::string_view text, float X, float Y, float W, float H)
+{
+	if (text.empty())
+		return;
+
+	const auto &ct = get_cached_text(text);
+	if (!ct.tex || ct.w <= 0 || ct.h <= 0)
+		return;
+
+	double h = H;
+	double w = 1.0 * ct.w / ct.h * h;
+	if (w > W) {
+		w = W;
+		h = 1.0 * ct.h / ct.w * w;
+	}
+
+	draw_image(ct.tex.get(), X + (W - w)/2, Y + (H - h)/2, w, h); 
+}
+void basecanvas::draw_text_left(std::string_view text, float X, float Y, float W, float H)
+{
+	if (text.empty())
+		return;
+
+	const auto &ct = get_cached_text(text);
+	if (!ct.tex || ct.w <= 0 || ct.h <= 0)
+		return;
+
+	double h = H;
+	double w = 1.0 * ct.w / ct.h * h;
+	if (w > W) {
+		w = W;
+		h = 1.0 * ct.h / ct.w * w;
+	}
+
+	draw_image(ct.tex.get(), X, Y + (H - h), w, h); 
+}
+
+SDL_Texture *basecanvas::text_to_texture(std::string_view text)
+{
+	return get_cached_text(text).tex.get();
 }
 
 extern float ratio_effect(float ratio);
