@@ -816,17 +816,30 @@ void scene::redo_all_multi_sink_nets(void)
 {
 	/*
 	 * Collect one representative connector per distinct multi-sink net (via BFS
-	 * so chained trunk connectors belong to the same net), ordering clk/rst rails
-	 * first so they claim clean straight horizontal rails along the bottom.
+	 * so chained trunk connectors belong to the same net), ordering:
+	 *   Tier 0: clk/rst rails (square rails along the bottom)
+	 *   Tier 1: forward (left-to-right) nets (avg sink X >= driver X), shorter spans first
+	 *   Tier 2: backward (right-to-left feedback) nets (avg sink X < driver X) last so
+	 *           feedback wraps around the already-laid forward datapath.
 	 */
+	struct net_seed {
+		int tier = 1; /* 0 = rail, 1 = forward, 2 = backward */
+		double span = 0.0;
+		element *conn = nullptr;
+	};
 	std::unordered_set<const element *> visited_conns;
-	std::vector<std::pair<bool, element *>> net_seeds;
+	std::vector<net_seed> net_seeds;
 
 	for (const auto &elem : elements) {
 		if (!elem || elem->class_id() != "connector:" || visited_conns.count(elem.get()))
 			continue;
 
 		bool is_rail = false;
+		float drv_x = 0.0f;
+		bool has_drv = false;
+		float sink_x_sum = 0.0f;
+		int sink_cnt = 0;
+
 		std::queue<element *> q;
 		q.push(elem.get());
 		visited_conns.insert(elem.get());
@@ -845,31 +858,55 @@ void scene::redo_all_multi_sink_nets(void)
 					is_rail = true;
 				}
 				port *other = w->get_other_port(cp);
-				if (other && other->parent && other->parent->class_id() == "connector:" &&
-				    visited_conns.insert(other->parent).second) {
-					q.push(other->parent);
+				if (!other)
+					continue;
+				if (other->parent && other->parent->class_id() == "connector:") {
+					if (visited_conns.insert(other->parent).second)
+						q.push(other->parent);
+				} else if (other->direction == PORT_OUT && !has_drv) {
+					drv_x = other->screenX;
+					has_drv = true;
+				} else {
+					sink_x_sum += other->screenX;
+					sink_cnt++;
 				}
 			}
 		}
 
-		net_seeds.emplace_back(is_rail, elem.get());
+		net_seed ns;
+		ns.conn = elem.get();
+		if (is_rail) {
+			ns.tier = 0;
+			ns.span = 0.0;
+		} else if (has_drv && sink_cnt > 0) {
+			const float avg_sink_x = sink_x_sum / static_cast<float>(sink_cnt);
+			ns.tier = (avg_sink_x >= drv_x) ? 1 : 2;
+			ns.span = std::abs(avg_sink_x - drv_x);
+		} else {
+			ns.tier = 1;
+			ns.span = 0.0;
+		}
+		net_seeds.push_back(ns);
 	}
 
-	/* Route clk/rst rail nets first, then all other multi-sink nets. */
 	std::stable_sort(net_seeds.begin(), net_seeds.end(),
-	                 [](const auto &a, const auto &b) { return a.first && !b.first; });
+	                 [](const net_seed &a, const net_seed &b) {
+		                 if (a.tier != b.tier)
+			                 return a.tier < b.tier;
+		                 return a.span < b.span;
+	                 });
 
-	for (const auto &[is_rail, seed_conn] : net_seeds) {
+	for (const auto &ns : net_seeds) {
 		/* Verify seed_conn is still alive in elements (not already deleted). */
 		bool alive = false;
 		for (const auto &e : elements) {
-			if (e.get() == seed_conn) {
+			if (e.get() == ns.conn) {
 				alive = true;
 				break;
 			}
 		}
 		if (alive)
-			redo_net(seed_conn);
+			redo_net(ns.conn);
 	}
 }
 

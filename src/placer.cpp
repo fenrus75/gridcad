@@ -444,24 +444,29 @@ void topological_placer::place(class scene *target_scene, const options &opts)
     }
 
     /*
-     * Identify single-sink constants (directly feeding one input port with no
-     * connector split). These will be tucked directly beside their consumer's
-     * input pin after main placement instead of occupying column slots.
+     * Identify single-sink constants and single-sink bit-slices (directly
+     * feeding one non-connector, non-slice input port). These will be tucked
+     * directly beside their consumer's input pin after main placement instead
+     * of occupying column slots.
      */
     std::vector<bool> tucked_const(n, false);
     std::vector<std::pair<size_t, port *>> single_sink_consts;
     for (size_t i = 0; i < n; ++i) {
         element *e = target_scene->elements[i].get();
-        if (!is_constant(e))
+        const bool is_c = is_constant(e);
+        const bool is_sl = is_slice(e);
+        if (!is_c && !is_sl)
             continue;
-        port *cp = e->port_at(0);
-        if (!cp || cp->get_wires().size() != 1)
+        /* For model_const, port 0 is output; for model_slice, port 1 is output. */
+        port *out_p = is_c ? e->port_at(0) : e->port_at(1);
+        if (!out_p || out_p->get_wires().size() != 1)
             continue;
-        const auto &w = cp->get_wires()[0];
+        const auto &w = out_p->get_wires()[0];
         if (!w)
             continue;
-        port *other = w->get_other_port(cp);
-        if (other && other->parent && !is_connector(other->parent)) {
+        port *other = w->get_other_port(out_p);
+        if (other && other->parent && !is_connector(other->parent) &&
+            !is_slice(other->parent) && !is_primary_output(other->parent)) {
             tucked_const[i] = true;
             single_sink_consts.emplace_back(i, other);
         }
@@ -1047,7 +1052,7 @@ void topological_placer::place(class scene *target_scene, const options &opts)
         }
 
         auto overlaps_any = [&](int x, int y, int w, int h) -> bool {
-            const int ax1 = x;
+            const int ax1 = x - 1; /* include left input pin for tucked slices */
             const int ay1 = y;
             const int ax2 = x + w; /* include right output pin */
             const int ay2 = y + h - 1;
