@@ -184,6 +184,7 @@ std::unique_ptr<scene> import_module_recursive(
 
     const json &mod = modules_obj[module_name];
     auto result_scene = std::make_unique<scene>(module_name);
+    result_scene->set_layout_module_name(module_name);
     if (!project_key.empty())
         result_scene->set_layout_project_key(project_key);
 

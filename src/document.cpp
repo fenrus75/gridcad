@@ -175,7 +175,8 @@ document::document(std::string _name, bool _library_mode,
 		}
 	}
 	clear_wire_factory();
-	scene_ptr->cycle_color();
+	if (!import_mode)
+		scene_ptr->cycle_color();
 
 	if (!vcd_path.empty()) {
 		vcd = std::make_unique<vcd_session>();

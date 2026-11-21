@@ -178,7 +178,7 @@ bool layout_overlay::save_scene_to_file(class scene *target_scene, const std::fi
 
     json root;
     root["version"] = 1;
-    root["module"] = target_scene->get_name();
+    root["module"] = target_scene->get_layout_module_name();
 
     json j_elems = json::array();
     json j_labels = json::array();
@@ -270,7 +270,8 @@ bool layout_overlay::save_scene_to_file(class scene *target_scene, const std::fi
     }
 
     target_scene->clear_layout_dirty();
-    logger::get().info("Saved layout overlay for '{}' -> {}", target_scene->get_name(), path.string());
+    logger::get().info("Saved layout overlay for '{}' -> {}",
+                       target_scene->get_layout_module_name(), path.string());
     return true;
 }
 
@@ -622,7 +623,7 @@ bool layout_overlay::apply_file_to_scene(class scene *target_scene, const std::f
 
     target_scene->clear_layout_dirty();
     logger::get().info("Applied layout overlay for '{}' ({} matched elements) from {}",
-                       target_scene->get_name(), matched_count, path.string());
+                       target_scene->get_layout_module_name(), matched_count, path.string());
     return true;
 }
 
@@ -634,7 +635,7 @@ size_t layout_overlay::save_dirty_recursive(class scene *root_scene)
     size_t saved = 0;
     if (root_scene->is_layout_dirty() && !root_scene->get_layout_project_key().empty()) {
         const auto path = layout_file_for_module(root_scene->get_layout_project_key(),
-                                                 root_scene->get_name());
+                                                 root_scene->get_layout_module_name());
         if (save_scene_to_file(root_scene, path))
             saved++;
     }
@@ -653,7 +654,7 @@ bool layout_overlay::apply_to_scene(class scene *target_scene, std::string_view 
 {
     if (!target_scene || project_key.empty())
         return false;
-    const auto path = layout_file_for_module(project_key, target_scene->get_name());
+    const auto path = layout_file_for_module(project_key, target_scene->get_layout_module_name());
     return apply_file_to_scene(target_scene, path);
 }
 
@@ -665,7 +666,7 @@ bool layout_overlay::reset_scene_layout(class scene *target_scene)
     if (target_scene->get_layout_project_key().empty())
         return false;
     const auto path = layout_file_for_module(target_scene->get_layout_project_key(),
-                                             target_scene->get_name());
+                                             target_scene->get_layout_module_name());
     std::error_code ec;
     const bool removed = std::filesystem::remove(path, ec);
     if (removed)

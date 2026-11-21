@@ -191,6 +191,7 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 		if (!dragging && wr && !is_port && floating.size()==0) {
 			class port *port;
 			take_undo_snapshot(current_scene.get());
+			current_scene->mark_layout_dirty();
 			current_scene->add_element(std::make_unique<connector>(x, y));
 
 			auto wr2 = wr->split();
@@ -232,6 +233,7 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 
 		if (floating.size() > 0) {
 			take_undo_snapshot(current_scene.get());
+			current_scene->mark_layout_dirty();
 			for (auto &flt : floating) {
 				class element *raw = flt.get();
 				raw->reset_uuid();
@@ -392,6 +394,7 @@ bool canvas::handle_event(SDL_Event &event)
 
 	if (event.type == EVENT_REWIRE && event.user.data1 == current_scene.get()) {
 		take_undo_snapshot(current_scene.get());
+		current_scene->mark_layout_dirty();
 		callback_reroute(current_scene.get());
 		if (is_import_view_mode())
 			current_scene->redo_all_multi_sink_nets();
@@ -408,6 +411,7 @@ bool canvas::handle_event(SDL_Event &event)
 		}
 		if (in_this_scene) {
 			take_undo_snapshot(current_scene.get());
+			current_scene->mark_layout_dirty();
 			current_scene->redo_net(seed_elem);
 		}
 	}
@@ -623,6 +627,7 @@ bool canvas::handle_event(SDL_Event &event)
 				case SDLK_BACKSPACE:
 					if (!someone_in_editmode) {
 						take_undo_snapshot(current_scene.get());
+						current_scene->mark_layout_dirty();
 						if (auto hw = hover_wire.lock()) {
 							hw->remove();
 							hover_wire.reset();
@@ -635,18 +640,26 @@ bool canvas::handle_event(SDL_Event &event)
 					break;
 				case SDLK_SPACE:
 					if (!someone_in_editmode) {
-						take_undo_snapshot(current_scene.get());
+						bool rotated_any = false;
 						for (auto &elem : current_scene->elements) {
 							if (!elem->is_selected())
 								continue;
+							if (!rotated_any) {
+								take_undo_snapshot(current_scene.get());
+								rotated_any = true;
+							}
 							elem->rotate_ports();
 						}
+						if (rotated_any)
+							current_scene->mark_layout_dirty();
 					}
 					break;
 				case SDLK_TAB:
 					if (!someone_in_editmode) {
-						if (autocomplete.size() > 0)
+						if (autocomplete.size() > 0) {
 							take_undo_snapshot(current_scene.get());
+							current_scene->mark_layout_dirty();
+						}
 						apply_autocomplete();
 						if (dragging_wire) {
 							dragging_wire.reset();
@@ -797,8 +810,10 @@ bool canvas::handle_event(SDL_Event &event)
 								dragging->select_single();
 						}
 					}
-					if (dragging->stop_drag(this))
+					if (dragging->stop_drag(this)) {
+						current_scene->mark_layout_dirty();
 						current_scene->rewire_section(dragging);
+					}
 
 					current_scene->redo_nets();
 				}
@@ -806,6 +821,7 @@ bool canvas::handle_event(SDL_Event &event)
 					std::shared_ptr<class wire> wr;
 
 					take_undo_snapshot(current_scene.get());
+					current_scene->mark_layout_dirty();
 
 					wr = current_scene->is_wire(x, y);
 					if (wr) {
@@ -843,6 +859,7 @@ bool canvas::handle_event(SDL_Event &event)
 
 					if (dragging_port != port2) {
 						take_undo_snapshot(current_scene.get());
+						current_scene->mark_layout_dirty();
 						zap_autocomplete();
 						dragging_port->add_wire(dragging_wire);
 						port2->add_wire(dragging_wire);
@@ -877,8 +894,10 @@ bool canvas::handle_event(SDL_Event &event)
 								dragging->select_single();
 						}
 					}
-					if (dragging->stop_drag(this))
+					if (dragging->stop_drag(this)) {
+						current_scene->mark_layout_dirty();
 						current_scene->rewire_section(dragging);
+					}
 					dragging = nullptr;
 
 				}
@@ -1486,8 +1505,6 @@ std::unique_ptr<class scene> canvas::swap_scene(std::unique_ptr<class scene> sce
 
 void canvas::take_undo_snapshot(class scene *scene)
 {
-	if (scene)
-		scene->mark_layout_dirty();
 	json J;
 	std::string s;
 
