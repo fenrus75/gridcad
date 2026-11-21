@@ -254,11 +254,15 @@ void model_mem::to_json(json &j)
     j["rd_sync"] = rd_sync;
     j["wr_sync"] = wr_sync;
     j["wr_en_width"] = wr_en_width;
+    j["prev_rd_clk"] = prev_rd_clk;
+    j["prev_wr_clk"] = prev_wr_clk;
+    j["latched_rd_data"] = latched_rd_data;
+    if (!mem.empty())
+        j["mem"] = mem;
 }
 
 void model_mem::from_json(json &j)
 {
-    element::from_json(j);
     abits = std::clamp(j.value("abits", 4), 1, 16);
     data_width = std::clamp(j.value("data_width", 8), 1, 64);
     mem_size = std::clamp(j.value("mem_size", 16), 1, static_cast<int>(MAX_MEM_WORDS));
@@ -266,5 +270,16 @@ void model_mem::from_json(json &j)
     rd_sync = j.value("rd_sync", false);
     wr_sync = j.value("wr_sync", true);
     wr_en_width = std::clamp(j.value("wr_en_width", 1), 1, 64);
+    prev_rd_clk = j.value("prev_rd_clk", false);
+    prev_wr_clk = j.value("prev_wr_clk", false);
+    latched_rd_data = j.value("latched_rd_data", latched_rd_data);
     mem.assign(static_cast<size_t>(mem_size), 0);
+    if (j.contains("mem") && j["mem"].is_array()) {
+        const size_t n = std::min(mem.size(), j["mem"].size());
+        for (size_t i = 0; i < n; ++i) {
+            if (j["mem"][i].is_number_unsigned() || j["mem"][i].is_number_integer())
+                mem[i] = j["mem"][i].get<uint64_t>();
+        }
+    }
+    element::from_json(j);
 }

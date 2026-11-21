@@ -1393,6 +1393,14 @@ static void test_vcd_playback(void)
         assert(v2 == v1);
         assert(c2 == c1);
         assert(s2 == s1);
+        auto count_ports = [](element *e) {
+            unsigned int n = 0;
+            while (e->port_at(n) != nullptr)
+                ++n;
+            return n;
+        };
+        for (size_t i = 0; i < orig->elements.size(); ++i)
+            assert(count_ports(orig->elements[i].get()) == count_ports(restored->elements[i].get()));
         assert(restored->get_layout_project_key() == "proj_undo_test");
         assert(restored->get_layout_module_name() == orig->get_layout_module_name());
         assert(restored->is_layout_dirty());

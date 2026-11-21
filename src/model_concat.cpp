@@ -104,7 +104,6 @@ void model_concat::to_json(json &j)
 
 void model_concat::from_json(json &j)
 {
-    element::from_json(j);
     if (j.contains("input_widths") && j["input_widths"].is_array()) {
         input_widths.clear();
         for (const auto &v : j["input_widths"]) {
@@ -115,4 +114,5 @@ void model_concat::from_json(json &j)
     if (input_widths.empty())
         input_widths.push_back(1);
     out_width = std::clamp(j.value("out_width", 2), 1, 64);
+    element::from_json(j);
 }

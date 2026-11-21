@@ -126,19 +126,37 @@ void model_truth::to_json(json & j)
 	j["outputs"] = outputs;
 	j["flip_input_ports"] = flip_input_ports;
 	j["flip_output_ports"] = flip_output_ports;
+	if (!input_port_widths.empty())
+		j["input_port_widths"] = input_port_widths;
+	if (!packed_lut_outputs.empty())
+		j["packed_lut_outputs"] = packed_lut_outputs;
 }
 
 void model_truth::from_json(json & j)
 {
-	element::from_json(j);
-
+	/* Restore LUT dimensions and packed metadata BEFORE element::from_json() attaches wires and triggers calculate(). */
 	names = j["names"];
-	values = j["values"];	
+	values = j["values"];
 	inputs = j["inputs"];
 	outputs = j["outputs"];
 	flip_input_ports = j.value("flip_input_ports", false);
 	flip_output_ports = j.value("flip_output_ports", false);
+	input_port_widths.clear();
+	if (j.contains("input_port_widths") && j["input_port_widths"].is_array()) {
+		for (const auto &v : j["input_port_widths"]) {
+			if (v.is_number_integer())
+				input_port_widths.push_back(std::clamp(v.get<int>(), 1, 64));
+		}
+	}
+	packed_lut_outputs.clear();
+	if (j.contains("packed_lut_outputs") && j["packed_lut_outputs"].is_array()) {
+		for (const auto &v : j["packed_lut_outputs"]) {
+			if (v.is_string())
+				packed_lut_outputs.push_back(v.get<std::string>());
+		}
+	}
 
+	element::from_json(j);
 }
 
 void model_truth::add_output(void)

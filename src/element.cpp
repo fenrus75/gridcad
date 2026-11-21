@@ -359,6 +359,8 @@ void element::from_json(json &j)
 	src_location = j.value("src_location", "");
 	src_verilog = j.value("src_verilog", "");
 
+	if (ports.size() > j["ports"].size())
+		ports.resize(j["ports"].size());
 	while (ports.size() < j["ports"].size())
 		add_port(0,0, "");
 	for (i = 0; i < j["ports"].size(); i++) {

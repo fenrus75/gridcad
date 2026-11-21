@@ -115,7 +115,6 @@ void model_split::to_json(json &j)
 
 void model_split::from_json(json &j)
 {
-    element::from_json(j);
     in_width = std::clamp(j.value("in_width", 8), 1, 64);
     if (j.contains("bit_offsets") && j["bit_offsets"].is_array()) {
         bit_offsets.clear();
@@ -131,4 +130,5 @@ void model_split::from_json(json &j)
                 output_widths.push_back(std::clamp(v.get<int>(), 1, 64));
         }
     }
+    element::from_json(j);
 }
