@@ -174,7 +174,7 @@
             }
           },
           "src": "src/register16.sv:39-45",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nvalue_reg <= RESET_VAL;\nend else if (enable) begin\nvalue_reg <= next_val;\nend\nend",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tvalue_reg <= RESET_VAL;\n\tend else if (enable) begin\n\t\tvalue_reg <= next_val;\n\tend\nend",
           "type": "gridcad_reg"
         },
         {
@@ -213,7 +213,7 @@
             }
           },
           "src": "src/register16.sv:26-34",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nsp_plus_2  <= RESET_VAL + 16'd2;\nsp_minus_2 <= RESET_VAL - 16'd2;\nend else begin\nsp_plus_2  <= value_reg + 16'd2;\nsp_minus_2 <= value_reg - 16'd2;\nend\nend",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tsp_plus_2  <= RESET_VAL + 16'd2;\n\t\tsp_minus_2 <= RESET_VAL - 16'd2;\n\tend else begin\n\t\tsp_plus_2  <= value_reg + 16'd2;\n\t\tsp_minus_2 <= value_reg - 16'd2;\n\tend\nend",
           "type": "gridcad_reg"
         },
         {
@@ -252,7 +252,7 @@
             }
           },
           "src": "src/register16.sv:26-34",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nsp_plus_2  <= RESET_VAL + 16'd2;\nsp_minus_2 <= RESET_VAL - 16'd2;\nend else begin\nsp_plus_2  <= value_reg + 16'd2;\nsp_minus_2 <= value_reg - 16'd2;\nend\nend",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tsp_plus_2  <= RESET_VAL + 16'd2;\n\t\tsp_minus_2 <= RESET_VAL - 16'd2;\n\tend else begin\n\t\tsp_plus_2  <= value_reg + 16'd2;\n\t\tsp_minus_2 <= value_reg - 16'd2;\n\tend\nend",
           "type": "gridcad_reg"
         },
         {

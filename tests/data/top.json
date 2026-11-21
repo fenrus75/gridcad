@@ -325,7 +325,7 @@
             }
           },
           "src": "src/alu16.sv:43-57",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nH_reg      <= 8'h00;\nL_reg      <= 8'h00;\nrp_reg     <= 16'h0000;\nimm16_reg  <= 16'h0000;\nopcode_reg <= 8'h00;\nend else if (decode) begin\nH_reg      <= H_val;\nL_reg      <= L_val;\nrp_reg     <= rp_val;\nimm16_reg  <= imm16;\nopcode_reg <= opcode;\nend\nend",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tH_reg      <= 8'h00;\n\t\tL_reg      <= 8'h00;\n\t\trp_reg     <= 16'h0000;\n\t\timm16_reg  <= 16'h0000;\n\t\topcode_reg <= 8'h00;\n\tend else if (decode) begin\n\t\tH_reg      <= H_val;\n\t\tL_reg      <= L_val;\n\t\trp_reg     <= rp_val;\n\t\timm16_reg  <= imm16;\n\t\topcode_reg <= opcode;\n\tend\nend",
           "type": "gridcad_reg"
         },
         {
@@ -364,7 +364,7 @@
             }
           },
           "src": "src/alu16.sv:43-57",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nH_reg      <= 8'h00;\nL_reg      <= 8'h00;\nrp_reg     <= 16'h0000;\nimm16_reg  <= 16'h0000;\nopcode_reg <= 8'h00;\nend else if (decode) begin\nH_reg      <= H_val;\nL_reg      <= L_val;\nrp_reg     <= rp_val;\nimm16_reg  <= imm16;\nopcode_reg <= opcode;\nend\nend",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tH_reg      <= 8'h00;\n\t\tL_reg      <= 8'h00;\n\t\trp_reg     <= 16'h0000;\n\t\timm16_reg  <= 16'h0000;\n\t\topcode_reg <= 8'h00;\n\tend else if (decode) begin\n\t\tH_reg      <= H_val;\n\t\tL_reg      <= L_val;\n\t\trp_reg     <= rp_val;\n\t\timm16_reg  <= imm16;\n\t\topcode_reg <= opcode;\n\tend\nend",
           "type": "gridcad_reg"
         },
         {
@@ -403,7 +403,7 @@
             }
           },
           "src": "src/alu16.sv:43-57",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nH_reg      <= 8'h00;\nL_reg      <= 8'h00;\nrp_reg     <= 16'h0000;\nimm16_reg  <= 16'h0000;\nopcode_reg <= 8'h00;\nend else if (decode) begin\nH_reg      <= H_val;\nL_reg      <= L_val;\nrp_reg     <= rp_val;\nimm16_reg  <= imm16;\nopcode_reg <= opcode;\nend\nend",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tH_reg      <= 8'h00;\n\t\tL_reg      <= 8'h00;\n\t\trp_reg     <= 16'h0000;\n\t\timm16_reg  <= 16'h0000;\n\t\topcode_reg <= 8'h00;\n\tend else if (decode) begin\n\t\tH_reg      <= H_val;\n\t\tL_reg      <= L_val;\n\t\trp_reg     <= rp_val;\n\t\timm16_reg  <= imm16;\n\t\topcode_reg <= opcode;\n\tend\nend",
           "type": "gridcad_reg"
         },
         {
@@ -442,7 +442,7 @@
             }
           },
           "src": "src/alu16.sv:43-57",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nH_reg      <= 8'h00;\nL_reg      <= 8'h00;\nrp_reg     <= 16'h0000;\nimm16_reg  <= 16'h0000;\nopcode_reg <= 8'h00;\nend else if (decode) begin\nH_reg      <= H_val;\nL_reg      <= L_val;\nrp_reg     <= rp_val;\nimm16_reg  <= imm16;\nopcode_reg <= opcode;\nend\nend",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tH_reg      <= 8'h00;\n\t\tL_reg      <= 8'h00;\n\t\trp_reg     <= 16'h0000;\n\t\timm16_reg  <= 16'h0000;\n\t\topcode_reg <= 8'h00;\n\tend else if (decode) begin\n\t\tH_reg      <= H_val;\n\t\tL_reg      <= L_val;\n\t\trp_reg     <= rp_val;\n\t\timm16_reg  <= imm16;\n\t\topcode_reg <= opcode;\n\tend\nend",
           "type": "gridcad_reg"
         },
         {
@@ -481,7 +481,7 @@
             }
           },
           "src": "src/alu16.sv:43-57",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nH_reg      <= 8'h00;\nL_reg      <= 8'h00;\nrp_reg     <= 16'h0000;\nimm16_reg  <= 16'h0000;\nopcode_reg <= 8'h00;\nend else if (decode) begin\nH_reg      <= H_val;\nL_reg      <= L_val;\nrp_reg     <= rp_val;\nimm16_reg  <= imm16;\nopcode_reg <= opcode;\nend\nend",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tH_reg      <= 8'h00;\n\t\tL_reg      <= 8'h00;\n\t\trp_reg     <= 16'h0000;\n\t\timm16_reg  <= 16'h0000;\n\t\topcode_reg <= 8'h00;\n\tend else if (decode) begin\n\t\tH_reg      <= H_val;\n\t\tL_reg      <= L_val;\n\t\trp_reg     <= rp_val;\n\t\timm16_reg  <= imm16;\n\t\topcode_reg <= opcode;\n\tend\nend",
           "type": "gridcad_reg"
         },
         {
@@ -543,7 +543,7 @@
             }
           },
           "src": "src/alu16.sv:67-73",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nflags_out <= 8'h00;\nend else begin\nflags_out <= next_flags;\nend\nend",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tflags_out <= 8'h00;\n\tend else begin\n\t\tflags_out <= next_flags;\n\tend\nend",
           "type": "gridcad_reg"
         },
         {
@@ -6285,7 +6285,7 @@
             }
           },
           "src": "src/alu8.sv:124-130",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nflags <= 8'h00;\nend else begin\nflags <= next_flags;\nend\nend",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tflags <= 8'h00;\n\tend else begin\n\t\tflags <= next_flags;\n\tend\nend",
           "type": "gridcad_reg"
         },
         {
@@ -6324,7 +6324,7 @@
             }
           },
           "src": "src/alu8.sv:124-130",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nflags <= 8'h00;\nend else begin\nflags <= next_flags;\nend\nend",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tflags <= 8'h00;\n\tend else begin\n\t\tflags <= next_flags;\n\tend\nend",
           "type": "gridcad_reg"
         },
         {
@@ -6363,7 +6363,7 @@
             }
           },
           "src": "src/alu8.sv:88-104",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nin1_reg           <= 8'h00;\nin2_reg           <= 8'h00;\nimm8_reg          <= 8'h00;\nopcode_reg        <= 8'h00;\nalu_out_valid_reg <= 1'b0;\nend else if (decode) begin\nin1_reg           <= input1;\nin2_reg           <= input2;\nimm8_reg          <= imm8;\nopcode_reg        <= opcode;\nalu_out_valid_reg <= check_writeback(opcode);\nend else if (retire) begin\nalu_out_valid_reg <= 1'b0;\n... (2 more line(s))",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tin1_reg           <= 8'h00;\n\t\tin2_reg           <= 8'h00;\n\t\timm8_reg          <= 8'h00;\n\t\topcode_reg        <= 8'h00;\n\t\talu_out_valid_reg <= 1'b0;\n\tend else if (decode) begin\n\t\tin1_reg           <= input1;\n\t\tin2_reg           <= input2;\n\t\timm8_reg          <= imm8;\n\t\topcode_reg        <= opcode;\n\t\talu_out_valid_reg <= check_writeback(opcode);\n\tend else if (retire) begin\n\t\talu_out_valid_reg <= 1'b0;\n... (2 more line(s))",
           "type": "gridcad_reg"
         },
         {
@@ -6402,7 +6402,7 @@
             }
           },
           "src": "src/alu8.sv:88-104",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nin1_reg           <= 8'h00;\nin2_reg           <= 8'h00;\nimm8_reg          <= 8'h00;\nopcode_reg        <= 8'h00;\nalu_out_valid_reg <= 1'b0;\nend else if (decode) begin\nin1_reg           <= input1;\nin2_reg           <= input2;\nimm8_reg          <= imm8;\nopcode_reg        <= opcode;\nalu_out_valid_reg <= check_writeback(opcode);\nend else if (retire) begin\nalu_out_valid_reg <= 1'b0;\n... (2 more line(s))",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tin1_reg           <= 8'h00;\n\t\tin2_reg           <= 8'h00;\n\t\timm8_reg          <= 8'h00;\n\t\topcode_reg        <= 8'h00;\n\t\talu_out_valid_reg <= 1'b0;\n\tend else if (decode) begin\n\t\tin1_reg           <= input1;\n\t\tin2_reg           <= input2;\n\t\timm8_reg          <= imm8;\n\t\topcode_reg        <= opcode;\n\t\talu_out_valid_reg <= check_writeback(opcode);\n\tend else if (retire) begin\n\t\talu_out_valid_reg <= 1'b0;\n... (2 more line(s))",
           "type": "gridcad_reg"
         },
         {
@@ -6441,7 +6441,7 @@
             }
           },
           "src": "src/alu8.sv:88-104",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nin1_reg           <= 8'h00;\nin2_reg           <= 8'h00;\nimm8_reg          <= 8'h00;\nopcode_reg        <= 8'h00;\nalu_out_valid_reg <= 1'b0;\nend else if (decode) begin\nin1_reg           <= input1;\nin2_reg           <= input2;\nimm8_reg          <= imm8;\nopcode_reg        <= opcode;\nalu_out_valid_reg <= check_writeback(opcode);\nend else if (retire) begin\nalu_out_valid_reg <= 1'b0;\n... (2 more line(s))",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tin1_reg           <= 8'h00;\n\t\tin2_reg           <= 8'h00;\n\t\timm8_reg          <= 8'h00;\n\t\topcode_reg        <= 8'h00;\n\t\talu_out_valid_reg <= 1'b0;\n\tend else if (decode) begin\n\t\tin1_reg           <= input1;\n\t\tin2_reg           <= input2;\n\t\timm8_reg          <= imm8;\n\t\topcode_reg        <= opcode;\n\t\talu_out_valid_reg <= check_writeback(opcode);\n\tend else if (retire) begin\n\t\talu_out_valid_reg <= 1'b0;\n... (2 more line(s))",
           "type": "gridcad_reg"
         },
         {
@@ -6480,7 +6480,7 @@
             }
           },
           "src": "src/alu8.sv:88-104",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nin1_reg           <= 8'h00;\nin2_reg           <= 8'h00;\nimm8_reg          <= 8'h00;\nopcode_reg        <= 8'h00;\nalu_out_valid_reg <= 1'b0;\nend else if (decode) begin\nin1_reg           <= input1;\nin2_reg           <= input2;\nimm8_reg          <= imm8;\nopcode_reg        <= opcode;\nalu_out_valid_reg <= check_writeback(opcode);\nend else if (retire) begin\nalu_out_valid_reg <= 1'b0;\n... (2 more line(s))",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tin1_reg           <= 8'h00;\n\t\tin2_reg           <= 8'h00;\n\t\timm8_reg          <= 8'h00;\n\t\topcode_reg        <= 8'h00;\n\t\talu_out_valid_reg <= 1'b0;\n\tend else if (decode) begin\n\t\tin1_reg           <= input1;\n\t\tin2_reg           <= input2;\n\t\timm8_reg          <= imm8;\n\t\topcode_reg        <= opcode;\n\t\talu_out_valid_reg <= check_writeback(opcode);\n\tend else if (retire) begin\n\t\talu_out_valid_reg <= 1'b0;\n... (2 more line(s))",
           "type": "gridcad_reg"
         },
         {
@@ -6519,7 +6519,7 @@
             }
           },
           "src": "src/alu8.sv:88-104",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nin1_reg           <= 8'h00;\nin2_reg           <= 8'h00;\nimm8_reg          <= 8'h00;\nopcode_reg        <= 8'h00;\nalu_out_valid_reg <= 1'b0;\nend else if (decode) begin\nin1_reg           <= input1;\nin2_reg           <= input2;\nimm8_reg          <= imm8;\nopcode_reg        <= opcode;\nalu_out_valid_reg <= check_writeback(opcode);\nend else if (retire) begin\nalu_out_valid_reg <= 1'b0;\n... (2 more line(s))",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tin1_reg           <= 8'h00;\n\t\tin2_reg           <= 8'h00;\n\t\timm8_reg          <= 8'h00;\n\t\topcode_reg        <= 8'h00;\n\t\talu_out_valid_reg <= 1'b0;\n\tend else if (decode) begin\n\t\tin1_reg           <= input1;\n\t\tin2_reg           <= input2;\n\t\timm8_reg          <= imm8;\n\t\topcode_reg        <= opcode;\n\t\talu_out_valid_reg <= check_writeback(opcode);\n\tend else if (retire) begin\n\t\talu_out_valid_reg <= 1'b0;\n... (2 more line(s))",
           "type": "gridcad_reg"
         },
         {
@@ -6558,7 +6558,7 @@
             }
           },
           "src": "src/alu8.sv:124-130",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nflags <= 8'h00;\nend else begin\nflags <= next_flags;\nend\nend",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tflags <= 8'h00;\n\tend else begin\n\t\tflags <= next_flags;\n\tend\nend",
           "type": "gridcad_reg"
         },
         {
@@ -20801,7 +20801,7 @@
             }
           },
           "src": "src/cpu.sv:253-261",
-          "src_verilog": "register16 #(.RESET_VAL(16'h0200)) SP_reg (\n.clk        (clk),\n.rst        (rst),\n.load       (SP_load),\n.dec2       (sp_dec2),\n.inc2       (sp_inc2),\n.load_value (alu16_out),\n.value      (sp_val)\n);",
+          "src_verilog": "register16 #(.RESET_VAL(16'h0200)) SP_reg (\n\t.clk        (clk),\n\t.rst        (rst),\n\t.load       (SP_load),\n\t.dec2       (sp_dec2),\n\t.inc2       (sp_inc2),\n\t.load_value (alu16_out),\n\t.value      (sp_val)\n);",
           "type": "register16"
         },
         {
@@ -20882,7 +20882,7 @@
             }
           },
           "src": "src/cpu.sv:174-189",
-          "src_verilog": "alu8 alu (\n.clk            (clk),\n.rst            (rst),\n.input1         (A_val),\n.input2         (alu_in2),\t// SSS operand (register in DECODE, mem_read_data in LOAD8)\n.imm8           (imm_data),\t// immediate operand\n.opcode         (opcode),\n.decode         (decode_phase || load_phase),\n.retire         (retire_phase),\n.alu16_carry    (alu16_carry_out),\n.pop_flags_in   (loaddata[7:0]),\n.flags_out      (flags),\n.alu_out        (alu_out),\n.reg_alu_out    (reg_alu_out),\n.alu_out_valid  (alu_out_valid)\n... (1 more line(s))",
+          "src_verilog": "alu8 alu (\n\t.clk            (clk),\n\t.rst            (rst),\n\t.input1         (A_val),\n\t.input2         (alu_in2),\t// SSS operand (register in DECODE, mem_read_data in LOAD8)\n\t.imm8           (imm_data),\t// immediate operand\n\t.opcode         (opcode),\n\t.decode         (decode_phase || load_phase),\n\t.retire         (retire_phase),\n\t.alu16_carry    (alu16_carry_out),\n\t.pop_flags_in   (loaddata[7:0]),\n\t.flags_out      (flags),\n\t.alu_out        (alu_out),\n\t.reg_alu_out    (reg_alu_out),\n\t.alu_out_valid  (alu_out_valid)\n... (1 more line(s))",
           "type": "alu8"
         },
         {
@@ -21093,7 +21093,7 @@
             }
           },
           "src": "src/cpu.sv:127-168",
-          "src_verilog": "decode_mod decode (\n.clk                (clk),\n.rst                (rst),\n.mem_data           (mem_read_data),\n.fetch_phase        (fetch_phase),\n.decode_phase       (decode_phase),\n.load_phase         (load_phase),\n.retire_phase       (retire_phase),\n.load16_1_phase     (load16_1_phase),\n.load16_2_phase     (load16_2_phase),\n.hl_addr            ({H_val, L_val}),\n.sp_val             (sp_val),\n.rp_val             (alu16_rp),\n.flags              (flags),\n.in_data            (in_data),\n... (27 more line(s))",
+          "src_verilog": "decode_mod decode (\n\t.clk                (clk),\n\t.rst                (rst),\n\t.mem_data           (mem_read_data),\n\t.fetch_phase        (fetch_phase),\n\t.decode_phase       (decode_phase),\n\t.load_phase         (load_phase),\n\t.retire_phase       (retire_phase),\n\t.load16_1_phase     (load16_1_phase),\n\t.load16_2_phase     (load16_2_phase),\n\t.hl_addr            ({H_val, L_val}),\n\t.sp_val             (sp_val),\n\t.rp_val             (alu16_rp),\n\t.flags              (flags),\n\t.in_data            (in_data),\n... (27 more line(s))",
           "type": "decode_mod"
         },
         {
@@ -21174,7 +21174,7 @@
             }
           },
           "src": "src/cpu.sv:192-207",
-          "src_verilog": "alu16 dual (\n.clk            (clk),\n.rst            (rst),\n.H_val          (H_val),\n.L_val          (L_val),\n.rp_val         (alu16_rp),\n.imm16          (imm16),\n.opcode         (opcode),\n.decode         (decode_phase),\n.retire         (retire_phase),\n.flags_in       (flags),\n.alu16_out      (alu16_out),\n.alu16_out_valid(alu16_out_valid),\n.flags_out      (alu16_flags_out),\n.carry_out      (alu16_carry_out)\n... (1 more line(s))",
+          "src_verilog": "alu16 dual (\n\t.clk            (clk),\n\t.rst            (rst),\n\t.H_val          (H_val),\n\t.L_val          (L_val),\n\t.rp_val         (alu16_rp),\n\t.imm16          (imm16),\n\t.opcode         (opcode),\n\t.decode         (decode_phase),\n\t.retire         (retire_phase),\n\t.flags_in       (flags),\n\t.alu16_out      (alu16_out),\n\t.alu16_out_valid(alu16_out_valid),\n\t.flags_out      (alu16_flags_out),\n\t.carry_out      (alu16_carry_out)\n... (1 more line(s))",
           "type": "alu16"
         },
         {
@@ -21225,7 +21225,7 @@
             }
           },
           "src": "src/cpu.sv:331-340",
-          "src_verilog": "io_out out_port (\n.clk          (clk),\n.rst          (rst),\n.decode_phase (decode_phase),\n.opcode       (opcode),\n.port         (imm_data[1:0]),\n.a_val        (A_val),\n.out_addr     (out_addr),\n.out_data     (out_data)\n);",
+          "src_verilog": "io_out out_port (\n\t.clk          (clk),\n\t.rst          (rst),\n\t.decode_phase (decode_phase),\n\t.opcode       (opcode),\n\t.port         (imm_data[1:0]),\n\t.a_val        (A_val),\n\t.out_addr     (out_addr),\n\t.out_data     (out_data)\n);",
           "type": "io_out"
         },
         {
@@ -21316,7 +21316,7 @@
             }
           },
           "src": "src/cpu.sv:274-285",
-          "src_verilog": "regsel_write select_ddd(.clk(clk), .rst(rst),\n.retire(retire_phase),\n.DDD(ddd),\n.pair_sel(rp_dst),\t// 16-bit dest pair from decoder (HL for DAD)\n// 8-bit writeback in RETIRE, gated by registered ALU8 output.\n.enable(alu_out_valid),\n// 16-bit (pair) writeback in RETIRE, gated by ALU16.\n.pair_enable(pair_write),\n.xchg_enable(is_xchg),\n.A_load(A_load), .B_load(B_load), .C_load(C_load),\n.D_load(D_load), .E_load(E_load), .H_load(H_load), .L_load(L_load),\n.SP_load(SP_load));",
+          "src_verilog": "regsel_write select_ddd(.clk(clk), .rst(rst),\n\t\t\t.retire(retire_phase),\n\t\t\t.DDD(ddd),\n\t\t\t.pair_sel(rp_dst),\t// 16-bit dest pair from decoder (HL for DAD)\n\t\t\t// 8-bit writeback in RETIRE, gated by registered ALU8 output.\n\t\t\t.enable(alu_out_valid),\n\t\t\t// 16-bit (pair) writeback in RETIRE, gated by ALU16.\n\t\t\t.pair_enable(pair_write),\n\t\t\t.xchg_enable(is_xchg),\n\t\t\t.A_load(A_load), .B_load(B_load), .C_load(C_load),\n\t\t\t.D_load(D_load), .E_load(E_load), .H_load(H_load), .L_load(L_load),\n\t\t\t.SP_load(SP_load));",
           "type": "regsel_write"
         },
         {
@@ -21402,7 +21402,7 @@
             }
           },
           "src": "src/cpu.sv:263-272",
-          "src_verilog": "regsel select_sss(.SSS(sss),\n.pair_sel(rp_src),\t// RP pair read from decoder\n.A_val(A_val), .B_val(B_val), .C_val(C_val),\n.D_val(D_val), .E_val(E_val), .H_val(H_val), .L_val(L_val),\n.M_val(loaddata[7:0]),\t// M = memory at HL (clocked in during LOAD8)\n.SP_val(sp_val),\n.flags_val(flags),\n.PC_val(pc_out),\n.pair_val(rp_read),\n.out_val(reg_out));",
+          "src_verilog": "regsel select_sss(.SSS(sss),\n\t\t  .pair_sel(rp_src),\t// RP pair read from decoder\n\t\t  .A_val(A_val), .B_val(B_val), .C_val(C_val),\n\t\t  .D_val(D_val), .E_val(E_val), .H_val(H_val), .L_val(L_val),\n\t\t  .M_val(loaddata[7:0]),\t// M = memory at HL (clocked in during LOAD8)\n\t\t  .SP_val(sp_val),\n\t\t  .flags_val(flags),\n\t\t  .PC_val(pc_out),\n\t\t  .pair_val(rp_read),\n\t\t  .out_val(reg_out));",
           "type": "regsel"
         },
         {
@@ -21488,7 +21488,7 @@
             }
           },
           "src": "src/cpu.sv:209-225",
-          "src_verilog": "sequencer_mod sequencer (\n.clk                (clk),\n.rst                (rst),\n.instruction_valid  (instruction_valid),\n.mask               (mask),\n.halt               (halt),\n.fetch_phase        (fetch_phase),\n.decode_phase       (decode_phase),\n.load_phase         (load_phase),\n.store_phase        (store_phase),\n.retire_phase       (retire_phase),\n.halt_phase         (halt_phase),\n.load16_1_phase     (load16_1_phase),\n.load16_2_phase     (load16_2_phase),\n.store16_1_phase    (store16_1_phase),\n... (2 more line(s))",
+          "src_verilog": "sequencer_mod sequencer (\n\t.clk                (clk),\n\t.rst                (rst),\n\t.instruction_valid  (instruction_valid),\n\t.mask               (mask),\n\t.halt               (halt),\n\t.fetch_phase        (fetch_phase),\n\t.decode_phase       (decode_phase),\n\t.load_phase         (load_phase),\n\t.store_phase        (store_phase),\n\t.retire_phase       (retire_phase),\n\t.halt_phase         (halt_phase),\n\t.load16_1_phase     (load16_1_phase),\n\t.load16_2_phase     (load16_2_phase),\n\t.store16_1_phase    (store16_1_phase),\n... (2 more line(s))",
           "type": "sequencer_mod"
         },
         {
@@ -21539,7 +21539,7 @@
             }
           },
           "src": "src/cpu.sv:320-329",
-          "src_verilog": "store_pipe store_buf (\n.clk            (clk),\n.rst            (rst),\n.store_addr_in  (store_addr_in),\n.store_data_in  (store_data_in),\n.store_phase    (store_phase),\n.storeaddress   (storeaddress),\n.storedata      (storedata),\n.store_we       (store_we)\n);",
+          "src_verilog": "store_pipe store_buf (\n\t.clk            (clk),\n\t.rst            (rst),\n\t.store_addr_in  (store_addr_in),\n\t.store_data_in  (store_data_in),\n\t.store_phase    (store_phase),\n\t.storeaddress   (storeaddress),\n\t.storedata      (storedata),\n\t.store_we       (store_we)\n);",
           "type": "store_pipe"
         },
         {
@@ -25283,7 +25283,7 @@
             }
           },
           "src": "src/decode.sv:323-324",
-          "src_verilog": "assign rp_src = is_sphl                 ? 3'b010 :\n(is_call_reg || is_rst) ? 3'b101 : default_rp;",
+          "src_verilog": "assign rp_src = is_sphl                 ? 3'b010 :\n                (is_call_reg || is_rst) ? 3'b101 : default_rp;",
           "type": "gridcad_mux"
         },
         {
@@ -25349,7 +25349,7 @@
             }
           },
           "src": "src/decode.sv:325-328",
-          "src_verilog": "assign rp_out = is_dad                  ? 3'b010 :\nis_sphl                 ? 3'b011 :\nis_ret_reg              ? 3'b101 :\n(is_lhld || is_xthl_comb) ? 3'b010 : default_rp;",
+          "src_verilog": "assign rp_out = is_dad                  ? 3'b010 :\n                is_sphl                 ? 3'b011 :\n                is_ret_reg              ? 3'b101 :\n                (is_lhld || is_xthl_comb) ? 3'b010 : default_rp;",
           "type": "gridcad_mux"
         },
         {
@@ -26062,7 +26062,7 @@
             }
           },
           "src": "src/decode.sv:277-312",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\ncc_matches_reg <= 1'b0;\ntake_jump_reg  <= 1'b0;\nis_call_reg    <= 1'b0;\nis_ret_reg     <= 1'b0;\nis_pair_load   <= 1'b0;\nis_pair_write  <= 1'b0;\nis_xchg        <= 1'b0;\nis_shld        <= 1'b0;\nis_xthl        <= 1'b0;\nis_lda         <= 1'b0;\nend else if (decode_phase || (fetch_phase && instruction_valid)) begin\ncc_matches_reg <= cc_matches;\ntake_jump_reg  <= take_jump;\n... (21 more line(s))",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tcc_matches_reg <= 1'b0;\n\t\ttake_jump_reg  <= 1'b0;\n\t\tis_call_reg    <= 1'b0;\n\t\tis_ret_reg     <= 1'b0;\n\t\tis_pair_load   <= 1'b0;\n\t\tis_pair_write  <= 1'b0;\n\t\tis_xchg        <= 1'b0;\n\t\tis_shld        <= 1'b0;\n\t\tis_xthl        <= 1'b0;\n\t\tis_lda         <= 1'b0;\n\tend else if (decode_phase || (fetch_phase && instruction_valid)) begin\n\t\tcc_matches_reg <= cc_matches;\n\t\ttake_jump_reg  <= take_jump;\n... (21 more line(s))",
           "type": "gridcad_reg"
         },
         {
@@ -26101,7 +26101,7 @@
             }
           },
           "src": "src/decode.sv:277-312",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\ncc_matches_reg <= 1'b0;\ntake_jump_reg  <= 1'b0;\nis_call_reg    <= 1'b0;\nis_ret_reg     <= 1'b0;\nis_pair_load   <= 1'b0;\nis_pair_write  <= 1'b0;\nis_xchg        <= 1'b0;\nis_shld        <= 1'b0;\nis_xthl        <= 1'b0;\nis_lda         <= 1'b0;\nend else if (decode_phase || (fetch_phase && instruction_valid)) begin\ncc_matches_reg <= cc_matches;\ntake_jump_reg  <= take_jump;\n... (21 more line(s))",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tcc_matches_reg <= 1'b0;\n\t\ttake_jump_reg  <= 1'b0;\n\t\tis_call_reg    <= 1'b0;\n\t\tis_ret_reg     <= 1'b0;\n\t\tis_pair_load   <= 1'b0;\n\t\tis_pair_write  <= 1'b0;\n\t\tis_xchg        <= 1'b0;\n\t\tis_shld        <= 1'b0;\n\t\tis_xthl        <= 1'b0;\n\t\tis_lda         <= 1'b0;\n\tend else if (decode_phase || (fetch_phase && instruction_valid)) begin\n\t\tcc_matches_reg <= cc_matches;\n\t\ttake_jump_reg  <= take_jump;\n... (21 more line(s))",
           "type": "gridcad_reg"
         },
         {
@@ -26140,7 +26140,7 @@
             }
           },
           "src": "src/decode.sv:277-312",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\ncc_matches_reg <= 1'b0;\ntake_jump_reg  <= 1'b0;\nis_call_reg    <= 1'b0;\nis_ret_reg     <= 1'b0;\nis_pair_load   <= 1'b0;\nis_pair_write  <= 1'b0;\nis_xchg        <= 1'b0;\nis_shld        <= 1'b0;\nis_xthl        <= 1'b0;\nis_lda         <= 1'b0;\nend else if (decode_phase || (fetch_phase && instruction_valid)) begin\ncc_matches_reg <= cc_matches;\ntake_jump_reg  <= take_jump;\n... (21 more line(s))",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tcc_matches_reg <= 1'b0;\n\t\ttake_jump_reg  <= 1'b0;\n\t\tis_call_reg    <= 1'b0;\n\t\tis_ret_reg     <= 1'b0;\n\t\tis_pair_load   <= 1'b0;\n\t\tis_pair_write  <= 1'b0;\n\t\tis_xchg        <= 1'b0;\n\t\tis_shld        <= 1'b0;\n\t\tis_xthl        <= 1'b0;\n\t\tis_lda         <= 1'b0;\n\tend else if (decode_phase || (fetch_phase && instruction_valid)) begin\n\t\tcc_matches_reg <= cc_matches;\n\t\ttake_jump_reg  <= take_jump;\n... (21 more line(s))",
           "type": "gridcad_reg"
         },
         {
@@ -26179,7 +26179,7 @@
             }
           },
           "src": "src/decode.sv:277-312",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\ncc_matches_reg <= 1'b0;\ntake_jump_reg  <= 1'b0;\nis_call_reg    <= 1'b0;\nis_ret_reg     <= 1'b0;\nis_pair_load   <= 1'b0;\nis_pair_write  <= 1'b0;\nis_xchg        <= 1'b0;\nis_shld        <= 1'b0;\nis_xthl        <= 1'b0;\nis_lda         <= 1'b0;\nend else if (decode_phase || (fetch_phase && instruction_valid)) begin\ncc_matches_reg <= cc_matches;\ntake_jump_reg  <= take_jump;\n... (21 more line(s))",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tcc_matches_reg <= 1'b0;\n\t\ttake_jump_reg  <= 1'b0;\n\t\tis_call_reg    <= 1'b0;\n\t\tis_ret_reg     <= 1'b0;\n\t\tis_pair_load   <= 1'b0;\n\t\tis_pair_write  <= 1'b0;\n\t\tis_xchg        <= 1'b0;\n\t\tis_shld        <= 1'b0;\n\t\tis_xthl        <= 1'b0;\n\t\tis_lda         <= 1'b0;\n\tend else if (decode_phase || (fetch_phase && instruction_valid)) begin\n\t\tcc_matches_reg <= cc_matches;\n\t\ttake_jump_reg  <= take_jump;\n... (21 more line(s))",
           "type": "gridcad_reg"
         },
         {
@@ -26218,7 +26218,7 @@
             }
           },
           "src": "src/decode.sv:277-312",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\ncc_matches_reg <= 1'b0;\ntake_jump_reg  <= 1'b0;\nis_call_reg    <= 1'b0;\nis_ret_reg     <= 1'b0;\nis_pair_load   <= 1'b0;\nis_pair_write  <= 1'b0;\nis_xchg        <= 1'b0;\nis_shld        <= 1'b0;\nis_xthl        <= 1'b0;\nis_lda         <= 1'b0;\nend else if (decode_phase || (fetch_phase && instruction_valid)) begin\ncc_matches_reg <= cc_matches;\ntake_jump_reg  <= take_jump;\n... (21 more line(s))",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tcc_matches_reg <= 1'b0;\n\t\ttake_jump_reg  <= 1'b0;\n\t\tis_call_reg    <= 1'b0;\n\t\tis_ret_reg     <= 1'b0;\n\t\tis_pair_load   <= 1'b0;\n\t\tis_pair_write  <= 1'b0;\n\t\tis_xchg        <= 1'b0;\n\t\tis_shld        <= 1'b0;\n\t\tis_xthl        <= 1'b0;\n\t\tis_lda         <= 1'b0;\n\tend else if (decode_phase || (fetch_phase && instruction_valid)) begin\n\t\tcc_matches_reg <= cc_matches;\n\t\ttake_jump_reg  <= take_jump;\n... (21 more line(s))",
           "type": "gridcad_reg"
         },
         {
@@ -26257,7 +26257,7 @@
             }
           },
           "src": "src/decode.sv:277-312",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\ncc_matches_reg <= 1'b0;\ntake_jump_reg  <= 1'b0;\nis_call_reg    <= 1'b0;\nis_ret_reg     <= 1'b0;\nis_pair_load   <= 1'b0;\nis_pair_write  <= 1'b0;\nis_xchg        <= 1'b0;\nis_shld        <= 1'b0;\nis_xthl        <= 1'b0;\nis_lda         <= 1'b0;\nend else if (decode_phase || (fetch_phase && instruction_valid)) begin\ncc_matches_reg <= cc_matches;\ntake_jump_reg  <= take_jump;\n... (21 more line(s))",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tcc_matches_reg <= 1'b0;\n\t\ttake_jump_reg  <= 1'b0;\n\t\tis_call_reg    <= 1'b0;\n\t\tis_ret_reg     <= 1'b0;\n\t\tis_pair_load   <= 1'b0;\n\t\tis_pair_write  <= 1'b0;\n\t\tis_xchg        <= 1'b0;\n\t\tis_shld        <= 1'b0;\n\t\tis_xthl        <= 1'b0;\n\t\tis_lda         <= 1'b0;\n\tend else if (decode_phase || (fetch_phase && instruction_valid)) begin\n\t\tcc_matches_reg <= cc_matches;\n\t\ttake_jump_reg  <= take_jump;\n... (21 more line(s))",
           "type": "gridcad_reg"
         },
         {
@@ -26296,7 +26296,7 @@
             }
           },
           "src": "src/decode.sv:277-312",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\ncc_matches_reg <= 1'b0;\ntake_jump_reg  <= 1'b0;\nis_call_reg    <= 1'b0;\nis_ret_reg     <= 1'b0;\nis_pair_load   <= 1'b0;\nis_pair_write  <= 1'b0;\nis_xchg        <= 1'b0;\nis_shld        <= 1'b0;\nis_xthl        <= 1'b0;\nis_lda         <= 1'b0;\nend else if (decode_phase || (fetch_phase && instruction_valid)) begin\ncc_matches_reg <= cc_matches;\ntake_jump_reg  <= take_jump;\n... (21 more line(s))",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tcc_matches_reg <= 1'b0;\n\t\ttake_jump_reg  <= 1'b0;\n\t\tis_call_reg    <= 1'b0;\n\t\tis_ret_reg     <= 1'b0;\n\t\tis_pair_load   <= 1'b0;\n\t\tis_pair_write  <= 1'b0;\n\t\tis_xchg        <= 1'b0;\n\t\tis_shld        <= 1'b0;\n\t\tis_xthl        <= 1'b0;\n\t\tis_lda         <= 1'b0;\n\tend else if (decode_phase || (fetch_phase && instruction_valid)) begin\n\t\tcc_matches_reg <= cc_matches;\n\t\ttake_jump_reg  <= take_jump;\n... (21 more line(s))",
           "type": "gridcad_reg"
         },
         {
@@ -26335,7 +26335,7 @@
             }
           },
           "src": "src/decode.sv:277-312",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\ncc_matches_reg <= 1'b0;\ntake_jump_reg  <= 1'b0;\nis_call_reg    <= 1'b0;\nis_ret_reg     <= 1'b0;\nis_pair_load   <= 1'b0;\nis_pair_write  <= 1'b0;\nis_xchg        <= 1'b0;\nis_shld        <= 1'b0;\nis_xthl        <= 1'b0;\nis_lda         <= 1'b0;\nend else if (decode_phase || (fetch_phase && instruction_valid)) begin\ncc_matches_reg <= cc_matches;\ntake_jump_reg  <= take_jump;\n... (21 more line(s))",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tcc_matches_reg <= 1'b0;\n\t\ttake_jump_reg  <= 1'b0;\n\t\tis_call_reg    <= 1'b0;\n\t\tis_ret_reg     <= 1'b0;\n\t\tis_pair_load   <= 1'b0;\n\t\tis_pair_write  <= 1'b0;\n\t\tis_xchg        <= 1'b0;\n\t\tis_shld        <= 1'b0;\n\t\tis_xthl        <= 1'b0;\n\t\tis_lda         <= 1'b0;\n\tend else if (decode_phase || (fetch_phase && instruction_valid)) begin\n\t\tcc_matches_reg <= cc_matches;\n\t\ttake_jump_reg  <= take_jump;\n... (21 more line(s))",
           "type": "gridcad_reg"
         },
         {
@@ -26374,7 +26374,7 @@
             }
           },
           "src": "src/decode.sv:277-312",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\ncc_matches_reg <= 1'b0;\ntake_jump_reg  <= 1'b0;\nis_call_reg    <= 1'b0;\nis_ret_reg     <= 1'b0;\nis_pair_load   <= 1'b0;\nis_pair_write  <= 1'b0;\nis_xchg        <= 1'b0;\nis_shld        <= 1'b0;\nis_xthl        <= 1'b0;\nis_lda         <= 1'b0;\nend else if (decode_phase || (fetch_phase && instruction_valid)) begin\ncc_matches_reg <= cc_matches;\ntake_jump_reg  <= take_jump;\n... (21 more line(s))",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tcc_matches_reg <= 1'b0;\n\t\ttake_jump_reg  <= 1'b0;\n\t\tis_call_reg    <= 1'b0;\n\t\tis_ret_reg     <= 1'b0;\n\t\tis_pair_load   <= 1'b0;\n\t\tis_pair_write  <= 1'b0;\n\t\tis_xchg        <= 1'b0;\n\t\tis_shld        <= 1'b0;\n\t\tis_xthl        <= 1'b0;\n\t\tis_lda         <= 1'b0;\n\tend else if (decode_phase || (fetch_phase && instruction_valid)) begin\n\t\tcc_matches_reg <= cc_matches;\n\t\ttake_jump_reg  <= take_jump;\n... (21 more line(s))",
           "type": "gridcad_reg"
         },
         {
@@ -26413,7 +26413,7 @@
             }
           },
           "src": "src/decode.sv:146-172",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nopcode\t     <= 8'h00;\nopcode_valid <= 1'b0;\ndata\t     <= 8'h00;\ndata_valid   <= 1'b0;\naddr_lo\t     <= 8'h00;\naddr_hi\t     <= 8'h00;\naddr_lo_valid <= 1'b0;\naddr_hi_valid <= 1'b0;\npc\t     <= 16'd0;\nloadaddress  <= 16'd0;\nloaddata     <= 16'd0;\nend else begin\nopcode\t     <= next_opcode;\n... (12 more line(s))",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\topcode\t     <= 8'h00;\n\t\topcode_valid <= 1'b0;\n\t\tdata\t     <= 8'h00;\n\t\tdata_valid   <= 1'b0;\n\t\taddr_lo\t     <= 8'h00;\n\t\taddr_hi\t     <= 8'h00;\n\t\taddr_lo_valid <= 1'b0;\n\t\taddr_hi_valid <= 1'b0;\n\t\tpc\t     <= 16'd0;\n\t\tloadaddress  <= 16'd0;\n\t\tloaddata     <= 16'd0;\n\tend else begin\n\t\topcode\t     <= next_opcode;\n... (12 more line(s))",
           "type": "gridcad_reg"
         },
         {
@@ -26452,7 +26452,7 @@
             }
           },
           "src": "src/decode.sv:146-172",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nopcode\t     <= 8'h00;\nopcode_valid <= 1'b0;\ndata\t     <= 8'h00;\ndata_valid   <= 1'b0;\naddr_lo\t     <= 8'h00;\naddr_hi\t     <= 8'h00;\naddr_lo_valid <= 1'b0;\naddr_hi_valid <= 1'b0;\npc\t     <= 16'd0;\nloadaddress  <= 16'd0;\nloaddata     <= 16'd0;\nend else begin\nopcode\t     <= next_opcode;\n... (12 more line(s))",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\topcode\t     <= 8'h00;\n\t\topcode_valid <= 1'b0;\n\t\tdata\t     <= 8'h00;\n\t\tdata_valid   <= 1'b0;\n\t\taddr_lo\t     <= 8'h00;\n\t\taddr_hi\t     <= 8'h00;\n\t\taddr_lo_valid <= 1'b0;\n\t\taddr_hi_valid <= 1'b0;\n\t\tpc\t     <= 16'd0;\n\t\tloadaddress  <= 16'd0;\n\t\tloaddata     <= 16'd0;\n\tend else begin\n\t\topcode\t     <= next_opcode;\n... (12 more line(s))",
           "type": "gridcad_reg"
         },
         {
@@ -26491,7 +26491,7 @@
             }
           },
           "src": "src/decode.sv:146-172",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nopcode\t     <= 8'h00;\nopcode_valid <= 1'b0;\ndata\t     <= 8'h00;\ndata_valid   <= 1'b0;\naddr_lo\t     <= 8'h00;\naddr_hi\t     <= 8'h00;\naddr_lo_valid <= 1'b0;\naddr_hi_valid <= 1'b0;\npc\t     <= 16'd0;\nloadaddress  <= 16'd0;\nloaddata     <= 16'd0;\nend else begin\nopcode\t     <= next_opcode;\n... (12 more line(s))",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\topcode\t     <= 8'h00;\n\t\topcode_valid <= 1'b0;\n\t\tdata\t     <= 8'h00;\n\t\tdata_valid   <= 1'b0;\n\t\taddr_lo\t     <= 8'h00;\n\t\taddr_hi\t     <= 8'h00;\n\t\taddr_lo_valid <= 1'b0;\n\t\taddr_hi_valid <= 1'b0;\n\t\tpc\t     <= 16'd0;\n\t\tloadaddress  <= 16'd0;\n\t\tloaddata     <= 16'd0;\n\tend else begin\n\t\topcode\t     <= next_opcode;\n... (12 more line(s))",
           "type": "gridcad_reg"
         },
         {
@@ -26530,7 +26530,7 @@
             }
           },
           "src": "src/decode.sv:146-172",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nopcode\t     <= 8'h00;\nopcode_valid <= 1'b0;\ndata\t     <= 8'h00;\ndata_valid   <= 1'b0;\naddr_lo\t     <= 8'h00;\naddr_hi\t     <= 8'h00;\naddr_lo_valid <= 1'b0;\naddr_hi_valid <= 1'b0;\npc\t     <= 16'd0;\nloadaddress  <= 16'd0;\nloaddata     <= 16'd0;\nend else begin\nopcode\t     <= next_opcode;\n... (12 more line(s))",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\topcode\t     <= 8'h00;\n\t\topcode_valid <= 1'b0;\n\t\tdata\t     <= 8'h00;\n\t\tdata_valid   <= 1'b0;\n\t\taddr_lo\t     <= 8'h00;\n\t\taddr_hi\t     <= 8'h00;\n\t\taddr_lo_valid <= 1'b0;\n\t\taddr_hi_valid <= 1'b0;\n\t\tpc\t     <= 16'd0;\n\t\tloadaddress  <= 16'd0;\n\t\tloaddata     <= 16'd0;\n\tend else begin\n\t\topcode\t     <= next_opcode;\n... (12 more line(s))",
           "type": "gridcad_reg"
         },
         {
@@ -26569,7 +26569,7 @@
             }
           },
           "src": "src/decode.sv:146-172",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nopcode\t     <= 8'h00;\nopcode_valid <= 1'b0;\ndata\t     <= 8'h00;\ndata_valid   <= 1'b0;\naddr_lo\t     <= 8'h00;\naddr_hi\t     <= 8'h00;\naddr_lo_valid <= 1'b0;\naddr_hi_valid <= 1'b0;\npc\t     <= 16'd0;\nloadaddress  <= 16'd0;\nloaddata     <= 16'd0;\nend else begin\nopcode\t     <= next_opcode;\n... (12 more line(s))",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\topcode\t     <= 8'h00;\n\t\topcode_valid <= 1'b0;\n\t\tdata\t     <= 8'h00;\n\t\tdata_valid   <= 1'b0;\n\t\taddr_lo\t     <= 8'h00;\n\t\taddr_hi\t     <= 8'h00;\n\t\taddr_lo_valid <= 1'b0;\n\t\taddr_hi_valid <= 1'b0;\n\t\tpc\t     <= 16'd0;\n\t\tloadaddress  <= 16'd0;\n\t\tloaddata     <= 16'd0;\n\tend else begin\n\t\topcode\t     <= next_opcode;\n... (12 more line(s))",
           "type": "gridcad_reg"
         },
         {
@@ -26608,7 +26608,7 @@
             }
           },
           "src": "src/decode.sv:146-172",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nopcode\t     <= 8'h00;\nopcode_valid <= 1'b0;\ndata\t     <= 8'h00;\ndata_valid   <= 1'b0;\naddr_lo\t     <= 8'h00;\naddr_hi\t     <= 8'h00;\naddr_lo_valid <= 1'b0;\naddr_hi_valid <= 1'b0;\npc\t     <= 16'd0;\nloadaddress  <= 16'd0;\nloaddata     <= 16'd0;\nend else begin\nopcode\t     <= next_opcode;\n... (12 more line(s))",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\topcode\t     <= 8'h00;\n\t\topcode_valid <= 1'b0;\n\t\tdata\t     <= 8'h00;\n\t\tdata_valid   <= 1'b0;\n\t\taddr_lo\t     <= 8'h00;\n\t\taddr_hi\t     <= 8'h00;\n\t\taddr_lo_valid <= 1'b0;\n\t\taddr_hi_valid <= 1'b0;\n\t\tpc\t     <= 16'd0;\n\t\tloadaddress  <= 16'd0;\n\t\tloaddata     <= 16'd0;\n\tend else begin\n\t\topcode\t     <= next_opcode;\n... (12 more line(s))",
           "type": "gridcad_reg"
         },
         {
@@ -26647,7 +26647,7 @@
             }
           },
           "src": "src/decode.sv:146-172",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nopcode\t     <= 8'h00;\nopcode_valid <= 1'b0;\ndata\t     <= 8'h00;\ndata_valid   <= 1'b0;\naddr_lo\t     <= 8'h00;\naddr_hi\t     <= 8'h00;\naddr_lo_valid <= 1'b0;\naddr_hi_valid <= 1'b0;\npc\t     <= 16'd0;\nloadaddress  <= 16'd0;\nloaddata     <= 16'd0;\nend else begin\nopcode\t     <= next_opcode;\n... (12 more line(s))",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\topcode\t     <= 8'h00;\n\t\topcode_valid <= 1'b0;\n\t\tdata\t     <= 8'h00;\n\t\tdata_valid   <= 1'b0;\n\t\taddr_lo\t     <= 8'h00;\n\t\taddr_hi\t     <= 8'h00;\n\t\taddr_lo_valid <= 1'b0;\n\t\taddr_hi_valid <= 1'b0;\n\t\tpc\t     <= 16'd0;\n\t\tloadaddress  <= 16'd0;\n\t\tloaddata     <= 16'd0;\n\tend else begin\n\t\topcode\t     <= next_opcode;\n... (12 more line(s))",
           "type": "gridcad_reg"
         },
         {
@@ -27054,7 +27054,7 @@
             }
           },
           "src": "src/decode.sv:146-172",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nopcode\t     <= 8'h00;\nopcode_valid <= 1'b0;\ndata\t     <= 8'h00;\ndata_valid   <= 1'b0;\naddr_lo\t     <= 8'h00;\naddr_hi\t     <= 8'h00;\naddr_lo_valid <= 1'b0;\naddr_hi_valid <= 1'b0;\npc\t     <= 16'd0;\nloadaddress  <= 16'd0;\nloaddata     <= 16'd0;\nend else begin\nopcode\t     <= next_opcode;\n... (12 more line(s))",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\topcode\t     <= 8'h00;\n\t\topcode_valid <= 1'b0;\n\t\tdata\t     <= 8'h00;\n\t\tdata_valid   <= 1'b0;\n\t\taddr_lo\t     <= 8'h00;\n\t\taddr_hi\t     <= 8'h00;\n\t\taddr_lo_valid <= 1'b0;\n\t\taddr_hi_valid <= 1'b0;\n\t\tpc\t     <= 16'd0;\n\t\tloadaddress  <= 16'd0;\n\t\tloaddata     <= 16'd0;\n\tend else begin\n\t\topcode\t     <= next_opcode;\n... (12 more line(s))",
           "type": "gridcad_reg"
         },
         {
@@ -27093,7 +27093,7 @@
             }
           },
           "src": "src/decode.sv:146-172",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nopcode\t     <= 8'h00;\nopcode_valid <= 1'b0;\ndata\t     <= 8'h00;\ndata_valid   <= 1'b0;\naddr_lo\t     <= 8'h00;\naddr_hi\t     <= 8'h00;\naddr_lo_valid <= 1'b0;\naddr_hi_valid <= 1'b0;\npc\t     <= 16'd0;\nloadaddress  <= 16'd0;\nloaddata     <= 16'd0;\nend else begin\nopcode\t     <= next_opcode;\n... (12 more line(s))",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\topcode\t     <= 8'h00;\n\t\topcode_valid <= 1'b0;\n\t\tdata\t     <= 8'h00;\n\t\tdata_valid   <= 1'b0;\n\t\taddr_lo\t     <= 8'h00;\n\t\taddr_hi\t     <= 8'h00;\n\t\taddr_lo_valid <= 1'b0;\n\t\taddr_hi_valid <= 1'b0;\n\t\tpc\t     <= 16'd0;\n\t\tloadaddress  <= 16'd0;\n\t\tloaddata     <= 16'd0;\n\tend else begin\n\t\topcode\t     <= next_opcode;\n... (12 more line(s))",
           "type": "gridcad_reg"
         },
         {
@@ -27132,7 +27132,7 @@
             }
           },
           "src": "src/decode.sv:146-172",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nopcode\t     <= 8'h00;\nopcode_valid <= 1'b0;\ndata\t     <= 8'h00;\ndata_valid   <= 1'b0;\naddr_lo\t     <= 8'h00;\naddr_hi\t     <= 8'h00;\naddr_lo_valid <= 1'b0;\naddr_hi_valid <= 1'b0;\npc\t     <= 16'd0;\nloadaddress  <= 16'd0;\nloaddata     <= 16'd0;\nend else begin\nopcode\t     <= next_opcode;\n... (12 more line(s))",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\topcode\t     <= 8'h00;\n\t\topcode_valid <= 1'b0;\n\t\tdata\t     <= 8'h00;\n\t\tdata_valid   <= 1'b0;\n\t\taddr_lo\t     <= 8'h00;\n\t\taddr_hi\t     <= 8'h00;\n\t\taddr_lo_valid <= 1'b0;\n\t\taddr_hi_valid <= 1'b0;\n\t\tpc\t     <= 16'd0;\n\t\tloadaddress  <= 16'd0;\n\t\tloaddata     <= 16'd0;\n\tend else begin\n\t\topcode\t     <= next_opcode;\n... (12 more line(s))",
           "type": "gridcad_reg"
         },
         {
@@ -27171,7 +27171,7 @@
             }
           },
           "src": "src/decode.sv:146-172",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nopcode\t     <= 8'h00;\nopcode_valid <= 1'b0;\ndata\t     <= 8'h00;\ndata_valid   <= 1'b0;\naddr_lo\t     <= 8'h00;\naddr_hi\t     <= 8'h00;\naddr_lo_valid <= 1'b0;\naddr_hi_valid <= 1'b0;\npc\t     <= 16'd0;\nloadaddress  <= 16'd0;\nloaddata     <= 16'd0;\nend else begin\nopcode\t     <= next_opcode;\n... (12 more line(s))",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\topcode\t     <= 8'h00;\n\t\topcode_valid <= 1'b0;\n\t\tdata\t     <= 8'h00;\n\t\tdata_valid   <= 1'b0;\n\t\taddr_lo\t     <= 8'h00;\n\t\taddr_hi\t     <= 8'h00;\n\t\taddr_lo_valid <= 1'b0;\n\t\taddr_hi_valid <= 1'b0;\n\t\tpc\t     <= 16'd0;\n\t\tloadaddress  <= 16'd0;\n\t\tloaddata     <= 16'd0;\n\tend else begin\n\t\topcode\t     <= next_opcode;\n... (12 more line(s))",
           "type": "gridcad_reg"
         },
         {
@@ -27210,7 +27210,7 @@
             }
           },
           "src": "src/decode.sv:146-172",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nopcode\t     <= 8'h00;\nopcode_valid <= 1'b0;\ndata\t     <= 8'h00;\ndata_valid   <= 1'b0;\naddr_lo\t     <= 8'h00;\naddr_hi\t     <= 8'h00;\naddr_lo_valid <= 1'b0;\naddr_hi_valid <= 1'b0;\npc\t     <= 16'd0;\nloadaddress  <= 16'd0;\nloaddata     <= 16'd0;\nend else begin\nopcode\t     <= next_opcode;\n... (12 more line(s))",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\topcode\t     <= 8'h00;\n\t\topcode_valid <= 1'b0;\n\t\tdata\t     <= 8'h00;\n\t\tdata_valid   <= 1'b0;\n\t\taddr_lo\t     <= 8'h00;\n\t\taddr_hi\t     <= 8'h00;\n\t\taddr_lo_valid <= 1'b0;\n\t\taddr_hi_valid <= 1'b0;\n\t\tpc\t     <= 16'd0;\n\t\tloadaddress  <= 16'd0;\n\t\tloaddata     <= 16'd0;\n\tend else begin\n\t\topcode\t     <= next_opcode;\n... (12 more line(s))",
           "type": "gridcad_reg"
         },
         {
@@ -42629,7 +42629,7 @@
             }
           },
           "src": "src/dipswitch.sv:17-28",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\ndata <= 8'h00;\nend else begin\nunique case (addr)\n2'b00:   data <= dip1;\n2'b01:   data <= dip2;\n2'b10:   data <= dip3;\ndefault: data <= 8'h00;\nendcase\nend\nend",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n    if (rst) begin\n        data <= 8'h00;\n    end else begin\n        unique case (addr)\n            2'b00:   data <= dip1;\n            2'b01:   data <= dip2;\n            2'b10:   data <= dip3;\n            default: data <= 8'h00;\n        endcase\n    end\nend",
           "type": "gridcad_reg"
         },
         {
@@ -43070,7 +43070,7 @@
             }
           ],
           "src": "src/dipswitch.sv:17-28",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\ndata <= 8'h00;\nend else begin\nunique case (addr)\n2'b00:   data <= dip1;\n2'b01:   data <= dip2;\n2'b10:   data <= dip3;\ndefault: data <= 8'h00;\nendcase\nend\nend",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n    if (rst) begin\n        data <= 8'h00;\n    end else begin\n        unique case (addr)\n            2'b00:   data <= dip1;\n            2'b01:   data <= dip2;\n            2'b10:   data <= dip3;\n            default: data <= 8'h00;\n        endcase\n    end\nend",
           "width": 8
         },
         {
@@ -43353,7 +43353,7 @@
             }
           },
           "src": "src/eightsegment.sv:69-84",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\ndisp0         <= 8'h00;\ndisp1         <= 8'h00;\nscan_cnt      <= '0;\nsegsel_active <= 4'b0000;\nseg_active    <= 8'h00;\nend else begin\nif (addr == 2'b00)      disp0 <= data;\nelse if (addr == 2'b01) disp1 <= data;\n\nscan_cnt      <= scan_cnt + 1'b1;\nsegsel_active <= 4'b0001 << digit_sel;\nseg_active    <= decoded_seg;\nend\n... (1 more line(s))",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tdisp0         <= 8'h00;\n\t\tdisp1         <= 8'h00;\n\t\tscan_cnt      <= '0;\n\t\tsegsel_active <= 4'b0000;\n\t\tseg_active    <= 8'h00;\n\tend else begin\n\t\tif (addr == 2'b00)      disp0 <= data;\n\t\telse if (addr == 2'b01) disp1 <= data;\n\n\t\tscan_cnt      <= scan_cnt + 1'b1;\n\t\tsegsel_active <= 4'b0001 << digit_sel;\n\t\tseg_active    <= decoded_seg;\n\tend\n... (1 more line(s))",
           "type": "gridcad_reg"
         },
         {
@@ -43392,7 +43392,7 @@
             }
           },
           "src": "src/eightsegment.sv:69-84",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\ndisp0         <= 8'h00;\ndisp1         <= 8'h00;\nscan_cnt      <= '0;\nsegsel_active <= 4'b0000;\nseg_active    <= 8'h00;\nend else begin\nif (addr == 2'b00)      disp0 <= data;\nelse if (addr == 2'b01) disp1 <= data;\n\nscan_cnt      <= scan_cnt + 1'b1;\nsegsel_active <= 4'b0001 << digit_sel;\nseg_active    <= decoded_seg;\nend\n... (1 more line(s))",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tdisp0         <= 8'h00;\n\t\tdisp1         <= 8'h00;\n\t\tscan_cnt      <= '0;\n\t\tsegsel_active <= 4'b0000;\n\t\tseg_active    <= 8'h00;\n\tend else begin\n\t\tif (addr == 2'b00)      disp0 <= data;\n\t\telse if (addr == 2'b01) disp1 <= data;\n\n\t\tscan_cnt      <= scan_cnt + 1'b1;\n\t\tsegsel_active <= 4'b0001 << digit_sel;\n\t\tseg_active    <= decoded_seg;\n\tend\n... (1 more line(s))",
           "type": "gridcad_reg"
         },
         {
@@ -43475,7 +43475,7 @@
             }
           },
           "src": "src/eightsegment.sv:48-66",
-          "src_verilog": "unique case (nibble)\n4'h0: decoded_seg = 8'b0011_1111;\n4'h1: decoded_seg = 8'b0000_0110;\n4'h2: decoded_seg = 8'b0101_1011;\n4'h3: decoded_seg = 8'b0100_1111;\n4'h4: decoded_seg = 8'b0110_0110;\n4'h5: decoded_seg = 8'b0110_1101;\n4'h6: decoded_seg = 8'b0111_1101;\n4'h7: decoded_seg = 8'b0000_0111;\n4'h8: decoded_seg = 8'b0111_1111;\n4'h9: decoded_seg = 8'b0110_1111;\n4'hA: decoded_seg = 8'b0111_0111;\n4'hB: decoded_seg = 8'b0111_1100;\n4'hC: decoded_seg = 8'b0011_1001;\n4'hD: decoded_seg = 8'b0101_1110;\n... (4 more line(s))",
+          "src_verilog": "unique case (nibble)\n\t4'h0: decoded_seg = 8'b0011_1111;\n\t4'h1: decoded_seg = 8'b0000_0110;\n\t4'h2: decoded_seg = 8'b0101_1011;\n\t4'h3: decoded_seg = 8'b0100_1111;\n\t4'h4: decoded_seg = 8'b0110_0110;\n\t4'h5: decoded_seg = 8'b0110_1101;\n\t4'h6: decoded_seg = 8'b0111_1101;\n\t4'h7: decoded_seg = 8'b0000_0111;\n\t4'h8: decoded_seg = 8'b0111_1111;\n\t4'h9: decoded_seg = 8'b0110_1111;\n\t4'hA: decoded_seg = 8'b0111_0111;\n\t4'hB: decoded_seg = 8'b0111_1100;\n\t4'hC: decoded_seg = 8'b0011_1001;\n\t4'hD: decoded_seg = 8'b0101_1110;\n... (4 more line(s))",
           "type": "gridcad_mem"
         },
         {
@@ -43537,7 +43537,7 @@
             }
           },
           "src": "src/eightsegment.sv:69-84",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\ndisp0         <= 8'h00;\ndisp1         <= 8'h00;\nscan_cnt      <= '0;\nsegsel_active <= 4'b0000;\nseg_active    <= 8'h00;\nend else begin\nif (addr == 2'b00)      disp0 <= data;\nelse if (addr == 2'b01) disp1 <= data;\n\nscan_cnt      <= scan_cnt + 1'b1;\nsegsel_active <= 4'b0001 << digit_sel;\nseg_active    <= decoded_seg;\nend\n... (1 more line(s))",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tdisp0         <= 8'h00;\n\t\tdisp1         <= 8'h00;\n\t\tscan_cnt      <= '0;\n\t\tsegsel_active <= 4'b0000;\n\t\tseg_active    <= 8'h00;\n\tend else begin\n\t\tif (addr == 2'b00)      disp0 <= data;\n\t\telse if (addr == 2'b01) disp1 <= data;\n\n\t\tscan_cnt      <= scan_cnt + 1'b1;\n\t\tsegsel_active <= 4'b0001 << digit_sel;\n\t\tseg_active    <= decoded_seg;\n\tend\n... (1 more line(s))",
           "type": "gridcad_reg"
         },
         {
@@ -43576,7 +43576,7 @@
             }
           },
           "src": "src/eightsegment.sv:69-84",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\ndisp0         <= 8'h00;\ndisp1         <= 8'h00;\nscan_cnt      <= '0;\nsegsel_active <= 4'b0000;\nseg_active    <= 8'h00;\nend else begin\nif (addr == 2'b00)      disp0 <= data;\nelse if (addr == 2'b01) disp1 <= data;\n\nscan_cnt      <= scan_cnt + 1'b1;\nsegsel_active <= 4'b0001 << digit_sel;\nseg_active    <= decoded_seg;\nend\n... (1 more line(s))",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tdisp0         <= 8'h00;\n\t\tdisp1         <= 8'h00;\n\t\tscan_cnt      <= '0;\n\t\tsegsel_active <= 4'b0000;\n\t\tseg_active    <= 8'h00;\n\tend else begin\n\t\tif (addr == 2'b00)      disp0 <= data;\n\t\telse if (addr == 2'b01) disp1 <= data;\n\n\t\tscan_cnt      <= scan_cnt + 1'b1;\n\t\tsegsel_active <= 4'b0001 << digit_sel;\n\t\tseg_active    <= decoded_seg;\n\tend\n... (1 more line(s))",
           "type": "gridcad_reg"
         },
         {
@@ -43615,7 +43615,7 @@
             }
           },
           "src": "src/eightsegment.sv:69-84",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\ndisp0         <= 8'h00;\ndisp1         <= 8'h00;\nscan_cnt      <= '0;\nsegsel_active <= 4'b0000;\nseg_active    <= 8'h00;\nend else begin\nif (addr == 2'b00)      disp0 <= data;\nelse if (addr == 2'b01) disp1 <= data;\n\nscan_cnt      <= scan_cnt + 1'b1;\nsegsel_active <= 4'b0001 << digit_sel;\nseg_active    <= decoded_seg;\nend\n... (1 more line(s))",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tdisp0         <= 8'h00;\n\t\tdisp1         <= 8'h00;\n\t\tscan_cnt      <= '0;\n\t\tsegsel_active <= 4'b0000;\n\t\tseg_active    <= 8'h00;\n\tend else begin\n\t\tif (addr == 2'b00)      disp0 <= data;\n\t\telse if (addr == 2'b01) disp1 <= data;\n\n\t\tscan_cnt      <= scan_cnt + 1'b1;\n\t\tsegsel_active <= 4'b0001 << digit_sel;\n\t\tseg_active    <= decoded_seg;\n\tend\n... (1 more line(s))",
           "type": "gridcad_reg"
         },
         {
@@ -45565,7 +45565,7 @@
             }
           },
           "src": "src/ram.sv:26-31",
-          "src_verilog": "always @(posedge clk) begin\nif (we) begin\nmem[waddr[11:0]] <= wdata;\nend\nrdata <= mem[raddr[11:0]]; // Synchronous read required for iCE40 BRAM\nend",
+          "src_verilog": "always @(posedge clk) begin\n\tif (we) begin\n\t\tmem[waddr[11:0]] <= wdata;\n\tend\n\trdata <= mem[raddr[11:0]]; // Synchronous read required for iCE40 BRAM\nend",
           "type": "gridcad_reg"
         },
         {
@@ -46282,7 +46282,7 @@
             }
           ],
           "src": "src/ram.sv:26-31",
-          "src_verilog": "always @(posedge clk) begin\nif (we) begin\nmem[waddr[11:0]] <= wdata;\nend\nrdata <= mem[raddr[11:0]]; // Synchronous read required for iCE40 BRAM\nend",
+          "src_verilog": "always @(posedge clk) begin\n\tif (we) begin\n\t\tmem[waddr[11:0]] <= wdata;\n\tend\n\trdata <= mem[raddr[11:0]]; // Synchronous read required for iCE40 BRAM\nend",
           "width": 8
         },
         {
@@ -46336,7 +46336,7 @@
             }
           ],
           "src": "src/ram.sv:26-31",
-          "src_verilog": "always @(posedge clk) begin\nif (we) begin\nmem[waddr[11:0]] <= wdata;\nend\nrdata <= mem[raddr[11:0]]; // Synchronous read required for iCE40 BRAM\nend",
+          "src_verilog": "always @(posedge clk) begin\n\tif (we) begin\n\t\tmem[waddr[11:0]] <= wdata;\n\tend\n\trdata <= mem[raddr[11:0]]; // Synchronous read required for iCE40 BRAM\nend",
           "width": 12
         },
         {
@@ -46531,7 +46531,7 @@
             }
           },
           "src": "src/io_out.sv:23-33",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nout_addr_n   <= 2'b00;\nout_data_reg <= 8'h00;\nend else if (decode_phase && (opcode == 8'b11010011)) begin\nout_addr_n   <= ~port;\nout_data_reg <= a_val;\nend else begin\nout_addr_n   <= 2'b00;\nend\nend",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tout_addr_n   <= 2'b00;\n\t\tout_data_reg <= 8'h00;\n\tend else if (decode_phase && (opcode == 8'b11010011)) begin\n\t\tout_addr_n   <= ~port;\n\t\tout_data_reg <= a_val;\n\tend else begin\n\t\tout_addr_n   <= 2'b00;\n\tend\nend",
           "type": "gridcad_reg"
         },
         {
@@ -46570,7 +46570,7 @@
             }
           },
           "src": "src/io_out.sv:23-33",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nout_addr_n   <= 2'b00;\nout_data_reg <= 8'h00;\nend else if (decode_phase && (opcode == 8'b11010011)) begin\nout_addr_n   <= ~port;\nout_data_reg <= a_val;\nend else begin\nout_addr_n   <= 2'b00;\nend\nend",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tout_addr_n   <= 2'b00;\n\t\tout_data_reg <= 8'h00;\n\tend else if (decode_phase && (opcode == 8'b11010011)) begin\n\t\tout_addr_n   <= ~port;\n\t\tout_data_reg <= a_val;\n\tend else begin\n\t\tout_addr_n   <= 2'b00;\n\tend\nend",
           "type": "gridcad_reg"
         },
         {
@@ -47112,7 +47112,7 @@
             }
           ],
           "src": "src/io_out.sv:23-33",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nout_addr_n   <= 2'b00;\nout_data_reg <= 8'h00;\nend else if (decode_phase && (opcode == 8'b11010011)) begin\nout_addr_n   <= ~port;\nout_data_reg <= a_val;\nend else begin\nout_addr_n   <= 2'b00;\nend\nend",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tout_addr_n   <= 2'b00;\n\t\tout_data_reg <= 8'h00;\n\tend else if (decode_phase && (opcode == 8'b11010011)) begin\n\t\tout_addr_n   <= ~port;\n\t\tout_data_reg <= a_val;\n\tend else begin\n\t\tout_addr_n   <= 2'b00;\n\tend\nend",
           "width": 2
         },
         {
@@ -47225,7 +47225,7 @@
             }
           },
           "src": "src/register.sv:18-24",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nvalue_reg <= 8'h00;\nend else if (load) begin\nvalue_reg <= load_value;\nend\nend",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tvalue_reg <= 8'h00;\n\tend else if (load) begin\n\t\tvalue_reg <= load_value;\n\tend\nend",
           "type": "gridcad_reg"
         }
       ],
@@ -47541,7 +47541,7 @@
             }
           },
           "src": "src/register16.sv:39-45",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nvalue_reg <= RESET_VAL;\nend else if (enable) begin\nvalue_reg <= next_val;\nend\nend",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tvalue_reg <= RESET_VAL;\n\tend else if (enable) begin\n\t\tvalue_reg <= next_val;\n\tend\nend",
           "type": "gridcad_reg"
         },
         {
@@ -47580,7 +47580,7 @@
             }
           },
           "src": "src/register16.sv:26-34",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nsp_plus_2  <= RESET_VAL + 16'd2;\nsp_minus_2 <= RESET_VAL - 16'd2;\nend else begin\nsp_plus_2  <= value_reg + 16'd2;\nsp_minus_2 <= value_reg - 16'd2;\nend\nend",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tsp_plus_2  <= RESET_VAL + 16'd2;\n\t\tsp_minus_2 <= RESET_VAL - 16'd2;\n\tend else begin\n\t\tsp_plus_2  <= value_reg + 16'd2;\n\t\tsp_minus_2 <= value_reg - 16'd2;\n\tend\nend",
           "type": "gridcad_reg"
         },
         {
@@ -47619,7 +47619,7 @@
             }
           },
           "src": "src/register16.sv:26-34",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nsp_plus_2  <= RESET_VAL + 16'd2;\nsp_minus_2 <= RESET_VAL - 16'd2;\nend else begin\nsp_plus_2  <= value_reg + 16'd2;\nsp_minus_2 <= value_reg - 16'd2;\nend\nend",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tsp_plus_2  <= RESET_VAL + 16'd2;\n\t\tsp_minus_2 <= RESET_VAL - 16'd2;\n\tend else begin\n\t\tsp_plus_2  <= value_reg + 16'd2;\n\t\tsp_minus_2 <= value_reg - 16'd2;\n\tend\nend",
           "type": "gridcad_reg"
         },
         {
@@ -49402,7 +49402,7 @@
             }
           },
           "src": "src/regsel_write.sv:41-51",
-          "src_verilog": "unique case (DDD)\n3'b000:   B_load = 1'b1;\n3'b001:   C_load = 1'b1;\n3'b010:   D_load = 1'b1;\n3'b011:   E_load = 1'b1;\n3'b100:   H_load = 1'b1;\n3'b101:   L_load = 1'b1;\n3'b110:   ; // M - handled by store path\n3'b111:   A_load = 1'b1;\ndefault:  ;\nendcase",
+          "src_verilog": "unique case (DDD)\n\t3'b000:   B_load = 1'b1;\n\t3'b001:   C_load = 1'b1;\n\t3'b010:   D_load = 1'b1;\n\t3'b011:   E_load = 1'b1;\n\t3'b100:   H_load = 1'b1;\n\t3'b101:   L_load = 1'b1;\n\t3'b110:   ; // M - handled by store path\n\t3'b111:   A_load = 1'b1;\n\tdefault:  ;\nendcase",
           "type": "gridcad_mem"
         },
         {
@@ -52891,7 +52891,7 @@
             }
           },
           "src": "src/sequencer.sv:75-84",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\n// Start in RETIRE: this cold-start self-primes the first opcode\n// read (RETIRE pre-stages the read at pc, and opcode 0 is a NOP\n// that retires harmlessly) so the first FETCH finds its opcode.\nstate <= RETIRE;\nend else begin\nstate <= next_state;\nend\nend",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\t// Start in RETIRE: this cold-start self-primes the first opcode\n\t\t// read (RETIRE pre-stages the read at pc, and opcode 0 is a NOP\n\t\t// that retires harmlessly) so the first FETCH finds its opcode.\n\t\tstate <= RETIRE;\n\tend else begin\n\t\tstate <= next_state;\n\tend\nend",
           "type": "gridcad_reg"
         },
         {
@@ -55842,7 +55842,7 @@
             }
           },
           "src": "src/store_pipe.sv:25-39",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nstoreaddress <= 16'd0;\nstoredata    <= 8'd0;\nstore_we     <= 1'b0;\nend else begin\nif (store_phase) begin\nstoreaddress <= store_addr_in;\nstoredata    <= store_data_in;\nstore_we     <= 1'b1;\nend else begin\nstore_we     <= 1'b0;\nend\nend\nend",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tstoreaddress <= 16'd0;\n\t\tstoredata    <= 8'd0;\n\t\tstore_we     <= 1'b0;\n\tend else begin\n\t\tif (store_phase) begin\n\t\t\tstoreaddress <= store_addr_in;\n\t\t\tstoredata    <= store_data_in;\n\t\t\tstore_we     <= 1'b1;\n\t\tend else begin\n\t\t\tstore_we     <= 1'b0;\n\t\tend\n\tend\nend",
           "type": "gridcad_reg"
         },
         {
@@ -55881,7 +55881,7 @@
             }
           },
           "src": "src/store_pipe.sv:25-39",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nstoreaddress <= 16'd0;\nstoredata    <= 8'd0;\nstore_we     <= 1'b0;\nend else begin\nif (store_phase) begin\nstoreaddress <= store_addr_in;\nstoredata    <= store_data_in;\nstore_we     <= 1'b1;\nend else begin\nstore_we     <= 1'b0;\nend\nend\nend",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tstoreaddress <= 16'd0;\n\t\tstoredata    <= 8'd0;\n\t\tstore_we     <= 1'b0;\n\tend else begin\n\t\tif (store_phase) begin\n\t\t\tstoreaddress <= store_addr_in;\n\t\t\tstoredata    <= store_data_in;\n\t\t\tstore_we     <= 1'b1;\n\t\tend else begin\n\t\t\tstore_we     <= 1'b0;\n\t\tend\n\tend\nend",
           "type": "gridcad_reg"
         },
         {
@@ -55920,7 +55920,7 @@
             }
           },
           "src": "src/store_pipe.sv:25-39",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nstoreaddress <= 16'd0;\nstoredata    <= 8'd0;\nstore_we     <= 1'b0;\nend else begin\nif (store_phase) begin\nstoreaddress <= store_addr_in;\nstoredata    <= store_data_in;\nstore_we     <= 1'b1;\nend else begin\nstore_we     <= 1'b0;\nend\nend\nend",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tstoreaddress <= 16'd0;\n\t\tstoredata    <= 8'd0;\n\t\tstore_we     <= 1'b0;\n\tend else begin\n\t\tif (store_phase) begin\n\t\t\tstoreaddress <= store_addr_in;\n\t\t\tstoredata    <= store_data_in;\n\t\t\tstore_we     <= 1'b1;\n\t\tend else begin\n\t\t\tstore_we     <= 1'b0;\n\t\tend\n\tend\nend",
           "type": "gridcad_reg"
         },
         {
@@ -56506,7 +56506,7 @@
             }
           },
           "src": "src/top.sv:82-88",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nled <= 8'h00;\nend else begin\nled <= mem_read_data ^ mem_write_data ^ mem_read_addr[7:0] ^ mem_write_addr[7:0] ^ {7'b0, mem_write_en};\nend\nend",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n    if (rst) begin\n        led <= 8'h00;\n    end else begin\n        led <= mem_read_data ^ mem_write_data ^ mem_read_addr[7:0] ^ mem_write_addr[7:0] ^ {7'b0, mem_write_en};\n    end\nend",
           "type": "gridcad_reg"
         },
         {
@@ -56577,7 +56577,7 @@
             }
           },
           "src": "src/top.sv:35-48",
-          "src_verilog": "cpu cpu_8080 (\n.clk            (clk),\n.rst            (rst),\n.mem_read_addr  (mem_read_addr),\n.mem_read_data  (mem_read_data),\n.mem_read_en    (mem_read_en),\n.mem_write_addr (mem_write_addr),\n.mem_write_data (mem_write_data),\n.mem_write_en   (mem_write_en),\n.out_addr       (out_addr),\n.out_data       (out_data),\n.in_addr        (in_addr),\n.in_data        (in_data)\n);",
+          "src_verilog": "cpu cpu_8080 (\n    .clk            (clk),\n    .rst            (rst),\n    .mem_read_addr  (mem_read_addr),\n    .mem_read_data  (mem_read_data),\n    .mem_read_en    (mem_read_en),\n    .mem_write_addr (mem_write_addr),\n    .mem_write_data (mem_write_data),\n    .mem_write_en   (mem_write_en),\n    .out_addr       (out_addr),\n    .out_data       (out_data),\n    .in_addr        (in_addr),\n    .in_data        (in_data)\n);",
           "type": "cpu"
         },
         {
@@ -56623,7 +56623,7 @@
             }
           },
           "src": "src/top.sv:51-59",
-          "src_verilog": "dipswitch dip_inputs (\n.clk  (clk),\n.rst  (rst),\n.addr (in_addr),\n.dip1 (io_dip1),\n.dip2 (io_dip2),\n.dip3 (io_dip3),\n.data (in_data)\n);",
+          "src_verilog": "dipswitch dip_inputs (\n    .clk  (clk),\n    .rst  (rst),\n    .addr (in_addr),\n    .dip1 (io_dip1),\n    .dip2 (io_dip2),\n    .dip3 (io_dip3),\n    .data (in_data)\n);",
           "type": "dipswitch"
         },
         {
@@ -56664,7 +56664,7 @@
             }
           },
           "src": "src/top.sv:72-79",
-          "src_verilog": "eightsegment display (\n.clk    (clk),\n.rst    (rst),\n.addr   (out_addr),\n.data   (out_data),\n.segsel (io_segsel),\n.seg    (io_seg)\n);",
+          "src_verilog": "eightsegment display (\n    .clk    (clk),\n    .rst    (rst),\n    .addr   (out_addr),\n    .data   (out_data),\n    .segsel (io_segsel),\n    .seg    (io_seg)\n);",
           "type": "eightsegment"
         },
         {
@@ -56705,7 +56705,7 @@
             }
           },
           "src": "src/top.sv:62-69",
-          "src_verilog": "initialized_bram main_memory (\n.clk    (clk),\n.we     (mem_write_en),\n.wdata  (mem_write_data),\n.waddr  (mem_write_addr),\n.raddr  (mem_read_addr),\n.rdata  (mem_read_data)\n);",
+          "src_verilog": "initialized_bram main_memory (\n    .clk    (clk),\n    .we     (mem_write_en),\n    .wdata  (mem_write_data),\n    .waddr  (mem_write_addr),\n    .raddr  (mem_read_addr),\n    .rdata  (mem_read_data)\n);",
           "type": "initialized_bram"
         },
         {
@@ -57274,7 +57274,7 @@
             }
           ],
           "src": "src/top.sv:82-88",
-          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\nif (rst) begin\nled <= 8'h00;\nend else begin\nled <= mem_read_data ^ mem_write_data ^ mem_read_addr[7:0] ^ mem_write_addr[7:0] ^ {7'b0, mem_write_en};\nend\nend",
+          "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n    if (rst) begin\n        led <= 8'h00;\n    end else begin\n        led <= mem_read_data ^ mem_write_data ^ mem_read_addr[7:0] ^ mem_write_addr[7:0] ^ {7'b0, mem_write_en};\n    end\nend",
           "width": 1
         },
         {
