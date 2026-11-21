@@ -45,6 +45,7 @@ float basecanvas::scr_to_Y(int Y)
 
 void basecanvas::draw_box(float X1, float Y1, float X2, float Y2, int color, int alpha)
 {
+	flush_line_batch();
 	int x1, y1, x2, y2;
 
 	SDL_Rect rect;
@@ -84,20 +85,43 @@ void basecanvas::draw_box(float X1, float Y1, float X2, float Y2, int color, int
  * Avoids SDL2_gfx thickLineRGBA(), which decomposes lines into per-scanline
  * hline() calls and explodes SDL's command buffer on large schematics.
  */
-static void draw_thick_quad(SDL_Renderer *ren, float x1, float y1, float x2, float y2,
-                            float thickness, Uint8 r, Uint8 g, Uint8 b, Uint8 a)
+void basecanvas::flush_line_batch(void)
 {
-	int out_w = 0, out_h = 0;
-	if (SDL_GetRendererOutputSize(ren, &out_w, &out_h) == 0 && out_w > 0 && out_h > 0) {
+	if (line_verts.empty())
+		return;
+	if (renderer) {
+		SDL_RenderGeometry(renderer.get(), nullptr,
+		                   line_verts.data(), static_cast<int>(line_verts.size()),
+		                   line_indices.data(), static_cast<int>(line_indices.size()));
+	}
+	line_verts.clear();
+	line_indices.clear();
+}
+
+bool basecanvas::point_visible(float x, float y, float radius) const
+{
+	if (cached_out_w <= 0 || cached_out_h <= 0)
+		return true;
+	return x + radius >= 0.0f && x - radius <= static_cast<float>(cached_out_w) &&
+	       y + radius >= 0.0f && y - radius <= static_cast<float>(cached_out_h);
+}
+
+void basecanvas::emit_thick_quad(float x1, float y1, float x2, float y2,
+                                 float thickness, Uint8 r, Uint8 g, Uint8 b, Uint8 a)
+{
+	if (cached_out_w > 0 && cached_out_h > 0) {
 		const float pad = thickness + 2.0f;
 		const float min_x = std::min(x1, x2) - pad;
 		const float max_x = std::max(x1, x2) + pad;
 		const float min_y = std::min(y1, y2) - pad;
 		const float max_y = std::max(y1, y2) + pad;
-		if (max_x < 0.0f || min_x > static_cast<float>(out_w) ||
-		    max_y < 0.0f || min_y > static_cast<float>(out_h))
+		if (max_x < 0.0f || min_x > static_cast<float>(cached_out_w) ||
+		    max_y < 0.0f || min_y > static_cast<float>(cached_out_h))
 			return;
 	}
+
+	if (line_verts.size() >= 32000)
+		flush_line_batch();
 
 	const float half = std::max(0.5f, thickness * 0.5f);
 	const float dx = x2 - x1;
@@ -110,24 +134,41 @@ static void draw_thick_quad(SDL_Renderer *ren, float x1, float y1, float x2, flo
 		ny = (dx / len) * half;
 	}
 
+	const int base = static_cast<int>(line_verts.size());
 	const SDL_Color col = {r, g, b, a};
-	const SDL_Vertex verts[4] = {
-		{{x1 + nx, y1 + ny}, col, {0.0f, 0.0f}},
-		{{x1 - nx, y1 - ny}, col, {0.0f, 0.0f}},
-		{{x2 - nx, y2 - ny}, col, {0.0f, 0.0f}},
-		{{x2 + nx, y2 + ny}, col, {0.0f, 0.0f}},
-	};
-	const int indices[6] = {0, 1, 2, 0, 2, 3};
-	SDL_RenderGeometry(ren, nullptr, verts, 4, indices, 6);
+	line_verts.push_back({{x1 + nx, y1 + ny}, col, {0.0f, 0.0f}});
+	line_verts.push_back({{x1 - nx, y1 - ny}, col, {0.0f, 0.0f}});
+	line_verts.push_back({{x2 - nx, y2 - ny}, col, {0.0f, 0.0f}});
+	line_verts.push_back({{x2 + nx, y2 + ny}, col, {0.0f, 0.0f}});
+	line_indices.push_back(base + 0);
+	line_indices.push_back(base + 1);
+	line_indices.push_back(base + 2);
+	line_indices.push_back(base + 0);
+	line_indices.push_back(base + 2);
+	line_indices.push_back(base + 3);
 }
 
-static bool point_visible(SDL_Renderer *ren, float x, float y, float radius)
+void basecanvas::emit_round_cap(float cx, float cy, float radius, Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 {
-	int out_w = 0, out_h = 0;
-	if (SDL_GetRendererOutputSize(ren, &out_w, &out_h) != 0 || out_w <= 0 || out_h <= 0)
-		return true;
-	return x + radius >= 0.0f && x - radius <= static_cast<float>(out_w) &&
-	       y + radius >= 0.0f && y - radius <= static_cast<float>(out_h);
+	if (radius < 1.0f || !point_visible(cx, cy, radius))
+		return;
+	if (line_verts.size() >= 32000)
+		flush_line_batch();
+
+	/* 6-sided hexagon fan in the same SDL_RenderGeometry batch (replaces per-scanline filledCircleRGBA). */
+	static constexpr float kCos[6] = {1.0f, 0.5f, -0.5f, -1.0f, -0.5f, 0.5f};
+	static constexpr float kSin[6] = {0.0f, 0.8660254f, 0.8660254f, 0.0f, -0.8660254f, -0.8660254f};
+
+	const int center = static_cast<int>(line_verts.size());
+	const SDL_Color col = {r, g, b, a};
+	line_verts.push_back({{cx, cy}, col, {0.0f, 0.0f}});
+	for (int i = 0; i < 6; ++i)
+		line_verts.push_back({{cx + kCos[i] * radius, cy + kSin[i] * radius}, col, {0.0f, 0.0f}});
+	for (int i = 0; i < 6; ++i) {
+		line_indices.push_back(center);
+		line_indices.push_back(center + 1 + i);
+		line_indices.push_back(center + 1 + ((i + 1) % 6));
+	}
 }
 
 void basecanvas::draw_line(float X1, float Y1, float X2, float Y2, int color)
@@ -138,13 +179,11 @@ void basecanvas::draw_line(float X1, float Y1, float X2, float Y2, int color)
 	const float sy2 = static_cast<float>(Y_to_scr(Y2));
 	const Uint8 r = R(color), g = G(color), b = B(color), a = Alpha(color);
 
-	draw_thick_quad(renderer.get(), sx1, sy1, sx2, sy2, 0.2f * scaleX, r, g, b, a);
+	emit_thick_quad(sx1, sy1, sx2, sy2, 0.2f * scaleX, r, g, b, a);
 	if (a > 250) {
 		const float cap_r = 0.1f * scaleX;
-		if (cap_r >= 1.0f && point_visible(renderer.get(), sx1, sy1, cap_r))
-			filledCircleRGBA(renderer.get(), sx1, sy1, cap_r, r, g, b, a);
-		if (cap_r >= 1.0f && point_visible(renderer.get(), sx2, sy2, cap_r))
-			filledCircleRGBA(renderer.get(), sx2, sy2, cap_r, r, g, b, a);
+		emit_round_cap(sx1, sy1, cap_r, r, g, b, a);
+		emit_round_cap(sx2, sy2, cap_r, r, g, b, a);
 	}
 }
 
@@ -156,13 +195,11 @@ void basecanvas::draw_thick_line(float X1, float Y1, float X2, float Y2, int col
 	const float sy2 = static_cast<float>(Y_to_scr(Y2));
 	const Uint8 r = R(color), g = G(color), b = B(color), a = Alpha(color);
 
-	draw_thick_quad(renderer.get(), sx1, sy1, sx2, sy2, 0.3f * scaleX, r, g, b, a);
+	emit_thick_quad(sx1, sy1, sx2, sy2, 0.3f * scaleX, r, g, b, a);
 	if (a > 250) {
 		const float cap_r = 0.15f * scaleX;
-		if (cap_r >= 1.0f && point_visible(renderer.get(), sx1, sy1, cap_r))
-			filledCircleRGBA(renderer.get(), sx1, sy1, cap_r, r, g, b, a);
-		if (cap_r >= 1.0f && point_visible(renderer.get(), sx2, sy2, cap_r))
-			filledCircleRGBA(renderer.get(), sx2, sy2, cap_r, r, g, b, a);
+		emit_round_cap(sx1, sy1, cap_r, r, g, b, a);
+		emit_round_cap(sx2, sy2, cap_r, r, g, b, a);
 	}
 }
 
@@ -173,14 +210,14 @@ void basecanvas::draw_shadow_Line(float X1, float Y1, float X2, float Y2, int co
 	if (color == COLOR_VALUE_RED)
 		r = 255;
 
-	draw_thick_quad(renderer.get(),
-	                static_cast<float>(X_to_scr(X1)), static_cast<float>(Y_to_scr(Y1)),
+	emit_thick_quad(static_cast<float>(X_to_scr(X1)), static_cast<float>(Y_to_scr(Y1)),
 	                static_cast<float>(X_to_scr(X2)), static_cast<float>(Y_to_scr(Y2)),
 	                0.25f * scaleX, r, g, b, 64);
 }
 
 void basecanvas::draw_circle(float X, float Y, float _R, int color, int color2)
 {
+	flush_line_batch();
 	int x1, y1;
 
 	x1 = X_to_scr(X);
@@ -197,6 +234,7 @@ void basecanvas::draw_circle(float X, float Y, float _R, int color, int color2)
 }
 void basecanvas::draw_circle2(float X, float Y, float _R, int color, int color2)
 {
+	flush_line_batch();
 	int x1, y1;
 
 	x1 = X_to_scr(X);
@@ -237,6 +275,7 @@ sdl::TexturePtr basecanvas::load_image(std::string_view filename)
 
 void basecanvas::draw_image(SDL_Texture *image, float X, float Y, float W, float H, int alpha, bool keep_aspect) 
 {
+	flush_line_batch();
 	SDL_Rect rect;
 	SDL_Point size;
 	float w, h;
@@ -274,6 +313,7 @@ void basecanvas::draw_image(SDL_Texture *image, float X, float Y, float W, float
 
 void basecanvas::draw_image_fragment(SDL_Texture *image, float X, float Y, float W, float H, int fromX, int fromY, int w, int h, int angle) 
 {
+	flush_line_batch();
 	SDL_Rect rect, src;
 
 	if (!image) {
@@ -299,6 +339,7 @@ void basecanvas::draw_image_fragment(SDL_Texture *image, float X, float Y, float
 
 void basecanvas::draw_image_rotated(SDL_Texture *image, float X, float Y, float W, float H, int alpha, int angle) 
 {
+	flush_line_batch();
 	SDL_Rect rect;
 	SDL_Point size;
 
@@ -459,6 +500,11 @@ extern float animation_time;
 
 void basecanvas::draw(void)
 {
+	++frame_id;
+	line_verts.clear();
+	line_indices.clear();
+	if (renderer)
+		SDL_GetRendererOutputSize(renderer.get(), &cached_out_w, &cached_out_h);
 	if (in_animation) {
 		uint64_t now = SDL_GetTicks64();
 		

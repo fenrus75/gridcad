@@ -79,7 +79,7 @@ public:
     virtual ~basecanvas(void) = default;
     virtual bool handle_event(SDL_Event &event) = 0;
     virtual void draw(void) = 0;
-    virtual void present(void) { SDL_RenderPresent(renderer.get()); };
+    virtual void present(void) { flush_line_batch(); SDL_RenderPresent(renderer.get()); };
     unsigned int get_window_ID(void) { return windowID;};
 
 
@@ -98,6 +98,8 @@ public:
     void draw_line(float X1, float Y1, float X2, float Y2, int color);
     void draw_thick_line(float X1, float Y1, float X2, float Y2, int color);
     void draw_shadow_Line(float X1, float Y1, float X2, float Y2, int color);
+    void flush_line_batch(void);
+    uint64_t current_frame_id(void) const { return frame_id; }
 
     sdl::TexturePtr load_image(std::string_view filename);
     void draw_image(SDL_Texture *image, float X, float Y, float W, float H, int alpha=255, bool keepaspect = false);
@@ -136,6 +138,15 @@ protected:
     std::map<std::string, sdl::TexturePtr, std::less<>> text_cache;
     bool has_focus = true;
     float fps = -1.0;
+    uint64_t frame_id = 0;
+    int cached_out_w = 0, cached_out_h = 0;
+    std::vector<SDL_Vertex> line_verts;
+    std::vector<int> line_indices;
+
+    void emit_thick_quad(float x1, float y1, float x2, float y2,
+                         float thickness, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
+    void emit_round_cap(float cx, float cy, float radius, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
+    bool point_visible(float x, float y, float radius) const;
 };
 
 

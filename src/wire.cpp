@@ -228,6 +228,15 @@ void wire::draw(class basecanvas *canvas, int _color)
 
 	assert(!dead);
 
+	/* Each wire is referenced by both endpoint ports; skip the second draw within the same frame. */
+	const uint64_t fid = canvas->current_frame_id();
+	if (fid != 0 && _color != COLOR_ELEMENT_GHOST) {
+		if (last_drawn_frame == fid && last_drawn_canvas == canvas)
+			return;
+		last_drawn_frame = fid;
+		last_drawn_canvas = canvas;
+	}
+
 	if (!points)
 		route(canvas->get_scene());
 		

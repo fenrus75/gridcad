@@ -300,8 +300,10 @@ void document::run(void)
 	int ret = 0;
 	bool leave = false;
 	
-	for (auto canvas:canvases)
+	for (auto canvas:canvases) {
 		canvas->draw();
+		canvas->present();
+	}
 
 	while (!leave) {
 		if (has_exit_time && std::chrono::steady_clock::now() >= exit_time) {
@@ -431,15 +433,16 @@ void document::run(void)
 		if (!ret && !leave) {
 			struct timeval now;
 			gettimeofday(&now, nullptr);
+			const bool do_slow_draw = (tv_delta_msec(&previous_slow_draw, &now) > 500);
+			std::vector<basecanvas *> drawn_canvases;
+			drawn_canvases.reserve(canvases.size());
 			for (auto canvas: canvases) {
-				if (canvas->canvas_has_focus()) {
+				if (canvas->canvas_has_focus() || do_slow_draw) {
 					canvas->draw();
-				} else {
-					if (tv_delta_msec(&previous_slow_draw, &now) > 500)
-						canvas->draw();
+					drawn_canvases.push_back(canvas);
 				}
 			}
-			if (tv_delta_msec(&previous_slow_draw, &now) > 500) {
+			if (do_slow_draw) {
 				previous_slow_draw = now;
 			}
 			fast_draw_counter++;
@@ -455,7 +458,8 @@ void document::run(void)
 				fast_draw_counter = 0;
 			}
 			wait_fps(30);
-			for (auto canvas: canvases) 
+			/* Only present canvases drawn this frame (1-to-1 draw/present pairing prevents queued draw leaks). */
+			for (auto canvas: drawn_canvases)
 				canvas->present();
 
 		}

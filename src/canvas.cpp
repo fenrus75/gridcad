@@ -1205,6 +1205,7 @@ void canvas::draw(void)
 		draw_image(area_select_texture.get(), X1, Y1, X2-X1, Y2-Y1, 64);
 	}
 
+	flush_line_batch();
 	SDL_RenderSetClipRect(renderer.get(), nullptr);
 	if (fps > 0)
 		button_bar->set_fps(fps);

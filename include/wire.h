@@ -114,5 +114,7 @@ protected:
     std::shared_ptr<const std::map<uint64_t, std::string>> label_table;
     std::string src_location = ""; /* imported Verilog file:line (nosave) */
     std::string src_verilog = "";  /* imported Verilog source snippet (nosave) */
+    uint64_t last_drawn_frame = 0; /* nosave: deduplicate wire::draw() across endpoint ports */
+    const class basecanvas *last_drawn_canvas = nullptr; /* nosave */
 };
 
