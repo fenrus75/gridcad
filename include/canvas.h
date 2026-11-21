@@ -97,4 +97,7 @@ protected:
     
     std::vector<std::unique_ptr<class autocomplete_element>> autocomplete;
     std::function<void()> on_scene_swapped;
+    int layout_win_w = 1024;
+    int layout_win_h = 768;
+    void update_window_size(int w, int h);
 };

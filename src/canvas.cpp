@@ -118,6 +118,27 @@ canvas::canvas(std::unique_ptr<class scene> _scene, struct capabilities *cap)
 
 autocomplete_element::~autocomplete_element(void) = default;
 
+void canvas::update_window_size(int w, int h)
+{
+	if (w <= 0 || h <= 0 || (w == layout_win_w && h == layout_win_h))
+		return;
+	layout_win_w = w;
+	layout_win_h = h;
+	button_rect.h = h;
+	main_area_rect.w = std::max(1, w - 220 - button_rect.w);
+	main_area_rect.h = h;
+	ui_area_rect.x = main_area_rect.w + button_rect.w;
+	ui_area_rect.y = 0;
+	ui_area_rect.w = std::max(0, w - ui_area_rect.x);
+	ui_area_rect.h = h;
+	if (icon_bar)
+		icon_bar->resize(ui_area_rect);
+	if (fittoscreen && current_scene)
+		callback_fit_to_screen2(current_scene.get());
+	if (dialogbox)
+		dialogbox->update_screen_size(w, h);
+}
+
 void canvas::set_dialog(std::unique_ptr<class dialog> D)
 {
 	dialogbox = std::move(D);
@@ -1052,17 +1073,8 @@ bool canvas::handle_event(SDL_Event &event)
 					window_shown = false;
 					break;
 				case SDL_WINDOWEVENT_RESIZED:
-					main_area_rect.w = event.window.data1 - 220 - button_rect.w;
-					main_area_rect.h = event.window.data2;
-					ui_area_rect.x = main_area_rect.w + button_rect.w;
-					ui_area_rect.y = 0;
-					ui_area_rect.w = event.window.data1 - ui_area_rect.x;
-					ui_area_rect.h = event.window.data2;
-					icon_bar->resize(ui_area_rect);
-					if (fittoscreen)
-						callback_fit_to_screen2(current_scene.get());
-					if (dialogbox)
-						dialogbox->update_screen_size(event.window.data1, event.window.data2);
+				case SDL_WINDOWEVENT_SIZE_CHANGED:
+					update_window_size(event.window.data1, event.window.data2);
 					break;
 				case SDL_WINDOWEVENT_CLOSE:   /* user clicked the 'x' */
 					SDL_HideWindow(window.get());
@@ -1103,6 +1115,12 @@ void canvas::draw(void)
 			Alpha(COLOR_BACKGROUND_GRID));
 	SDL_RenderClear(renderer.get());
 	basecanvas::draw();
+	{
+		int cur_w = 0, cur_h = 0;
+		SDL_GetWindowSize(window.get(), &cur_w, &cur_h);
+		if (cur_w > 0 && cur_h > 0 && (cur_w != layout_win_w || cur_h != layout_win_h))
+			update_window_size(cur_w, cur_h);
+	}
 	icon_bar->draw();
 	SDL_RenderSetClipRect(renderer.get(), &main_area_rect);
 
