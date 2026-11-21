@@ -20,6 +20,7 @@
 #include "verilog_import.h"
 #include "vcd_session.h"
 #include "placer.h"
+#include "layout_overlay.h"
 
 std::chrono::steady_clock::time_point start_time;
 std::chrono::steady_clock::time_point exit_time;
@@ -261,6 +262,8 @@ document::~document(void)
 			std::filesystem::create_directory(name + "/verilog");
 			save_verilog(name + "/verilog", name + "/verilog//main.v");
 		}
+	} else if (main_canvas && main_canvas->get_scene()) {
+		layout_overlay::save_dirty_recursive(main_canvas->get_scene());
 	}
 	clear_png_maps();
 }
@@ -340,8 +343,13 @@ void document::run(void)
 				SDL_PushEvent(&ev);				
 			}
 			if (event.type == EVENT_SAVE || event.type == EVENT_RUN_VERILOG) {
-				save_json();
-				save_verilog(name + "/verilog", name + "/verilog//main.v");
+				if (import_mode) {
+					if (main_canvas && main_canvas->get_scene())
+						layout_overlay::save_dirty_recursive(main_canvas->get_scene());
+				} else {
+					save_json();
+					save_verilog(name + "/verilog", name + "/verilog//main.v");
+				}
 			}
 			if (event.type == EVENT_VCD_WIRE_UPDATE) {
 				std::unique_ptr<vcd_wire_update> upd(

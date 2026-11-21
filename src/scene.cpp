@@ -15,6 +15,7 @@
 #include "gridcad.h"
 #include "scene.h"
 #include "placer.h"
+#include "layout_overlay.h"
 #include "element.h"
 #include "connector.h"
 #include "port.h"
@@ -99,6 +100,11 @@ void callback_redo_connectors(class scene *scene)
 	scene->reroute_all_wires();
 }
 
+void callback_reset_layout(class scene *scene)
+{
+	layout_overlay::reset_scene_layout(scene);
+}
+
 void callback_validate(class scene *scene)
 {
 	scene->validate_ports();
@@ -116,6 +122,7 @@ scene::scene(std::string _name, std::string _parent)
 	menu->add_item("Connect clocks", callback_autoclock);
 	menu->add_item("Reroute wires", callback_reroute);
 	menu->add_item("Redo connector placement", callback_redo_connectors);
+	menu->add_item("Reset saved layout", callback_reset_layout);
 	menu->add_item("Validate routing", callback_validate);
 	menu->add_item("Reset all sequencers", callback_sequencer_reset);
 }

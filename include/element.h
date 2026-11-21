@@ -37,6 +37,7 @@ public:
     float get_Y(void) { return Y; };
     float get_width(void) { return sizeX; };
     float get_height(void) { return sizeY; };
+    int get_angle(void) const { return angle; };
     
     void update_value(class port *port, struct value *value, int ttl);
     virtual void notify(int ttl);

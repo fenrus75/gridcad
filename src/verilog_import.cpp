@@ -9,6 +9,7 @@
 
 #include "verilog_import.h"
 #include "placer.h"
+#include "layout_overlay.h"
 #include "gridcad.h"
 #include "scene.h"
 #include "element.h"
@@ -160,6 +161,7 @@ std::unique_ptr<scene> import_module_recursive(
     const json &modules_obj,
     const std::string &module_name,
     const std::string &instance_path,
+    const std::string &project_key,
     const LabelTableMap &label_tables,
     const verilog_importer::options &opts,
     const std::filesystem::path &base_dir,
@@ -182,6 +184,8 @@ std::unique_ptr<scene> import_module_recursive(
 
     const json &mod = modules_obj[module_name];
     auto result_scene = std::make_unique<scene>(module_name);
+    if (!project_key.empty())
+        result_scene->set_layout_project_key(project_key);
 
     /* Maps "kind:id:pin" -> gridcad port* for wiring. */
     std::unordered_map<std::string, port *> port_map;
@@ -644,7 +648,7 @@ std::unique_ptr<scene> import_module_recursive(
                                                  : (instance_path + "." + sub_inst_name);
 
                 if (modules_obj.contains(ctype)) {
-                    sub_scene = import_module_recursive(modules_obj, ctype, sub_path, label_tables,
+                    sub_scene = import_module_recursive(modules_obj, ctype, sub_path, project_key, label_tables,
                                                         opts, base_dir, false, depth + 1, stats, sub_err);
                 } else if (opts.load_sibling_files && !base_dir.empty()) {
                     const std::filesystem::path sibling = base_dir / (ctype + ".json");
@@ -658,7 +662,7 @@ std::unique_ptr<scene> import_module_recursive(
                                 if (sj.is_object() && sj.contains("modules") &&
                                     sj["modules"].is_object() && sj["modules"].contains(ctype)) {
                                     sub_scene = import_module_recursive(
-                                        sj["modules"], ctype, sub_path, label_tables, opts, base_dir,
+                                        sj["modules"], ctype, sub_path, project_key, label_tables, opts, base_dir,
                                         false, depth + 1, stats, sub_err);
                                 }
                             } catch (const std::exception &e) {
@@ -830,9 +834,11 @@ std::unique_ptr<scene> import_module_recursive(
         }
     }
 
-    /* 5. Topological placement, Steiner multi-sink net routing & net initialization. */
+    /* 5. Topological placement, optional saved layout overlay, Steiner routing & net init. */
     if (opts.run_placer) {
         topological_placer::place(result_scene.get());
+        if (!project_key.empty())
+            layout_overlay::apply_to_scene(result_scene.get(), project_key);
         if (is_top)
             result_scene->redo_all_multi_sink_nets();
         else
@@ -930,8 +936,16 @@ verilog_importer::result verilog_importer::import_json(const json &root,
         }
     }
 
+    /* Resolve stable project key for ~/.cache/gridcad/project_<hash>/layouts/. */
+    std::string project_key = root.value("project_dir", "");
+    if (project_key.empty() && !base_dir.empty()) {
+        std::error_code ec;
+        auto canon = std::filesystem::weakly_canonical(base_dir, ec);
+        project_key = ec ? base_dir.string() : canon.string();
+    }
+
     res.imported_scene = import_module_recursive(
-        root["modules"], res.top_module, "", shared_label_tables, opts, base_dir, true, 0, res.stats, res.error);
+        root["modules"], res.top_module, "", project_key, shared_label_tables, opts, base_dir, true, 0, res.stats, res.error);
     res.ok = (res.imported_scene != nullptr);
     return res;
 }

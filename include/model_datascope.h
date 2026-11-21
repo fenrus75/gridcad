@@ -21,6 +21,7 @@ public:
     std::string get_verilog_main(void) override {return "";};
     void rotate_ports(void) override;
     void set_format(int f) { format = f; };
+    int get_format(void) const { return format; };
 private:
     struct value value = {};
     bool edit_mode = false;

@@ -42,6 +42,9 @@
 #include "vcd_session.h"
 #include "timelinebar.h"
 #include "placer.h"
+#include "layout_overlay.h"
+#include "model_label.h"
+#include "model_datascope.h"
 
 #include <cassert>
 #include <filesystem>
@@ -1219,6 +1222,97 @@ static void test_vcd_playback(void)
             assert(w->get_src_location() == "src/foo.sv:42");
             assert(w->get_src_verilog() == "logic [7:0] data_bus;");
         }
+    }
+
+    // 1d. layout_overlay save/apply: element positions, wire colors, area labels, and datascopes
+    {
+        const std::filesystem::path tmp_layout =
+            std::filesystem::temp_directory_path() / "gridcad_test_layout_overlay.json";
+        std::error_code ec;
+        std::filesystem::remove(tmp_layout, ec);
+
+        // Import register16, edit layout (move an element, recolor a wire, add label + hex datascope)
+        auto res1 = verilog_importer::import_file("tests/data/register16.json");
+        assert(res1.ok && res1.imported_scene != nullptr);
+        scene *s1 = res1.imported_scene.get();
+
+        element *val_elem = nullptr;
+        port *val_port = nullptr;
+        for (auto &e : s1->elements) {
+            if (e->class_id() == "model_output:" && e->get_name() == "value") {
+                val_elem = e.get();
+                val_port = e->port_at(0);
+                break;
+            }
+        }
+        assert(val_elem && val_port && !val_port->get_wires().empty());
+        val_elem->place(77, 19);
+        val_elem->reseat();
+        val_port->push_net_color(4);
+
+        auto lbl = std::make_unique<model_label>(12, 8);
+        lbl->update_name("sp_plus_2");
+        lbl->set_size(14, 7);
+        lbl->set_color(3);
+        lbl->set_bottomlabel(false);
+        s1->add_element(std::move(lbl));
+
+        auto ds = std::make_unique<model_datascope>(60, 25);
+        ds->update_name("val_scope");
+        ds->set_format(1); // hex mode
+        model_datascope *ds_p = ds.get();
+        s1->add_element(std::move(ds));
+
+        // Tap datascope onto 'value' wire
+        auto vw = val_port->get_wires()[0];
+        auto tap_w = std::make_shared<wire>(0, 0, 0, 0, 4);
+        tap_w->name = vw->name;
+        tap_w->set_width(16);
+        val_port->get_wires()[0]->get_other_port(val_port)->add_wire(tap_w);
+        ds_p->port_at(0)->add_wire(tap_w);
+        s1->redo_nets();
+        s1->mark_layout_dirty();
+
+        assert(layout_overlay::save_scene_to_file(s1, tmp_layout));
+        assert(!s1->is_layout_dirty());
+
+        // Fresh import of register16 + apply saved layout overlay
+        auto res2 = verilog_importer::import_file("tests/data/register16.json");
+        assert(res2.ok && res2.imported_scene != nullptr);
+        scene *s2 = res2.imported_scene.get();
+
+        assert(layout_overlay::apply_file_to_scene(s2, tmp_layout));
+        s2->redo_all_multi_sink_nets();
+        s2->redo_nets();
+        assert(!s2->is_layout_dirty());
+
+        bool found_moved_val = false, found_lbl = false, found_ds = false;
+        for (auto &e : s2->elements) {
+            if (e->class_id() == "model_output:" && e->get_name() == "value") {
+                assert(static_cast<int>(std::round(e->get_X())) == 77);
+                assert(static_cast<int>(std::round(e->get_Y())) == 19);
+                assert(!e->port_at(0)->get_wires().empty());
+                assert(e->port_at(0)->get_wires()[0]->get_color() == 4);
+                found_moved_val = true;
+            } else if (e->class_id() == "model_label:" && e->get_name() == "sp_plus_2") {
+                auto *l = static_cast<model_label *>(e.get());
+                assert(static_cast<int>(std::round(l->get_X())) == 12);
+                assert(static_cast<int>(std::round(l->get_Y())) == 8);
+                assert(l->get_color() == 3);
+                assert(l->get_bottomlabel() == false);
+                found_lbl = true;
+            } else if (e->class_id() == "model_datascope:") {
+                auto *d = static_cast<model_datascope *>(e.get());
+                assert(static_cast<int>(std::round(d->get_X())) == 60);
+                assert(static_cast<int>(std::round(d->get_Y())) == 25);
+                assert(d->get_format() == 1);
+                assert(d->port_at(0) && !d->port_at(0)->get_wires().empty());
+                found_ds = true;
+            }
+        }
+        assert(found_moved_val && found_lbl && found_ds);
+
+        std::filesystem::remove(tmp_layout, ec);
     }
 
     // 2. Real test8080 top.json + dump_top_tb.vcd end-to-end binding & tick stepping

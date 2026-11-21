@@ -761,7 +761,10 @@ bool canvas::handle_event(SDL_Event &event)
 				float x, y;
 				x = scr_to_X(event.motion.x);
 				y = scr_to_Y(event.motion.y);
+				const bool is_elem_or_port_menu = (active_menu != current_scene->get_menu());
 				active_menu->mouse_click(x,y);
+				if (is_elem_or_port_menu)
+					current_scene->mark_layout_dirty();
 				active_menu = nullptr;
 				current_scene->process_delete_requests();
 				break;
@@ -1483,6 +1486,8 @@ std::unique_ptr<class scene> canvas::swap_scene(std::unique_ptr<class scene> sce
 
 void canvas::take_undo_snapshot(class scene *scene)
 {
+	if (scene)
+		scene->mark_layout_dirty();
 	json J;
 	std::string s;
 

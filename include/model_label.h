@@ -28,6 +28,9 @@ public:
     std::string get_verilog_main(void) override { return "";};
     void set_color(int c) { color = c; };
     int get_color(void) { return color; };
+    bool get_bottomlabel(void) const { return bottomlabel; };
+    void set_bottomlabel(bool b) { bottomlabel = b; };
+    void set_size(int w, int h) { sizeX = std::max(1, w); sizeY = std::max(1, h); };
     void rotate_ports(void) override;
     
     bool is_background(void) override {return true;};

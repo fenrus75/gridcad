@@ -66,6 +66,11 @@ public:
             redo_all_multi_sink_nets();
         }
     }
+    void set_layout_project_key(std::string_view key) { layout_project_key = std::string(key); }
+    const std::string &get_layout_project_key(void) const { return layout_project_key; }
+    void mark_layout_dirty(void) { layout_dirty = true; }
+    void clear_layout_dirty(void) { layout_dirty = false; }
+    bool is_layout_dirty(void) const { return layout_dirty; }
     void validate_ports(void);
 
     size_t broadcast_vcd_value(std::string_view vcd_name, const struct value &val);
@@ -81,5 +86,7 @@ protected:
     uint64_t generation_count = 0;
     bool has_sequencer = false;
     bool needs_steiner_routing = false;
+    std::string layout_project_key = "";
+    bool layout_dirty = false;
 };
 
