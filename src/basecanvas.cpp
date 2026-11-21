@@ -508,5 +508,7 @@ bool basecanvas::handle_event(SDL_Event &event)
 
 void basecanvas::unhide(void)
 {
+	SDL_RestoreWindow(window.get());
 	SDL_ShowWindow(window.get());
+	SDL_RaiseWindow(window.get());
 }

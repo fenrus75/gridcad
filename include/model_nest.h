@@ -22,6 +22,7 @@ public:
     void handle_event(class basecanvas *canvas, SDL_Event&) override;
     bool in_edit_mode(void) override { return name_edit->get_edit_mode() && single && selected;};    
     void regen_ports(void);
+    void open_window(void);
     void set_scene(std::unique_ptr<class scene> new_scene);
     class scene *get_scene(void) const { return active_scene(); };
     
@@ -42,7 +43,7 @@ private:
     std::unique_ptr<class scene> owned_scene;
     std::unique_ptr<class canvas> canvas;
     class scene *active_scene(void) const;
-    long int previous_click = -1;  /* no save */
+    uint64_t previous_click_ms = 0;  /* no save */
     std::vector<std::unique_ptr<class port>> north, south, east, west; /* nosave */
     
     std::string from_library_collection = "";

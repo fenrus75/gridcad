@@ -36,6 +36,12 @@ static float dist(float X1, float Y1, float X2, float Y2)
 	return sqrtf( (X2-X1)*(X2-X1) + (Y2-Y1)*(Y2-Y1));
 }
 
+static void callback_zoom_into_module(class element *element)
+{
+	auto *nest = static_cast<class model_nest *>(element);
+	nest->open_window();
+}
+
 void callback_reset(class element *element)
 {
 	class model_nest *nest = (class model_nest *) element;
@@ -62,6 +68,7 @@ model_nest::model_nest(float _X, float _Y) : element(_X,_Y, "SubScreen")
 	Y = floorf(_Y);    
 	//	printf("New scene %s %s\n", name.c_str(), get_full_name().c_str());
 	owned_scene = std::make_unique<class scene>(name, get_full_name());
+	menu->add_item("Zoom into module", callback_zoom_into_module);
 	menu->add_item("Edit name", callback_editname);
 	menu->add_item("Reset to library version", callback_reset);
 	menu->add_item("Save to library", callback_save_to_library);
@@ -153,26 +160,33 @@ void model_nest::calculate(int ttl)
 }
 
 
-bool model_nest::mouse_select(float _X, float _Y)
+void model_nest::open_window(void)
 {
-	long int click = time(nullptr);
-
 	regen_ports();
-
-	if (click - previous_click > 1) {
-		previous_click = click;
-		return false;
-	}	
 
 	if (!canvas) {
 		logger::get().info("Spawning a new window");
 		canvas = std::make_unique<class canvas>(std::move(owned_scene));
 		canvas->unhide();
-		register_new_canvas(canvas.get());	
+		register_new_canvas(canvas.get());
 	} else {
 		canvas->unhide();
 	}
-	previous_click = click;
+}
+
+bool model_nest::mouse_select(float _X, float _Y)
+{
+	const uint64_t now = SDL_GetTicks64();
+
+	regen_ports();
+
+	if (previous_click_ms == 0 || (now - previous_click_ms) > 600) {
+		previous_click_ms = now;
+		return false;
+	}
+
+	previous_click_ms = 0;
+	open_window();
 	return false;
 }
 
