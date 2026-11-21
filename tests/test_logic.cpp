@@ -1530,6 +1530,68 @@ static void test_vcd_playback(void)
     }
 }
 
+static void test_wire_intersect(void)
+{
+    auto make_wire = [](std::initializer_list<std::pair<float, float>> coords) {
+        auto w = std::make_shared<wire>(0, 0, 0, 0, 0);
+        auto pts = std::make_unique<std::vector<struct waypoint>>();
+        for (const auto &[x, y] : coords) {
+            struct waypoint wp = {};
+            wp.X = x;
+            wp.Y = y;
+            pts->push_back(wp);
+        }
+        w->set_routed_points(std::move(pts));
+        return w;
+    };
+
+    // 1. Unrouted wire (points == nullptr)
+    auto empty_w = std::make_shared<wire>(0, 0, 0, 0, 0);
+    assert(!empty_w->intersect(0.5f, 0.5f));
+
+    // 2. Horizontal wire along y=2 (centerline y=2.5, x from 2.5 to 10.5)
+    auto h = make_wire({{2.0f, 2.0f}, {10.0f, 2.0f}});
+    assert(h->intersect(5.5f, 2.5f));   // directly on centerline
+    assert(h->intersect(5.5f, 2.95f));  // within 0.49 radius
+    assert(h->intersect(5.5f, 2.05f));  // within 0.49 radius
+    assert(!h->intersect(5.5f, 3.05f)); // outside 0.49 and outside [5.5,6.5)x[3.05,4.05)
+    assert(!h->intersect(5.5f, 1.45f)); // outside 0.49 and outside [5.5,6.5)x[1.45,2.45)
+    assert(h->intersect(5.0f, 2.0f));   // integer cell hit (rewire_section convention)
+    assert(!h->intersect(5.0f, 1.0f));  // adjacent integer cell above
+    assert(!h->intersect(5.0f, 3.0f));  // adjacent integer cell below
+    assert(!h->intersect(0.0f, 2.5f));  // past left endpoint
+    assert(!h->intersect(12.0f, 2.5f)); // past right endpoint
+
+    // 3. Vertical wire along x=4 (centerline x=4.5, y from 1.5 to 8.5)
+    auto v = make_wire({{4.0f, 1.0f}, {4.0f, 8.0f}});
+    assert(v->intersect(4.5f, 5.0f));
+    assert(v->intersect(4.95f, 5.0f));
+    assert(v->intersect(4.0f, 5.0f));   // integer cell hit
+    assert(!v->intersect(3.0f, 5.0f));
+    assert(!v->intersect(5.0f, 5.0f));
+
+    // 4. Diagonal 45-deg wire from (1,1) to (5,5) (centerline (1.5,1.5) -> (5.5,5.5))
+    auto d = make_wire({{1.0f, 1.0f}, {5.0f, 5.0f}});
+    assert(d->intersect(3.5f, 3.5f));   // on centerline
+    assert(d->intersect(3.2f, 3.8f));   // perp dist ~0.424 <= 0.49
+    assert(!d->intersect(2.0f, 5.0f));  // far off diagonal
+    assert(d->intersect(3.0f, 3.0f));   // integer cell along diagonal
+    assert(!d->intersect(1.0f, 4.0f));  // off-diagonal integer cell
+
+    // 5. Multi-segment L-shaped wire: verify bbox reject on segment 1 doesn't break segment 2
+    auto l = make_wire({{1.0f, 1.0f}, {1.0f, 10.0f}, {15.0f, 10.0f}});
+    assert(l->intersect(12.5f, 10.5f)); // on segment 2 (far from segment 1)
+    assert(l->intersect(12.0f, 10.0f)); // integer cell on segment 2
+    assert(l->intersect(1.5f, 5.5f));   // on segment 1
+    assert(!l->intersect(8.0f, 5.0f));  // inside L concavity, misses both segments
+
+    // 6. Degenerate zero-length segment (no NaN / divide-by-zero)
+    auto z = make_wire({{3.0f, 3.0f}, {3.0f, 3.0f}});
+    assert(z->intersect(3.5f, 3.5f));
+    assert(z->intersect(3.0f, 3.0f));
+    assert(!z->intersect(10.0f, 10.0f));
+}
+
 int main(void)
 {
     start_time = std::chrono::steady_clock::now();
@@ -1541,6 +1603,7 @@ int main(void)
     test_verilog_import();
     test_vcd_playback();
     test_wirepath_routing();
+    test_wire_intersect();
     test_scene_json_and_verilog();
 
     std::cout << "All logic tests passed." << std::endl;

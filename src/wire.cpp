@@ -550,64 +550,84 @@ void wire::notify(int ttl)
 }
 
 
+static bool segment_intersects_unit_box(float x1, float y1, float x2, float y2,
+                                        float bx, float by)
+{
+	/* Liang-Barsky test of segment P(t) = (x1, y1) + t*(dx, dy), t in [0, 1],
+	 * against the half-open unit cell [bx, bx + 1) x [by, by + 1). */
+	float tmin = 0.0f;
+	float tmax = 1.0f;
+	const float dx = x2 - x1;
+	const float dy = y2 - y1;
+
+	auto clip = [&](float p, float q) -> bool {
+		if (std::fabs(p) < 1e-7f)
+			return q >= 0.0f;
+		const float r = q / p;
+		if (p < 0.0f) {
+			if (r > tmax) return false;
+			if (r > tmin) tmin = r;
+		} else {
+			if (r < tmin) return false;
+			if (r < tmax) tmax = r;
+		}
+		return true;
+	};
+
+	if (!clip(-dx, x1 - bx)) return false;
+	if (!clip( dx, (bx + 1.0f) - x1)) return false;
+	if (!clip(-dy, y1 - by)) return false;
+	if (!clip( dy, (by + 1.0f) - y1)) return false;
+
+	const float tx = x1 + tmin * dx;
+	const float ty = y1 + tmin * dy;
+	if (tx >= bx && tx < bx + 1.0f && ty >= by && ty < by + 1.0f)
+		return true;
+	if (tmax > tmin) {
+		const float tm = 0.5f * (tmin + tmax);
+		const float mx = x1 + tm * dx;
+		const float my = y1 + tm * dy;
+		return (mx >= bx && mx < bx + 1.0f && my >= by && my < by + 1.0f);
+	}
+	return false;
+}
+
 bool wire::intersect(float targetX, float targetY)
 {
-	float bestdist = 10000;
-	bool first = true;
-	float prevX, prevY;
-
-	if (!points)
+	if (!points || points->size() < 2)
 		return false;
 
-	/* TODO we should do fancy "point to a line" math.... */
-	for (auto point: *points) {
-		if (first) {
-			first = false;
-			prevX = point.X + 0.5;
-			prevY = point.Y + 0.5;
-			continue;
-		}
-		float dx, dy,d;
-		float x1,y1,x2,y2;
-		x1 = prevX;
-		y1 = prevY;
-		x2 = point.X + 0.5;
-		y2 = point.Y + 0.5;
+	constexpr float kHitRadiusSq = 0.49f * 0.49f;
+	const auto &pts = *points;
 
-#if 0
-		/* bounding box first */
-		if (targetX < x1 - 2 && targetX < x2 - 2)
-			continue;
-		if (targetX > x2  + 2 && targetX > x1 + 2)
-			continue;
-		if (targetY < y1 - 2 && targetY < y2 - 2)
-			continue;
-		if (targetY > y2  + 2 && targetY > y1 + 2)
-			continue;
-#endif
+	for (size_t i = 1; i < pts.size(); ++i) {
+		const float x1 = pts[i - 1].X + 0.5f;
+		const float y1 = pts[i - 1].Y + 0.5f;
+		const float x2 = pts[i].X + 0.5f;
+		const float y2 = pts[i].Y + 0.5f;
 
-		dx = x2-x1;
-		dy = y2-y1;
-		d = dist(x1,y1,x2,y2);
-		dx = dx/d/20.0;
-		dy = dy/d/20.0;
+		/* Fast bounding-box reject covering both the 0.49 radius circle and [target, target+1) cell. */
+		if (std::max(x1, x2) < targetX - 0.5f || std::min(x1, x2) > targetX + 1.0f ||
+		    std::max(y1, y2) < targetY - 0.5f || std::min(y1, y2) > targetY + 1.0f)
+			continue;
 
+		const float dx = x2 - x1;
+		const float dy = y2 - y1;
+		const float len2 = dx * dx + dy * dy;
+		float t = 0.0f;
+		if (len2 > 1e-6f)
+			t = std::clamp(((targetX - x1) * dx + (targetY - y1) * dy) / len2, 0.0f, 1.0f);
+		const float cx = x1 + t * dx;
+		const float cy = y1 + t * dy;
+		const float ex = targetX - cx;
+		const float ey = targetY - cy;
+		if (ex * ex + ey * ey <= kHitRadiusSq)
+			return true;
 
-		while (dist(x1,y1,x2,y2) > 1/10.0) {
-			if (dist(targetX, targetY, x1, y1) < bestdist) {
-				bestdist = dist(targetX, targetY, x1, y1);
-			}
-			if (x1 >= targetX && x1 < targetX+1 && y1 >= targetY && y1 < targetY + 1)
-				bestdist = 0.0;
-			x1 += dx;
-			y1 += dy;            
-		}
-		prevX = point.X + 0.5;
-		prevY = point.Y + 0.5;
+		if (segment_intersects_unit_box(x1, y1, x2, y2, targetX, targetY))
+			return true;
 	}
 
-	if (bestdist <= 0.49)
-		return true;
 	return false;
 }
 
