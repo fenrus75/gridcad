@@ -16,14 +16,14 @@
 #include <cstdint>
 #include <string>
 #include <string_view>
+#include <unordered_map>
 #include <vector>
 
 class scene;
 
-/* Payload for EVENT_VCD_WIRE_UPDATE SDL user events. */
+/* Batched payload for EVENT_VCD_WIRE_UPDATE SDL user events (one event per tick). */
 struct vcd_wire_update {
-    std::string vcd_name;
-    struct value val = {};
+    std::unordered_map<std::string, struct value> values;
 };
 
 /*

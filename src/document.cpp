@@ -356,9 +356,9 @@ void document::run(void)
 				std::unique_ptr<vcd_wire_update> upd(
 				    static_cast<vcd_wire_update *>(event.user.data1));
 				if (upd && main_canvas && main_canvas->get_scene()) {
-					main_canvas->get_scene()->broadcast_vcd_value(
-					    upd->vcd_name, upd->val);
+					main_canvas->get_scene()->broadcast_vcd_values(upd->values);
 				}
+				continue;
 			}
 			if (event.type == EVENT_VCD_SEEK && vcd && vcd->is_loaded() &&
 			    vcd->get_total_ticks() > 0) {

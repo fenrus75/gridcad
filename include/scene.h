@@ -1,5 +1,6 @@
 #pragma once
 #include "gridcad.h"
+#include <unordered_map>
 
 /* logical representation of a (sub)circuit */
 class scene : public base
@@ -78,6 +79,7 @@ public:
     void validate_ports(void);
 
     size_t broadcast_vcd_value(std::string_view vcd_name, const struct value &val);
+    size_t broadcast_vcd_values(const std::unordered_map<std::string, struct value> &values);
     void unlock_all_vcd(void);
     void collect_vcd_names(std::vector<std::string> &out_names) const;
     

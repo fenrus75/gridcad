@@ -943,39 +943,53 @@ void scene::validate_ports(void)
 		elem->validate_ports();
 }
 
-size_t scene::broadcast_vcd_value(std::string_view vcd_name, const struct value &val)
+size_t scene::broadcast_vcd_values(const std::unordered_map<std::string, struct value> &values)
 {
+	if (values.empty())
+		return 0;
+
 	size_t updated = 0;
-	std::unordered_set<const wire *> visited_wires;
 	std::unordered_set<const net *> visited_nets;
+	std::unordered_set<const wire *> visited_orphan_wires;
 
 	for (auto &elem : elements) {
 		if (elem->class_id() == "model_nest:") {
 			auto *nest = static_cast<model_nest *>(elem.get());
 			if (scene *sub = nest->get_scene())
-				updated += sub->broadcast_vcd_value(vcd_name, val);
+				updated += sub->broadcast_vcd_values(values);
 		}
 		for (unsigned int pi = 0;; ++pi) {
 			port *p = elem->port_at(pi);
 			if (!p)
 				break;
 			for (const auto &w : p->get_wires()) {
-				if (!w || visited_wires.count(w.get()))
+				if (!w)
 					continue;
-				visited_wires.insert(w.get());
-				if (w->get_vcd_name() != vcd_name)
+				const std::string &vname = w->get_vcd_name();
+				if (vname.empty())
 					continue;
 				if (net *n = w->get_net()) {
-					if (visited_nets.count(n))
+					if (!visited_nets.insert(n).second)
 						continue;
-					visited_nets.insert(n);
+				} else if (!visited_orphan_wires.insert(w.get()).second) {
+					continue;
 				}
-				w->apply_vcd_value(val);
+				auto it = values.find(vname);
+				if (it == values.end())
+					continue;
+				w->apply_vcd_value(it->second);
 				updated++;
 			}
 		}
 	}
 	return updated;
+}
+
+size_t scene::broadcast_vcd_value(std::string_view vcd_name, const struct value &val)
+{
+	std::unordered_map<std::string, struct value> single;
+	single.emplace(std::string(vcd_name), val);
+	return broadcast_vcd_values(single);
 }
 
 void scene::unlock_all_vcd(void)

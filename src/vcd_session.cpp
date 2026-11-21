@@ -172,14 +172,17 @@ size_t vcd_session::apply_tick(size_t tick_idx, class scene *root_scene)
     unlocked_ = false;
     const uint64_t t = clock_ticks_[current_tick_];
 
-    size_t updated = 0;
+    std::unordered_map<std::string, struct value> batch;
+    batch.reserve(bindings_.size());
     for (const auto &b : bindings_) {
         const std::string raw = parser_.get_raw_value_at_time(*b.signal, t);
         struct value v = parse_vcd_raw_value(raw, b.signal->bit_width);
         if (b.signal->full_name == clock_signal_ || b.signal->short_name == "clk")
             v.is_clock = true;
-        updated += root_scene->broadcast_vcd_value(b.wire_vcd_name, v);
+        batch.emplace(b.wire_vcd_name, v);
     }
+
+    size_t updated = root_scene->broadcast_vcd_values(batch);
 
     /* Let unlocked glue wires and zoomed-in sub-blocks settle from the VCD values. */
     run_queued_calculations();
@@ -195,27 +198,30 @@ size_t vcd_session::push_tick_events(size_t tick_idx)
     unlocked_ = false;
     const uint64_t t = clock_ticks_[current_tick_];
 
-    size_t pushed = 0;
+    auto payload = std::make_unique<vcd_wire_update>();
+    payload->values.reserve(bindings_.size());
     for (const auto &b : bindings_) {
         const std::string raw = parser_.get_raw_value_at_time(*b.signal, t);
-        auto payload = std::make_unique<vcd_wire_update>();
-        payload->vcd_name = b.wire_vcd_name;
-        payload->val = parse_vcd_raw_value(raw, b.signal->bit_width);
+        struct value v = parse_vcd_raw_value(raw, b.signal->bit_width);
         if (b.signal->full_name == clock_signal_ || b.signal->short_name == "clk")
-            payload->val.is_clock = true;
-
-        SDL_Event ev = {};
-        ev.type = EVENT_VCD_WIRE_UPDATE;
-        ev.user.code = static_cast<Sint32>(current_tick_);
-        ev.user.data1 = payload.release();
-        if (SDL_PushEvent(&ev)) {
-            pushed++;
-        } else {
-            /* Reclaim payload on queue failure so we never leak. */
-            std::unique_ptr<vcd_wire_update> reclaim(static_cast<vcd_wire_update *>(ev.user.data1));
-        }
+            v.is_clock = true;
+        payload->values.emplace(b.wire_vcd_name, v);
     }
-    return pushed;
+
+    const size_t count = payload->values.size();
+    if (count == 0)
+        return 0;
+
+    SDL_Event ev = {};
+    ev.type = EVENT_VCD_WIRE_UPDATE;
+    ev.user.code = static_cast<Sint32>(current_tick_);
+    ev.user.data1 = payload.release();
+    if (SDL_PushEvent(&ev))
+        return count;
+
+    /* Reclaim payload on queue failure so we never leak. */
+    std::unique_ptr<vcd_wire_update> reclaim(static_cast<vcd_wire_update *>(ev.user.data1));
+    return 0;
 }
 
 size_t vcd_session::step_forward(class scene *root_scene)
