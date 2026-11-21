@@ -831,11 +831,15 @@ std::unique_ptr<scene> import_module_recursive(
         }
     }
 
-    /* 5. Topological placement, automatic optimization rounds & net initialization. */
+    /* 5. Topological placement, Steiner multi-sink net routing & net initialization. */
     if (opts.run_placer) {
         topological_placer::place(result_scene.get());
         if (opts.optimize_rounds > 0)
             placement_optimizer::optimize_rounds(result_scene.get(), opts.optimize_rounds);
+        if (is_top)
+            result_scene->redo_all_multi_sink_nets();
+        else
+            result_scene->set_needs_steiner_routing(true);
     }
 
     result_scene->redo_nets();

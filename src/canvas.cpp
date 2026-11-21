@@ -111,6 +111,8 @@ canvas::canvas(std::unique_ptr<class scene> _scene, struct capabilities *cap)
 		button_bar->add_button("Upload to FPGA", "assets/icon_program_fpga.png", EVENT_PROGRAM_FPGA);
 	}
 	current_scene = std::move(_scene);
+	if (current_scene)
+		current_scene->maybe_run_steiner_routing();
 	callback_fit_to_screen2(current_scene.get());
 	SDL_MaximizeWindow(window.get());
 }
@@ -422,9 +424,9 @@ bool canvas::handle_event(SDL_Event &event)
 
 	if (event.type == EVENT_REWIRE && event.user.data1 == current_scene.get()) {
 		take_undo_snapshot(current_scene.get());
-		if (is_import_view_mode())
-			topological_placer::place_connectors(current_scene.get());
 		callback_reroute(current_scene.get());
+		if (is_import_view_mode())
+			current_scene->redo_all_multi_sink_nets();
 	}
 
 	if (event.type == EVENT_REDO_NET && event.user.data1 != nullptr && current_scene) {

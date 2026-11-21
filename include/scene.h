@@ -58,6 +58,14 @@ public:
     void add_nets(void);
     void redo_nets(void);
     void redo_net(class element *seed_elem);
+    void redo_all_multi_sink_nets(void);
+    void set_needs_steiner_routing(bool needed) { needs_steiner_routing = needed; }
+    void maybe_run_steiner_routing(void) {
+        if (needs_steiner_routing) {
+            needs_steiner_routing = false;
+            redo_all_multi_sink_nets();
+        }
+    }
     void validate_ports(void);
 
     size_t broadcast_vcd_value(std::string_view vcd_name, const struct value &val);
@@ -72,5 +80,6 @@ protected:
     std::string verilog_name = "";
     uint64_t generation_count = 0;
     bool has_sequencer = false;
+    bool needs_steiner_routing = false;
 };
 

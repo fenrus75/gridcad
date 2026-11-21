@@ -812,6 +812,67 @@ void scene::redo_net(class element *seed_elem)
 		net_wires[0]->get_net()->apply_vcd_value(meta_value);
 }
 
+void scene::redo_all_multi_sink_nets(void)
+{
+	/*
+	 * Collect one representative connector per distinct multi-sink net (via BFS
+	 * so chained trunk connectors belong to the same net), ordering clk/rst rails
+	 * first so they claim clean straight horizontal rails along the bottom.
+	 */
+	std::unordered_set<const element *> visited_conns;
+	std::vector<std::pair<bool, element *>> net_seeds;
+
+	for (const auto &elem : elements) {
+		if (!elem || elem->class_id() != "connector:" || visited_conns.count(elem.get()))
+			continue;
+
+		bool is_rail = false;
+		std::queue<element *> q;
+		q.push(elem.get());
+		visited_conns.insert(elem.get());
+
+		while (!q.empty()) {
+			element *cur = q.front();
+			q.pop();
+			port *cp = cur->port_at(0);
+			if (!cp)
+				continue;
+			for (const auto &w : cp->get_wires()) {
+				if (!w)
+					continue;
+				if (w->value.is_clock || w->name == "clk" ||
+				    w->name == "rst" || w->name == "rst_n") {
+					is_rail = true;
+				}
+				port *other = w->get_other_port(cp);
+				if (other && other->parent && other->parent->class_id() == "connector:" &&
+				    visited_conns.insert(other->parent).second) {
+					q.push(other->parent);
+				}
+			}
+		}
+
+		net_seeds.emplace_back(is_rail, elem.get());
+	}
+
+	/* Route clk/rst rail nets first, then all other multi-sink nets. */
+	std::stable_sort(net_seeds.begin(), net_seeds.end(),
+	                 [](const auto &a, const auto &b) { return a.first && !b.first; });
+
+	for (const auto &[is_rail, seed_conn] : net_seeds) {
+		/* Verify seed_conn is still alive in elements (not already deleted). */
+		bool alive = false;
+		for (const auto &e : elements) {
+			if (e.get() == seed_conn) {
+				alive = true;
+				break;
+			}
+		}
+		if (alive)
+			redo_net(seed_conn);
+	}
+}
+
 void scene::validate_ports(void)
 {
 	for (auto &elem : elements)
