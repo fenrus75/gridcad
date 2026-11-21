@@ -167,6 +167,7 @@ void model_nest::open_window(void)
 	if (!canvas) {
 		logger::get().info("Spawning a new window");
 		canvas = std::make_unique<class canvas>(std::move(owned_scene));
+		canvas->set_on_scene_swapped([this]() { regen_ports(); });
 		canvas->unhide();
 		register_new_canvas(canvas.get());
 	} else {

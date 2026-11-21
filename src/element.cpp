@@ -333,6 +333,10 @@ void element::to_json(json &j)
 	j["uuid"] = uuid;
 	j["ports"] = json::array();
 	j["angle"] = angle;
+	if (!src_location.empty())
+		j["src_location"] = src_location;
+	if (!src_verilog.empty())
+		j["src_verilog"] = src_verilog;
 	for (i = 0; i < ports.size(); i++) {
 		json p;
 		ports[i]->to_json(p);
@@ -352,6 +356,8 @@ void element::from_json(json &j)
 	name = j["name"];
 	parental_name = j.value("parental_name", "");
 	verilog_name = j.value("verilog_name", "");
+	src_location = j.value("src_location", "");
+	src_verilog = j.value("src_verilog", "");
 
 	while (ports.size() < j["ports"].size())
 		add_port(0,0, "");

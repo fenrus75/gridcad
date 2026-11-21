@@ -160,6 +160,14 @@ extern bool wire_factory_force_new_name;
 extern std::shared_ptr<class wire> json_wire_factory(json &jwire);
 extern void clear_wire_factory(void);
 
+/* RAII guard pushing an isolated wire-deserialization map for nested scenes. */
+struct wire_factory_scope {
+    wire_factory_scope(void);
+    ~wire_factory_scope(void);
+    wire_factory_scope(const wire_factory_scope &) = delete;
+    wire_factory_scope &operator=(const wire_factory_scope &) = delete;
+};
+
 extern void register_new_canvas(class basecanvas *canvas);
 extern void unregister_canvas(class basecanvas *canvas);
 extern void labelevent(SDL_Event &event, std::string *text);

@@ -697,9 +697,21 @@ bool canvas::handle_event(SDL_Event &event)
 				case SDLK_z:
 					if (event.key.keysym.mod & KMOD_LCTRL) {
 						zap_autocomplete();
-						logger::get().debug("UNDO");
-						swap_scene(get_undo());
-						current_scene->redo_nets();
+						if (auto undone = get_undo()) {
+							logger::get().debug("UNDO");
+							/* Clear any transient raw pointers into the outgoing scene before swapping. */
+							dragging = nullptr;
+							dragging_port = nullptr;
+							dragging_wire.reset();
+							hover_wire.reset();
+							active_menu = nullptr;
+							swap_scene(std::move(undone));
+							current_scene->redo_nets();
+							if (on_scene_swapped)
+								on_scene_swapped();
+							if (auto *vcd = get_active_vcd_session(); vcd && vcd->is_loaded())
+								vcd->apply_tick(vcd->get_current_tick(), current_scene.get());
+						}
 					}
 					break;
 				case SDLK_a:
@@ -817,10 +829,12 @@ bool canvas::handle_event(SDL_Event &event)
 
 					current_scene->redo_nets();
 				}
+				bool took_wire_undo = false;
 				if (dragging_port && !current_scene->is_port(x, y)) {
 					std::shared_ptr<class wire> wr;
 
 					take_undo_snapshot(current_scene.get());
+					took_wire_undo = true;
 					current_scene->mark_layout_dirty();
 
 					wr = current_scene->is_wire(x, y);
@@ -858,7 +872,8 @@ bool canvas::handle_event(SDL_Event &event)
 					class port *port2 = current_scene->is_port(x, y);
 
 					if (dragging_port != port2) {
-						take_undo_snapshot(current_scene.get());
+						if (!took_wire_undo)
+							take_undo_snapshot(current_scene.get());
 						current_scene->mark_layout_dirty();
 						zap_autocomplete();
 						dragging_port->add_wire(dragging_wire);
@@ -1544,7 +1559,7 @@ void canvas::from_json_to_floating(json &j)
 	bool saved = wire_factory_force_new_name;
 
 	wire_factory_force_new_name = true;
-	clear_wire_factory();
+	wire_factory_scope wire_scope;
 
 	for (i = 0; i <j["elements"].size(); i++) {
 		json p = j["elements"][i];
@@ -1553,7 +1568,6 @@ void canvas::from_json_to_floating(json &j)
 		element->from_json(p);
 		floating.push_back(std::move(element));
 	}
-	clear_wire_factory();
 	wire_factory_force_new_name = saved;
 
 }

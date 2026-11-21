@@ -414,7 +414,9 @@ void port::from_json(json &j)
 	allow_fancy_verilog_name = j.value("allow_fancy_verilog_name", false);
 	for (i = 0; i < j["wires"].size(); i++) {
 		auto wire = json_wire_factory(j["wires"][i]);
+		const int saved_color = wire->get_color();
 		add_wire(wire);
+		wire->set_color(saved_color);
 		wire->add_port(this);
 		wire->reseat();
 	}

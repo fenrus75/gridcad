@@ -84,3 +84,18 @@ std::string model_logic2::get_verilog_main(void)
     
     return s;
 }
+
+void model_logic2::to_json(json &j)
+{
+    element::to_json(j);
+    if (bus_width > 1)
+        j["bus_width"] = bus_width;
+}
+
+void model_logic2::from_json(json &j)
+{
+    element::from_json(j);
+    int w = j.value("bus_width", 1);
+    if (w > 1)
+        set_bus_width(w);
+}

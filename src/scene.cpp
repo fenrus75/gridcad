@@ -247,6 +247,14 @@ void scene::to_json(json &j)
 	j["parental_name"] = parental_name;
 	j["verilog_name"] = verilog_name;
 	j["has_sequencer"] = has_sequencer;
+	if (!layout_project_key.empty())
+		j["layout_project_key"] = layout_project_key;
+	if (!layout_module_name.empty())
+		j["layout_module_name"] = layout_module_name;
+	if (layout_dirty)
+		j["layout_dirty"] = true;
+	if (needs_steiner_routing)
+		j["needs_steiner_routing"] = true;
 
 	for (i = 0; i < elements.size(); i++) {
 		json p;
@@ -276,10 +284,21 @@ void scene::selection_to_json(json &j)
 
 void scene::from_json(json &j)
 {
+	/* Isolate wire-ID pairing per scene so recursive model_nest loads never collide. */
+	wire_factory_scope wire_scope;
 	unsigned int i;
 
 	sizeX = j["sizeX"];
 	sizeY = j["sizeY"];
+	if (j.contains("name") && j["name"].is_string() && !j["name"].get<std::string>().empty())
+		name = j["name"].get<std::string>();
+	parental_name = j.value("parental_name", parental_name);
+	verilog_name = j.value("verilog_name", verilog_name);
+	layout_project_key = j.value("layout_project_key", "");
+	layout_module_name = j.value("layout_module_name", layout_module_name);
+	layout_dirty = j.value("layout_dirty", false);
+	needs_steiner_routing = j.value("needs_steiner_routing", false);
+
 	for (i = 0; i <j["elements"].size(); i++) {
 		json p = j["elements"][i];
 		std::string cid = p["class_id"];
@@ -291,7 +310,8 @@ void scene::from_json(json &j)
 	for (auto &element : elements)
 		element->calculate(100);
 
-	cycle_color();
+	if (!is_import_view_mode() && layout_project_key.empty())
+		cycle_color();
 	redo_nets();
 	has_sequencer = j.value("has_sequencer", false);
 	if (has_sequencer)

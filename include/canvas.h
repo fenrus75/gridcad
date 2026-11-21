@@ -1,6 +1,8 @@
 #pragma once
 #include "gridcad.h"
 
+#include <functional>
+
 
 
 class timelinebar;
@@ -45,6 +47,7 @@ public:
     void set_dialog(std::unique_ptr<class dialog> D);
     void set_project_name(std::string _projectname) { projectname = _projectname;};
     void set_vcd_session(class vcd_session *sess);
+    void set_on_scene_swapped(std::function<void()> cb) { on_scene_swapped = std::move(cb); }
     
          
 protected:
@@ -93,4 +96,5 @@ protected:
     void best_port_to_autocomplete(class port *origin);
     
     std::vector<std::unique_ptr<class autocomplete_element>> autocomplete;
+    std::function<void()> on_scene_swapped;
 };

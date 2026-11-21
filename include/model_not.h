@@ -16,6 +16,8 @@ public:
     std::string get_verilog_main(void) override;
     void set_bus_width(int width);
     int get_bus_width(void) const { return bus_width; }
+    void to_json(json &j) override;
+    void from_json(json &j) override;
 protected:
     int bus_width = 1;
 };

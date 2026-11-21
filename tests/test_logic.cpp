@@ -44,12 +44,14 @@
 #include "placer.h"
 #include "layout_overlay.h"
 #include "model_label.h"
+#include "model_nest.h"
 #include "model_datascope.h"
 
 #include <cassert>
 #include <filesystem>
 #include <iostream>
 #include <memory>
+#include <set>
 #include <nlohmann/json.hpp>
 
 static void connect_ports(class port *p1, class port *p2)
@@ -1329,6 +1331,90 @@ static void test_vcd_playback(void)
         assert(found_moved_val && found_lbl && found_connected_ds == 2);
 
         std::filesystem::remove(tmp_layout, ec);
+    }
+
+    // 1e. Undo JSON round-trip on hierarchical Verilog import (top.json):
+    // verifies wire_id keying, scoped model_nest deserialization, VCD/src/layout metadata, and colors.
+    {
+        auto res = verilog_importer::import_file("tests/data/top.json");
+        assert(res.ok && res.imported_scene != nullptr);
+        scene *orig = res.imported_scene.get();
+        orig->set_layout_project_key("proj_undo_test");
+        orig->mark_layout_dirty();
+
+        auto collect_stats = [](scene *sc, size_t &elem_cnt, size_t &wire_cnt,
+                                size_t &vcd_wire_cnt, size_t &clk_color_cnt,
+                                size_t &src_elem_cnt) {
+            elem_cnt = sc->elements.size();
+            std::set<const wire *> seen;
+            wire_cnt = 0;
+            vcd_wire_cnt = 0;
+            clk_color_cnt = 0;
+            src_elem_cnt = 0;
+            for (const auto &e : sc->elements) {
+                if (!e->get_src_location().empty())
+                    src_elem_cnt++;
+                for (unsigned int pi = 0; ; ++pi) {
+                    port *p = e->port_at(pi);
+                    if (!p)
+                        break;
+                    for (const auto &w : p->get_wires()) {
+                        if (!w)
+                            continue;
+                        if (seen.insert(w.get()).second) {
+                            assert(w->get_ports().size() == 2);
+                            wire_cnt++;
+                            if (!w->get_vcd_name().empty())
+                                vcd_wire_cnt++;
+                            if (w->get_color() == 1)
+                                clk_color_cnt++;
+                        }
+                    }
+                }
+            }
+        };
+
+        size_t e1, w1, v1, c1, s1;
+        collect_stats(orig, e1, w1, v1, c1, s1);
+        assert(w1 > 10 && v1 > 0 && c1 > 0);
+
+        json snap;
+        orig->to_json(snap);
+        std::string dumped = snap.dump();
+
+        auto restored = std::make_unique<scene>(orig->get_name());
+        json parsed = json::parse(dumped);
+        restored->from_json(parsed);
+
+        size_t e2, w2, v2, c2, s2;
+        collect_stats(restored.get(), e2, w2, v2, c2, s2);
+        assert(e2 == e1);
+        assert(w2 == w1);
+        assert(v2 == v1);
+        assert(c2 == c1);
+        assert(s2 == s1);
+        assert(restored->get_layout_project_key() == "proj_undo_test");
+        assert(restored->get_layout_module_name() == orig->get_layout_module_name());
+        assert(restored->is_layout_dirty());
+
+        // Also verify nested submodules inside top.json kept every wire intact
+        int nest_checked = 0;
+        for (size_t i = 0; i < orig->elements.size(); ++i) {
+            if (orig->elements[i]->class_id() != "model_nest:")
+                continue;
+            auto *n1 = static_cast<model_nest *>(orig->elements[i].get());
+            auto *n2 = static_cast<model_nest *>(restored->elements[i].get());
+            size_t ne1, nw1, nv1, nc1, ns1;
+            size_t ne2, nw2, nv2, nc2, ns2;
+            collect_stats(n1->get_scene(), ne1, nw1, nv1, nc1, ns1);
+            collect_stats(n2->get_scene(), ne2, nw2, nv2, nc2, ns2);
+            assert(ne2 == ne1);
+            assert(nw2 == nw1);
+            assert(nv2 == nv1);
+            assert(nc2 == nc1);
+            nest_checked++;
+        }
+        assert(nest_checked > 0);
     }
 
     // 2. Real test8080 top.json + dump_top_tb.vcd end-to-end binding & tick stepping

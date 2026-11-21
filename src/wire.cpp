@@ -20,6 +20,9 @@
 #include "model_clock.h"
 
 #include <algorithm>
+#include <charconv>
+#include <cstdint>
+#include <format>
 
 #include <sys/time.h>
 #include <map>
@@ -665,6 +668,7 @@ std::shared_ptr<class wire> wire::split(void)
 
 void wire::to_json(json &j)
 {
+	j["wire_id"] = std::format("{:x}", reinterpret_cast<uintptr_t>(this));
 	j["value"] = value;
 	j["name"] = name;
 	j["X1"] = X1;
@@ -675,9 +679,23 @@ void wire::to_json(json &j)
 	j["width"] = width;
 	j["distance_from_outport"] = distance_from_outport;
 	j["is_reversed"] = is_reversed;
+	if (!vcd_name.empty())
+		j["vcd_name"] = vcd_name;
+	if (vcd_locked)
+		j["vcd_locked"] = true;
+	if (!src_location.empty())
+		j["src_location"] = src_location;
+	if (!src_verilog.empty())
+		j["src_verilog"] = src_verilog;
+	if (label_table && !label_table->empty()) {
+		json lt = json::object();
+		for (const auto &[k, v] : *label_table)
+			lt[std::to_string(k)] = v;
+		j["label_table"] = std::move(lt);
+	}
 	if (points)
 		j["points"] = *points;
-}    
+}
 void wire::from_json(json &j)
 {
 	value.is_clock = false;
@@ -691,6 +709,25 @@ void wire::from_json(json &j)
 	width = j.value("width", 0);
 	is_reversed = j.value("is_reversed", false);
 	distance_from_outport = j.value("distance_from_outport", INT_MAX);
+	vcd_name = j.value("vcd_name", "");
+	vcd_locked = j.value("vcd_locked", false);
+	src_location = j.value("src_location", "");
+	src_verilog = j.value("src_verilog", "");
+	label_table.reset();
+	if (j.contains("label_table") && j["label_table"].is_object()) {
+		auto tbl = std::make_shared<std::map<uint64_t, std::string>>();
+		for (auto it = j["label_table"].begin(); it != j["label_table"].end(); ++it) {
+			if (!it.value().is_string())
+				continue;
+			uint64_t key_val = 0;
+			const std::string &ks = it.key();
+			auto [ptr, ec] = std::from_chars(ks.data(), ks.data() + ks.size(), key_val);
+			if (ec == std::errc() && ptr == ks.data() + ks.size())
+				(*tbl)[key_val] = it.value().get<std::string>();
+		}
+		if (!tbl->empty())
+			label_table = std::move(tbl);
+	}
 	if (j.contains("points")) {
 		points = std::make_unique<std::vector<struct waypoint>>();
 		*points = j["points"];
@@ -698,26 +735,51 @@ void wire::from_json(json &j)
 }
 
 
-static std::map<std::string, std::shared_ptr<class wire>> json_wires;
+static std::vector<std::map<std::string, std::shared_ptr<class wire>>> json_wire_scopes;
+
+static std::map<std::string, std::shared_ptr<class wire>> &active_wire_scope(void)
+{
+	if (json_wire_scopes.empty())
+		json_wire_scopes.emplace_back();
+	return json_wire_scopes.back();
+}
+
+wire_factory_scope::wire_factory_scope(void)
+{
+	json_wire_scopes.emplace_back();
+}
+
+wire_factory_scope::~wire_factory_scope(void)
+{
+	if (!json_wire_scopes.empty())
+		json_wire_scopes.pop_back();
+}
 
 void clear_wire_factory(void)
 {
-	json_wires.clear();
+	if (!json_wire_scopes.empty())
+		json_wire_scopes.back().clear();
 }
 
 bool wire_factory_force_new_name;
 
 std::shared_ptr<class wire> json_wire_factory(json &jwire)
 {
-	if (json_wires.find(jwire["name"]) != json_wires.end()) {
-		std::string s = jwire["name"];
-		auto _wire = json_wires[s];
-		json_wires.erase(s);
+	auto &scope = active_wire_scope();
+	/* Key by per-wire unique wire_id so multi-segment nets sharing a Verilog name don't collide. */
+	std::string key = jwire.contains("wire_id") && jwire["wire_id"].is_string()
+	                      ? jwire["wire_id"].get<std::string>()
+	                      : jwire.value("name", "");
+
+	auto it = scope.find(key);
+	if (it != scope.end()) {
+		auto _wire = it->second;
+		scope.erase(it);
 		return _wire;
 	}
 	auto new_wire = std::make_shared<wire>(jwire["X1"], jwire["Y1"], jwire["X2"], jwire["Y2"]);
 
-	json_wires[jwire["name"]] = new_wire;
+	scope[key] = new_wire;
 
 	new_wire->from_json(jwire);
 
