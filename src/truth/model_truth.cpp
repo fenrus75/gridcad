@@ -328,7 +328,7 @@ void model_truth::configure_lut(int num_inputs, const std::vector<std::string> &
 	packed_lut_outputs.clear();
 
 	const int target_inputs = std::clamp(num_inputs, 1, 8);
-	const int target_outputs = std::clamp(static_cast<int>(lut_outputs.size()), 1, 16);
+	const int target_outputs = std::clamp(static_cast<int>(lut_outputs.size()), 1, 64);
 
 	while (static_cast<int>(inputs) < target_inputs)
 		add_input();
@@ -376,7 +376,7 @@ void model_truth::configure_lut_packed(const std::vector<int> &in_widths,
 		return;
 
 	const int target_inputs = std::clamp(static_cast<int>(in_widths.size()), 1, 8);
-	const int target_outputs = std::clamp(static_cast<int>(lut_outputs.size()), 1, 16);
+	const int target_outputs = std::clamp(static_cast<int>(lut_outputs.size()), 1, 64);
 
 	while (static_cast<int>(inputs) < target_inputs)
 		add_input();
