@@ -51,6 +51,7 @@
 #include "model_ne.h"
 #include "model_gt.h"
 #include "model_ge.h"
+#include "model_reduce.h"
 #include "model_mem.h"
 #include "model_slice.h"
 #include "model_concat.h"
@@ -103,6 +104,7 @@ std::unique_ptr<class element> element_from_class_id(std::string_view classid)
     ELEMENT(model_ne);
     ELEMENT(model_gt);
     ELEMENT(model_ge);
+    ELEMENT(model_reduce);
     ELEMENT(model_mem);
     ELEMENT(model_slice);
     ELEMENT(model_concat);

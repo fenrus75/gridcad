@@ -135,6 +135,7 @@ model_sources = files(
     'src/model_ne.cpp',
     'src/model_gt.cpp',
     'src/model_ge.cpp',
+    'src/model_reduce.cpp',
     'src/model_mem.cpp',
     'src/model_slice.cpp',
     'src/model_concat.cpp',

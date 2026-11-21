@@ -31,6 +31,7 @@
 #include "model_ne.h"
 #include "model_gt.h"
 #include "model_ge.h"
+#include "model_reduce.h"
 #include "model_mem.h"
 #include "model_slice.h"
 #include "model_concat.h"
@@ -994,6 +995,70 @@ static void test_verilog_import(void)
         s2_p->update_value(&v1, DEFAULT_TTL);
         run_queued_calculations();
         assert(y_p->get_value().intval == 0x3333);
+    }
+
+    // 12. model_reduce (4-bit OR, AND, XOR, XNOR reductions)
+    {
+        scene s("reduce_test");
+        auto in_a  = std::make_unique<model_toggle>(1, 4);
+        auto r_or  = std::make_unique<model_reduce>(7, 1, 4, reduce_op::OR);
+        auto r_and = std::make_unique<model_reduce>(7, 5, 4, reduce_op::AND);
+        auto r_xor = std::make_unique<model_reduce>(7, 9, 4, reduce_op::XOR);
+        auto r_xnr = std::make_unique<model_reduce>(7, 13, 4, reduce_op::XNOR);
+        auto o_or  = std::make_unique<model_output>(13, 1);
+        auto o_and = std::make_unique<model_output>(13, 5);
+        auto o_xor = std::make_unique<model_output>(13, 9);
+        auto o_xnr = std::make_unique<model_output>(13, 13);
+
+        in_a->set_width(4);
+
+        auto *a_p = in_a.get();
+        auto *ror_p = r_or.get(), *rand_p = r_and.get(), *rxor_p = r_xor.get(), *rxnr_p = r_xnr.get();
+        auto *oor_p = o_or.get(), *oand_p = o_and.get(), *oxor_p = o_xor.get(), *oxnr_p = o_xnr.get();
+
+        s.add_element(std::move(in_a));
+        s.add_element(std::move(r_or));
+        s.add_element(std::move(r_and));
+        s.add_element(std::move(r_xor));
+        s.add_element(std::move(r_xnr));
+        s.add_element(std::move(o_or));
+        s.add_element(std::move(o_and));
+        s.add_element(std::move(o_xor));
+        s.add_element(std::move(o_xnr));
+
+        connect_ports(a_p->port_at(0), ror_p->port_at(0));
+        connect_ports(a_p->port_at(0), rand_p->port_at(0));
+        connect_ports(a_p->port_at(0), rxor_p->port_at(0));
+        connect_ports(a_p->port_at(0), rxnr_p->port_at(0));
+        connect_ports(ror_p->port_at(1),  oor_p->port_at(0));
+        connect_ports(rand_p->port_at(1), oand_p->port_at(0));
+        connect_ports(rxor_p->port_at(1), oxor_p->port_at(0));
+        connect_ports(rxnr_p->port_at(1), oxnr_p->port_at(0));
+        s.redo_nets();
+
+        auto v0 = make_int_val(0b0000);
+        a_p->update_value(&v0, DEFAULT_TTL);
+        run_queued_calculations();
+        assert(oor_p->get_value().boolval == false);
+        assert(oand_p->get_value().boolval == false);
+        assert(oxor_p->get_value().boolval == false);
+        assert(oxnr_p->get_value().boolval == true);
+
+        auto v7 = make_int_val(0b0111); // odd popcount (3)
+        a_p->update_value(&v7, DEFAULT_TTL);
+        run_queued_calculations();
+        assert(oor_p->get_value().boolval == true);
+        assert(oand_p->get_value().boolval == false);
+        assert(oxor_p->get_value().boolval == true);
+        assert(oxnr_p->get_value().boolval == false);
+
+        auto vf = make_int_val(0b1111); // even popcount (4), all ones
+        a_p->update_value(&vf, DEFAULT_TTL);
+        run_queued_calculations();
+        assert(oor_p->get_value().boolval == true);
+        assert(oand_p->get_value().boolval == true);
+        assert(oxor_p->get_value().boolval == false);
+        assert(oxnr_p->get_value().boolval == true);
     }
 }
 

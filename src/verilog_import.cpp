@@ -36,6 +36,7 @@
 #include "model_ne.h"
 #include "model_gt.h"
 #include "model_ge.h"
+#include "model_reduce.h"
 #include "model_mem.h"
 #include "model_slice.h"
 #include "model_concat.h"
@@ -446,6 +447,22 @@ std::unique_ptr<scene> import_module_recursive(
                 register_pin("a", el->port_at(0));
                 register_pin("b", el->port_at(1));
                 register_pin("y", el->port_at(2));
+                result_scene->add_element(std::move(el));
+                stats.components++;
+            } else if (ctype == "gridcad_reduce_or" || ctype == "gridcad_reduce_and" ||
+                       ctype == "gridcad_reduce_xor" || ctype == "gridcad_reduce_xnor") {
+                const int width = parse_width_json(params, "WIDTH", 8);
+                reduce_op rop = reduce_op::OR;
+                if (ctype == "gridcad_reduce_and")
+                    rop = reduce_op::AND;
+                else if (ctype == "gridcad_reduce_xor")
+                    rop = reduce_op::XOR;
+                else if (ctype == "gridcad_reduce_xnor")
+                    rop = reduce_op::XNOR;
+                auto el = std::make_unique<model_reduce>(0, 0, width, rop);
+                el->update_name(cid);
+                register_pin("a", el->port_at(0));
+                register_pin("y", el->port_at(1));
                 result_scene->add_element(std::move(el));
                 stats.components++;
             } else if (ctype == "gridcad_slice") {
