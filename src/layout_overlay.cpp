@@ -115,6 +115,14 @@ std::string compute_net_key_from_port(port *start_port)
     std::string vcd_sig;
     std::string drv_key;
 
+    if (start_port->direction == PORT_OUT && start_port->parent &&
+        start_port->parent->class_id() != "connector:") {
+        drv_key = std::format("drv:{}:{}:{}",
+                              start_port->parent->class_id(),
+                              start_port->parent->get_name(),
+                              start_port->name);
+    }
+
     while (!q.empty()) {
         port *cur = q.front();
         q.pop();

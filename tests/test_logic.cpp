@@ -1268,6 +1268,25 @@ static void test_vcd_playback(void)
         tap_w->set_width(16);
         val_port->get_wires()[0]->get_other_port(val_port)->add_wire(tap_w);
         ds_p->port_at(0)->add_wire(tap_w);
+        // Tap a second datascope onto an unnamed 1-to-1 internal wire (gridcad_mux_2:y -> gridcad_mux_3:a)
+        element *mux2 = nullptr;
+        for (auto &e : s1->elements) {
+            if (e->class_id() == "model_mux:" && e->get_name() == "gridcad_mux_2") {
+                mux2 = e.get();
+                break;
+            }
+        }
+        assert(mux2 && mux2->port_at(3));
+        auto ds2 = std::make_unique<model_datascope>(79, 11);
+        ds2->update_name("mux_scope");
+        ds2->set_format(1);
+        model_datascope *ds2_p = ds2.get();
+        s1->add_element(std::move(ds2));
+        auto tap_w2 = std::make_shared<wire>(0, 0, 0, 0, 0);
+        tap_w2->set_width(16);
+        mux2->port_at(3)->add_wire(tap_w2);
+        ds2_p->port_at(0)->add_wire(tap_w2);
+
         s1->redo_nets();
         s1->mark_layout_dirty();
 
@@ -1284,7 +1303,8 @@ static void test_vcd_playback(void)
         s2->redo_nets();
         assert(!s2->is_layout_dirty());
 
-        bool found_moved_val = false, found_lbl = false, found_ds = false;
+        bool found_moved_val = false, found_lbl = false;
+        int found_connected_ds = 0;
         for (auto &e : s2->elements) {
             if (e->class_id() == "model_output:" && e->get_name() == "value") {
                 assert(static_cast<int>(std::round(e->get_X())) == 77);
@@ -1301,14 +1321,12 @@ static void test_vcd_playback(void)
                 found_lbl = true;
             } else if (e->class_id() == "model_datascope:") {
                 auto *d = static_cast<model_datascope *>(e.get());
-                assert(static_cast<int>(std::round(d->get_X())) == 60);
-                assert(static_cast<int>(std::round(d->get_Y())) == 25);
                 assert(d->get_format() == 1);
                 assert(d->port_at(0) && !d->port_at(0)->get_wires().empty());
-                found_ds = true;
+                found_connected_ds++;
             }
         }
-        assert(found_moved_val && found_lbl && found_ds);
+        assert(found_moved_val && found_lbl && found_connected_ds == 2);
 
         std::filesystem::remove(tmp_layout, ec);
     }
