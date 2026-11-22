@@ -604,36 +604,28 @@ bool canvas::handle_event(SDL_Event &event)
 				case SDLK_KP_PLUS:
 				case SDLK_EQUALS:
 					if (!someone_in_editmode) {
-//						scaleX *= 1.1;
-//						scaleY *= 1.1;
-						from_offsetX = offsetX;
-						from_offsetY = offsetY;
-						from_scaleX = scaleX;
-						from_scaleY = scaleY;
-						animation_start = SDL_GetTicks64();
-						target_offsetX = offsetX;
-						target_offsetY = offsetY;
-						target_scaleX = scaleX * 1.1;
-						target_scaleY = scaleY * 1.1;
-						animation_type = 1;
-						in_animation = true;
+						int sx = 0, sy = 0;
+						SDL_GetMouseState(&sx, &sy);
+						if (sx < main_area_rect.x || sx > main_area_rect.x + main_area_rect.w ||
+						    sy < main_area_rect.y || sy > main_area_rect.y + main_area_rect.h) {
+							sx = main_area_rect.x + main_area_rect.w / 2;
+							sy = main_area_rect.y + main_area_rect.h / 2;
+						}
+						start_zoom_animation_at_screen(sx, sy, 1.15f);
 						fittoscreen = false;
 					}
 					break;
 				case SDLK_MINUS:
 				case SDLK_KP_MINUS:
 					if (!someone_in_editmode) {
-						from_offsetX = offsetX;
-						from_offsetY = offsetY;
-						from_scaleX = scaleX;
-						from_scaleY = scaleY;
-						animation_start = SDL_GetTicks64();
-						target_offsetX = offsetX;
-						target_offsetY = offsetY;
-						target_scaleX = scaleX * 0.9;
-						target_scaleY = scaleY * 0.9;
-						in_animation = true;
-						animation_type = 1;
+						int sx = 0, sy = 0;
+						SDL_GetMouseState(&sx, &sy);
+						if (sx < main_area_rect.x || sx > main_area_rect.x + main_area_rect.w ||
+						    sy < main_area_rect.y || sy > main_area_rect.y + main_area_rect.h) {
+							sx = main_area_rect.x + main_area_rect.w / 2;
+							sy = main_area_rect.y + main_area_rect.h / 2;
+						}
+						start_zoom_animation_at_screen(sx, sy, 1.0f / 1.15f);
 						fittoscreen = false;
 					}
 					break;
@@ -1024,41 +1016,20 @@ bool canvas::handle_event(SDL_Event &event)
 		case SDL_MOUSEWHEEL:
 			if (dialogbox)
 				break;
-			if (event.wheel.y > 0) {
-				float cX, cY;
-				int count = 0;
-
-				cX = X_to_scr(mouseX);
-				cY = Y_to_scr(mouseY);
-				scaleX++;
-				scaleY++;
-				fittoscreen = false;
-
-				/* need to keep the point under the cursor the same */
-				while (scr_to_X(cX) < mouseX && count++ < 1000)
-					offsetX += 0.02;
-				while (scr_to_Y(cY) < mouseY && count++ < 1000)
-					offsetY += 0.02;
-
+			{
+				const float steps = (event.wheel.preciseY != 0.0f)
+				                        ? event.wheel.preciseY
+				                        : static_cast<float>(event.wheel.y);
+				if (steps != 0.0f) {
+					int sx = 0, sy = 0;
+					SDL_GetMouseState(&sx, &sy);
+					const float factor = std::pow(1.15f, std::clamp(steps, -5.0f, 5.0f));
+					zoom_at_screen(sx, sy, factor);
+					fittoscreen = false;
+					mouseX = scr_to_X(sx);
+					mouseY = scr_to_Y(sy);
+				}
 			}
-			if (event.wheel.y < 0) {
-				float cX, cY;
-				int count = 0;
-
-				cX = X_to_scr(mouseX);
-				cY = Y_to_scr(mouseY);
-				if (scaleX > 1)
-					scaleX--;
-				if (scaleY > 1)
-					scaleY--;
-				fittoscreen = false;
-				/* need to keep the point under the cursor the same */
-				while (scr_to_X(cX) > mouseX && count++ < 1000)  
-					offsetX -= 0.05;
-				while (scr_to_Y(cY) > mouseY && count++ < 1000)
-					offsetY -= 0.05;
-			}
-
 			break;
 
 		case SDL_POLLSENTINEL:

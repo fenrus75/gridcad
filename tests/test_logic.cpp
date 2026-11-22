@@ -1812,6 +1812,70 @@ static void test_label_table_and_datascope(void)
     }
 }
 
+static void test_canvas_zoom(void)
+{
+    struct headless_canvas : public basecanvas {
+        bool handle_event(SDL_Event &) override { return false; }
+        void draw(void) override { basecanvas::draw(); }
+        void set_view(float ox, float oy, float sx, float sy) {
+            offsetX = ox; offsetY = oy; scaleX = sx; scaleY = sy;
+        }
+        float get_scaleX(void) const { return scaleX; }
+        float get_offsetX(void) const { return offsetX; }
+        float get_offsetY(void) const { return offsetY; }
+        bool is_animating(void) const { return in_animation; }
+    };
+
+    headless_canvas c;
+
+    // 1. Far-edge cursor pinning at low zoom (where old 1000-iter loop failed badly)
+    c.set_view(50.0f, 30.0f, 2.0f, 2.0f);
+    const int edge_sx = 1850;
+    const int edge_sy = 1020;
+    const float wx0 = c.scr_to_X(edge_sx);
+    const float wy0 = c.scr_to_Y(edge_sy);
+
+    for (int i = 0; i < 10; ++i) {
+        c.zoom_at_screen(edge_sx, edge_sy, 1.15f);
+        assert(std::fabs(c.scr_to_X(edge_sx) - wx0) < 1e-3f);
+        assert(std::fabs(c.scr_to_Y(edge_sy) - wy0) < 1e-3f);
+    }
+    for (int i = 0; i < 10; ++i) {
+        c.zoom_at_screen(edge_sx, edge_sy, 1.0f / 1.15f);
+        assert(std::fabs(c.scr_to_X(edge_sx) - wx0) < 1e-3f);
+        assert(std::fabs(c.scr_to_Y(edge_sy) - wy0) < 1e-3f);
+    }
+    assert(std::fabs(c.get_scaleX() - 2.0f) < 1e-3f);
+    assert(std::fabs(c.get_offsetX() - 50.0f) < 1e-2f);
+    assert(std::fabs(c.get_offsetY() - 30.0f) < 1e-2f);
+
+    // 2. Clamping at min/max zoom still keeps cursor pinned
+    c.zoom_at_screen(edge_sx, edge_sy, 0.01f);
+    assert(std::fabs(c.get_scaleX() - 0.5f) < 1e-5f);
+    assert(std::fabs(c.scr_to_X(edge_sx) - wx0) < 1e-3f);
+    assert(std::fabs(c.scr_to_Y(edge_sy) - wy0) < 1e-3f);
+
+    c.zoom_at_screen(edge_sx, edge_sy, 1000.0f);
+    assert(std::fabs(c.get_scaleX() - 200.0f) < 1e-4f);
+    assert(std::fabs(c.scr_to_X(edge_sx) - wx0) < 1e-3f);
+    assert(std::fabs(c.scr_to_Y(edge_sy) - wy0) < 1e-3f);
+
+    // 3. Animated keyboard zoom pins anchor and wheel zoom cancels active animation
+    c.set_view(10.0f, 20.0f, 25.0f, 25.0f);
+    const float awx = c.scr_to_X(1400);
+    const float awy = c.scr_to_Y(900);
+    c.start_zoom_animation_at_screen(1400, 900, 1.15f);
+    assert(c.is_animating());
+    c.draw();
+    assert(std::fabs(c.scr_to_X(1400) - awx) < 1e-3f);
+    assert(std::fabs(c.scr_to_Y(900) - awy) < 1e-3f);
+
+    c.zoom_at_screen(1400, 900, 1.15f);
+    assert(!c.is_animating());
+    assert(std::fabs(c.scr_to_X(1400) - awx) < 1e-3f);
+    assert(std::fabs(c.scr_to_Y(900) - awy) < 1e-3f);
+}
+
 int main(void)
 {
     start_time = std::chrono::steady_clock::now();
@@ -1826,6 +1890,7 @@ int main(void)
     test_wire_intersect();
     test_scene_json_and_verilog();
     test_label_table_and_datascope();
+    test_canvas_zoom();
 
     std::cout << "All logic tests passed." << std::endl;
     return 0;

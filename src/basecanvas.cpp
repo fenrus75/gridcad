@@ -629,6 +629,45 @@ SDL_Texture *basecanvas::text_to_texture(std::string_view text)
 extern float ratio_effect(float ratio);
 extern float animation_time;
 
+void basecanvas::zoom_at_screen(int scr_x, int scr_y, float factor)
+{
+	const float wx = scr_to_X(scr_x);
+	const float wy = scr_to_Y(scr_y);
+	scaleX = std::clamp(scaleX * factor, 0.5f, 200.0f);
+	scaleY = std::clamp(scaleY * factor, 0.5f, 200.0f);
+	offsetX = wx - static_cast<float>(scr_x) / scaleX;
+	offsetY = wy - static_cast<float>(scr_y) / scaleY;
+	in_animation = false;
+	animation_type = 0;
+}
+
+void basecanvas::start_zoom_animation_at_screen(int scr_x, int scr_y, float factor)
+{
+	const float wx = scr_to_X(scr_x);
+	const float wy = scr_to_Y(scr_y);
+	const float base_sx = (in_animation && animation_type == 1) ? target_scaleX : scaleX;
+	const float base_sy = (in_animation && animation_type == 1) ? target_scaleY : scaleY;
+
+	from_offsetX = offsetX;
+	from_offsetY = offsetY;
+	from_scaleX = scaleX;
+	from_scaleY = scaleY;
+
+	target_scaleX = std::clamp(base_sx * factor, 0.5f, 200.0f);
+	target_scaleY = std::clamp(base_sy * factor, 0.5f, 200.0f);
+	target_offsetX = wx - static_cast<float>(scr_x) / target_scaleX;
+	target_offsetY = wy - static_cast<float>(scr_y) / target_scaleY;
+
+	zoom_anchor_wx = wx;
+	zoom_anchor_wy = wy;
+	zoom_anchor_sx = scr_x;
+	zoom_anchor_sy = scr_y;
+
+	animation_start = SDL_GetTicks64();
+	animation_type = 1;
+	in_animation = true;
+}
+
 void basecanvas::draw(void)
 {
 	++frame_id;
@@ -672,8 +711,14 @@ void basecanvas::draw(void)
 		
 		scaleX = exp( log(from_scaleX) + effect * (log(target_scaleX) - log(from_scaleX)));
 		scaleY = exp( log(from_scaleY) + effect * (log(target_scaleY) - log(from_scaleY)));
-		offsetX = from_offsetX + effect2 * (target_offsetX - from_offsetX);
-		offsetY = from_offsetY + effect2 * (target_offsetY - from_offsetY);
+		if (animation_type == 1) {
+			/* Keep the zoom anchor pixel exact at every intermediate exponential scale step. */
+			offsetX = zoom_anchor_wx - static_cast<float>(zoom_anchor_sx) / scaleX;
+			offsetY = zoom_anchor_wy - static_cast<float>(zoom_anchor_sy) / scaleY;
+		} else {
+			offsetX = from_offsetX + effect2 * (target_offsetX - from_offsetX);
+			offsetY = from_offsetY + effect2 * (target_offsetY - from_offsetY);
+		}
 			
 	}
 }

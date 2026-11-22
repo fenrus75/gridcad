@@ -88,6 +88,10 @@ public:
     float scr_to_X(int X);
     float scr_to_Y(int Y);
 
+    /* Zoom by multiplicative factor while keeping the world point at (scr_x, scr_y) pinned. */
+    void zoom_at_screen(int scr_x, int scr_y, float factor);
+    void start_zoom_animation_at_screen(int scr_x, int scr_y, float factor);
+
     float scale_to_X(int X) { return X / scaleX;};
     float scale_to_Y(int Y) { return Y / scaleY;};
     
@@ -129,6 +133,8 @@ protected:
     uint64_t animation_start = 0; /* nosave */
     int animation_type = 0;
     bool in_animation = false; /* nosave */
+    float zoom_anchor_wx = 0.0f, zoom_anchor_wy = 0.0f; /* nosave: world point pinned during animation_type == 1 */
+    int zoom_anchor_sx = 0, zoom_anchor_sy = 0;         /* nosave: screen pixel pinned during animation_type == 1 */
     unsigned int windowID = 0;
     /* Declared in lifecycle order: textures & font are destroyed before renderer, which is destroyed before window. */
     sdl::WindowPtr window;
