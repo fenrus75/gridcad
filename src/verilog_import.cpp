@@ -733,6 +733,8 @@ std::unique_ptr<scene> import_module_recursive(
 
             const std::string wname = wobj.value("name", "");
             const std::string vcd_local = wobj.value("vcd_signal", "");
+            const std::string valid_local = wobj.value("valid_signal", "");
+            const bool valid_active_low = wobj.value("valid_active_low", false);
             const std::string lbl_key = wobj.value("label_table", "");
             const std::string wire_src = wobj.value("src", "");
             const std::string wire_verilog = wobj.value("src_verilog", "");
@@ -746,6 +748,10 @@ std::unique_ptr<scene> import_module_recursive(
                 vcd_local.empty()
                     ? std::string("")
                     : (instance_path.empty() ? vcd_local : (instance_path + "." + vcd_local));
+            const std::string full_valid_name =
+                valid_local.empty()
+                    ? std::string("")
+                    : (instance_path.empty() ? valid_local : (instance_path + "." + valid_local));
             if (wobj.contains("width") && wobj["width"].is_number_integer() &&
                 wobj["width"].get<int>() == 0)
                 continue;
@@ -794,6 +800,8 @@ std::unique_ptr<scene> import_module_recursive(
                     w->name = wname;
                 if (!full_vcd_name.empty())
                     w->set_vcd_name(full_vcd_name);
+                if (!full_valid_name.empty())
+                    w->set_vcd_valid_signal(full_valid_name, valid_active_low);
                 if (wire_lbl_tbl)
                     w->set_label_table(wire_lbl_tbl);
                 if (!wire_src.empty() || !wire_verilog.empty())

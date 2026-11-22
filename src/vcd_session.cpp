@@ -144,16 +144,56 @@ size_t vcd_session::bind_scene(const class scene *root_scene, std::string_view e
         scope_prefix_ = best_scope;
     }
 
+    std::unordered_map<std::string, std::pair<std::string, bool>> qualifiers;
+    root_scene->collect_vcd_qualifiers(qualifiers);
+
     /* Build final binding list. */
     for (const auto &vn : scene_vcd_names) {
         std::string full = scope_prefix_.empty() ? vn : (scope_prefix_ + "." + vn);
         auto it = full_map.find(full);
         if (it != full_map.end()) {
-            bindings_.push_back(binding{vn, it->second});
+            const verilog::vcd_signal *valid_sig = nullptr;
+            bool valid_active_low = false;
+            if (auto qit = qualifiers.find(vn); qit != qualifiers.end()) {
+                const std::string &qname = qit->second.first;
+                std::string full_q = scope_prefix_.empty() ? qname : (scope_prefix_ + "." + qname);
+                if (auto vit = full_map.find(full_q); vit != full_map.end()) {
+                    valid_sig = vit->second;
+                    valid_active_low = qit->second.second;
+                }
+            }
+            bindings_.push_back(binding{vn, it->second, valid_sig, valid_active_low});
         }
     }
 
     return bindings_.size();
+}
+
+bool vcd_session::evaluate_valid_raw(std::string_view raw, bool active_low)
+{
+    if (raw.empty())
+        return false;
+    bool any_one = false;
+    for (char c : raw) {
+        if (c == 'x' || c == 'X' || c == 'z' || c == 'Z')
+            return false;
+        if (c == '1')
+            any_one = true;
+    }
+    return active_low ? !any_one : any_one;
+}
+
+struct value vcd_session::sample_binding_at_time(const binding &b, uint64_t t) const
+{
+    const std::string raw = parser_.get_raw_value_at_time(*b.signal, t);
+    struct value v = parse_vcd_raw_value(raw, b.signal->bit_width);
+    if (b.signal->full_name == clock_signal_ || b.signal->short_name == "clk")
+        v.is_clock = true;
+    if (b.valid_signal) {
+        const std::string vraw = parser_.get_raw_value_at_time(*b.valid_signal, t);
+        v.qualifier_valid = evaluate_valid_raw(vraw, b.valid_active_low);
+    }
+    return v;
 }
 
 uint64_t vcd_session::get_current_timestamp(void) const noexcept
@@ -174,13 +214,8 @@ size_t vcd_session::apply_tick(size_t tick_idx, class scene *root_scene)
 
     std::unordered_map<std::string, struct value> batch;
     batch.reserve(bindings_.size());
-    for (const auto &b : bindings_) {
-        const std::string raw = parser_.get_raw_value_at_time(*b.signal, t);
-        struct value v = parse_vcd_raw_value(raw, b.signal->bit_width);
-        if (b.signal->full_name == clock_signal_ || b.signal->short_name == "clk")
-            v.is_clock = true;
-        batch.emplace(b.wire_vcd_name, v);
-    }
+    for (const auto &b : bindings_)
+        batch.emplace(b.wire_vcd_name, sample_binding_at_time(b, t));
 
     size_t updated = root_scene->broadcast_vcd_values(batch);
 
@@ -200,13 +235,8 @@ size_t vcd_session::push_tick_events(size_t tick_idx)
 
     auto payload = std::make_unique<vcd_wire_update>();
     payload->values.reserve(bindings_.size());
-    for (const auto &b : bindings_) {
-        const std::string raw = parser_.get_raw_value_at_time(*b.signal, t);
-        struct value v = parse_vcd_raw_value(raw, b.signal->bit_width);
-        if (b.signal->full_name == clock_signal_ || b.signal->short_name == "clk")
-            v.is_clock = true;
-        payload->values.emplace(b.wire_vcd_name, v);
-    }
+    for (const auto &b : bindings_)
+        payload->values.emplace(b.wire_vcd_name, sample_binding_at_time(b, t));
 
     const size_t count = payload->values.size();
     if (count == 0)

@@ -491,6 +491,10 @@ void port::unsplice(void)
 		w3->set_vcd_name(w1->get_vcd_name());
 	else if (!w2->get_vcd_name().empty())
 		w3->set_vcd_name(w2->get_vcd_name());
+	if (!w1->get_vcd_valid_name().empty())
+		w3->set_vcd_valid_signal(w1->get_vcd_valid_name(), w1->is_vcd_valid_active_low());
+	else if (!w2->get_vcd_valid_name().empty())
+		w3->set_vcd_valid_signal(w2->get_vcd_valid_name(), w2->is_vcd_valid_active_low());
 	if (w1->get_label_table())
 		w3->set_label_table(w1->get_label_table());
 	else if (w2->get_label_table())

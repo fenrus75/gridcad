@@ -580,6 +580,8 @@ bool layout_overlay::apply_file_to_scene(class scene *target_scene, const std::f
                         nw->name = tw->name;
                         if (!tw->get_vcd_name().empty())
                             nw->set_vcd_name(tw->get_vcd_name());
+                        if (!tw->get_vcd_valid_name().empty())
+                            nw->set_vcd_valid_signal(tw->get_vcd_valid_name(), tw->is_vcd_valid_active_low());
                         if (tw->get_label_table())
                             nw->set_label_table(tw->get_label_table());
                         if (!tw->get_src_location().empty() || !tw->get_src_verilog().empty())
@@ -609,6 +611,8 @@ bool layout_overlay::apply_file_to_scene(class scene *target_scene, const std::f
                 sw->name = tw->name;
                 if (!tw->get_vcd_name().empty())
                     sw->set_vcd_name(tw->get_vcd_name());
+                if (!tw->get_vcd_valid_name().empty())
+                    sw->set_vcd_valid_signal(tw->get_vcd_valid_name(), tw->is_vcd_valid_active_low());
                 if (tw->get_label_table())
                     sw->set_label_table(tw->get_label_table());
                 if (!tw->get_src_location().empty() || !tw->get_src_verilog().empty())

@@ -155,33 +155,41 @@ void draw_snake_line(class basecanvas *canvas, float x1, float y1, float x2, flo
 					cursormag = 1;
 				if (cursormag > 2)
 					cursormag = 2;
-				const float pulse_mag = 1.0f + 0.35f * pulse;
+				const bool qual_invalid = (!value->qualifier_valid && !wire->get_is_z() && !wire_debug_mode);
+				const float eff_pulse = qual_invalid ? 0.0f : pulse;
+				const float pulse_mag = 1.0f + 0.35f * eff_pulse;
 				const float size = 0.24f * cursormag * pulse_mag;
 				const float size2 = 0.20f * cursormag * pulse_mag;
-				std::string s;
-				bool has_enum_label = false;
-				if (wire->get_is_z())
-					s = "Z";
-				else if (wire_debug_mode)
-					s = std::format("{}", wire->get_distance_from_outport());
-				else if (show_enum) {
-					s = std::string(enum_label);
-					has_enum_label = true;
+				if (qual_invalid) {
+					/* Qualified-invalid signal: muted grey box without white border or text. */
+					canvas->draw_box_rgba(x1 - size, y1 - size, x1 + size, y1 + size, 100, 100, 100, 220);
+					canvas->draw_box_rgba(x1 - size2, y1 - size2, x1 + size2, y1 + size2, 68, 68, 68, 220);
 				} else {
-					s = std::format("{}", value->intval);
+					std::string s;
+					bool has_enum_label = false;
+					if (wire->get_is_z())
+						s = "Z";
+					else if (wire_debug_mode)
+						s = std::format("{}", wire->get_distance_from_outport());
+					else if (show_enum) {
+						s = std::string(enum_label);
+						has_enum_label = true;
+					} else {
+						s = std::format("{}", value->intval);
+					}
+					const float half_w = has_enum_label ? std::max(size, size * 0.45f * static_cast<float>(s.size())) : size;
+					const float half_w2 = half_w - (size - size2);
+					if (eff_pulse > 0.001f) {
+						const Uint8 br = static_cast<Uint8>(R(COLOR_WIRE_MOTION) + (255 - R(COLOR_WIRE_MOTION)) * eff_pulse);
+						const Uint8 bg = static_cast<Uint8>(G(COLOR_WIRE_MOTION) + (225 - G(COLOR_WIRE_MOTION)) * eff_pulse);
+						const Uint8 bb = static_cast<Uint8>(B(COLOR_WIRE_MOTION) + (80 - B(COLOR_WIRE_MOTION)) * eff_pulse);
+						canvas->draw_box_rgba(x1-half_w, y1-size, x1+half_w, y1+size, br, bg, bb, 255);
+					} else {
+						canvas->draw_box(x1-half_w, y1-size, x1+half_w, y1+size, COLOR_WIRE_MOTION);
+					}
+					canvas->draw_box(x1-half_w2, y1-size2, x1+half_w2, y1+size2, COLOR_BACKGROUND_MAIN);
+					canvas->draw_text(s, x1+0.05-half_w, y1+0.05-size, 2 * half_w - 0.1, 2 * size - 0.1);
 				}
-				const float half_w = has_enum_label ? std::max(size, size * 0.45f * static_cast<float>(s.size())) : size;
-				const float half_w2 = half_w - (size - size2);
-				if (pulse > 0.001f) {
-					const Uint8 br = static_cast<Uint8>(R(COLOR_WIRE_MOTION) + (255 - R(COLOR_WIRE_MOTION)) * pulse);
-					const Uint8 bg = static_cast<Uint8>(G(COLOR_WIRE_MOTION) + (225 - G(COLOR_WIRE_MOTION)) * pulse);
-					const Uint8 bb = static_cast<Uint8>(B(COLOR_WIRE_MOTION) + (80 - B(COLOR_WIRE_MOTION)) * pulse);
-					canvas->draw_box_rgba(x1-half_w, y1-size, x1+half_w, y1+size, br, bg, bb, 255);
-				} else {
-					canvas->draw_box(x1-half_w, y1-size, x1+half_w, y1+size, COLOR_WIRE_MOTION);
-				}
-				canvas->draw_box(x1-half_w2, y1-size2, x1+half_w2, y1+size2, COLOR_BACKGROUND_MAIN);
-				canvas->draw_text(s, x1+0.05-half_w, y1+0.05-size, 2 * half_w - 0.1, 2 * size - 0.1);
 			} else if (value->is_clock) {
 				const float size = 0.24;
 				float f;
@@ -514,7 +522,7 @@ void wire::update_value(struct value *newvalue, int ttl)
 
 void wire::record_value_change(const struct value &v)
 {
-	if (value.valid && v.valid && !v.is_clock && value != v)
+	if (value.valid && v.valid && v.qualifier_valid && !v.is_clock && value != v)
 		last_changed_ms = SDL_GetTicks64();
 }
 
@@ -718,6 +726,8 @@ std::shared_ptr<class wire> wire::split(void)
 	logger::get().debug("Splitting wire");
 	wr->update_value_final(&value, 100);    
 	wr->set_width(get_width());
+	if (!vcd_valid_name.empty())
+		wr->set_vcd_valid_signal(vcd_valid_name, vcd_valid_active_low);
 	if (label_table)
 		wr->set_label_table(label_table);
 	/* upper bound the distance from outports */
@@ -749,6 +759,10 @@ void wire::to_json(json &j)
 	j["is_reversed"] = is_reversed;
 	if (!vcd_name.empty())
 		j["vcd_name"] = vcd_name;
+	if (!vcd_valid_name.empty())
+		j["vcd_valid_name"] = vcd_valid_name;
+	if (vcd_valid_active_low)
+		j["vcd_valid_active_low"] = true;
 	if (vcd_locked)
 		j["vcd_locked"] = true;
 	if (!src_location.empty())
@@ -780,6 +794,8 @@ void wire::from_json(json &j)
 	is_reversed = j.value("is_reversed", false);
 	distance_from_outport = j.value("distance_from_outport", INT_MAX);
 	vcd_name = j.value("vcd_name", "");
+	vcd_valid_name = j.value("vcd_valid_name", "");
+	vcd_valid_active_low = j.value("vcd_valid_active_low", false);
 	vcd_locked = j.value("vcd_locked", false);
 	src_location = j.value("src_location", "");
 	src_verilog = j.value("src_verilog", "");

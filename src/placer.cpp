@@ -1201,6 +1201,8 @@ void topological_placer::place(class scene *target_scene, const options &opts)
                 trunk->name = tmpl->name;
                 if (!tmpl->get_vcd_name().empty())
                     trunk->set_vcd_name(tmpl->get_vcd_name());
+                if (!tmpl->get_vcd_valid_name().empty())
+                    trunk->set_vcd_valid_signal(tmpl->get_vcd_valid_name(), tmpl->is_vcd_valid_active_low());
                 if (tmpl->get_label_table())
                     trunk->set_label_table(tmpl->get_label_table());
                 if (!tmpl->get_src_location().empty() || !tmpl->get_src_verilog().empty())

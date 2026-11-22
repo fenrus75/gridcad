@@ -18,6 +18,7 @@ struct value {
     bool is_error = false;
     bool valid = false;
     bool is_clock = false;
+    bool qualifier_valid = true;
     bool operator==(const value &) const = default;
 };
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE_WITH_DEFAULT(value, type, boolval, intval, floatval, arrayval, is_error, valid, is_clock);
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE_WITH_DEFAULT(value, type, boolval, intval, floatval, arrayval, is_error, valid, is_clock, qualifier_valid);

@@ -587,6 +587,8 @@ void scene::redo_net(class element *seed_elem)
 	const int meta_color = tmpl->get_color();
 	const int meta_width = std::max(1, tmpl->get_width());
 	const std::string meta_vcd = tmpl->get_vcd_name();
+	const std::string meta_vcd_valid = tmpl->get_vcd_valid_name();
+	const bool meta_vcd_valid_low = tmpl->is_vcd_valid_active_low();
 	const bool meta_vcd_locked = tmpl->is_vcd_locked();
 	const struct value meta_value = tmpl->value;
 	const auto meta_lbl = tmpl->get_label_table();
@@ -662,6 +664,8 @@ void scene::redo_net(class element *seed_elem)
 		w->name = meta_name;
 		if (!meta_vcd.empty())
 			w->set_vcd_name(meta_vcd);
+		if (!meta_vcd_valid.empty())
+			w->set_vcd_valid_signal(meta_vcd_valid, meta_vcd_valid_low);
 		if (meta_lbl)
 			w->set_label_table(meta_lbl);
 		if (!meta_src_loc.empty() || !meta_src_v.empty())
@@ -1044,6 +1048,31 @@ void scene::collect_vcd_names(std::vector<std::string> &out_names) const
 				const std::string &vn = w->get_vcd_name();
 				if (!vn.empty() && seen.insert(vn).second)
 					out_names.push_back(vn);
+			}
+		}
+	}
+}
+
+void scene::collect_vcd_qualifiers(
+	std::unordered_map<std::string, std::pair<std::string, bool>> &out_qualifiers) const
+{
+	for (const auto &elem : elements) {
+		if (elem->class_id() == "model_nest:") {
+			auto *nest = static_cast<model_nest *>(elem.get());
+			if (const scene *sub = nest->get_scene())
+				sub->collect_vcd_qualifiers(out_qualifiers);
+		}
+		for (unsigned int pi = 0;; ++pi) {
+			port *p = elem->port_at(pi);
+			if (!p)
+				break;
+			for (const auto &w : p->get_wires()) {
+				if (!w)
+					continue;
+				const std::string &vn = w->get_vcd_name();
+				const std::string &qn = w->get_vcd_valid_name();
+				if (!vn.empty() && !qn.empty() && !out_qualifiers.count(vn))
+					out_qualifiers.emplace(vn, std::make_pair(qn, w->is_vcd_valid_active_low()));
 			}
 		}
 	}

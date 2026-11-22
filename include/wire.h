@@ -75,6 +75,12 @@ public:
     void unlock_vcd(void) { vcd_locked = false; };
     void set_vcd_value_direct(const struct value &v);
     void apply_vcd_value(const struct value &v);
+    void set_vcd_valid_signal(std::string_view name, bool active_low = false) {
+        vcd_valid_name = std::string(name);
+        vcd_valid_active_low = active_low;
+    }
+    const std::string &get_vcd_valid_name(void) const { return vcd_valid_name; }
+    bool is_vcd_valid_active_low(void) const { return vcd_valid_active_low; }
 
     void set_label_table(std::shared_ptr<const class label_table> tbl) { label_table = std::move(tbl); };
     const std::shared_ptr<const class label_table> &get_label_table(void) const { return label_table; };
@@ -111,6 +117,8 @@ protected:
     bool in_animation = false; /* nosave */
     uint64_t points_timestamp = 0; /* nosave */
     std::string vcd_name = ""; /* hierarchical VCD signal name */
+    std::string vcd_valid_name = ""; /* optional hierarchical VCD name of 1-bit valid qualifier */
+    bool vcd_valid_active_low = false;
     bool vcd_locked = false;   /* true while driven/locked by VCD playback */
     std::shared_ptr<const class label_table> label_table;
     std::string src_location = ""; /* imported Verilog file:line (nosave) */

@@ -60,6 +60,8 @@ std::string model_datascope::format_display_text(void) const
         return "";
     if (ports[0]->value.type != VALUE_TYPE_INT && ports[0]->value.type != VALUE_TYPE_BOOL)
         return "";
+    if (!ports[0]->value.qualifier_valid)
+        return "---";
 
     const uint64_t raw_val = (ports[0]->value.type == VALUE_TYPE_BOOL)
                                  ? (ports[0]->value.boolval ? 1ULL : 0ULL)
@@ -84,9 +86,13 @@ void model_datascope::drawAt(class basecanvas *canvas, float X, float Y, int typ
     } else {
         canvas->draw_image("assets/datascope.png", X, Y, sizeX, sizeY, Alpha(type));
     }
-    const std::string s = format_display_text();
-    if (!s.empty())
-        canvas->draw_text(s, X + 0.6, Y + 0.6, 2.8, 1.8);
+    if (!ports.empty() && !ports[0]->value.qualifier_valid) {
+        canvas->draw_box_rgba(X + 0.55f, Y + 0.55f, X + 3.45f, Y + 2.45f, 80, 80, 80, 150);
+    } else {
+        const std::string s = format_display_text();
+        if (!s.empty())
+            canvas->draw_text(s, X + 0.6, Y + 0.6, 2.8, 1.8);
+    }
 
     for (auto &port : ports) {
         port->drawAt(canvas, X,Y, COLOR_WIRE_SOLID);

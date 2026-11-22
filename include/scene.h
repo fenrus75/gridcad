@@ -83,6 +83,7 @@ public:
     size_t broadcast_vcd_values(const std::unordered_map<std::string, struct value> &values);
     void unlock_all_vcd(void);
     void collect_vcd_names(std::vector<std::string> &out_names) const;
+    void collect_vcd_qualifiers(std::unordered_map<std::string, std::pair<std::string, bool>> &out_qualifiers) const;
     
 protected:
     std::unique_ptr<class contextmenu> menu;

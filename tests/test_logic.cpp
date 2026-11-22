@@ -1876,6 +1876,68 @@ static void test_canvas_zoom(void)
     assert(std::fabs(c.scr_to_Y(900) - awy) < 1e-3f);
 }
 
+static void test_vcd_valid_qualifiers(void)
+{
+    // 1. Qualifier evaluation (active-high, active-low, X/Z/empty -> false)
+    assert(vcd_session::evaluate_valid_raw("1", false) == true);
+    assert(vcd_session::evaluate_valid_raw("0", false) == false);
+    assert(vcd_session::evaluate_valid_raw("0", true) == true);
+    assert(vcd_session::evaluate_valid_raw("1", true) == false);
+    assert(vcd_session::evaluate_valid_raw("x", false) == false);
+    assert(vcd_session::evaluate_valid_raw("x", true) == false);
+    assert(vcd_session::evaluate_valid_raw("z", false) == false);
+    assert(vcd_session::evaluate_valid_raw("", false) == false);
+
+    // 2. Wire JSON round-trip & Data Scope invalid display
+    {
+        auto w = std::make_shared<wire>(0, 0, 5, 0);
+        w->set_vcd_name("cpu.alu_out");
+        w->set_vcd_valid_signal("cpu.alu_out_valid", true);
+        nlohmann::json wj;
+        w->to_json(wj);
+        auto w2 = std::make_shared<wire>(0, 0, 5, 0);
+        w2->from_json(wj);
+        assert(w2->get_vcd_valid_name() == "cpu.alu_out_valid");
+        assert(w2->is_vcd_valid_active_low() == true);
+
+        auto ds = std::make_unique<model_datascope>(10, 0);
+        struct value v = make_int_val(0x42);
+        v.qualifier_valid = false;
+        ds->port_at(0)->value = v;
+        assert(ds->format_display_text() == "---");
+        v.qualifier_valid = true;
+        ds->port_at(0)->value = v;
+        assert(ds->format_display_text() == "66");
+    }
+
+    // 3. Real Turbostar export (tests/data/top.json) + dump_top_tb.vcd
+    {
+        verilog_importer::options opts;
+        opts.run_placer = false;
+        auto res = verilog_importer::import_file("tests/data/top.json", opts);
+        assert(res.ok && res.imported_scene != nullptr);
+
+        std::unordered_map<std::string, std::pair<std::string, bool>> quals;
+        res.imported_scene->collect_vcd_qualifiers(quals);
+        assert(!quals.empty());
+
+        bool found_alu_out = false;
+        for (const auto &[vn, q] : quals) {
+            if (vn.ends_with("alu_out") && q.first.ends_with("alu_out_valid") && !q.second) {
+                found_alu_out = true;
+                break;
+            }
+        }
+        assert(found_alu_out);
+
+        vcd_session sess;
+        std::string err;
+        assert(sess.load("tests/data/dump_top_tb.vcd", err));
+        assert(sess.bind_scene(res.imported_scene.get()) > 0);
+        assert(sess.apply_tick(0, res.imported_scene.get()) > 0);
+    }
+}
+
 int main(void)
 {
     start_time = std::chrono::steady_clock::now();
@@ -1891,6 +1953,7 @@ int main(void)
     test_scene_json_and_verilog();
     test_label_table_and_datascope();
     test_canvas_zoom();
+    test_vcd_valid_qualifiers();
 
     std::cout << "All logic tests passed." << std::endl;
     return 0;

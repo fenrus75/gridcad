@@ -68,12 +68,18 @@ public:
 
     /* Convert a raw VCD binary string (e.g. "0", "1", "00110110") into a gridcad value. */
     static struct value parse_vcd_raw_value(std::string_view raw, int bit_width);
+    /* Evaluate a 1-bit VCD qualifier string (X/Z or empty -> false). */
+    static bool evaluate_valid_raw(std::string_view raw, bool active_low);
 
 private:
     struct binding {
         std::string wire_vcd_name;
         const verilog::vcd_signal *signal = nullptr;
+        const verilog::vcd_signal *valid_signal = nullptr;
+        bool valid_active_low = false;
     };
+
+    struct value sample_binding_at_time(const binding &b, uint64_t t) const;
 
     verilog::vcd_parser parser_;
     std::string clock_signal_;

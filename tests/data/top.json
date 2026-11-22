@@ -12256,6 +12256,7 @@
           ],
           "src": "src/alu8.sv:38",
           "src_verilog": "output logic [7:0] alu_out,         // [timing: 12 <- Reg]",
+          "valid_signal": "alu_out_valid",
           "vcd_signal": "alu_out",
           "width": 8
         },
@@ -22879,6 +22880,7 @@
           ],
           "src": "src/cpu.sv:79",
           "src_verilog": "logic [7:0] alu_out;",
+          "valid_signal": "alu_out_valid",
           "vcd_signal": "alu_out",
           "width": 8
         },
