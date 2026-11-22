@@ -575,10 +575,7 @@ std::string wire::get_label(uint64_t val) const
 {
 	if (!label_table)
 		return "";
-	auto it = label_table->find(val);
-	if (it != label_table->end())
-		return it->second;
-	return "";
+	return label_table->lookup(val, width);
 }
 
 void wire::apply_vcd_value(const struct value &v)
@@ -724,6 +721,8 @@ std::shared_ptr<class wire> wire::split(void)
 	logger::get().debug("Splitting wire");
 	wr->update_value_final(&value, 100);    
 	wr->set_width(get_width());
+	if (label_table)
+		wr->set_label_table(label_table);
 	/* upper bound the distance from outports */
 	wr->set_distance_from_outport(distance_from_outport + 1);
 	distance_from_outport++;
@@ -760,10 +759,12 @@ void wire::to_json(json &j)
 	if (!src_verilog.empty())
 		j["src_verilog"] = src_verilog;
 	if (label_table && !label_table->empty()) {
-		json lt = json::object();
-		for (const auto &[k, v] : *label_table)
-			lt[std::to_string(k)] = v;
-		j["label_table"] = std::move(lt);
+		if (!label_table->get_name().empty() &&
+		    label_table::find_registered(label_table->get_name()) != nullptr) {
+			j["label_table_name"] = label_table->get_name();
+		} else {
+			j["label_table"] = label_table->to_json();
+		}
 	}
 	if (points)
 		j["points"] = *points;
@@ -786,18 +787,11 @@ void wire::from_json(json &j)
 	src_location = j.value("src_location", "");
 	src_verilog = j.value("src_verilog", "");
 	label_table.reset();
-	if (j.contains("label_table") && j["label_table"].is_object()) {
-		auto tbl = std::make_shared<std::map<uint64_t, std::string>>();
-		for (auto it = j["label_table"].begin(); it != j["label_table"].end(); ++it) {
-			if (!it.value().is_string())
-				continue;
-			uint64_t key_val = 0;
-			const std::string &ks = it.key();
-			auto [ptr, ec] = std::from_chars(ks.data(), ks.data() + ks.size(), key_val);
-			if (ec == std::errc() && ptr == ks.data() + ks.size())
-				(*tbl)[key_val] = it.value().get<std::string>();
-		}
-		if (!tbl->empty())
+	if (j.contains("label_table_name") && j["label_table_name"].is_string()) {
+		label_table = label_table::find_registered(j["label_table_name"].get<std::string>());
+	} else if (j.contains("label_table") && j["label_table"].is_object()) {
+		auto tbl = label_table::from_json("", j["label_table"]);
+		if (tbl && !tbl->empty())
 			label_table = std::move(tbl);
 	}
 	if (j.contains("points")) {

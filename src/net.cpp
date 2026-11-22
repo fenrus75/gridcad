@@ -29,6 +29,21 @@ void net::add_wire(class wire *wire)
 			return;
 	wires.push_back(wire);
 	wire->add_net(this);
+
+	/* Propagate shared label_table across all wires on the net (e.g. manual Data Scope taps). */
+	if (wire->get_label_table()) {
+		for (auto *w : wires) {
+			if (w && !w->get_label_table())
+				w->set_label_table(wire->get_label_table());
+		}
+	} else {
+		for (auto *w : wires) {
+			if (w && w->get_label_table()) {
+				wire->set_label_table(w->get_label_table());
+				break;
+			}
+		}
+	}
 }
 
 void net::remove_wire(class wire *wire)

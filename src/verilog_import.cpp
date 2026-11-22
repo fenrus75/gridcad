@@ -155,7 +155,7 @@ std::unique_ptr<scene> build_stub_scene(const std::string &mod_name, const json 
     return sub;
 }
 
-using LabelTableMap = std::map<std::string, std::shared_ptr<const std::map<uint64_t, std::string>>>;
+using LabelTableMap = std::map<std::string, std::shared_ptr<const label_table>>;
 
 std::unique_ptr<scene> import_module_recursive(
     const json &modules_obj,
@@ -736,7 +736,7 @@ std::unique_ptr<scene> import_module_recursive(
             const std::string lbl_key = wobj.value("label_table", "");
             const std::string wire_src = wobj.value("src", "");
             const std::string wire_verilog = wobj.value("src_verilog", "");
-            std::shared_ptr<const std::map<uint64_t, std::string>> wire_lbl_tbl;
+            std::shared_ptr<const label_table> wire_lbl_tbl;
             if (!lbl_key.empty()) {
                 auto lit = label_tables.find(lbl_key);
                 if (lit != label_tables.end())
@@ -919,21 +919,18 @@ verilog_importer::result verilog_importer::import_json(const json &root,
         }
     }
 
-    /* Parse optional enum/state label tables for waveform/wire annotation. */
+    /* Parse optional enum/opcode label tables (exact hex/dec + binary wildcard patterns). */
     LabelTableMap shared_label_tables;
     if (root.contains("label_tables") && root["label_tables"].is_object()) {
         for (auto it = root["label_tables"].begin(); it != root["label_tables"].end(); ++it) {
             if (!it.value().is_object())
                 continue;
-            auto &tbl = res.label_tables[it.key()];
-            for (auto kv = it.value().begin(); kv != it.value().end(); ++kv) {
-                if (kv.value().is_string()) {
-                    uint64_t code = parse_u64_json(json(kv.key()), 0);
-                    tbl[code] = kv.value().get<std::string>();
-                }
-            }
-            shared_label_tables[it.key()] =
-                std::make_shared<std::map<uint64_t, std::string>>(tbl);
+            auto tbl = label_table::from_json(it.key(), it.value());
+            if (!tbl || tbl->empty())
+                continue;
+            label_table::register_table(tbl);
+            res.label_tables[it.key()] = tbl;
+            shared_label_tables[it.key()] = std::move(tbl);
         }
     }
 

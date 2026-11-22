@@ -46,6 +46,8 @@
 #include "model_label.h"
 #include "model_nest.h"
 #include "model_datascope.h"
+#include "label_table.h"
+#include "net.h"
 
 #include <cassert>
 #include <filesystem>
@@ -1592,6 +1594,154 @@ static void test_wire_intersect(void)
     assert(!z->intersect(10.0f, 10.0f));
 }
 
+static void test_label_table_and_datascope(void)
+{
+    // 1. Unit tests for label_table: hex normalization, binary zero-padding,
+    //    exact-over-wildcard precedence, and fewer-'?' wildcard precedence.
+    {
+        nlohmann::json j = {
+            {"0x0", "ZERO_HEX"},
+            {"0x00", "NOP"},          // overwrites 0x0 via normalized uint64_t key
+            {"b001", "C"},
+            {"b01110110", "HLT"},
+            {"b01??????", "MOV"},
+            {"b00??0001", "LXI"},
+            {"b00???001", "BROAD_1"}, // 3 wildcards vs LXI's 2 wildcards
+            {"b00100010", "SHLD"},
+            {"b00??0010", "STAX"},
+        };
+        auto tbl = label_table::from_json("unit_opcodes", j);
+        assert(tbl->get_name() == "unit_opcodes");
+        assert(!tbl->empty());
+
+        // Hex normalization: 0x0 == 0x00
+        assert(tbl->lookup(0, 8) == "NOP");
+        // Binary exact match with zero-padding to 3-bit width: 1 -> "001" -> "C"
+        assert(tbl->lookup(1, 3) == "C");
+        // Width masking: 0x101 masked to 3 bits is 1 -> "C"
+        assert(tbl->lookup(0x101, 3) == "C");
+        // Exact beats wildcard: 0x76 -> "HLT" (not "MOV"), 0x22 -> "SHLD" (not "STAX")
+        assert(tbl->lookup(0x76, 8) == "HLT");
+        assert(tbl->lookup(0x22, 8) == "SHLD");
+        // Wildcard matches when no exact match exists
+        assert(tbl->lookup(0x41, 8) == "MOV");
+        assert(tbl->lookup(0x02, 8) == "STAX");
+        // Fewer-'?' wildcard precedence: 0x11 (0b00010001) matches both LXI (2 '?') and BROAD_1 (3 '?')
+        assert(tbl->lookup(0x11, 8) == "LXI");
+        // 0x09 (0b00001001) only matches BROAD_1
+        assert(tbl->lookup(0x09, 8) == "BROAD_1");
+        // Unmatched value returns empty string
+        assert(tbl->lookup(0xFF, 8).empty());
+    }
+
+    // 2. Central registry + wire::to_json/from_json round-trip (Undo) + net propagation + Data Scope
+    {
+        nlohmann::json j = {
+            {"0x00", "NOP"},
+            {"b01110110", "HLT"},
+            {"b01??????", "MOV"},
+        };
+        auto tbl = label_table::from_json("test_central_tbl", j);
+        label_table::register_table(tbl);
+        assert(label_table::find_registered("test_central_tbl") == tbl);
+
+        auto w1 = std::make_shared<wire>(0, 0, 5, 0);
+        w1->set_width(8);
+        w1->set_label_table(tbl);
+        assert(w1->get_label(0x76) == "HLT");
+        assert(w1->get_label(0x42) == "MOV");
+
+        // Wire JSON serialization stores only the registered table name (not the full table)
+        nlohmann::json wj;
+        w1->to_json(wj);
+        assert(wj.value("label_table_name", "") == "test_central_tbl");
+        assert(!wj.contains("label_table"));
+
+        auto w_restored = std::make_shared<wire>(0, 0, 5, 0);
+        w_restored->from_json(wj);
+        assert(w_restored->get_label_table() == tbl);
+        assert(w_restored->get_label(0x76) == "HLT");
+
+        // Net propagation: manually tapped Data Scope wire inherits the net's label_table
+        auto ds = std::make_unique<model_datascope>(10, 0);
+        assert(ds->get_format() == 3); // defaults to Enum mode
+
+        auto tap_wire = std::make_shared<wire>(5, 0, 9, 1);
+        tap_wire->set_width(8);
+        assert(!tap_wire->get_label_table());
+
+        auto n = std::make_unique<net>();
+        n->add_wire(w1.get());
+        n->add_wire(tap_wire.get());
+        assert(tap_wire->get_label_table() == tbl);
+
+        // Attach tap_wire to datascope's input port and verify Enum display + fallback + formats
+        ds->port_at(0)->add_wire(tap_wire);
+        struct value v = make_int_val(0x76);
+        ds->port_at(0)->value = v;
+        assert(ds->format_display_text() == "HLT");
+
+        ds->port_at(0)->value = make_int_val(0x41);
+        assert(ds->format_display_text() == "MOV");
+
+        // Fallback to decimal when value has no matching label
+        ds->port_at(0)->value = make_int_val(0xFF);
+        assert(ds->format_display_text() == "255");
+
+        // Explicit formats override Enum mode
+        ds->port_at(0)->value = make_int_val(0x76);
+        ds->set_format(0);
+        assert(ds->format_display_text() == "118");
+        ds->set_format(1);
+        assert(ds->format_display_text() == "x76");
+        ds->set_format(2);
+        assert(ds->format_display_text() == "1110110");
+
+        // Datascope JSON round-trip preserves format and defaults missing format to 3 (Enum)
+        nlohmann::json dsj;
+        ds->to_json(dsj);
+        auto ds_rt = std::make_unique<model_datascope>(0, 0);
+        ds_rt->from_json(dsj);
+        assert(ds_rt->get_format() == 2);
+
+        nlohmann::json dsj_no_fmt = dsj;
+        dsj_no_fmt.erase("format");
+        auto ds_def = std::make_unique<model_datascope>(0, 0);
+        ds_def->set_format(0);
+        ds_def->from_json(dsj_no_fmt);
+        assert(ds_def->get_format() == 3);
+
+        n->destroy();
+        ds->port_at(0)->remove_wire(tap_wire.get());
+    }
+
+    // 3. Real Turbostar export (tests/data/top.json): verify wildcard opcode table label_3 & label_2
+    {
+        verilog_importer::options opts;
+        opts.run_placer = false;
+        auto res = verilog_importer::import_file("tests/data/top.json", opts);
+        assert(res.ok);
+        assert(res.label_tables.count("label_2") == 1);
+        assert(res.label_tables.count("label_3") == 1);
+
+        const auto &l2 = res.label_tables.at("label_2");
+        assert(l2->lookup(0, 3) == "B");
+        assert(l2->lookup(1, 3) == "C");
+        assert(l2->lookup(7, 3) == "A");
+
+        const auto &l3 = res.label_tables.at("label_3");
+        assert(l3->lookup(0x00, 8) == "NOP");
+        assert(l3->lookup(0x22, 8) == "SHLD"); // exact beats b00??0010 (STAX)
+        assert(l3->lookup(0x02, 8) == "STAX");
+        assert(l3->lookup(0x2A, 8) == "LHLD"); // exact beats b00??1010 (LDAX)
+        assert(l3->lookup(0x0A, 8) == "LDAX");
+        assert(l3->lookup(0x76, 8) == "HLT");  // exact beats b01?????? (MOV)
+        assert(l3->lookup(0x41, 8) == "MOV");
+        assert(l3->lookup(0x01, 8) == "LXI");
+        assert(l3->lookup(0x04, 8) == "INR");
+    }
+}
+
 int main(void)
 {
     start_time = std::chrono::steady_clock::now();
@@ -1605,6 +1755,7 @@ int main(void)
     test_wirepath_routing();
     test_wire_intersect();
     test_scene_json_and_verilog();
+    test_label_table_and_datascope();
 
     std::cout << "All logic tests passed." << std::endl;
     return 0;

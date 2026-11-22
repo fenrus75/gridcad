@@ -87,6 +87,7 @@ core_sources = files(
     'src/iconbar.cpp',
     'src/placer.cpp',
     'src/layout_overlay.cpp',
+    'src/label_table.cpp',
     'src/verilog_import.cpp',
     'src/vcd_parser.cpp',
     'src/vcd_session.cpp',

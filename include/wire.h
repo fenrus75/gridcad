@@ -2,7 +2,7 @@
 #include "gridcad.h"
 #include "wirepath.h"
 #include "value.h"
-
+#include "label_table.h"
 
 class net;
 
@@ -76,8 +76,8 @@ public:
     void set_vcd_value_direct(const struct value &v);
     void apply_vcd_value(const struct value &v);
 
-    void set_label_table(std::shared_ptr<const std::map<uint64_t, std::string>> tbl) { label_table = std::move(tbl); };
-    const std::shared_ptr<const std::map<uint64_t, std::string>> &get_label_table(void) const { return label_table; };
+    void set_label_table(std::shared_ptr<const class label_table> tbl) { label_table = std::move(tbl); };
+    const std::shared_ptr<const class label_table> &get_label_table(void) const { return label_table; };
     std::string get_label(uint64_t val) const;
 
     void set_src_info(std::string_view loc, std::string_view verilog) {
@@ -112,7 +112,7 @@ protected:
     uint64_t points_timestamp = 0; /* nosave */
     std::string vcd_name = ""; /* hierarchical VCD signal name */
     bool vcd_locked = false;   /* true while driven/locked by VCD playback */
-    std::shared_ptr<const std::map<uint64_t, std::string>> label_table;
+    std::shared_ptr<const class label_table> label_table;
     std::string src_location = ""; /* imported Verilog file:line (nosave) */
     std::string src_verilog = "";  /* imported Verilog source snippet (nosave) */
     uint64_t last_drawn_frame = 0; /* nosave: deduplicate wire::draw() across endpoint ports */

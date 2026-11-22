@@ -14,6 +14,7 @@
 #include "element.h"
 #include "model_datascope.h"
 #include "port.h"
+#include "wire.h"
 
 #include <sys/time.h>
 
@@ -33,6 +34,11 @@ void callback_binary(class element *element)
      class model_datascope *e = (class model_datascope *)element;
      e->set_format(2);
 }
+void callback_enum(class element *element)
+{
+     class model_datascope *e = (class model_datascope *)element;
+     e->set_format(3);
+}
 
 model_datascope::model_datascope(float _X, float _Y)  : element(1, 1, "Output")
 {
@@ -42,9 +48,37 @@ model_datascope::model_datascope(float _X, float _Y)  : element(1, 1, "Output")
     Y = floorf(_Y);
     
     add_port(-1, 1, "Output", PORT_IN);    
+    menu->add_item("Enum", callback_enum);
     menu->add_item("Decimal", callback_decimal);
     menu->add_item("Hex", callback_hexadecimal);
     menu->add_item("Binary", callback_binary);
+}
+
+std::string model_datascope::format_display_text(void) const
+{
+    if (ports.empty())
+        return "";
+    if (ports[0]->value.type != VALUE_TYPE_INT && ports[0]->value.type != VALUE_TYPE_BOOL)
+        return "";
+
+    const uint64_t raw_val = (ports[0]->value.type == VALUE_TYPE_BOOL)
+                                 ? (ports[0]->value.boolval ? 1ULL : 0ULL)
+                                 : ports[0]->value.intval;
+    if (format == 3) {
+        for (const auto &w : ports[0]->get_wires()) {
+            if (w) {
+                std::string lbl = w->get_label(raw_val);
+                if (!lbl.empty())
+                    return lbl;
+            }
+        }
+        return std::format("{}", raw_val);
+    }
+    if (format == 1)
+        return std::format("x{:x}", raw_val);
+    if (format == 2)
+        return std::format("{:b}", raw_val);
+    return std::format("{}", raw_val);
 }
 
 void model_datascope::drawAt(class basecanvas *canvas, float X, float Y, int type)
@@ -54,17 +88,9 @@ void model_datascope::drawAt(class basecanvas *canvas, float X, float Y, int typ
     } else {
         canvas->draw_image("assets/datascope.png", X, Y, sizeX, sizeY, Alpha(type));
     }
-    if (ports[0]->value.type == VALUE_TYPE_INT) {
-        std::string s;
-        if (format == 1) {
-            s = std::format("x{:x}", ports[0]->value.intval);
-        } else if (format == 2) {
-            s = std::format("{:b}", ports[0]->value.intval);
-        } else {
-            s = std::format("{}", ports[0]->value.intval);
-        }
+    const std::string s = format_display_text();
+    if (!s.empty())
         canvas->draw_text(s, X + 0.6, Y + 0.6, 2.8, 1.8);
-    }
 
     for (auto &port : ports) {
         port->drawAt(canvas, X,Y, COLOR_WIRE_SOLID);
@@ -82,7 +108,7 @@ void model_datascope::to_json(json &j)
 void model_datascope::from_json(json &j)
 {
      element::from_json(j);
-     format = j.value("format", 0);
+     format = j.value("format", 3);
 }
 
 void model_datascope::rotate_ports(void)

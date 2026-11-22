@@ -19,6 +19,7 @@
 
 #include <nlohmann/json.hpp>
 
+#include "label_table.h"
 class scene;
 
 /*
@@ -51,7 +52,7 @@ public:
         std::string error;
         std::string top_module;
         std::unique_ptr<class scene> imported_scene;
-        std::map<std::string, std::map<uint64_t, std::string>> label_tables;
+        std::map<std::string, std::shared_ptr<const label_table>> label_tables;
         struct stats stats = {};
     };
 

@@ -22,10 +22,11 @@ public:
     void rotate_ports(void) override;
     void set_format(int f) { format = f; };
     int get_format(void) const { return format; };
+    std::string format_display_text(void) const;
 private:
     struct value value = {};
     bool edit_mode = false;
-    /* 0 = decimal, 1 = hex 2 = binary */
-    int format = 0;
+    /* 0 = decimal, 1 = hex, 2 = binary, 3 = enum (falls back to decimal if no label) */
+    int format = 3;
 };
 
