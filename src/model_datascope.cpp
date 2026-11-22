@@ -65,13 +65,9 @@ std::string model_datascope::format_display_text(void) const
                                  ? (ports[0]->value.boolval ? 1ULL : 0ULL)
                                  : ports[0]->value.intval;
     if (format == 3) {
-        for (const auto &w : ports[0]->get_wires()) {
-            if (w) {
-                std::string lbl = w->get_label(raw_val);
-                if (!lbl.empty())
-                    return lbl;
-            }
-        }
+        std::string lbl = ports[0]->get_label(raw_val);
+        if (!lbl.empty())
+            return lbl;
         return std::format("{}", raw_val);
     }
     if (format == 1)

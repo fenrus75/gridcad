@@ -88,8 +88,10 @@ void model_output::drawAt(class basecanvas *canvas, float X, float Y, int type)
       name_edit->drawAt(canvas, X, Y + sizeY, sizeX);
 
     if (ports[0]->value.type == VALUE_TYPE_INT) {
-	std::string s = std::format("{}", ports[0]->value.intval);
-	canvas->draw_text(s, X+ 0.6, Y + 0.6, 1.8,1.8);
+        std::string s = port::enum_display_phase() ? ports[0]->get_label(ports[0]->value.intval) : "";
+        if (s.empty())
+            s = std::format("{}", ports[0]->value.intval);
+        canvas->draw_text(s, X + 0.6, Y + 0.6, 1.8, 1.8);
     }
 
     for (auto &port : ports) {

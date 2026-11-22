@@ -121,7 +121,12 @@ void model_reg::drawAt(class basecanvas *canvas, float X, float Y, int type)
 {
     canvas->draw_image_rotated(selected ? "assets/deflipflop_selected.png" : "assets/deflipflop.png",
                                X, Y, sizeX, sizeY, Alpha(type), angle);
-    canvas->draw_text(std::format("0x{:X}", stored_value.intval), X + 0.1f, Y + sizeY - 1.2f, sizeX - 0.2f, 1.0f);
+    const struct value &qv = ports[4]->value.valid ? ports[4]->value : stored_value;
+    const uint64_t raw_val = (qv.type == VALUE_TYPE_BOOL) ? (qv.boolval ? 1ULL : 0ULL) : qv.intval;
+    std::string display = port::enum_display_phase() ? ports[4]->get_label(raw_val) : "";
+    if (display.empty())
+        display = std::format("0x{:X}", raw_val);
+    canvas->draw_text(display, X + 0.1f, Y + sizeY - 1.2f, sizeX - 0.2f, 1.0f);
 
     for (auto &port : ports) {
         port->drawAt(canvas, X, Y, COLOR_WIRE_SOLID);

@@ -43,6 +43,8 @@ public:
     void from_json(json &j);
     bool has_wires(void) { return wires.size() > 0; };
     const std::vector<std::shared_ptr<class wire>> &get_wires(void) const { return wires; };
+    std::string get_label(uint64_t val) const;
+    static bool enum_display_phase(void);
     void remove_wires(void);
     void remove_orphans(void);
     int get_width(void);

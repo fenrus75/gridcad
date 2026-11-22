@@ -97,9 +97,17 @@ void model_toggle::drawAt(class basecanvas *canvas, float X, float Y, int type)
       name_edit->drawAt(canvas,X, Y + sizeY, sizeX);
 
     if (ports[0]->get_width() > 1 || value.type == VALUE_TYPE_INT) {
-	strvalue = std::format("{}", ports[0]->value.intval);
-//	canvas->draw_text(s, X+ 0.6, Y + 0.6, 1.8,1.8);
-	value_edit->drawAt(canvas, X + 0.6, Y + 1, 1.8);
+        strvalue = std::format("{}", ports[0]->value.intval);
+        if (!value_edit->get_edit_mode() && port::enum_display_phase()) {
+            const std::string lbl = ports[0]->get_label(ports[0]->value.intval);
+            if (!lbl.empty()) {
+                canvas->draw_text(lbl, X + 0.6, Y + 0.6, 1.8, 1.8);
+            } else {
+                value_edit->drawAt(canvas, X + 0.6, Y + 1, 1.8);
+            }
+        } else {
+            value_edit->drawAt(canvas, X + 0.6, Y + 1, 1.8);
+        }
     }
 
     for (auto &port : ports) {

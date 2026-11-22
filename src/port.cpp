@@ -733,3 +733,20 @@ void port::clear_distress(void)
 	if (parent && old_distress)
 		parent->notify(DEFAULT_TTL); 
 };
+
+std::string port::get_label(uint64_t val) const
+{
+	for (const auto &w : wires) {
+		if (w) {
+			std::string lbl = w->get_label(val);
+			if (!lbl.empty())
+				return lbl;
+		}
+	}
+	return "";
+}
+
+bool port::enum_display_phase(void)
+{
+	return ((SDL_GetTicks64() / 1000ULL) & 1ULL) == 0;
+}
