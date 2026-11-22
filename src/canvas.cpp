@@ -1024,7 +1024,7 @@ bool canvas::handle_event(SDL_Event &event)
 					int sx = 0, sy = 0;
 					SDL_GetMouseState(&sx, &sy);
 					const float factor = std::pow(1.15f, std::clamp(steps, -5.0f, 5.0f));
-					zoom_at_screen(sx, sy, factor);
+					start_zoom_animation_at_screen(sx, sy, factor);
 					fittoscreen = false;
 					mouseX = scr_to_X(sx);
 					mouseY = scr_to_Y(sy);

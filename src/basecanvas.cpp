@@ -684,7 +684,7 @@ void basecanvas::draw(void)
 		ratio = (now - animation_start) / animation_time;
 		
 		if (animation_type == 1)
-			ratio = ratio * 2;
+			ratio = ratio * 1.4f;
 		if (animation_type == 2)
 			ratio = ratio * 6;
 		if (ratio > 1.0)
@@ -692,7 +692,12 @@ void basecanvas::draw(void)
 			
 		effect = ratio_effect(ratio);
 		effect2 = ratio * 2;
-		if (animation_type == 1 || animation_type == 2) {
+		if (animation_type == 1) {
+			/* Smooth cubic ease-out (~285 ms) for silky wheel and keyboard zoom */
+			const float inv = 1.0f - ratio;
+			effect = 1.0f - inv * inv * inv;
+			effect2 = effect;
+		} else if (animation_type == 2) {
 			effect = ratio;
 			effect2 = ratio;
 		}
