@@ -92,6 +92,7 @@ public:
     void remove_nets(void);
     void free_nets_memory(void);
     void add_nets(void);
+    void sync_nets(void);
 
     void update_value_net(struct value *value, int port, int ttl);
     int has_port(class port *port); /* true if this element has this port */

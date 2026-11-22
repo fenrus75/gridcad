@@ -556,6 +556,14 @@ void element::add_nets(void)
 	}
 }
 
+void element::sync_nets(void)
+{
+	for (auto &n : my_nets) {
+		if (n)
+			n->sync_existing_value();
+	}
+}
+
 void element::update_value_net(struct value *value, int port, int ttl)
 {
 	add_nets();

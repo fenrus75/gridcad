@@ -57,6 +57,7 @@ public:
 
     void remove_nets(void);
     void add_nets(void);
+    void sync_nets(void);
     void redo_nets(void);
     void redo_net(class element *seed_elem);
     void redo_all_multi_sink_nets(void);

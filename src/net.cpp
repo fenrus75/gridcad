@@ -192,6 +192,61 @@ void net::unlock_vcd(void)
 	}
 }
 
+void net::sync_existing_value(void)
+{
+	const int net_w = get_width();
+	if (net_w > 1) {
+		for (auto *w : wires) {
+			if (w && w->get_width() == 0)
+				w->set_width(net_w);
+		}
+	}
+
+	/* If any wire on this net is VCD-locked, restore net VCD lock and sync newly tapped endpoints. */
+	for (auto *w : wires) {
+		if (w && w->is_vcd_locked()) {
+			vcd_locked = true;
+			value = w->value;
+			auto wires_copy = wires;
+			for (auto *tw : wires_copy) {
+				if (tw && (!tw->is_vcd_locked() || tw->value != value))
+					tw->set_vcd_value_direct(value);
+			}
+			auto ports_copy = ports;
+			for (auto *p : ports_copy) {
+				if (p && p->value != value)
+					p->update_value_final(&value, DEFAULT_TTL);
+			}
+			return;
+		}
+	}
+
+	/* Otherwise, if there is a single driving PORT_OUT, propagate its current value to any
+	 * newly connected wires/ports whose value differs (without re-notifying unchanged ports). */
+	class port *driver = nullptr;
+	int out_count = 0;
+	for (auto *p : ports) {
+		if (p && p->direction == PORT_OUT) {
+			driver = p;
+			++out_count;
+		}
+	}
+	if (out_count != 1 || !driver)
+		return;
+
+	value = driver->value;
+	auto wires_copy = wires;
+	for (auto *tw : wires_copy) {
+		if (tw && tw->value != value)
+			tw->update_value_final(&value, DEFAULT_TTL);
+	}
+	auto ports_copy = ports;
+	for (auto *p : ports_copy) {
+		if (p && p != driver && p->value != value)
+			p->update_value_final(&value, DEFAULT_TTL);
+	}
+}
+
 
 void net::update_color(int _color)
 {

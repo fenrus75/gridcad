@@ -1740,6 +1740,75 @@ static void test_label_table_and_datascope(void)
         assert(l3->lookup(0x01, 8) == "LXI");
         assert(l3->lookup(0x04, 8) == "INR");
     }
+
+    // 4. Bugfix test-first: connecting a fresh Data Scope to an existing driven or VCD-locked
+    //    wire must immediately propagate the existing net value on redo_nets() without waiting
+    //    for a simulation cycle or VCD tick.
+    {
+        nlohmann::json j = {
+            {"b01110110", "HLT"},
+            {"b01??????", "MOV"},
+        };
+        auto tbl = label_table::from_json("tap_sync_tbl", j);
+
+        // 4a. Normal driven net (PORT_OUT -> connector -> newly tapped Data Scope)
+        scene s("tap_sync_sim");
+        auto drv = std::make_unique<model_toggle>(0, 0);
+        auto conn = std::make_unique<connector>(5, 0);
+        element *drv_p = drv.get();
+        element *conn_p = conn.get();
+        s.add_element(std::move(drv));
+        s.add_element(std::move(conn));
+
+        auto existing_w = std::make_shared<wire>(1, 0, 5, 0);
+        existing_w->set_width(8);
+        existing_w->set_label_table(tbl);
+        drv_p->port_at(0)->add_wire(existing_w);
+        conn_p->port_at(0)->add_wire(existing_w);
+        s.redo_nets();
+
+        struct value v_hlt = make_int_val(0x76);
+        drv_p->port_at(0)->value = v_hlt;
+        drv_p->port_at(0)->update_value_net(&v_hlt, DEFAULT_TTL);
+        assert(existing_w->value.intval == 0x76);
+
+        // Now add a brand-new Data Scope and connect it to the connector (as canvas.cpp does)
+        auto ds = std::make_unique<model_datascope>(10, 0);
+        model_datascope *ds_p = ds.get();
+        s.add_element(std::move(ds));
+
+        auto tap_w = std::make_shared<wire>(9, 1, 5, 0);
+        ds_p->port_at(0)->add_wire(tap_w);
+        conn_p->port_at(0)->add_wire(tap_w);
+        s.redo_nets();
+
+        // Must immediately show "HLT" without running any simulation tick!
+        assert(ds_p->port_at(0)->value.type == VALUE_TYPE_INT);
+        assert(ds_p->port_at(0)->value.intval == 0x76);
+        assert(ds_p->format_display_text() == "HLT");
+        assert(tap_w->get_width() == 8);
+
+        // 4b. VCD-locked net: tapping a second Data Scope onto a VCD-locked wire
+        struct value v_mov = make_int_val(0x41);
+        existing_w->apply_vcd_value(v_mov);
+        assert(ds_p->format_display_text() == "MOV");
+
+        auto ds2 = std::make_unique<model_datascope>(10, 5);
+        model_datascope *ds2_p = ds2.get();
+        s.add_element(std::move(ds2));
+
+        auto tap_w2 = std::make_shared<wire>(9, 6, 5, 0);
+        ds2_p->port_at(0)->add_wire(tap_w2);
+        conn_p->port_at(0)->add_wire(tap_w2);
+        s.redo_nets();
+
+        // Must immediately show "MOV" and keep net/tap wire VCD-locked!
+        assert(ds2_p->port_at(0)->value.type == VALUE_TYPE_INT);
+        assert(ds2_p->port_at(0)->value.intval == 0x41);
+        assert(ds2_p->format_display_text() == "MOV");
+        assert(tap_w2->is_vcd_locked());
+        assert(ds2_p->port_at(0)->get_net() && ds2_p->port_at(0)->get_net()->is_vcd_locked());
+    }
 }
 
 int main(void)

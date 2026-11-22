@@ -23,6 +23,7 @@ public:
 	void apply_vcd_value(const struct value &v);
 	void unlock_vcd(void);
 	bool is_vcd_locked(void) const { return vcd_locked; };
+	void sync_existing_value(void);
 	void update_net_distances(void);
 
 	void update_color(int color);

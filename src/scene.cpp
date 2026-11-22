@@ -510,10 +510,17 @@ void scene::add_nets(void)
 		elem->add_nets();
 }
 
+void scene::sync_nets(void)
+{
+	for (auto &elem : elements)
+		elem->sync_nets();
+}
+
 void scene::redo_nets(void)
 {
 	remove_nets();
 	add_nets();
+	sync_nets();
 }
 
 void scene::redo_net(class element *seed_elem)
