@@ -256,11 +256,15 @@ static sdl::SurfacePtr downscale_surface_if_large(sdl::SurfacePtr src, int max_d
 	if (!src || (src->w <= max_dim && src->h <= max_dim))
 		return src;
 
-	const double scale = static_cast<double>(max_dim) / static_cast<double>(std::max(src->w, src->h));
-	const int dst_w = std::max(1, static_cast<int>(std::lround(src->w * scale)));
-	const int dst_h = std::max(1, static_cast<int>(std::lround(src->h * scale)));
+	/* Use an exact integer divisor + premultiplied-alpha box filter to avoid fractional-scale fuzzing. */
+	const int div = (std::max(src->w, src->h) + max_dim - 1) / max_dim;
+	if (div <= 1)
+		return src;
 
-	/* Convert to 32-bit RGBA so SDL_BlitScaled handles paletted/RGB/RGBA PNGs uniformly. */
+	const int dst_w = std::max(1, src->w / div);
+	const int dst_h = std::max(1, src->h / div);
+
+	/* RGBA32 guarantees byte order [R, G, B, A] regardless of host endianness. */
 	sdl::SurfacePtr rgba(SDL_ConvertSurfaceFormat(src.get(), SDL_PIXELFORMAT_RGBA32, 0));
 	if (!rgba)
 		return src;
@@ -268,9 +272,51 @@ static sdl::SurfacePtr downscale_surface_if_large(sdl::SurfacePtr src, int max_d
 	if (!dst)
 		return src;
 
-	SDL_SetSurfaceBlendMode(rgba.get(), SDL_BLENDMODE_NONE);
-	if (SDL_BlitScaled(rgba.get(), nullptr, dst.get(), nullptr) != 0)
-		return src;
+	if (SDL_MUSTLOCK(rgba.get()))
+		SDL_LockSurface(rgba.get());
+	if (SDL_MUSTLOCK(dst.get()))
+		SDL_LockSurface(dst.get());
+
+	const auto *src_base = static_cast<const uint8_t *>(rgba->pixels);
+	auto *dst_base = static_cast<uint8_t *>(dst->pixels);
+
+	for (int dy = 0; dy < dst_h; ++dy) {
+		const int y0 = dy * div;
+		const int y1 = std::min(rgba->h, y0 + div);
+		uint8_t *dst_row = dst_base + dy * dst->pitch;
+		for (int dx = 0; dx < dst_w; ++dx) {
+			const int x0 = dx * div;
+			const int x1 = std::min(rgba->w, x0 + div);
+			uint64_t sum_r = 0, sum_g = 0, sum_b = 0, sum_a = 0, count = 0;
+			for (int sy = y0; sy < y1; ++sy) {
+				const uint8_t *src_row = src_base + sy * rgba->pitch;
+				for (int sx = x0; sx < x1; ++sx) {
+					const uint8_t *px = src_row + sx * 4;
+					const uint64_t a = px[3];
+					sum_r += static_cast<uint64_t>(px[0]) * a;
+					sum_g += static_cast<uint64_t>(px[1]) * a;
+					sum_b += static_cast<uint64_t>(px[2]) * a;
+					sum_a += a;
+					++count;
+				}
+			}
+			uint8_t *out = dst_row + dx * 4;
+			if (count > 0 && sum_a > 0) {
+				out[0] = static_cast<uint8_t>(std::min<uint64_t>(255, (sum_r + sum_a / 2) / sum_a));
+				out[1] = static_cast<uint8_t>(std::min<uint64_t>(255, (sum_g + sum_a / 2) / sum_a));
+				out[2] = static_cast<uint8_t>(std::min<uint64_t>(255, (sum_b + sum_a / 2) / sum_a));
+				out[3] = static_cast<uint8_t>(std::min<uint64_t>(255, (sum_a + count / 2) / count));
+			} else {
+				out[0] = out[1] = out[2] = out[3] = 0;
+			}
+		}
+	}
+
+	if (SDL_MUSTLOCK(dst.get()))
+		SDL_UnlockSurface(dst.get());
+	if (SDL_MUSTLOCK(rgba.get()))
+		SDL_UnlockSurface(rgba.get());
+
 	return dst;
 }
 
