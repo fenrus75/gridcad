@@ -74,7 +74,7 @@ private:
     std::string name;
     int hover_item_x = 8888;
     int hover_item_y = 8888;
-    uint64_t hover_time;
+    uint64_t hover_time = 0;
 
 };
 

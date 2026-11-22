@@ -2,5 +2,5 @@
 
 
 struct capabilities {
-    bool has_full_workflow;
+    bool has_full_workflow = false;
 };

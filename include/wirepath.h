@@ -8,26 +8,26 @@
 #define SQRT2 1.45
 
 struct point {
-    int x;
-    int y;
-    bool valid;
-    bool blocked;
-    bool part_of_wire;
-    bool visited;
-    double distance_from_start;
-    double hamdist;
+    int x = 0;
+    int y = 0;
+    bool valid = false;
+    bool blocked = false;
+    bool part_of_wire = false;
+    bool visited = false;
+    double distance_from_start = 0.0;
+    double hamdist = 0.0;
     
-    int dirX, dirY; /* direction we xame from to get best cost to get here */
-    int dir_to_goal;
+    int dirX = 0, dirY = 0; /* direction we came from to get best cost to get here */
+    int dir_to_goal = 0;
     
     bool on_path = false;
     bool queued = false;
     
-    double extra_score;
+    double extra_score = 0.0;
 };
 
 struct waypoint {
-    float X, Y;
+    float X = 0.0f, Y = 0.0f;
 };
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE_WITH_DEFAULT(waypoint, X, Y);
 
@@ -50,8 +50,8 @@ public:
     float get_soft_cost(int x, int y);
     
     struct seed_point {
-        int x;
-        int y;
+        int x = 0;
+        int y = 0;
         double initial_cost = 0.0;
     };
 
@@ -66,7 +66,7 @@ private:
 
     bool found_solution = false;    
     double best_path = 500000;
-    int width, height;
+    int width = 0, height = 0;
 
     int originX = 0, originY = 0;
     int targetX = 0, targetY = 0;

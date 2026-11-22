@@ -100,7 +100,7 @@ void model_deflipflop::calculate(int ttl)
 
 		if (ports[3]->value.boolval) {
 
-			if (memcmp(&value, &(ports[0]->value), sizeof(struct value)) != 0)
+			if (value != ports[0]->value)
 				changed = true;
 			value = ports[0]->value;  
 		}

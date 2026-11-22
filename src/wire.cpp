@@ -483,7 +483,7 @@ void wire::update_value(struct value *newvalue, int ttl)
 		return;
 	if (!newvalue->valid)
 		return;
-	if (value.valid && memcmp(&value, newvalue, sizeof(struct value)) == 0) {
+	if (value.valid && value == *newvalue) {
 		/* no change -- early exit to kill oscillations */
 		return;
 	}

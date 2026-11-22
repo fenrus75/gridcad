@@ -275,7 +275,7 @@ void element::fill_grid(class wiregrid *grid)
 
 void element::update_value(class port *port, struct value *value, int ttl)
 {
-	if (memcmp(value, &port->value, sizeof(struct value)) == 0)
+	if (*value == port->value)
 		return; /* short circuit noop updates */
 
 	notify(ttl -1);

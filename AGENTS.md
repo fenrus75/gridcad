@@ -12,6 +12,7 @@
 - **Memory Management**: Follow RAII strictly; avoid raw `new` and `delete`, using `std::make_unique` and `std::make_shared`.
 - **String Handling**: Use `std::string` or `std::string_view` over raw `char *` except when interfacing with C APIs or the OS kernel.
 - **Standard Library**: Prefer C++ Standard Library containers and algorithms over custom implementations.
+- **Member Initialization**: Initialize all class and struct member variables (scalars, pointers, POD structs) inline at their declaration in the class definition (e.g., `= 0`, `= false`, `= nullptr`, `= {}`).
 - **File Organization**: Place each class in a dedicated `.cpp` file and matching header in the same directory.
 
 ## Security Considerations

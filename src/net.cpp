@@ -143,7 +143,7 @@ void net::update_value(struct value *newvalue, int ttl)
 {
 	if (vcd_locked)
 		return;
-	if (memcmp(&value, newvalue, sizeof(struct value)) == 0)
+	if (value == *newvalue)
 		return;
 
 	value = *newvalue;

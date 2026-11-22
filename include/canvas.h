@@ -54,7 +54,7 @@ protected:
     bool draw_grid = false;
     bool window_shown = true;
     std::unique_ptr<class scene> current_scene;
-    SDL_Rect main_area_rect, ui_area_rect, button_rect;
+    SDL_Rect main_area_rect = {}, ui_area_rect = {}, button_rect = {};
     class element *dragging = nullptr;
     std::vector<std::unique_ptr<class element>> floating;
     class port *dragging_port = nullptr;

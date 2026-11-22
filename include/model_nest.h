@@ -38,7 +38,7 @@ public:
     void save_to_library(std::string library_path);
 private:
 
-    float bX1,bY1,bX2,bY2; /* bounding box of the scene -- no save*/
+    float bX1 = 0.0f, bY1 = 0.0f, bX2 = 0.0f, bY2 = 0.0f; /* bounding box of the scene -- no save*/
     /* Scene is owned here until a canvas window is opened, at which point ownership moves into canvas. */
     std::unique_ptr<class scene> owned_scene;
     std::unique_ptr<class canvas> canvas;

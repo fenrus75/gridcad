@@ -23,7 +23,7 @@ model_zero::model_zero(float _X, float _Y)  : element(1, 1, "")
     Y = floorf(_Y);
 
     
-    memset(&value, 0, sizeof(struct value));
+    value = {};
     value.boolval = false;
     value.valid = true;
 

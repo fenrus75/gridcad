@@ -65,7 +65,7 @@ public:
     scoped_breadcrumb &operator=(scoped_breadcrumb &&) = delete;
 
 private:
-    char prev_[128];
+    char prev_[128] = {};
 };
 
 } // namespace crash_handler

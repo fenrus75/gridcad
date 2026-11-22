@@ -33,7 +33,7 @@ private:
     std::vector<std::unique_ptr<class widget>> widgets;
     bool need_fill_grid = false;
     
-    int selectX, selectY;
+    int selectX = 0, selectY = 0;
     std::vector<std::vector<bool>> canX;
     void do_canX(unsigned int row);
 };

@@ -96,7 +96,7 @@ void model_dflipflop::calculate(int ttl)
 		previous_clock = newclock;
 		/* latch in the D value */
 
-		if (memcmp(&value, &(ports[0]->value), sizeof(struct value)) != 0)
+		if (value != ports[0]->value)
 			changed = true;
 		value = ports[0]->value;  
 

@@ -44,7 +44,7 @@ public:
     
 private:
     char *tv = nullptr;
-    bool is_input;
+    bool is_input = false;
     class truthcanvas *canvas = nullptr;
 };
 

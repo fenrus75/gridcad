@@ -26,7 +26,7 @@ public:
 	void update_net_distances(void);
 
 	void update_color(int color);
-	unsigned int netnum;
+	unsigned int netnum = 0;
 	
 	std::string get_verilog_name(void);
 	void set_special_verilog_name(std::string name) { special_verilog_name = name; };
