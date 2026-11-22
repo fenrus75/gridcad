@@ -1283,7 +1283,7 @@ static void test_vcd_playback(void)
         assert(mux2 && mux2->port_at(3));
         auto ds2 = std::make_unique<model_datascope>(79, 11);
         ds2->update_name("mux_scope");
-        ds2->set_format(1);
+        ds2->set_format(3); // enum mode
         model_datascope *ds2_p = ds2.get();
         s1->add_element(std::move(ds2));
         auto tap_w2 = std::make_shared<wire>(0, 0, 0, 0, 0);
@@ -1325,7 +1325,8 @@ static void test_vcd_playback(void)
                 found_lbl = true;
             } else if (e->class_id() == "model_datascope:") {
                 auto *d = static_cast<model_datascope *>(e.get());
-                assert(d->get_format() == 1);
+                const int expected_fmt = (d->get_name() == "mux_scope") ? 3 : 1;
+                assert(d->get_format() == expected_fmt);
                 assert(d->port_at(0) && !d->port_at(0)->get_wires().empty());
                 found_connected_ds++;
             }

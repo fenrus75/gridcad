@@ -532,7 +532,7 @@ bool layout_overlay::apply_file_to_scene(class scene *target_scene, const std::f
             const float dy = std::max(1.0f, std::floor(jd.value("Y", 4.0f)));
             auto ds = std::make_unique<model_datascope>(dx, dy);
             ds->update_name(jd.value("name", ""));
-            ds->set_format(std::clamp(jd.value("format", 0), 0, 2));
+            ds->set_format(std::clamp(jd.value("format", 3), 0, 3));
             const int target_angle = ((((jd.value("angle", 0) % 360) + 360) % 360) / 90) * 90;
             for (int tries = 0; tries < 4 && (ds->get_angle() % 360) != target_angle; ++tries)
                 ds->rotate_ports();
