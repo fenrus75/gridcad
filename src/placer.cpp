@@ -999,7 +999,7 @@ void topological_placer::place(class scene *target_scene, const options &opts)
                         continue;
                     port *other = w->get_other_port(p);
                     if (!other || !other->parent || is_connector(other->parent) ||
-                        is_constant(other->parent))
+                        is_constant(other->parent) || is_slice(other->parent))
                         continue;
                     /* Only align roughly horizontal forward wires. */
                     const float dx = (p->direction == PORT_OUT)

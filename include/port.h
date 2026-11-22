@@ -15,8 +15,8 @@ public:
     port(std::string _name, int _direction = PORT_IN, int bus_width = 1);    
     virtual ~port(void);
     virtual std::string class_id(void) { return "port:";};
-    int X, Y;
-    float screenX, screenY;
+    int X = 0, Y = 0;
+    float screenX = 0.0f, screenY = 0.0f;
     std::string name = "";
     class element *parent = nullptr;
     struct value value = {};
