@@ -80,6 +80,28 @@ void basecanvas::draw_box(float X1, float Y1, float X2, float Y2, int color, int
 	SDL_RenderFillRect(renderer.get(), &rect);
 }
 
+void basecanvas::draw_box_rgba(float X1, float Y1, float X2, float Y2, Uint8 r, Uint8 g, Uint8 b, Uint8 a)
+{
+	flush_line_batch();
+	int x1 = X_to_scr(X1);
+	int x2 = X_to_scr(X2);
+	int y1 = Y_to_scr(Y1);
+	int y2 = Y_to_scr(Y2);
+
+	if (x1 < 0)
+		x1 = 0;
+	if (x2 < 0)
+		return;
+	if (y1 < 0)
+		y1 = 0;
+	if (y2 < 0)
+		return;
+
+	SDL_Rect rect = {x1, y1, x2 - x1, y2 - y1};
+	SDL_SetRenderDrawColor(renderer.get(), r, g, b, a);
+	SDL_RenderFillRect(renderer.get(), &rect);
+}
+
 /*
  * Draw a thick line segment as a single 2-triangle quad via SDL_RenderGeometry,
  * culling segments whose bounding box lies outside the current render target.
@@ -204,16 +226,31 @@ void basecanvas::draw_thick_line(float X1, float Y1, float X2, float Y2, int col
 	}
 }
 
-void basecanvas::draw_shadow_Line(float X1, float Y1, float X2, float Y2, int color)
+void basecanvas::draw_shadow_Line(float X1, float Y1, float X2, float Y2, int color, float pulse)
 {
 	Uint8 r = 0, g = 0, b = 0;
+	Uint8 a = 64;
+	float width = 0.25f * scaleX;
 
 	if (color == COLOR_VALUE_RED)
 		r = 255;
 
+	if (pulse > 0.001f) {
+		const float p = std::clamp(pulse, 0.0f, 1.0f);
+		/* Brightened version of the wire's base color, pushed toward warm highlight. */
+		const float br = R(color) + (255.0f - R(color)) * 0.65f;
+		const float bg = G(color) + (255.0f - G(color)) * 0.65f;
+		const float bb = B(color) + (255.0f - B(color)) * 0.45f;
+		r = static_cast<Uint8>(std::clamp(r + (br - r) * p, 0.0f, 255.0f));
+		g = static_cast<Uint8>(std::clamp(g + (bg - g) * p, 0.0f, 255.0f));
+		b = static_cast<Uint8>(std::clamp(b + (bb - b) * p, 0.0f, 255.0f));
+		a = static_cast<Uint8>(std::clamp(64.0f + 135.0f * p, 0.0f, 255.0f));
+		width = (0.25f + 0.50f * p) * scaleX;
+	}
+
 	emit_thick_quad(static_cast<float>(X_to_scr(X1)), static_cast<float>(Y_to_scr(Y1)),
 	                static_cast<float>(X_to_scr(X2)), static_cast<float>(Y_to_scr(Y2)),
-	                0.25f * scaleX, r, g, b, 64);
+	                width, r, g, b, a);
 }
 
 void basecanvas::draw_circle(float X, float Y, float _R, int color, int color2)

@@ -93,11 +93,12 @@ public:
     
 
     void draw_box(float X1, float Y1, float X2, float Y2, int color, int alpha = -1);
+    void draw_box_rgba(float X1, float Y1, float X2, float Y2, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
     void draw_circle(float X, float Y, float R, int color, int color2=COLOR_BACKGROUND_MAIN);
     void draw_circle2(float X, float Y, float R, int color, int color2=COLOR_BACKGROUND_MAIN);
     void draw_line(float X1, float Y1, float X2, float Y2, int color);
     void draw_thick_line(float X1, float Y1, float X2, float Y2, int color);
-    void draw_shadow_Line(float X1, float Y1, float X2, float Y2, int color);
+    void draw_shadow_Line(float X1, float Y1, float X2, float Y2, int color, float pulse = 0.0f);
     void flush_line_batch(void);
     uint64_t current_frame_id(void) const { return frame_id; }
 

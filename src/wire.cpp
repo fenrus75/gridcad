@@ -113,7 +113,7 @@ int calc_angle(int x1, int y1, int x2, int y2)
 	return 0;
 }
 
-void draw_snake_line(class basecanvas *canvas, float x1, float y1, float x2, float y2, int color, int *step, struct value *value, int stepsize, class wire *wire)
+void draw_snake_line(class basecanvas *canvas, float x1, float y1, float x2, float y2, int color, int *step, struct value *value, int stepsize, class wire *wire, float pulse)
 {
 	float dx, dy,d, deltad, currentd, bigstep;
 	bool thick = false;
@@ -160,8 +160,9 @@ void draw_snake_line(class basecanvas *canvas, float x1, float y1, float x2, flo
 					cursormag = 1;
 				if (cursormag > 2)
 					cursormag = 2;
-				const float size = 0.24 * cursormag;
-				const float size2 = 0.20 * cursormag;
+				const float pulse_mag = 1.0f + 0.35f * pulse;
+				const float size = 0.24f * cursormag * pulse_mag;
+				const float size2 = 0.20f * cursormag * pulse_mag;
 				std::string s;
 				bool has_enum_label = false;
 				if (wire->get_is_z())
@@ -179,7 +180,14 @@ void draw_snake_line(class basecanvas *canvas, float x1, float y1, float x2, flo
 				}
 				const float half_w = has_enum_label ? std::max(size, size * 0.45f * static_cast<float>(s.size())) : size;
 				const float half_w2 = half_w - (size - size2);
-				canvas->draw_box(x1-half_w, y1-size, x1+half_w, y1+size, COLOR_WIRE_MOTION);
+				if (pulse > 0.001f) {
+					const Uint8 br = static_cast<Uint8>(R(COLOR_WIRE_MOTION) + (255 - R(COLOR_WIRE_MOTION)) * pulse);
+					const Uint8 bg = static_cast<Uint8>(G(COLOR_WIRE_MOTION) + (225 - G(COLOR_WIRE_MOTION)) * pulse);
+					const Uint8 bb = static_cast<Uint8>(B(COLOR_WIRE_MOTION) + (80 - B(COLOR_WIRE_MOTION)) * pulse);
+					canvas->draw_box_rgba(x1-half_w, y1-size, x1+half_w, y1+size, br, bg, bb, 255);
+				} else {
+					canvas->draw_box(x1-half_w, y1-size, x1+half_w, y1+size, COLOR_WIRE_MOTION);
+				}
 				canvas->draw_box(x1-half_w2, y1-size2, x1+half_w2, y1+size2, COLOR_BACKGROUND_MAIN);
 				canvas->draw_text(s, x1+0.05-half_w, y1+0.05-size, 2 * half_w - 0.1, 2 * size - 0.1);
 			} else if (value->is_clock) {
@@ -198,9 +206,10 @@ void draw_snake_line(class basecanvas *canvas, float x1, float y1, float x2, flo
 				//                        canvas->draw_image_fragment("assets/clock_wave.png", x1-size, y1-size, 4*size, 2*size, 25 + f, 0, 2 * (450 -25), 189, ang);	
 				canvas->draw_image_fragment("assets/clock_wave.png", x1-size, y1-size, 2*size, 2*size, 25 + f, 0, 450 -25, 189, ang);	
 			} else {
-				float r = 0.18;
+				float r = 0.18f;
 				if (thick)
-					r = 0.22;
+					r = 0.22f;
+				r *= (1.0f + 0.45f * pulse);
 				canvas->draw_image(value_color_texture(value), x1-r, y1-r, 2 * r, 2 * r);
 //				canvas->draw_circle2(x1, y1, r, COLOR_WIRE_MOTION, value_color(value));
 			}
@@ -253,7 +262,11 @@ void wire::draw(class basecanvas *canvas, int _color)
 	step = current_interval() % stepsize;
 
 	if (value.is_clock && !clock_running)
-		step = (global_clock.arrayval * 4) % stepsize;;
+		step = (global_clock.arrayval * 4) % stepsize;
+
+	const float pulse = (_color != COLOR_ELEMENT_GHOST) ? change_pulse() : 0.0f;
+	const int shadow_color = (pulse > 0.001f && _color != COLOR_VALUE_RED) ? wire_to_color(color) : _color;
+
 	for (auto point: *drawpoints) {
 		if (first) {
 			prevX = point.X;
@@ -261,7 +274,7 @@ void wire::draw(class basecanvas *canvas, int _color)
 			first = false;
 			continue;
 		}
-		canvas->draw_shadow_Line(prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, _color);
+		canvas->draw_shadow_Line(prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, shadow_color, pulse);
 		prevX = point.X;
 		prevY = point.Y;
 	}
@@ -283,9 +296,9 @@ void wire::draw(class basecanvas *canvas, int _color)
 			canvas->draw_circle(tX,tY, 0.4, COLOR_VALUE_RED);
 		
 		if (_color != COLOR_ELEMENT_GHOST)
-			draw_snake_line(canvas, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, wire_to_color(color), &step, &value, stepsize, this);
+			draw_snake_line(canvas, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, wire_to_color(color), &step, &value, stepsize, this, pulse);
 		else
-			draw_snake_line(canvas, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, COLOR_ELEMENT_GHOST, &step, &value, stepsize, this);
+			draw_snake_line(canvas, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, COLOR_ELEMENT_GHOST, &step, &value, stepsize, this, 0.0f);
 		prevX = point.X;
 		prevY = point.Y;
 	}
@@ -502,10 +515,38 @@ void wire::update_value(struct value *newvalue, int ttl)
 }
 #endif
 
+void wire::record_value_change(const struct value &v)
+{
+	if (value.valid && v.valid && !v.is_clock && value != v)
+		last_changed_ms = SDL_GetTicks64();
+}
+
+float wire::change_pulse(void) const
+{
+	if (last_changed_ms == 0)
+		return 0.0f;
+	/* Manual single-stepping gets 2x duration (100ms attack + 1100ms decay = 1200ms) so the user
+	 * has time to scan changes; automatic playback uses 50ms + 550ms = 600ms. */
+	const uint64_t attack_ms = clock_running ? 50 : 100;
+	const uint64_t decay_ms = clock_running ? 550 : 1100;
+	const uint64_t total_ms = attack_ms + decay_ms;
+	const uint64_t now = SDL_GetTicks64();
+	if (now < last_changed_ms)
+		return 0.0f;
+	const uint64_t elapsed = now - last_changed_ms;
+	if (elapsed >= total_ms)
+		return 0.0f;
+	if (elapsed < attack_ms)
+		return static_cast<float>(elapsed) / static_cast<float>(attack_ms);
+	const float t = static_cast<float>(elapsed - attack_ms) / static_cast<float>(decay_ms);
+	return std::max(0.0f, 1.0f - std::sin(t * 1.57079632679f));
+}
+
 void wire::update_value_final(struct value *newvalue, int ttl)
 {
 	if (vcd_locked)
 		return;
+	record_value_change(*newvalue);
 	value = *newvalue;
 	notify(ttl - 1);
 }
@@ -526,6 +567,7 @@ void wire::update_value_net(struct value *newvalue, int ttl)
 void wire::set_vcd_value_direct(const struct value &v)
 {
 	vcd_locked = true;
+	record_value_change(v);
 	value = v;
 }
 
@@ -542,6 +584,7 @@ std::string wire::get_label(uint64_t val) const
 void wire::apply_vcd_value(const struct value &v)
 {
 	vcd_locked = true;
+	record_value_change(v);
 	value = v;
 	if (net) {
 		net->apply_vcd_value(v);
