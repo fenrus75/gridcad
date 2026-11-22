@@ -1938,6 +1938,79 @@ static void test_vcd_valid_qualifiers(void)
     }
 }
 
+static void test_nest_scale_2x(void)
+{
+    auto sub = std::make_unique<scene>("sub_2x");
+    // Place 3 inputs on the left and 2 outputs on the right
+    for (int i = 0; i < 3; ++i) {
+        auto in_p = std::make_unique<model_toggle>(2, 4 + i * 4);
+        in_p->update_name(std::format("in{}", i));
+        sub->add_element(std::move(in_p));
+    }
+    for (int i = 0; i < 2; ++i) {
+        auto out_p = std::make_unique<model_output>(20, 4 + i * 4);
+        out_p->update_name(std::format("out{}", i));
+        sub->add_element(std::move(out_p));
+    }
+
+    scene parent("parent_2x");
+    auto nest = std::make_unique<model_nest>(10, 12);
+    nest->update_name("big_block");
+    nest->set_scene(std::move(sub));
+    model_nest *np = nest.get();
+    parent.add_element(std::move(nest));
+
+    const float w1 = np->get_width();
+    const float h1 = np->get_height();
+    assert(!np->is_scale_2x());
+    assert(w1 >= 4.0f && h1 >= 5.0f);
+
+    // Toggle 2x: dimensions double, top-left stays anchored, west ports spaced by 2
+    np->toggle_scale_2x();
+    assert(np->is_scale_2x());
+    assert(np->get_X() == 10.0f && np->get_Y() == 12.0f);
+    assert(np->get_width() == w1 * 2.0f);
+    assert(np->get_height() == h1 * 2.0f);
+
+    std::vector<int> west_ys;
+    for (unsigned int i = 0;; ++i) {
+        port *p = np->port_at(i);
+        if (!p)
+            break;
+        if (p->X == -1)
+            west_ys.push_back(p->Y);
+    }
+    assert(west_ys.size() == 3);
+    assert(west_ys[1] - west_ys[0] == 2);
+    assert(west_ys[2] - west_ys[1] == 2);
+
+    // JSON round-trip (Undo / project save)
+    nlohmann::json nj;
+    np->to_json(nj);
+    assert(nj.value("scale_2x", false) == true);
+    auto nest_rt = std::make_unique<model_nest>(0, 0);
+    nest_rt->from_json(nj);
+    assert(nest_rt->is_scale_2x());
+    assert(nest_rt->get_width() == w1 * 2.0f);
+    assert(nest_rt->get_height() == h1 * 2.0f);
+
+    // Layout overlay round-trip
+    const std::filesystem::path tmp_overlay =
+        std::filesystem::temp_directory_path() / "gridcad_test_nest_2x_overlay.json";
+    std::error_code ec;
+    std::filesystem::remove(tmp_overlay, ec);
+    assert(layout_overlay::save_scene_to_file(&parent, tmp_overlay));
+
+    np->set_scale_2x(false);
+    assert(!np->is_scale_2x());
+    assert(np->get_width() == w1 && np->get_height() == h1);
+
+    assert(layout_overlay::apply_file_to_scene(&parent, tmp_overlay));
+    assert(np->is_scale_2x());
+    assert(np->get_width() == w1 * 2.0f && np->get_height() == h1 * 2.0f);
+    std::filesystem::remove(tmp_overlay, ec);
+}
+
 int main(void)
 {
     start_time = std::chrono::steady_clock::now();
@@ -1954,6 +2027,7 @@ int main(void)
     test_label_table_and_datascope();
     test_canvas_zoom();
     test_vcd_valid_qualifiers();
+    test_nest_scale_2x();
 
     std::cout << "All logic tests passed." << std::endl;
     return 0;

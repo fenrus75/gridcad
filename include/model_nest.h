@@ -36,6 +36,9 @@ public:
     void set_library_origin(std::string origin, std::string elm) override { from_library_collection = origin; from_library_element = elm;};
     void reset_to_library(void);
     void save_to_library(std::string library_path);
+    void set_scale_2x(bool enabled);
+    void toggle_scale_2x(void) { set_scale_2x(!scale_2x); }
+    bool is_scale_2x(void) const { return scale_2x; }
 private:
 
     float bX1 = 0.0f, bY1 = 0.0f, bX2 = 0.0f, bY2 = 0.0f; /* bounding box of the scene -- no save*/
@@ -55,4 +58,5 @@ private:
     std::string icon_selected = "";
     std::unique_ptr<class name> name_edit;
     bool title_on_top = false;
+    bool scale_2x = false;
 };

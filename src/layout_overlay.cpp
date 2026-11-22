@@ -250,6 +250,8 @@ bool layout_overlay::save_scene_to_file(class scene *target_scene, const std::fi
         je["X"] = elem->get_X();
         je["Y"] = elem->get_Y();
         je["angle"] = elem->get_angle();
+        if (cid == "model_nest:" && static_cast<model_nest *>(elem.get())->is_scale_2x())
+            je["scale_2x"] = true;
         j_elems.push_back(std::move(je));
 
         /* Record wire colors by net key. */
@@ -317,6 +319,7 @@ bool layout_overlay::apply_file_to_scene(class scene *target_scene, const std::f
         float X = 0.0f;
         float Y = 0.0f;
         int angle = 0;
+        bool scale_2x = false;
         bool used = false;
     };
     std::vector<saved_elem> saved_list;
@@ -336,6 +339,7 @@ bool layout_overlay::apply_file_to_scene(class scene *target_scene, const std::f
             se.X = je.value("X", 0.0f);
             se.Y = je.value("Y", 0.0f);
             se.angle = ((je.value("angle", 0) % 360) + 360) % 360;
+            se.scale_2x = je.value("scale_2x", false);
             const size_t idx = saved_list.size();
             saved_list.push_back(se);
 
@@ -353,6 +357,8 @@ bool layout_overlay::apply_file_to_scene(class scene *target_scene, const std::f
     size_t matched_count = 0;
 
     auto apply_pose = [&](element *e, const saved_elem &se) {
+        if (e->class_id() == "model_nest:")
+            static_cast<model_nest *>(e)->set_scale_2x(se.scale_2x);
         const int target_angle = (se.angle / 90) * 90;
         for (int tries = 0; tries < 4 && (e->get_angle() % 360) != target_angle; ++tries)
             e->rotate_ports();

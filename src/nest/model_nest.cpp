@@ -42,6 +42,12 @@ static void callback_zoom_into_module(class element *element)
 	nest->open_window();
 }
 
+static void callback_toggle_2x(class element *element)
+{
+	auto *nest = static_cast<class model_nest *>(element);
+	nest->toggle_scale_2x();
+}
+
 void callback_reset(class element *element)
 {
 	class model_nest *nest = (class model_nest *) element;
@@ -69,11 +75,26 @@ model_nest::model_nest(float _X, float _Y) : element(_X,_Y, "SubScreen")
 	//	printf("New scene %s %s\n", name.c_str(), get_full_name().c_str());
 	owned_scene = std::make_unique<class scene>(name, get_full_name());
 	menu->add_item("Zoom into module", callback_zoom_into_module);
+	menu->add_item("2x size", callback_toggle_2x);
 	menu->add_item("Edit name", callback_editname);
 	menu->add_item("Reset to library version", callback_reset);
 	menu->add_item("Save to library", callback_save_to_library);
 
 	name_edit = std::make_unique<class name>(&name);
+}
+
+void model_nest::set_scale_2x(bool enabled)
+{
+	if (scale_2x == enabled)
+		return;
+	scale_2x = enabled;
+	if (scale_2x)
+		menu->rename_item("2x size", "1x size");
+	else
+		menu->rename_item("1x size", "2x size");
+	regen_ports();
+	reseat();
+	reroute_all_wires();
 }
 
 class scene *model_nest::active_scene(void) const
@@ -226,6 +247,8 @@ void model_nest::to_json(json &j)
 	j["icon_selected"] = path_to_template(icon_selected);
 	j["from_library_collection"] = path_to_template(from_library_collection);
 	j["from_library_element"] = path_to_template(from_library_element);
+	if (scale_2x)
+		j["scale_2x"] = true;
 }
 void model_nest::from_json(json &j)
 {
@@ -236,6 +259,11 @@ void model_nest::from_json(json &j)
 	icon_selected = template_to_path(j.value("icon_selected", ""));
 	from_library_collection = template_to_path(j.value("from_library_collection", ""));
 	from_library_element = template_to_path(j.value("from_library_element", ""));
+	scale_2x = j.value("scale_2x", false);
+	if (scale_2x)
+		menu->rename_item("2x size", "1x size");
+	else
+		menu->rename_item("1x size", "2x size");
 
 	if (from_library_collection == "")
 		menu->set_inactive("Reset to library version");
@@ -369,8 +397,9 @@ void model_nest::regen_ports(void)
 	}
 	ports.clear();
 
-	sizeY = std::max(west.size() + 2U, std::max(east.size() + 2, 4UL));	
-	sizeX = std::max(north.size() + 2U, std::max(south.size() + 2, 4UL));
+	const unsigned int stride = scale_2x ? 2U : 1U;
+	sizeY = std::max(west.size() + 2U, std::max(east.size() + 2U, 4UL)) * stride;
+	sizeX = std::max(north.size() + 2U, std::max(south.size() + 2U, 4UL)) * stride;
 
 	std::sort(north.begin(), north.end(), compare_north);
 	std::sort(south.begin(), south.end(), compare_south);
@@ -380,30 +409,36 @@ void model_nest::regen_ports(void)
 	if (north.size() == 0 && south.size() > 0)
 		title_on_top = true;
 
-	/* center */
-	unsigned int offset = (sizeX - north.size())/2;
+	/* Center each side's port span (leaving an empty cell between ports in 2x mode). */
+	auto side_offset = [stride](unsigned int side_size, size_t count) -> unsigned int {
+		if (count == 0)
+			return 0;
+		const unsigned int span = static_cast<unsigned int>((count - 1) * stride + 1);
+		return (side_size > span) ? ((side_size - span) / 2U) : 0U;
+	};
 
+	unsigned int offset = side_offset(sizeX, north.size());
 	for (unsigned int i = 0; i < north.size(); i++) {
-		north[i]->X = i + offset;
+		north[i]->X = static_cast<int>(i * stride + offset);
 		north[i]->Y = -1;
 	}
 
-	offset = (sizeX - south.size())/2;
+	offset = side_offset(sizeX, south.size());
 	for (unsigned int i = 0; i < south.size(); i++) {
-		south[i]->X = i + offset;
+		south[i]->X = static_cast<int>(i * stride + offset);
 		south[i]->Y = sizeY;
 	}
 
-	offset = (sizeY - west.size())/2;
+	offset = side_offset(sizeY, west.size());
 	for (unsigned int i = 0; i < west.size(); i++) {
 		west[i]->X = -1;
-		west[i]->Y = i + offset;
+		west[i]->Y = static_cast<int>(i * stride + offset);
 	}
 
-	offset = (sizeY - east.size())/2;
+	offset = side_offset(sizeY, east.size());
 	for (unsigned int i = 0; i < east.size(); i++) {
 		east[i]->X = sizeX;
-		east[i]->Y = i + offset;
+		east[i]->Y = static_cast<int>(i * stride + offset);
 	}
 
 

@@ -41,6 +41,7 @@ public:
     
     void set_active(std::string_view);
     void set_inactive(std::string_view);
+    void rename_item(std::string_view from, std::string_view to);
     
 protected:
     class element *element = nullptr;

@@ -53,6 +53,13 @@ void contextmenu::set_inactive(std::string_view name)
 			item.active = false;
 	}
 }
+void contextmenu::rename_item(std::string_view from, std::string_view to)
+{
+	for (auto &item : items) {
+		if (item.menu_text == from)
+			item.menu_text = std::string(to);
+	}
+}
 
 float Xsize(class basecanvas *canvas, std::string_view str)
 {
