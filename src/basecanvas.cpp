@@ -251,12 +251,36 @@ void basecanvas::draw_circle2(float X, float Y, float _R, int color, int color2)
 
 }
 
+static sdl::SurfacePtr downscale_surface_if_large(sdl::SurfacePtr src, int max_dim)
+{
+	if (!src || (src->w <= max_dim && src->h <= max_dim))
+		return src;
+
+	const double scale = static_cast<double>(max_dim) / static_cast<double>(std::max(src->w, src->h));
+	const int dst_w = std::max(1, static_cast<int>(std::lround(src->w * scale)));
+	const int dst_h = std::max(1, static_cast<int>(std::lround(src->h * scale)));
+
+	/* Convert to 32-bit RGBA so SDL_BlitScaled handles paletted/RGB/RGBA PNGs uniformly. */
+	sdl::SurfacePtr rgba(SDL_ConvertSurfaceFormat(src.get(), SDL_PIXELFORMAT_RGBA32, 0));
+	if (!rgba)
+		return src;
+	sdl::SurfacePtr dst(SDL_CreateRGBSurfaceWithFormat(0, dst_w, dst_h, 32, SDL_PIXELFORMAT_RGBA32));
+	if (!dst)
+		return src;
+
+	SDL_SetSurfaceBlendMode(rgba.get(), SDL_BLENDMODE_NONE);
+	if (SDL_BlitScaled(rgba.get(), nullptr, dst.get(), nullptr) != 0)
+		return src;
+	return dst;
+}
+
 sdl::TexturePtr IMG_LoadTextureFromMem(SDL_Renderer *renderer, const char *filename)
 {
 	if (!renderer || !filename || filename[0] == '\0')
 		return nullptr;
 
-	/* Cache decoded PNG surfaces once globally so opening new windows never re-runs libpng/zlib. */
+	/* Cache decoded (and downscaled) PNG surfaces once globally so opening new windows
+	 * never re-runs libpng/zlib and doesn't allocate ~300 MB of 1200x1200 icons per window. */
 	static std::unordered_map<std::string, sdl::SurfacePtr> surface_cache;
 
 	std::string key(filename);
@@ -272,6 +296,9 @@ sdl::TexturePtr IMG_LoadTextureFromMem(SDL_Renderer *renderer, const char *filen
 			if (ops)
 				surf.reset(IMG_Load_RW(ops, 1));
 		}
+		/* Keep clock_wave.png native since draw_image_fragment() indexes it by pixel coords. */
+		if (key != "assets/clock_wave.png")
+			surf = downscale_surface_if_large(std::move(surf), 256);
 		it = surface_cache.emplace(std::move(key), std::move(surf)).first;
 	}
 
