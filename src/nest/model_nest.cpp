@@ -133,10 +133,11 @@ void model_nest::drawAt(class basecanvas *canvas, float X, float Y, int type)
 		}
 	}
 
+	const float label_h = scale_2x ? 2.0f : 1.0f;
 	if (title_on_top)
-		name_edit->drawAt(canvas, X, Y -1, sizeX);
+		name_edit->drawAt(canvas, X, Y - label_h, sizeX, label_h);
 	else
-		name_edit->drawAt(canvas, X, Y + sizeY, sizeX);
+		name_edit->drawAt(canvas, X, Y + sizeY, sizeX, label_h);
 
 	for (auto &port : ports) {
 		port->draw_wires(canvas);	
