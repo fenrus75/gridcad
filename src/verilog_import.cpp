@@ -177,6 +177,58 @@ size_t count_scene_complexity(const scene *s, int depth = 0)
     return score;
 }
 
+struct timing_info parse_timing_json(/* untrusted */ const json &obj)
+{
+    struct timing_info ti = {};
+    if (!obj.is_object())
+        return ti;
+    ti.critical_path = obj.value("critical_path", false);
+    if (!ti.critical_path)
+        return ti;
+    if (obj.contains("critical_rank") && obj["critical_rank"].is_number_integer())
+        ti.critical_rank = std::clamp(obj["critical_rank"].get<int>(), 0, 1000);
+    if (obj.contains("timing_delay_ns") && obj["timing_delay_ns"].is_number()) {
+        ti.delay_ns = obj["timing_delay_ns"].get<float>();
+        ti.has_delay = true;
+    }
+    if (obj.contains("timing_slack_ns") && obj["timing_slack_ns"].is_number()) {
+        ti.slack_ns = obj["timing_slack_ns"].get<float>();
+        ti.has_slack = true;
+    }
+    if (obj.contains("logic_depth") && obj["logic_depth"].is_number_integer())
+        ti.logic_depth = std::clamp(obj["logic_depth"].get<int>(), 0, 10000);
+    return ti;
+}
+
+/* Propagate critical-path metadata upward so parent model_nest blocks highlight on parent schematics. */
+struct timing_info find_scene_critical_timing(const scene *s, int depth = 0)
+{
+    struct timing_info best = {};
+    if (!s || depth > 16)
+        return best;
+    for (const auto &elem : s->elements) {
+        if (!elem)
+            continue;
+        if (elem->is_critical_path())
+            return elem->get_timing_info();
+        for (unsigned int pi = 0;; ++pi) {
+            port *p = elem->port_at(pi);
+            if (!p)
+                break;
+            for (const auto &w : p->get_wires()) {
+                if (w && w->is_critical_path())
+                    return w->get_timing_info();
+            }
+        }
+        if (elem->class_id() == "model_nest:") {
+            auto sub_ti = find_scene_critical_timing(static_cast<const model_nest *>(elem.get())->get_scene(), depth + 1);
+            if (sub_ti.critical_path)
+                return sub_ti;
+        }
+    }
+    return best;
+}
+
 using LabelTableMap = std::map<std::string, std::shared_ptr<const label_table>>;
 
 std::unique_ptr<scene> import_module_recursive(
@@ -742,9 +794,16 @@ std::unique_ptr<scene> import_module_recursive(
                 }
                 result_scene->add_element(std::move(nest));
             }
-            if (result_scene->elements.size() > before_comp_el &&
-                (!comp_src.empty() || !comp_verilog.empty())) {
-                result_scene->elements.back()->set_src_info(comp_src, comp_verilog);
+            if (result_scene->elements.size() > before_comp_el) {
+                element *created = result_scene->elements.back().get();
+                if (!comp_src.empty() || !comp_verilog.empty())
+                    created->set_src_info(comp_src, comp_verilog);
+                struct timing_info cti = parse_timing_json(comp);
+                if (!cti.critical_path && created->class_id() == "model_nest:") {
+                    cti = find_scene_critical_timing(static_cast<const model_nest *>(created)->get_scene());
+                }
+                if (cti.critical_path)
+                    created->set_timing_info(cti);
             }
         }
     }
@@ -766,6 +825,7 @@ std::unique_ptr<scene> import_module_recursive(
             const std::string lbl_key = wobj.value("label_table", "");
             const std::string wire_src = wobj.value("src", "");
             const std::string wire_verilog = wobj.value("src_verilog", "");
+            const struct timing_info wire_timing = parse_timing_json(wobj);
             std::shared_ptr<const label_table> wire_lbl_tbl;
             if (!lbl_key.empty()) {
                 auto lit = label_tables.find(lbl_key);
@@ -834,6 +894,8 @@ std::unique_ptr<scene> import_module_recursive(
                     w->set_label_table(wire_lbl_tbl);
                 if (!wire_src.empty() || !wire_verilog.empty())
                     w->set_src_info(wire_src, wire_verilog);
+                if (wire_timing.critical_path)
+                    w->set_timing_info(wire_timing);
                 int wire_color = 0;
                 if (wname == "clk" || vcd_local == "clk") {
                     w->value.valid = true;

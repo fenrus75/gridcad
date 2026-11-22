@@ -1207,6 +1207,8 @@ void topological_placer::place(class scene *target_scene, const options &opts)
                     trunk->set_label_table(tmpl->get_label_table());
                 if (!tmpl->get_src_location().empty() || !tmpl->get_src_verilog().empty())
                     trunk->set_src_info(tmpl->get_src_location(), tmpl->get_src_verilog());
+                if (tmpl->is_critical_path())
+                    trunk->set_timing_info(tmpl->get_timing_info());
                 if (tmpl->value.is_clock) {
                     trunk->value.valid = true;
                     trunk->value.is_clock = true;

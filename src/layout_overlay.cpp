@@ -596,6 +596,8 @@ bool layout_overlay::apply_file_to_scene(class scene *target_scene, const std::f
                             nw->set_label_table(tw->get_label_table());
                         if (!tw->get_src_location().empty() || !tw->get_src_verilog().empty())
                             nw->set_src_info(tw->get_src_location(), tw->get_src_verilog());
+                        if (tw->is_critical_path())
+                            nw->set_timing_info(tw->get_timing_info());
                         nw->value = tw->value;
                         nw->set_width(w_width);
                         a->add_wire(nw);
@@ -627,6 +629,8 @@ bool layout_overlay::apply_file_to_scene(class scene *target_scene, const std::f
                     sw->set_label_table(tw->get_label_table());
                 if (!tw->get_src_location().empty() || !tw->get_src_verilog().empty())
                     sw->set_src_info(tw->get_src_location(), tw->get_src_verilog());
+                if (tw->is_critical_path())
+                    sw->set_timing_info(tw->get_timing_info());
                 sw->value = tw->value;
                 sw->set_width(w_width);
                 tap_port->add_wire(sw);

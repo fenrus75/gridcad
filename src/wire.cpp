@@ -270,6 +270,7 @@ void wire::draw(class basecanvas *canvas, int _color)
 		(value.type == VALUE_TYPE_INT && !wire_debug_mode && !is_z) ? get_label(value.intval) : "";
 
 	const float pulse = (_color != COLOR_ELEMENT_GHOST) ? change_pulse() : 0.0f;
+	const bool is_crit = (show_critical_path && timing.critical_path && _color != COLOR_ELEMENT_GHOST);
 	const int shadow_color = (pulse > 0.001f && _color != COLOR_VALUE_RED) ? wire_to_color(color) : _color;
 
 	for (auto point: *drawpoints) {
@@ -279,7 +280,7 @@ void wire::draw(class basecanvas *canvas, int _color)
 			first = false;
 			continue;
 		}
-		canvas->draw_shadow_Line(prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, shadow_color, pulse);
+		canvas->draw_shadow_Line(prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, shadow_color, pulse, is_crit);
 		prevX = point.X;
 		prevY = point.Y;
 	}
@@ -730,6 +731,8 @@ std::shared_ptr<class wire> wire::split(void)
 		wr->set_vcd_valid_signal(vcd_valid_name, vcd_valid_active_low);
 	if (label_table)
 		wr->set_label_table(label_table);
+	if (timing.critical_path)
+		wr->set_timing_info(timing);
 	/* upper bound the distance from outports */
 	wr->set_distance_from_outport(distance_from_outport + 1);
 	distance_from_outport++;
@@ -769,6 +772,17 @@ void wire::to_json(json &j)
 		j["src_location"] = src_location;
 	if (!src_verilog.empty())
 		j["src_verilog"] = src_verilog;
+	if (timing.critical_path) {
+		j["critical_path"] = true;
+		if (timing.critical_rank > 0)
+			j["critical_rank"] = timing.critical_rank;
+		if (timing.has_delay)
+			j["timing_delay_ns"] = timing.delay_ns;
+		if (timing.has_slack)
+			j["timing_slack_ns"] = timing.slack_ns;
+		if (timing.logic_depth > 0)
+			j["logic_depth"] = timing.logic_depth;
+	}
 	if (label_table && !label_table->empty()) {
 		if (!label_table->get_name().empty() &&
 		    label_table::find_registered(label_table->get_name()) != nullptr) {
@@ -799,6 +813,18 @@ void wire::from_json(json &j)
 	vcd_locked = j.value("vcd_locked", false);
 	src_location = j.value("src_location", "");
 	src_verilog = j.value("src_verilog", "");
+	timing = {};
+	timing.critical_path = j.value("critical_path", false);
+	timing.critical_rank = j.value("critical_rank", 0);
+	if (j.contains("timing_delay_ns") && j["timing_delay_ns"].is_number()) {
+		timing.delay_ns = j["timing_delay_ns"].get<float>();
+		timing.has_delay = true;
+	}
+	if (j.contains("timing_slack_ns") && j["timing_slack_ns"].is_number()) {
+		timing.slack_ns = j["timing_slack_ns"].get<float>();
+		timing.has_slack = true;
+	}
+	timing.logic_depth = j.value("logic_depth", 0);
 	label_table.reset();
 	if (j.contains("label_table_name") && j["label_table_name"].is_string()) {
 		label_table = label_table::find_registered(j["label_table_name"].get<std::string>());

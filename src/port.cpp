@@ -503,6 +503,10 @@ void port::unsplice(void)
 		w3->set_src_info(w1->get_src_location(), w1->get_src_verilog());
 	else if (!w2->get_src_location().empty() || !w2->get_src_verilog().empty())
 		w3->set_src_info(w2->get_src_location(), w2->get_src_verilog());
+	if (w1->is_critical_path())
+		w3->set_timing_info(w1->get_timing_info());
+	else if (w2->is_critical_path())
+		w3->set_timing_info(w2->get_timing_info());
 	if (w1->value.is_clock || w2->value.is_clock) {
 		w3->value.valid = true;
 		w3->value.is_clock = true;

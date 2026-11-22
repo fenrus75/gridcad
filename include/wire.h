@@ -92,6 +92,9 @@ public:
     }
     const std::string &get_src_location(void) const { return src_location; }
     const std::string &get_src_verilog(void) const { return src_verilog; }
+    void set_timing_info(const struct timing_info &ti) { timing = ti; }
+    const struct timing_info &get_timing_info(void) const { return timing; }
+    bool is_critical_path(void) const { return timing.critical_path; }
     float change_pulse(void) const;
     
     void calculate_drawpoints(void);
@@ -123,6 +126,7 @@ protected:
     std::shared_ptr<const class label_table> label_table;
     std::string src_location = ""; /* imported Verilog file:line (nosave) */
     std::string src_verilog = "";  /* imported Verilog source snippet (nosave) */
+    struct timing_info timing = {}; /* imported critical timing path metadata */
     uint64_t last_drawn_frame = 0; /* nosave: deduplicate wire::draw() across endpoint ports */
     const class basecanvas *last_drawn_canvas = nullptr; /* nosave */
     uint64_t last_changed_ms = 0;  /* nosave: SDL_GetTicks64() timestamp of last value change */

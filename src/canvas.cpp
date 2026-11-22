@@ -707,6 +707,11 @@ bool canvas::handle_event(SDL_Event &event)
 						wire_debug_mode = !wire_debug_mode;
 					}
 					break;
+				case SDLK_t:
+					if (!someone_in_editmode) {
+						show_critical_path = !show_critical_path;
+					}
+					break;
 				case SDLK_z:
 					if (event.key.keysym.mod & KMOD_LCTRL) {
 						zap_autocomplete();
@@ -1133,6 +1138,18 @@ void canvas::draw(void)
 			elem->draw_early(this, DRAW_ORIGIN);
 	}
 
+	if (show_critical_path) {
+		for (auto const &elem : current_scene->elements) {
+			if (elem && elem->is_critical_path() && !elem->is_background() && elem.get() != dragging) {
+				const float pad = (elem->class_id() == "model_nest:") ? 0.35f : 0.22f;
+				draw_box_rgba(elem->get_X() - pad, elem->get_Y() - pad,
+				              elem->get_X() + elem->get_width() + pad,
+				              elem->get_Y() + elem->get_height() + pad,
+				              255, 45, 45, 130);
+			}
+		}
+	}
+
 	for (auto const &elem : current_scene->elements) {
 		if (elem.get() != dragging)
 			elem->draw(this, DRAW_NORMAL);
@@ -1316,6 +1333,22 @@ void canvas::draw_hover_inspector(void)
 	std::string top_text;
 	std::string verilog_text;
 
+	auto format_timing_badge = [](const struct timing_info &ti) -> std::string {
+		if (!ti.critical_path)
+			return "";
+		std::string b = (ti.critical_rank > 0)
+		                    ? std::format("   [CRITICAL #{}", ti.critical_rank)
+		                    : std::string("   [CRITICAL");
+		if (ti.has_delay)
+			b += std::format(" {:.2f}ns", ti.delay_ns);
+		if (ti.has_slack)
+			b += std::format(" slack {:.2f}ns", ti.slack_ns);
+		if (ti.logic_depth > 0)
+			b += std::format(" depth {}", ti.logic_depth);
+		b += "]";
+		return b;
+	};
+
 	if (hovered_elem) {
 		std::string label = hovered_elem->get_name();
 		if (label.empty())
@@ -1323,11 +1356,12 @@ void canvas::draw_hover_inspector(void)
 		top_text = label;
 		if (!hovered_elem->get_src_location().empty())
 			top_text += "   [" + hovered_elem->get_src_location() + "]";
+		top_text += format_timing_badge(hovered_elem->get_timing_info());
 		verilog_text = hovered_elem->get_src_verilog();
 	} else if (auto hw = hover_wire.lock()) {
 		const bool is_named = !hw->get_vcd_name().empty() ||
 		                      (!hw->name.empty() && !hw->name.starts_with("wire_"));
-		if (is_named) {
+		if (is_named || hw->is_critical_path()) {
 			const std::string wlabel = !hw->name.empty() ? hw->name : hw->get_vcd_name();
 			const int w = hw->get_width();
 			if (w > 1) {
@@ -1345,6 +1379,7 @@ void canvas::draw_hover_inspector(void)
 			}
 			if (!hw->get_src_location().empty())
 				top_text += "   [" + hw->get_src_location() + "]";
+			top_text += format_timing_badge(hw->get_timing_info());
 			verilog_text = hw->get_src_verilog();
 		}
 	}

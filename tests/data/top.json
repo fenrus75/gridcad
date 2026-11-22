@@ -20947,9 +20947,12 @@
           "type": "alu8"
         },
         {
+          "critical_path": true,
+          "critical_rank": 1,
           "id": "decode_mod_46",
           "instance_name": "decode",
           "is_submodule": true,
+          "logic_depth": 9,
           "parameters": {},
           "pins": {
             "clk": {
@@ -21155,6 +21158,8 @@
           },
           "src": "src/cpu.sv:127-168",
           "src_verilog": "decode_mod decode (\n\t.clk                (clk),\n\t.rst                (rst),\n\t.mem_data           (mem_read_data),\n\t.fetch_phase        (fetch_phase),\n\t.decode_phase       (decode_phase),\n\t.load_phase         (load_phase),\n\t.retire_phase       (retire_phase),\n\t.load16_1_phase     (load16_1_phase),\n\t.load16_2_phase     (load16_2_phase),\n\t.hl_addr            ({H_val, L_val}),\n\t.sp_val             (sp_val),\n\t.rp_val             (alu16_rp),\n\t.flags              (flags),\n\t.in_data            (in_data),\n... (27 more line(s))",
+          "timing_delay_ns": 15.568,
+          "timing_slack_ns": -2.235,
           "type": "decode_mod"
         },
         {
@@ -26092,9 +26097,12 @@
           "type": "INV"
         },
         {
+          "critical_path": true,
+          "critical_rank": 1,
           "id": "gridcad_reg_115",
           "instance_name": "$auto$ff.cc:337:slice$2561",
           "is_submodule": false,
+          "logic_depth": 9,
           "parameters": {
             "RESET_VAL": "0x0",
             "WIDTH": 1
@@ -26128,12 +26136,17 @@
           },
           "src": "src/decode.sv:277-312",
           "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tcc_matches_reg <= 1'b0;\n\t\ttake_jump_reg  <= 1'b0;\n\t\tis_call_reg    <= 1'b0;\n\t\tis_ret_reg     <= 1'b0;\n\t\tis_pair_load   <= 1'b0;\n\t\tis_pair_write  <= 1'b0;\n\t\tis_xchg        <= 1'b0;\n\t\tis_shld        <= 1'b0;\n\t\tis_xthl        <= 1'b0;\n\t\tis_lda         <= 1'b0;\n\tend else if (decode_phase || (fetch_phase && instruction_valid)) begin\n\t\tcc_matches_reg <= cc_matches;\n\t\ttake_jump_reg  <= take_jump;\n... (21 more line(s))",
+          "timing_delay_ns": 15.568,
+          "timing_slack_ns": -2.235,
           "type": "gridcad_reg"
         },
         {
+          "critical_path": true,
+          "critical_rank": 1,
           "id": "gridcad_reg_116",
           "instance_name": "$auto$ff.cc:337:slice$2565",
           "is_submodule": false,
+          "logic_depth": 9,
           "parameters": {
             "RESET_VAL": "0x0",
             "WIDTH": 1
@@ -26167,12 +26180,17 @@
           },
           "src": "src/decode.sv:277-312",
           "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tcc_matches_reg <= 1'b0;\n\t\ttake_jump_reg  <= 1'b0;\n\t\tis_call_reg    <= 1'b0;\n\t\tis_ret_reg     <= 1'b0;\n\t\tis_pair_load   <= 1'b0;\n\t\tis_pair_write  <= 1'b0;\n\t\tis_xchg        <= 1'b0;\n\t\tis_shld        <= 1'b0;\n\t\tis_xthl        <= 1'b0;\n\t\tis_lda         <= 1'b0;\n\tend else if (decode_phase || (fetch_phase && instruction_valid)) begin\n\t\tcc_matches_reg <= cc_matches;\n\t\ttake_jump_reg  <= take_jump;\n... (21 more line(s))",
+          "timing_delay_ns": 15.568,
+          "timing_slack_ns": -2.235,
           "type": "gridcad_reg"
         },
         {
+          "critical_path": true,
+          "critical_rank": 1,
           "id": "gridcad_reg_117",
           "instance_name": "$auto$ff.cc:337:slice$2568",
           "is_submodule": false,
+          "logic_depth": 9,
           "parameters": {
             "RESET_VAL": "0x0",
             "WIDTH": 1
@@ -26206,12 +26224,17 @@
           },
           "src": "src/decode.sv:277-312",
           "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tcc_matches_reg <= 1'b0;\n\t\ttake_jump_reg  <= 1'b0;\n\t\tis_call_reg    <= 1'b0;\n\t\tis_ret_reg     <= 1'b0;\n\t\tis_pair_load   <= 1'b0;\n\t\tis_pair_write  <= 1'b0;\n\t\tis_xchg        <= 1'b0;\n\t\tis_shld        <= 1'b0;\n\t\tis_xthl        <= 1'b0;\n\t\tis_lda         <= 1'b0;\n\tend else if (decode_phase || (fetch_phase && instruction_valid)) begin\n\t\tcc_matches_reg <= cc_matches;\n\t\ttake_jump_reg  <= take_jump;\n... (21 more line(s))",
+          "timing_delay_ns": 15.568,
+          "timing_slack_ns": -2.235,
           "type": "gridcad_reg"
         },
         {
+          "critical_path": true,
+          "critical_rank": 1,
           "id": "gridcad_reg_118",
           "instance_name": "$auto$ff.cc:337:slice$2571",
           "is_submodule": false,
+          "logic_depth": 9,
           "parameters": {
             "RESET_VAL": "0x0",
             "WIDTH": 1
@@ -26245,12 +26268,17 @@
           },
           "src": "src/decode.sv:277-312",
           "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tcc_matches_reg <= 1'b0;\n\t\ttake_jump_reg  <= 1'b0;\n\t\tis_call_reg    <= 1'b0;\n\t\tis_ret_reg     <= 1'b0;\n\t\tis_pair_load   <= 1'b0;\n\t\tis_pair_write  <= 1'b0;\n\t\tis_xchg        <= 1'b0;\n\t\tis_shld        <= 1'b0;\n\t\tis_xthl        <= 1'b0;\n\t\tis_lda         <= 1'b0;\n\tend else if (decode_phase || (fetch_phase && instruction_valid)) begin\n\t\tcc_matches_reg <= cc_matches;\n\t\ttake_jump_reg  <= take_jump;\n... (21 more line(s))",
+          "timing_delay_ns": 15.568,
+          "timing_slack_ns": -2.235,
           "type": "gridcad_reg"
         },
         {
+          "critical_path": true,
+          "critical_rank": 1,
           "id": "gridcad_reg_119",
           "instance_name": "$auto$ff.cc:337:slice$2574",
           "is_submodule": false,
+          "logic_depth": 9,
           "parameters": {
             "RESET_VAL": "0x0",
             "WIDTH": 1
@@ -26284,12 +26312,17 @@
           },
           "src": "src/decode.sv:277-312",
           "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tcc_matches_reg <= 1'b0;\n\t\ttake_jump_reg  <= 1'b0;\n\t\tis_call_reg    <= 1'b0;\n\t\tis_ret_reg     <= 1'b0;\n\t\tis_pair_load   <= 1'b0;\n\t\tis_pair_write  <= 1'b0;\n\t\tis_xchg        <= 1'b0;\n\t\tis_shld        <= 1'b0;\n\t\tis_xthl        <= 1'b0;\n\t\tis_lda         <= 1'b0;\n\tend else if (decode_phase || (fetch_phase && instruction_valid)) begin\n\t\tcc_matches_reg <= cc_matches;\n\t\ttake_jump_reg  <= take_jump;\n... (21 more line(s))",
+          "timing_delay_ns": 15.568,
+          "timing_slack_ns": -2.235,
           "type": "gridcad_reg"
         },
         {
+          "critical_path": true,
+          "critical_rank": 1,
           "id": "gridcad_reg_120",
           "instance_name": "$auto$ff.cc:337:slice$2577",
           "is_submodule": false,
+          "logic_depth": 9,
           "parameters": {
             "RESET_VAL": "0x0",
             "WIDTH": 1
@@ -26323,12 +26356,17 @@
           },
           "src": "src/decode.sv:277-312",
           "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tcc_matches_reg <= 1'b0;\n\t\ttake_jump_reg  <= 1'b0;\n\t\tis_call_reg    <= 1'b0;\n\t\tis_ret_reg     <= 1'b0;\n\t\tis_pair_load   <= 1'b0;\n\t\tis_pair_write  <= 1'b0;\n\t\tis_xchg        <= 1'b0;\n\t\tis_shld        <= 1'b0;\n\t\tis_xthl        <= 1'b0;\n\t\tis_lda         <= 1'b0;\n\tend else if (decode_phase || (fetch_phase && instruction_valid)) begin\n\t\tcc_matches_reg <= cc_matches;\n\t\ttake_jump_reg  <= take_jump;\n... (21 more line(s))",
+          "timing_delay_ns": 15.568,
+          "timing_slack_ns": -2.235,
           "type": "gridcad_reg"
         },
         {
+          "critical_path": true,
+          "critical_rank": 1,
           "id": "gridcad_reg_121",
           "instance_name": "$auto$ff.cc:337:slice$2581",
           "is_submodule": false,
+          "logic_depth": 9,
           "parameters": {
             "RESET_VAL": "0x0",
             "WIDTH": 1
@@ -26362,12 +26400,17 @@
           },
           "src": "src/decode.sv:277-312",
           "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tcc_matches_reg <= 1'b0;\n\t\ttake_jump_reg  <= 1'b0;\n\t\tis_call_reg    <= 1'b0;\n\t\tis_ret_reg     <= 1'b0;\n\t\tis_pair_load   <= 1'b0;\n\t\tis_pair_write  <= 1'b0;\n\t\tis_xchg        <= 1'b0;\n\t\tis_shld        <= 1'b0;\n\t\tis_xthl        <= 1'b0;\n\t\tis_lda         <= 1'b0;\n\tend else if (decode_phase || (fetch_phase && instruction_valid)) begin\n\t\tcc_matches_reg <= cc_matches;\n\t\ttake_jump_reg  <= take_jump;\n... (21 more line(s))",
+          "timing_delay_ns": 15.568,
+          "timing_slack_ns": -2.235,
           "type": "gridcad_reg"
         },
         {
+          "critical_path": true,
+          "critical_rank": 1,
           "id": "gridcad_reg_122",
           "instance_name": "$auto$ff.cc:337:slice$2589",
           "is_submodule": false,
+          "logic_depth": 9,
           "parameters": {
             "RESET_VAL": "0x0",
             "WIDTH": 1
@@ -26401,12 +26444,17 @@
           },
           "src": "src/decode.sv:277-312",
           "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tcc_matches_reg <= 1'b0;\n\t\ttake_jump_reg  <= 1'b0;\n\t\tis_call_reg    <= 1'b0;\n\t\tis_ret_reg     <= 1'b0;\n\t\tis_pair_load   <= 1'b0;\n\t\tis_pair_write  <= 1'b0;\n\t\tis_xchg        <= 1'b0;\n\t\tis_shld        <= 1'b0;\n\t\tis_xthl        <= 1'b0;\n\t\tis_lda         <= 1'b0;\n\tend else if (decode_phase || (fetch_phase && instruction_valid)) begin\n\t\tcc_matches_reg <= cc_matches;\n\t\ttake_jump_reg  <= take_jump;\n... (21 more line(s))",
+          "timing_delay_ns": 15.568,
+          "timing_slack_ns": -2.235,
           "type": "gridcad_reg"
         },
         {
+          "critical_path": true,
+          "critical_rank": 1,
           "id": "gridcad_reg_123",
           "instance_name": "$auto$ff.cc:337:slice$2593",
           "is_submodule": false,
+          "logic_depth": 9,
           "parameters": {
             "RESET_VAL": "0x0",
             "WIDTH": 1
@@ -26440,6 +26488,8 @@
           },
           "src": "src/decode.sv:277-312",
           "src_verilog": "always_ff @(posedge clk, posedge rst) begin\n\tif (rst) begin\n\t\tcc_matches_reg <= 1'b0;\n\t\ttake_jump_reg  <= 1'b0;\n\t\tis_call_reg    <= 1'b0;\n\t\tis_ret_reg     <= 1'b0;\n\t\tis_pair_load   <= 1'b0;\n\t\tis_pair_write  <= 1'b0;\n\t\tis_xchg        <= 1'b0;\n\t\tis_shld        <= 1'b0;\n\t\tis_xthl        <= 1'b0;\n\t\tis_lda         <= 1'b0;\n\tend else if (decode_phase || (fetch_phase && instruction_valid)) begin\n\t\tcc_matches_reg <= cc_matches;\n\t\ttake_jump_reg  <= take_jump;\n... (21 more line(s))",
+          "timing_delay_ns": 15.568,
+          "timing_slack_ns": -2.235,
           "type": "gridcad_reg"
         },
         {
@@ -29941,9 +29991,12 @@
           "type": "gridcad_mux"
         },
         {
+          "critical_path": true,
+          "critical_rank": 1,
           "id": "gridcad_mux_232",
           "instance_name": "$procmux$1900",
           "is_submodule": false,
+          "logic_depth": 9,
           "parameters": {
             "WIDTH": 1
           },
@@ -29971,12 +30024,17 @@
           },
           "src": "src/decode.sv:289",
           "src_verilog": "end else if (decode_phase || (fetch_phase && instruction_valid)) begin",
+          "timing_delay_ns": 15.568,
+          "timing_slack_ns": -2.235,
           "type": "gridcad_mux"
         },
         {
+          "critical_path": true,
+          "critical_rank": 1,
           "id": "gridcad_mux_233",
           "instance_name": "$procmux$1905",
           "is_submodule": false,
+          "logic_depth": 9,
           "parameters": {
             "WIDTH": 1
           },
@@ -30004,12 +30062,17 @@
           },
           "src": "src/decode.sv:289",
           "src_verilog": "end else if (decode_phase || (fetch_phase && instruction_valid)) begin",
+          "timing_delay_ns": 15.568,
+          "timing_slack_ns": -2.235,
           "type": "gridcad_mux"
         },
         {
+          "critical_path": true,
+          "critical_rank": 1,
           "id": "gridcad_mux_234",
           "instance_name": "$procmux$1910",
           "is_submodule": false,
+          "logic_depth": 9,
           "parameters": {
             "WIDTH": 1
           },
@@ -30037,12 +30100,17 @@
           },
           "src": "src/decode.sv:289",
           "src_verilog": "end else if (decode_phase || (fetch_phase && instruction_valid)) begin",
+          "timing_delay_ns": 15.568,
+          "timing_slack_ns": -2.235,
           "type": "gridcad_mux"
         },
         {
+          "critical_path": true,
+          "critical_rank": 1,
           "id": "gridcad_mux_235",
           "instance_name": "$procmux$1920",
           "is_submodule": false,
+          "logic_depth": 9,
           "parameters": {
             "WIDTH": 1
           },
@@ -30070,12 +30138,17 @@
           },
           "src": "src/decode.sv:289",
           "src_verilog": "end else if (decode_phase || (fetch_phase && instruction_valid)) begin",
+          "timing_delay_ns": 15.568,
+          "timing_slack_ns": -2.235,
           "type": "gridcad_mux"
         },
         {
+          "critical_path": true,
+          "critical_rank": 1,
           "id": "gridcad_mux_236",
           "instance_name": "$procmux$1925",
           "is_submodule": false,
+          "logic_depth": 9,
           "parameters": {
             "WIDTH": 1
           },
@@ -30103,12 +30176,17 @@
           },
           "src": "src/decode.sv:289",
           "src_verilog": "end else if (decode_phase || (fetch_phase && instruction_valid)) begin",
+          "timing_delay_ns": 15.568,
+          "timing_slack_ns": -2.235,
           "type": "gridcad_mux"
         },
         {
+          "critical_path": true,
+          "critical_rank": 1,
           "id": "gridcad_mux_237",
           "instance_name": "$procmux$1930",
           "is_submodule": false,
+          "logic_depth": 9,
           "parameters": {
             "WIDTH": 1
           },
@@ -30136,12 +30214,17 @@
           },
           "src": "src/decode.sv:289",
           "src_verilog": "end else if (decode_phase || (fetch_phase && instruction_valid)) begin",
+          "timing_delay_ns": 15.568,
+          "timing_slack_ns": -2.235,
           "type": "gridcad_mux"
         },
         {
+          "critical_path": true,
+          "critical_rank": 1,
           "id": "gridcad_mux_238",
           "instance_name": "$procmux$1935",
           "is_submodule": false,
+          "logic_depth": 9,
           "parameters": {
             "WIDTH": 1
           },
@@ -30169,12 +30252,17 @@
           },
           "src": "src/decode.sv:289",
           "src_verilog": "end else if (decode_phase || (fetch_phase && instruction_valid)) begin",
+          "timing_delay_ns": 15.568,
+          "timing_slack_ns": -2.235,
           "type": "gridcad_mux"
         },
         {
+          "critical_path": true,
+          "critical_rank": 1,
           "id": "gridcad_mux_239",
           "instance_name": "$procmux$1940",
           "is_submodule": false,
+          "logic_depth": 9,
           "parameters": {
             "WIDTH": 1
           },
@@ -30202,12 +30290,17 @@
           },
           "src": "src/decode.sv:289",
           "src_verilog": "end else if (decode_phase || (fetch_phase && instruction_valid)) begin",
+          "timing_delay_ns": 15.568,
+          "timing_slack_ns": -2.235,
           "type": "gridcad_mux"
         },
         {
+          "critical_path": true,
+          "critical_rank": 1,
           "id": "gridcad_mux_240",
           "instance_name": "$procmux$1942",
           "is_submodule": false,
+          "logic_depth": 9,
           "parameters": {
             "WIDTH": 1
           },
@@ -30235,12 +30328,17 @@
           },
           "src": "src/decode.sv:300",
           "src_verilog": "end else if (retire_phase) begin",
+          "timing_delay_ns": 15.568,
+          "timing_slack_ns": -2.235,
           "type": "gridcad_mux"
         },
         {
+          "critical_path": true,
+          "critical_rank": 1,
           "id": "gridcad_mux_241",
           "instance_name": "$procmux$1945",
           "is_submodule": false,
+          "logic_depth": 9,
           "parameters": {
             "WIDTH": 1
           },
@@ -30268,6 +30366,8 @@
           },
           "src": "src/decode.sv:289",
           "src_verilog": "end else if (decode_phase || (fetch_phase && instruction_valid)) begin",
+          "timing_delay_ns": 15.568,
+          "timing_slack_ns": -2.235,
           "type": "gridcad_mux"
         },
         {
@@ -31424,9 +31524,12 @@
           "type": "gridcad_lut"
         },
         {
+          "critical_path": true,
+          "critical_rank": 1,
           "id": "gridcad_lut_42",
           "instance_name": "$abc$9299$blif$9299$33",
           "is_submodule": false,
+          "logic_depth": 9,
           "parameters": {
             "LUT": "11101010",
             "WIDTH": 3
@@ -31453,6 +31556,8 @@
               "wire": "wire_43"
             }
           },
+          "timing_delay_ns": 15.568,
+          "timing_slack_ns": -2.235,
           "type": "gridcad_lut"
         },
         {
@@ -36696,12 +36801,15 @@
           "width": 1
         },
         {
+          "critical_path": true,
+          "critical_rank": 1,
           "driver": {
             "id": "gridcad_lut_42",
             "kind": "component",
             "pin": "Y"
           },
           "is_glue": true,
+          "logic_depth": 9,
           "name": "wire_43",
           "sinks": [
             {
@@ -36757,6 +36865,8 @@
           ],
           "src": "src/decode.sv:289",
           "src_verilog": "end else if (decode_phase || (fetch_phase && instruction_valid)) begin",
+          "timing_delay_ns": 15.568,
+          "timing_slack_ns": -2.235,
           "width": 1
         },
         {
@@ -38429,12 +38539,15 @@
           "width": 1
         },
         {
+          "critical_path": true,
+          "critical_rank": 1,
           "driver": {
             "id": "gridcad_mux_241",
             "kind": "component",
             "pin": "y"
           },
           "is_glue": true,
+          "logic_depth": 9,
           "name": "wire_130",
           "sinks": [
             {
@@ -38445,6 +38558,8 @@
           ],
           "src": "src/decode.sv:289",
           "src_verilog": "end else if (decode_phase || (fetch_phase && instruction_valid)) begin",
+          "timing_delay_ns": 15.568,
+          "timing_slack_ns": -2.235,
           "width": 1
         },
         {
@@ -38507,12 +38622,15 @@
           "width": 1
         },
         {
+          "critical_path": true,
+          "critical_rank": 1,
           "driver": {
             "id": "gridcad_mux_239",
             "kind": "component",
             "pin": "y"
           },
           "is_glue": true,
+          "logic_depth": 9,
           "name": "wire_132",
           "sinks": [
             {
@@ -38523,15 +38641,20 @@
           ],
           "src": "src/decode.sv:289",
           "src_verilog": "end else if (decode_phase || (fetch_phase && instruction_valid)) begin",
+          "timing_delay_ns": 15.568,
+          "timing_slack_ns": -2.235,
           "width": 1
         },
         {
+          "critical_path": true,
+          "critical_rank": 1,
           "driver": {
             "id": "gridcad_mux_238",
             "kind": "component",
             "pin": "y"
           },
           "is_glue": true,
+          "logic_depth": 9,
           "name": "wire_133",
           "sinks": [
             {
@@ -38542,15 +38665,20 @@
           ],
           "src": "src/decode.sv:289",
           "src_verilog": "end else if (decode_phase || (fetch_phase && instruction_valid)) begin",
+          "timing_delay_ns": 15.568,
+          "timing_slack_ns": -2.235,
           "width": 1
         },
         {
+          "critical_path": true,
+          "critical_rank": 1,
           "driver": {
             "id": "gridcad_mux_237",
             "kind": "component",
             "pin": "y"
           },
           "is_glue": true,
+          "logic_depth": 9,
           "name": "wire_134",
           "sinks": [
             {
@@ -38561,15 +38689,20 @@
           ],
           "src": "src/decode.sv:289",
           "src_verilog": "end else if (decode_phase || (fetch_phase && instruction_valid)) begin",
+          "timing_delay_ns": 15.568,
+          "timing_slack_ns": -2.235,
           "width": 1
         },
         {
+          "critical_path": true,
+          "critical_rank": 1,
           "driver": {
             "id": "gridcad_mux_236",
             "kind": "component",
             "pin": "y"
           },
           "is_glue": true,
+          "logic_depth": 9,
           "name": "wire_135",
           "sinks": [
             {
@@ -38580,15 +38713,20 @@
           ],
           "src": "src/decode.sv:289",
           "src_verilog": "end else if (decode_phase || (fetch_phase && instruction_valid)) begin",
+          "timing_delay_ns": 15.568,
+          "timing_slack_ns": -2.235,
           "width": 1
         },
         {
+          "critical_path": true,
+          "critical_rank": 1,
           "driver": {
             "id": "gridcad_mux_232",
             "kind": "component",
             "pin": "y"
           },
           "is_glue": true,
+          "logic_depth": 9,
           "name": "wire_136",
           "sinks": [
             {
@@ -38599,15 +38737,20 @@
           ],
           "src": "src/decode.sv:289",
           "src_verilog": "end else if (decode_phase || (fetch_phase && instruction_valid)) begin",
+          "timing_delay_ns": 15.568,
+          "timing_slack_ns": -2.235,
           "width": 1
         },
         {
+          "critical_path": true,
+          "critical_rank": 1,
           "driver": {
             "id": "gridcad_mux_235",
             "kind": "component",
             "pin": "y"
           },
           "is_glue": true,
+          "logic_depth": 9,
           "name": "wire_137",
           "sinks": [
             {
@@ -38618,15 +38761,20 @@
           ],
           "src": "src/decode.sv:289",
           "src_verilog": "end else if (decode_phase || (fetch_phase && instruction_valid)) begin",
+          "timing_delay_ns": 15.568,
+          "timing_slack_ns": -2.235,
           "width": 1
         },
         {
+          "critical_path": true,
+          "critical_rank": 1,
           "driver": {
             "id": "gridcad_mux_234",
             "kind": "component",
             "pin": "y"
           },
           "is_glue": true,
+          "logic_depth": 9,
           "name": "wire_138",
           "sinks": [
             {
@@ -38637,6 +38785,8 @@
           ],
           "src": "src/decode.sv:289",
           "src_verilog": "end else if (decode_phase || (fetch_phase && instruction_valid)) begin",
+          "timing_delay_ns": 15.568,
+          "timing_slack_ns": -2.235,
           "width": 1
         },
         {
@@ -38660,12 +38810,15 @@
           "width": 1
         },
         {
+          "critical_path": true,
+          "critical_rank": 1,
           "driver": {
             "id": "gridcad_mux_233",
             "kind": "component",
             "pin": "y"
           },
           "is_glue": true,
+          "logic_depth": 9,
           "name": "wire_139",
           "sinks": [
             {
@@ -38676,6 +38829,8 @@
           ],
           "src": "src/decode.sv:289",
           "src_verilog": "end else if (decode_phase || (fetch_phase && instruction_valid)) begin",
+          "timing_delay_ns": 15.568,
+          "timing_slack_ns": -2.235,
           "width": 1
         },
         {
@@ -42155,12 +42310,15 @@
           "width": 1
         },
         {
+          "critical_path": true,
+          "critical_rank": 1,
           "driver": {
             "id": "gridcad_mux_240",
             "kind": "component",
             "pin": "y"
           },
           "is_glue": true,
+          "logic_depth": 9,
           "name": "wire_262",
           "sinks": [
             {
@@ -42211,6 +42369,8 @@
           ],
           "src": "src/decode.sv:300",
           "src_verilog": "end else if (retire_phase) begin",
+          "timing_delay_ns": 15.568,
+          "timing_slack_ns": -2.235,
           "width": 1
         },
         {
@@ -56581,9 +56741,12 @@
           "type": "gridcad_reg"
         },
         {
+          "critical_path": true,
+          "critical_rank": 1,
           "id": "cpu_7",
           "instance_name": "cpu_8080",
           "is_submodule": true,
+          "logic_depth": 9,
           "parameters": {},
           "pins": {
             "clk": {
@@ -56649,6 +56812,8 @@
           },
           "src": "src/top.sv:35-48",
           "src_verilog": "cpu cpu_8080 (\n    .clk            (clk),\n    .rst            (rst),\n    .mem_read_addr  (mem_read_addr),\n    .mem_read_data  (mem_read_data),\n    .mem_read_en    (mem_read_en),\n    .mem_write_addr (mem_write_addr),\n    .mem_write_data (mem_write_data),\n    .mem_write_en   (mem_write_en),\n    .out_addr       (out_addr),\n    .out_data       (out_data),\n    .in_addr        (in_addr),\n    .in_data        (in_data)\n);",
+          "timing_delay_ns": 15.568,
+          "timing_slack_ns": -2.235,
           "type": "cpu"
         },
         {
@@ -57558,5 +57723,13 @@
   },
   "project_dir": "/home/arjan/git/turbostar2/examples/test8080",
   "project_name": "test8080",
+  "timing_summary": {
+    "critical_delay_ns": 15.568,
+    "fmax_mhz": 64.234,
+    "max_logic_depth": 9,
+    "source": "pnr",
+    "target_period_ns": 13.333,
+    "worst_slack_ns": -2.235
+  },
   "top_module": "top"
 }

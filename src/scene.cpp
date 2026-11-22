@@ -594,6 +594,7 @@ void scene::redo_net(class element *seed_elem)
 	const auto meta_lbl = tmpl->get_label_table();
 	const std::string meta_src_loc = tmpl->get_src_location();
 	const std::string meta_src_v = tmpl->get_src_verilog();
+	const struct timing_info meta_timing = tmpl->get_timing_info();
 	const bool is_rail = meta_value.is_clock || meta_name == "clk" ||
 	                     meta_name == "rst" || meta_name == "rst_n";
 
@@ -670,6 +671,8 @@ void scene::redo_net(class element *seed_elem)
 			w->set_label_table(meta_lbl);
 		if (!meta_src_loc.empty() || !meta_src_v.empty())
 			w->set_src_info(meta_src_loc, meta_src_v);
+		if (meta_timing.critical_path)
+			w->set_timing_info(meta_timing);
 		w->value = meta_value;
 		w->set_width(meta_width);
 		a->add_wire(w);

@@ -64,6 +64,19 @@ class buttonbar;
 class dialog;
 class scene;
 
+/* Optional critical timing-path metadata imported from Turbostar JSON. */
+struct timing_info {
+    bool critical_path = false;
+    int critical_rank = 0;
+    float delay_ns = 0.0f;
+    float slack_ns = 0.0f;
+    int logic_depth = 0;
+    bool has_delay = false;
+    bool has_slack = false;
+};
+
+extern bool show_critical_path;
+
 class base
 {
 public:
@@ -102,7 +115,7 @@ public:
     void draw_circle2(float X, float Y, float R, int color, int color2=COLOR_BACKGROUND_MAIN);
     void draw_line(float X1, float Y1, float X2, float Y2, int color);
     void draw_thick_line(float X1, float Y1, float X2, float Y2, int color);
-    void draw_shadow_Line(float X1, float Y1, float X2, float Y2, int color, float pulse = 0.0f);
+    void draw_shadow_Line(float X1, float Y1, float X2, float Y2, int color, float pulse = 0.0f, bool critical = false);
     void flush_line_batch(void);
     uint64_t current_frame_id(void) const { return frame_id; }
 

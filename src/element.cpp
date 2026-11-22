@@ -337,6 +337,17 @@ void element::to_json(json &j)
 		j["src_location"] = src_location;
 	if (!src_verilog.empty())
 		j["src_verilog"] = src_verilog;
+	if (timing.critical_path) {
+		j["critical_path"] = true;
+		if (timing.critical_rank > 0)
+			j["critical_rank"] = timing.critical_rank;
+		if (timing.has_delay)
+			j["timing_delay_ns"] = timing.delay_ns;
+		if (timing.has_slack)
+			j["timing_slack_ns"] = timing.slack_ns;
+		if (timing.logic_depth > 0)
+			j["logic_depth"] = timing.logic_depth;
+	}
 	for (i = 0; i < ports.size(); i++) {
 		json p;
 		ports[i]->to_json(p);
@@ -358,6 +369,18 @@ void element::from_json(json &j)
 	verilog_name = j.value("verilog_name", "");
 	src_location = j.value("src_location", "");
 	src_verilog = j.value("src_verilog", "");
+	timing = {};
+	timing.critical_path = j.value("critical_path", false);
+	timing.critical_rank = j.value("critical_rank", 0);
+	if (j.contains("timing_delay_ns") && j["timing_delay_ns"].is_number()) {
+		timing.delay_ns = j["timing_delay_ns"].get<float>();
+		timing.has_delay = true;
+	}
+	if (j.contains("timing_slack_ns") && j["timing_slack_ns"].is_number()) {
+		timing.slack_ns = j["timing_slack_ns"].get<float>();
+		timing.has_slack = true;
+	}
+	timing.logic_depth = j.value("logic_depth", 0);
 
 	if (ports.size() > j["ports"].size())
 		ports.resize(j["ports"].size());

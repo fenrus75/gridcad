@@ -2011,6 +2011,61 @@ static void test_nest_scale_2x(void)
     std::filesystem::remove(tmp_overlay, ec);
 }
 
+static void test_critical_timing_import(void)
+{
+    verilog_importer::options opts;
+    opts.run_placer = false;
+    auto res = verilog_importer::import_file("tests/data/top.json", opts);
+    assert(res.ok && res.imported_scene != nullptr);
+
+    // Top-level 'cpu' submodule should inherit critical_path from its nested decode_mod
+    model_nest *cpu_nest = nullptr;
+    for (const auto &e : res.imported_scene->elements) {
+        if (e && e->class_id() == "model_nest:" && e->get_name().find("cpu") != std::string::npos) {
+            cpu_nest = static_cast<model_nest *>(e.get());
+            break;
+        }
+    }
+    assert(cpu_nest != nullptr);
+    assert(cpu_nest->is_critical_path());
+    assert(cpu_nest->get_timing_info().has_delay);
+    assert(cpu_nest->get_timing_info().has_slack);
+    assert(cpu_nest->get_timing_info().logic_depth == 9);
+
+    // Inside cpu, decode_mod should be flagged critical_path
+    model_nest *dec_nest = nullptr;
+    for (const auto &e : cpu_nest->get_scene()->elements) {
+        if (e && e->class_id() == "model_nest:" && e->get_name().find("decode") != std::string::npos) {
+            dec_nest = static_cast<model_nest *>(e.get());
+            break;
+        }
+    }
+    assert(dec_nest != nullptr);
+    assert(dec_nest->is_critical_path());
+
+    // Inside decode_mod, critical wires and critical components should be flagged
+    size_t crit_wires = 0;
+    size_t crit_elems = 0;
+    std::set<const wire *> seen_w;
+    for (const auto &e : dec_nest->get_scene()->elements) {
+        if (!e)
+            continue;
+        if (e->is_critical_path())
+            ++crit_elems;
+        for (unsigned int pi = 0;; ++pi) {
+            port *p = e->port_at(pi);
+            if (!p)
+                break;
+            for (const auto &w : p->get_wires()) {
+                if (w && seen_w.insert(w.get()).second && w->is_critical_path())
+                    ++crit_wires;
+            }
+        }
+    }
+    assert(crit_wires >= 10);
+    assert(crit_elems >= 15);
+}
+
 int main(void)
 {
     start_time = std::chrono::steady_clock::now();
@@ -2028,6 +2083,7 @@ int main(void)
     test_canvas_zoom();
     test_vcd_valid_qualifiers();
     test_nest_scale_2x();
+    test_critical_timing_import();
 
     std::cout << "All logic tests passed." << std::endl;
     return 0;

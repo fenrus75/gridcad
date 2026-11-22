@@ -226,14 +226,23 @@ void basecanvas::draw_thick_line(float X1, float Y1, float X2, float Y2, int col
 	}
 }
 
-void basecanvas::draw_shadow_Line(float X1, float Y1, float X2, float Y2, int color, float pulse)
+bool show_critical_path = true;
+
+void basecanvas::draw_shadow_Line(float X1, float Y1, float X2, float Y2, int color, float pulse, bool critical)
 {
 	Uint8 r = 0, g = 0, b = 0;
 	Uint8 a = 64;
 	float width = 0.25f * scaleX;
 
-	if (color == COLOR_VALUE_RED)
+	if (critical) {
 		r = 255;
+		g = 40;
+		b = 40;
+		a = 175;
+		width = 0.50f * scaleX;
+	} else if (color == COLOR_VALUE_RED) {
+		r = 255;
+	}
 
 	if (pulse > 0.001f) {
 		const float p = std::clamp(pulse, 0.0f, 1.0f);
@@ -244,8 +253,8 @@ void basecanvas::draw_shadow_Line(float X1, float Y1, float X2, float Y2, int co
 		r = static_cast<Uint8>(std::clamp(r + (br - r) * p, 0.0f, 255.0f));
 		g = static_cast<Uint8>(std::clamp(g + (bg - g) * p, 0.0f, 255.0f));
 		b = static_cast<Uint8>(std::clamp(b + (bb - b) * p, 0.0f, 255.0f));
-		a = static_cast<Uint8>(std::clamp(64.0f + 135.0f * p, 0.0f, 255.0f));
-		width = (0.25f + 0.50f * p) * scaleX;
+		a = static_cast<Uint8>(std::clamp(static_cast<float>(a) + (200.0f - static_cast<float>(a)) * p, 0.0f, 255.0f));
+		width = std::max(width, (0.25f + 0.50f * p) * scaleX);
 	}
 
 	emit_thick_quad(static_cast<float>(X_to_scr(X1)), static_cast<float>(Y_to_scr(Y1)),
