@@ -155,6 +155,28 @@ std::unique_ptr<scene> build_stub_scene(const std::string &mod_name, const json 
     return sub;
 }
 
+/* Recursive complexity score for default 2x submodule sizing (BRAMs weighted heavily). */
+size_t count_scene_complexity(const scene *s, int depth = 0)
+{
+    if (!s || depth > 16)
+        return 0;
+    size_t score = 0;
+    for (const auto &elem : s->elements) {
+        if (!elem)
+            continue;
+        const std::string cid = elem->class_id();
+        if (cid == "model_nest:") {
+            score += count_scene_complexity(static_cast<const model_nest *>(elem.get())->get_scene(), depth + 1);
+        } else if (cid == "model_mem:" || cid == "model_memory:") {
+            score += 100;
+        } else if (cid != "model_toggle:" && cid != "model_output:" && cid != "model_clock:" &&
+                   cid != "connector:" && cid != "model_label:" && cid != "model_datascope:") {
+            score += 1;
+        }
+    }
+    return score;
+}
+
 using LabelTableMap = std::map<std::string, std::shared_ptr<const label_table>>;
 
 std::unique_ptr<scene> import_module_recursive(
@@ -686,6 +708,12 @@ std::unique_ptr<scene> import_module_recursive(
                 auto nest = std::make_unique<model_nest>(0, 0);
                 nest->update_name(inst.empty() ? cid : inst);
                 nest->set_scene(std::move(sub_scene));
+                /* Default complex-but-compact submodules (e.g. cpu, alu8, alu16, BRAM) to 2x size
+                 * so they stand out visually, while leaving already-tall port-heavy blocks at 1x. */
+                if (count_scene_complexity(nest->get_scene()) >= 64 &&
+                    std::max(nest->get_width(), nest->get_height()) <= 14.0f) {
+                    nest->set_scale_2x(true);
+                }
 
                 for (unsigned int pi = 0;; ++pi) {
                     port *p = nest->port_at(pi);
