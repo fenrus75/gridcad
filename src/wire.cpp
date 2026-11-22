@@ -57,17 +57,10 @@ void wire::set_new_name(void)
 
 }
 
-/* returns a value of 0 - 60 based on the current time, suitable for animations */
-/* TODO: this should be a global value for a whole frame -- not for each individual wire */
-static int current_interval(void)
+/* Monotonic 60 Hz animation tick counter so box parity stays stitched across wraps. */
+static uint64_t current_animation_ticks(void)
 {
-	struct timeval tv;
-	double d;
-	gettimeofday(&tv, nullptr);
-	d = tv.tv_usec;
-
-	d = d * 60 / 1000000.0;
-	return floorf(d);        
+	return (SDL_GetTicks64() * 60ULL) / 1000ULL;
 }
 
 float dist(float x1, float y1, float x2, float y2)
@@ -113,7 +106,7 @@ int calc_angle(int x1, int y1, int x2, int y2)
 	return 0;
 }
 
-void draw_snake_line(class basecanvas *canvas, float x1, float y1, float x2, float y2, int color, int *step, struct value *value, int stepsize, class wire *wire, float pulse)
+void draw_snake_line(class basecanvas *canvas, float x1, float y1, float x2, float y2, int color, int *step, int *box_parity, struct value *value, int stepsize, class wire *wire, float pulse, std::string_view enum_label)
 {
 	float dx, dy,d, deltad, currentd, bigstep;
 	bool thick = false;
@@ -153,6 +146,8 @@ void draw_snake_line(class basecanvas *canvas, float x1, float y1, float x2, flo
 		currentd -= deltad;
 		if ((*step) >= stepsize) {
 			(*step) -= stepsize;
+			const bool show_enum = (!enum_label.empty() && (((*box_parity) & 1) == 0));
+			(*box_parity) ^= 1;
 			if (value->type == VALUE_TYPE_INT || wire_debug_mode || wire->get_is_z()) { 
 				float cursormag;
 				cursormag = 2.5 - canvas->distance_from_mouse(x1,y1)/2;
@@ -169,14 +164,11 @@ void draw_snake_line(class basecanvas *canvas, float x1, float y1, float x2, flo
 					s = "Z";
 				else if (wire_debug_mode)
 					s = std::format("{}", wire->get_distance_from_outport());
-				else {
-					std::string lbl = wire->get_label(value->intval);
-					if (!lbl.empty()) {
-						s = std::move(lbl);
-						has_enum_label = true;
-					} else {
-						s = std::format("{}", value->intval);
-					}
+				else if (show_enum) {
+					s = std::string(enum_label);
+					has_enum_label = true;
+				} else {
+					s = std::format("{}", value->intval);
 				}
 				const float half_w = has_enum_label ? std::max(size, size * 0.45f * static_cast<float>(s.size())) : size;
 				const float half_w2 = half_w - (size - size2);
@@ -259,10 +251,15 @@ void wire::draw(class basecanvas *canvas, int _color)
 	if (selected)
 		stepsize = 20;
 
-	step = current_interval() % stepsize;
+	const uint64_t ticks = current_animation_ticks();
+	step = static_cast<int>(ticks % static_cast<uint64_t>(stepsize));
+	int box_parity = static_cast<int>((ticks / static_cast<uint64_t>(stepsize)) & 1ULL);
 
 	if (value.is_clock && !clock_running)
 		step = (global_clock.arrayval * 4) % stepsize;
+
+	const std::string enum_label =
+		(value.type == VALUE_TYPE_INT && !wire_debug_mode && !is_z) ? get_label(value.intval) : "";
 
 	const float pulse = (_color != COLOR_ELEMENT_GHOST) ? change_pulse() : 0.0f;
 	const int shadow_color = (pulse > 0.001f && _color != COLOR_VALUE_RED) ? wire_to_color(color) : _color;
@@ -296,9 +293,9 @@ void wire::draw(class basecanvas *canvas, int _color)
 			canvas->draw_circle(tX,tY, 0.4, COLOR_VALUE_RED);
 		
 		if (_color != COLOR_ELEMENT_GHOST)
-			draw_snake_line(canvas, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, wire_to_color(color), &step, &value, stepsize, this, pulse);
+			draw_snake_line(canvas, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, wire_to_color(color), &step, &box_parity, &value, stepsize, this, pulse, enum_label);
 		else
-			draw_snake_line(canvas, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, COLOR_ELEMENT_GHOST, &step, &value, stepsize, this, 0.0f);
+			draw_snake_line(canvas, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, COLOR_ELEMENT_GHOST, &step, &box_parity, &value, stepsize, this, 0.0f, enum_label);
 		prevX = point.X;
 		prevY = point.Y;
 	}
