@@ -582,8 +582,10 @@ void port::cycle_color(void)
 
 void port::reroute_all_wires(void)
 {
-	for (auto &wire : wires)
+	for (auto &wire : wires) {
+		wire->reseat();
 		wire->redo_wires();
+	}
 }
 
 void port::collect_nets(std::vector<std::string> *netmap)

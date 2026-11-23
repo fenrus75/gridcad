@@ -56,7 +56,7 @@
 #include <set>
 #include <nlohmann/json.hpp>
 
-static void connect_ports(class port *p1, class port *p2)
+static std::shared_ptr<wire> connect_ports(class port *p1, class port *p2)
 {
     auto w = std::make_shared<wire>(0, 0, 0, 0);
     w->add_port(p1);
@@ -64,6 +64,7 @@ static void connect_ports(class port *p1, class port *p2)
     p1->add_wire(w);
     p2->add_wire(w);
     w->reseat();
+    return w;
 }
 
 static struct value make_bool_val(bool b)
@@ -2009,6 +2010,74 @@ static void test_nest_scale_2x(void)
     assert(np->is_scale_2x());
     assert(np->get_width() == w1 * 2.0f && np->get_height() == h1 * 2.0f);
     std::filesystem::remove(tmp_overlay, ec);
+
+    // Connect incoming and outgoing wires in 2x mode, route them, then toggle to 1x:
+    // both wires must reseat to the moved port coordinates and clear their stale routes.
+    auto drv = std::make_unique<model_toggle>(2, 14);
+    auto sink = std::make_unique<model_output>(30, 14);
+    model_toggle *drv_p = drv.get();
+    model_output *sink_p = sink.get();
+    parent.add_element(std::move(drv));
+    parent.add_element(std::move(sink));
+    drv_p->reseat();
+    sink_p->reseat();
+    np->reseat();
+
+    port *nest_in = nullptr;
+    port *nest_out = nullptr;
+    for (unsigned int i = 0;; ++i) {
+        port *p = np->port_at(i);
+        if (!p)
+            break;
+        if (p->name == "in2")
+            nest_in = p;
+        else if (p->name == "out1")
+            nest_out = p;
+    }
+    assert(nest_in != nullptr && nest_out != nullptr);
+    const int in_2x_y = nest_in->screenY;
+    const int out_2x_x = nest_out->screenX;
+    const int out_2x_y = nest_out->screenY;
+
+    auto w_in = connect_ports(drv_p->port_at(0), nest_in);
+    auto w_out = connect_ports(nest_out, sink_p->port_at(0));
+    w_in->reseat();
+    w_out->reseat();
+    w_in->route(&parent);
+    w_out->route(&parent);
+
+    // Switch 2x -> 1x: ports move and attached wires must reseat & invalidate cached routes
+    np->set_scale_2x(false);
+    assert(nest_in->screenY != in_2x_y);
+    assert(nest_out->screenX != out_2x_x || nest_out->screenY != out_2x_y);
+
+    nlohmann::json w_in_j, w_out_j;
+    w_in->to_json(w_in_j);
+    w_out->to_json(w_out_j);
+    assert(!w_in_j.contains("points"));
+    assert(!w_out_j.contains("points"));
+    assert((w_in_j["X1"] == nest_in->screenX && w_in_j["Y1"] == nest_in->screenY) ||
+           (w_in_j["X2"] == nest_in->screenX && w_in_j["Y2"] == nest_in->screenY));
+    assert((w_out_j["X1"] == nest_out->screenX && w_out_j["Y1"] == nest_out->screenY) ||
+           (w_out_j["X2"] == nest_out->screenX && w_out_j["Y2"] == nest_out->screenY));
+
+    // Re-routing after 2x -> 1x must land on the new 1x port coordinates
+    w_in->route(&parent);
+    w_out->route(&parent);
+    w_in_j.clear();
+    w_out_j.clear();
+    w_in->to_json(w_in_j);
+    w_out->to_json(w_out_j);
+    assert(w_in_j.contains("points") && !w_in_j["points"].empty());
+    assert(w_out_j.contains("points") && !w_out_j["points"].empty());
+    const auto &in_front = w_in_j["points"].front();
+    const auto &in_back = w_in_j["points"].back();
+    assert((in_front["X"] == nest_in->screenX && in_front["Y"] == nest_in->screenY) ||
+           (in_back["X"] == nest_in->screenX && in_back["Y"] == nest_in->screenY));
+    const auto &out_front = w_out_j["points"].front();
+    const auto &out_back = w_out_j["points"].back();
+    assert((out_front["X"] == nest_out->screenX && out_front["Y"] == nest_out->screenY) ||
+           (out_back["X"] == nest_out->screenX && out_back["Y"] == nest_out->screenY));
 }
 
 static void test_critical_timing_import(void)
