@@ -381,6 +381,8 @@ void document::run(void)
 					                   vcd->get_current_timestamp());
 				}
 			}
+			if (event.type == SDL_timer_event && !clock_running)
+				continue;
 			if ((event.type == SDL_timer_event && clock_running) || event.type == EVENT_SINGLE_CLOCK) {
 				if (vcd && vcd->is_loaded() && vcd->get_total_ticks() > 0) {
 					size_t next = (vcd->get_current_tick() + 1 < vcd->get_total_ticks())
