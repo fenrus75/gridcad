@@ -434,13 +434,20 @@ void model_truth::calculate(int ttl)
 	if (!packed_lut_outputs.empty() && input_port_widths.size() == inputs) {
 		size_t lut_idx = 0;
 		int bit_pos = 0;
+		constexpr int kSizeBits = static_cast<int>(sizeof(size_t) * 8);
 		for (unsigned int k = 0; k < inputs; ++k) {
 			const int w = input_port_widths[k];
+			if (w <= 0)
+				continue;
 			const struct value &v = ports[k]->value;
 			const uint64_t raw = (v.type == VALUE_TYPE_BOOL) ? (v.boolval ? 1ULL : 0ULL) : v.intval;
 			const uint64_t mask = (w >= 64) ? ~uint64_t{0} : ((uint64_t{1} << w) - 1);
-			lut_idx |= static_cast<size_t>(raw & mask) << bit_pos;
-			bit_pos += w;
+			if (bit_pos < kSizeBits)
+				lut_idx |= static_cast<size_t>(raw & mask) << bit_pos;
+			if (w >= kSizeBits - bit_pos)
+				bit_pos = kSizeBits;
+			else
+				bit_pos += w;
 		}
 		for (unsigned int o = 0; o < outputs; ++o) {
 			const std::string &bits = (o < packed_lut_outputs.size()) ? packed_lut_outputs[o] : std::string();
