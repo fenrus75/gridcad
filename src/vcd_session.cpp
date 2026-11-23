@@ -131,7 +131,7 @@ size_t vcd_session::bind_scene(const class scene *root_scene, std::string_view e
         for (const auto &scope : candidate_scopes) {
             size_t hits = 0;
             for (const auto &vn : scene_vcd_names) {
-                std::string full = scope.empty() ? vn : (scope + "." + vn);
+                std::string full = scope.empty() ? vn : std::format("{}.{}", scope, vn);
                 if (full_map.count(full))
                     hits++;
             }

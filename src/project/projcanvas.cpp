@@ -395,9 +395,7 @@ void projcanvas::crawl_filesystem(void)
 
 	for (auto const &dir_entry : std::filesystem::directory_iterator{projpath}) {
 		std::string path = dir_entry.path().filename();
-		std::string jsonstr = dir_entry.path();
-		jsonstr = jsonstr + "/scene.json";
-		std::filesystem::path jsonpath(jsonstr);
+		std::filesystem::path jsonpath = dir_entry.path() / "scene.json";
 
 		if (std::filesystem::last_write_time(jsonpath) > newest_time || first) {
 			newest_time = std::filesystem::last_write_time(jsonpath);

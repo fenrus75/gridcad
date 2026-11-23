@@ -348,12 +348,12 @@ bool layout_overlay::apply_file_to_scene(class scene *target_scene, const std::f
             saved_list.push_back(se);
 
             if (!nm.empty())
-                exact_map.emplace(cid + "|" + nm, idx);
+                exact_map.emplace(std::format("{}|{}", cid, nm), idx);
 
             const std::string src = je.value("src", "");
             const std::string out_w = je.value("out_wire", "");
             if (!src.empty() || !out_w.empty())
-                fallback_map.emplace(cid + "|" + src + "|" + out_w, idx);
+                fallback_map.emplace(std::format("{}|{}|{}", cid, src, out_w), idx);
         }
     }
 
@@ -396,7 +396,7 @@ bool layout_overlay::apply_file_to_scene(class scene *target_scene, const std::f
         const std::string out_w = first_out_wire_name(elem.get());
         if (src.empty() && out_w.empty())
             continue;
-        const std::string fkey = elem->class_id() + "|" + src + "|" + out_w;
+        const std::string fkey = std::format("{}|{}|{}", elem->class_id(), src, out_w);
         auto it = fallback_map.find(fkey);
         if (it != fallback_map.end() && !saved_list[it->second].used) {
             saved_list[it->second].used = true;

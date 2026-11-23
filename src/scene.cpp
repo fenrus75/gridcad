@@ -459,14 +459,14 @@ std::string scene::get_verilog_main(void)
 		elem->collect_nets(&netmap);
 	}
 
-	for (auto netstr : netmap)
-		s = s + netstr + "\n";
+	for (const auto &netstr : netmap)
+		s += std::format("{}\n", netstr);
 
-	s = s + "\n";
+	s += "\n";
 
 	for (auto &elem : elements) {
-		s = s + elem->get_verilog_main();
-	}	
+		s += elem->get_verilog_main();
+	}
 
 
 
@@ -483,8 +483,8 @@ std::string scene::get_verilog_modules(std::string verilog_path)
 	std::string s = "";
 
 	for (auto &elem : elements) {
-		s = s + elem->get_verilog_modules(verilog_path);
-	}	
+		s += elem->get_verilog_modules(verilog_path);
+	}
 
 	return s;
 }

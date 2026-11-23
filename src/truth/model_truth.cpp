@@ -543,19 +543,14 @@ std::string model_truth::get_verilog_main(void)
 	s = s + verilog_module_name + " " + get_verilog_name() + "(";
 	bool first = true;
 	for (auto &port : ports) {
-
 		if (!port->has_net())
 			continue;
-
 		if (!first)
-			s = s + ", ";
+			s += ", ";
 		first = false;
-		s = s + "." + port->get_verilog_name() + "(";
-		s = s + port->get_net_verilog_name();
-		s = s + ")";
-
+		s += std::format(".{}({})", port->get_verilog_name(), port->get_net_verilog_name());
 	}
-	s = s + ");\n";
+	s += ");\n";
 
 	return s;
 }
@@ -565,59 +560,57 @@ std::string model_truth::get_verilog_modules(std::string path)
 {
 	std::string s = "";
 
-	s = s + "module " + verilog_module_name + "\n (";
+	s += std::format("module {}\n (", verilog_module_name);
 	bool first = true;
 	for (auto &port : ports) {
-
 		if (!first)
-			s = s + ", ";
+			s += ", ";
 		first = false;
 		if (port->direction == PORT_IN)
-			s = s + "input ";
+			s += "input ";
 		if (port->direction == PORT_OUT)
-			s = s + "output ";
-		s = s +port->get_verilog_name();
-
+			s += "output ";
+		s += port->get_verilog_name();
 	}
-	s = s + ");\n\n";
+	s += ");\n\n";
 
 	for (unsigned int i = inputs; i < names.size(); i++) {
 		first = true;
-		s = s +"assign " + names[i] + " = ";
+		s += std::format("assign {} = ", names[i]);
 
 		for (unsigned int Y = 0; Y < values.size(); Y++) {
 			if (values[Y][i] == '1') {
-				if (!first) 
-					s = s + " | ";
+				if (!first)
+					s += " | ";
 				first = false;
-				s = s + "(";
+				s += "(";
 				bool nestedfirst = true;
 				for (unsigned int x = 0; x < inputs; x++) {
 					if (values[Y][x] == '1') {
 						if (!nestedfirst)
-							s = s + " & ";
+							s += " & ";
 						nestedfirst = false;
-						s = s + names[x];
+						s += names[x];
 					}
 					if (values[Y][x] == '0') {
 						if (!nestedfirst)
-							s = s + " & ";
+							s += " & ";
 						nestedfirst = false;
-						s = s + "(!" + names[x] + ")";
+						s += std::format("(!{})", names[x]);
 					}
 				}
 
-				s = s + ")";
+				s += ")";
 			}
 		}
 
-		if (first) 
-			s = s + "1'b0";
+		if (first)
+			s += "1'b0";
 
-		s = s + ";\n";
+		s += ";\n";
 	}
 
-	s = s + "endmodule\n";
+	s += "endmodule\n";
 
 
 	return s;

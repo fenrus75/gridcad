@@ -536,19 +536,15 @@ std::string model_nest::get_verilog_main(void)
 
 	_scene->create_verilog_names();
 
-	s = s + _scene->get_verilog_name() + " " + get_verilog_name() + "(";
+	s += std::format("{} {}(", _scene->get_verilog_name(), get_verilog_name());
 	bool first = true;
 	for (auto &port : ports) {
-
 		if (!first)
-			s = s + ", ";
+			s += ", ";
 		first = false;
-		s = s + "." + port->get_verilog_name() + "(";
-		s = s + port->get_net_verilog_name();
-		s = s + ")";
-
+		s += std::format(".{}({})", port->get_verilog_name(), port->get_net_verilog_name());
 	}
-	s = s + ");\n";
+	s += ");\n";
 
 	return s;
 }

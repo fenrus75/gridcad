@@ -183,22 +183,17 @@ std::string sequencer::get_verilog_main(void)
 	if (verilog_module_name == "")
 		verilog_module_name = append_random_bits(verilog_name + "_tt_");
 
-	s = s + verilog_module_name + " " + get_verilog_name() + "(";
+	s += std::format("{} {}(", verilog_module_name, get_verilog_name());
 	bool first = true;
 	for (auto &port : ports) {
-
 		if (!port->has_net())
 			continue;
-
 		if (!first)
-			s = s + ", ";
+			s += ", ";
 		first = false;
-		s = s + "." + port->get_verilog_name() + "(";
-		s = s + port->get_net_verilog_name();
-		s = s + ")";
-
+		s += std::format(".{}({})", port->get_verilog_name(), port->get_net_verilog_name());
 	}
-	s = s + ");\n";
+	s += ");\n";
 
 	return s;
 }
@@ -229,106 +224,88 @@ std::string sequencer::get_verilog_modules(std::string path)
 	unsigned int outwidth = ports[1]->get_net_width();
 	unsigned int counterwidth = highest_addr_bit(values.size());
 
-	s = s + "module " + verilog_module_name + "\n (";
+	s += std::format("module {}\n (", verilog_module_name);
 	bool first = true;
 	for (auto &port : ports) {
 		if (!port->has_net())
 			continue;
 		if (!first)
-			s = s + ", ";
+			s += ", ";
 		first = false;
 		if (port->direction == PORT_IN)
-			s = s + "input ";
+			s += "input ";
 		if (port->direction == PORT_OUT)
-			s = s + "output ";
-		s = s + port->get_verilog_width() + " ";
-		s = s +port->get_verilog_name();
-
+			s += "output ";
+		s += std::format("{} {}", port->get_verilog_width(), port->get_verilog_name());
 	}
-	s = s + ");\n\n";
-	
-	s = s + "reg [" + std::to_string(counterwidth) + ":0] counter;\n";
-	s = s + "wire [" + std::to_string(counterwidth) + ":0] nextcounter;\n";
-	
+	s += std::format(");\n\nreg [{}:0] counter;\nwire [{}:0] nextcounter;\n",
+	                 counterwidth, counterwidth);
+
 	for (unsigned int i = 0; i < outwidth; i++) {
 		first = true;
-		s = s +"assign Out[" + std::to_string(i) + "] = ";
+		s += std::format("assign Out[{}] = ", i);
 
 		for (unsigned int Y = 0; Y < values.size(); Y++) {
 			if (BIT_IS_SET(i, values[Y].intval)) {
-				if (!first) 
-					s = s + " | ";
+				if (!first)
+					s += " | ";
 				first = false;
-				s = s + "(";
+				s += "(";
 				bool nestedfirst = true;
 				for (unsigned int x = 0; x <= counterwidth; x++) {
-					if (BIT_IS_SET(x, Y)) {
-						if (!nestedfirst)
-							s = s + " & ";
-						nestedfirst = false;
-						s = s + "counter[" + std::to_string(x) +"]";
-					} else {
-						if (!nestedfirst)
-							s = s + " & ";
-						nestedfirst = false;
-						s = s + "(! counter[" +std::to_string(x) + "])";
-					}
+					if (!nestedfirst)
+						s += " & ";
+					nestedfirst = false;
+					if (BIT_IS_SET(x, Y))
+						s += std::format("counter[{}]", x);
+					else
+						s += std::format("(! counter[{}])", x);
 				}
 
-				s = s + ")";
+				s += ")";
 			}
 		}
 
-		if (first) 
-			s = s + "1'b0";
+		if (first)
+			s += "1'b0";
 
-		s = s + ";\n";
+		s += ";\n";
 	}
 
 	for (unsigned int i = 0; i <= counterwidth; i++) {
 		first = true;
-		s = s +"assign nextcounter[" + std::to_string(i) + "] = ";
+		s += std::format("assign nextcounter[{}] = ", i);
 
 		for (unsigned int Y = 0; Y < values.size(); Y++) {
 			unsigned int nextc = Y + 1;
 			if (nextc >= values.size())
-				nextc  = 0;
+				nextc = 0;
 			if (BIT_IS_SET(i, nextc)) {
-				if (!first) 
-					s = s + " | ";
+				if (!first)
+					s += " | ";
 				first = false;
-				s = s + "(";
+				s += "(";
 				bool nestedfirst = true;
 				for (unsigned int x = 0; x <= counterwidth; x++) {
-					if (BIT_IS_SET(x, Y)) {
-						if (!nestedfirst)
-							s = s + " & ";
-						nestedfirst = false;
-						s = s + "counter[" + std::to_string(x) +"]";
-					} else {
-						if (!nestedfirst)
-							s = s + " & ";
-						nestedfirst = false;
-						s = s + "(! counter[" +std::to_string(x) + "])";
-					}
+					if (!nestedfirst)
+						s += " & ";
+					nestedfirst = false;
+					if (BIT_IS_SET(x, Y))
+						s += std::format("counter[{}]", x);
+					else
+						s += std::format("(! counter[{}])", x);
 				}
 
-				s = s + ")";
+				s += ")";
 			}
 		}
 
-		if (first) 
-			s = s + "1'b0";
+		if (first)
+			s += "1'b0";
 
-		s = s + ";\n";
+		s += ";\n";
 	}
-	s = s + "\n";
-	s = s + "always @(posedge clk) \n";
-	s = s + "begin\n";
-	s = s + "    counter <= nextcounter;\n";
-	s = s + "end \n";
-
-	s = s + "endmodule\n";
+	s += "\nalways @(posedge clk) \nbegin\n    counter <= nextcounter;\nend \nendmodule\n";
 
 
 	return s;

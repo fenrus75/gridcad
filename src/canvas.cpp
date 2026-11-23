@@ -1637,7 +1637,7 @@ static std::string alpha_begin(std::string input)
 	{
 		if (input[i] >= '0' && input[i] <= '9')
 			break;
-		s = s + input[i];
+		s.push_back(input[i]);
 	}
 	return s;
 }
@@ -1648,7 +1648,7 @@ static std::string numeric_end(std::string input)
 	for (unsigned i = 0; i < input.size(); i++)
 	{
 		if (input[i] >= '0' && input[i] <= '9')
-			s = s + input[i];
+			s.push_back(input[i]);
 		else 
 			s = "";
 	}

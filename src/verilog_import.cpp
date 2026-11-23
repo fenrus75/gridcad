@@ -720,7 +720,7 @@ std::unique_ptr<scene> import_module_recursive(
                 const std::string sub_inst_name = inst.empty() ? cid : inst;
                 const std::string sub_path = instance_path.empty()
                                                  ? sub_inst_name
-                                                 : (instance_path + "." + sub_inst_name);
+                                                 : std::format("{}.{}", instance_path, sub_inst_name);
 
                 if (modules_obj.contains(ctype)) {
                     sub_scene = import_module_recursive(modules_obj, ctype, sub_path, project_key, label_tables,
@@ -835,11 +835,11 @@ std::unique_ptr<scene> import_module_recursive(
             const std::string full_vcd_name =
                 vcd_local.empty()
                     ? std::string("")
-                    : (instance_path.empty() ? vcd_local : (instance_path + "." + vcd_local));
+                    : (instance_path.empty() ? vcd_local : std::format("{}.{}", instance_path, vcd_local));
             const std::string full_valid_name =
                 valid_local.empty()
                     ? std::string("")
-                    : (instance_path.empty() ? valid_local : (instance_path + "." + valid_local));
+                    : (instance_path.empty() ? valid_local : std::format("{}.{}", instance_path, valid_local));
             if (wobj.contains("width") && wobj["width"].is_number_integer() &&
                 wobj["width"].get<int>() == 0)
                 continue;

@@ -132,8 +132,10 @@ std::string model_pmux::get_verilog_main(void)
     for (int i = num_arms - 1; i >= 0; --i) {
         const size_t s_idx = static_cast<size_t>(1 + num_arms + i);
         const size_t b_idx = static_cast<size_t>(1 + i);
-        expr = "(" + ports[s_idx]->get_net_verilog_name("1'b0") + " ? "
-             + ports[b_idx]->get_net_verilog_name("0") + " : " + expr + ")";
+        expr = std::format("({} ? {} : {})",
+                           ports[s_idx]->get_net_verilog_name("1'b0"),
+                           ports[b_idx]->get_net_verilog_name("0"),
+                           expr);
     }
-    return "assign " + ports[y_idx]->get_net_verilog_name() + " = " + expr + ";\n";
+    return std::format("assign {} = {};\n", ports[y_idx]->get_net_verilog_name(), expr);
 }
