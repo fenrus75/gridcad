@@ -11,7 +11,7 @@ class sequencer : public element
 {
 public:
 	sequencer(int X, int Y);
-	~sequencer();
+	~sequencer() override;
 	std::string class_id(void) override { return "sequencer:";};
 	
 	void to_json(json &j) override;

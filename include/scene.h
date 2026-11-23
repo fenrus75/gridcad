@@ -9,7 +9,7 @@ public:
     scene(std::string name, std::string parent = "");
     virtual ~scene(void);
     
-    virtual std::string class_id(void) { return "scene:";};
+    std::string class_id(void) override { return "scene:";};
 
     float sizeX = 200, sizeY = 200;
     

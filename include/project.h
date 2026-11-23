@@ -10,7 +10,7 @@ class projcanvas : public basecanvas
 {
 public:
     projcanvas(bool library_mode = false);
-    virtual ~projcanvas(void);
+    ~projcanvas(void) override;
     
 
     void draw(void) override;

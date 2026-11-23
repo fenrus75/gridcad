@@ -20,7 +20,7 @@ class model_slice : public element
 public:
     model_slice(float _X, float _Y, int in_width = 8, int out_width = 1, int offset = 0);
 
-    virtual std::string class_id(void) override { return "model_slice:"; }
+    std::string class_id(void) override { return "model_slice:"; }
 
     void drawAt(class basecanvas *canvas, float X, float Y, int type) override;
     void calculate(int ttl) override;

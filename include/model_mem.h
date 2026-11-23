@@ -26,7 +26,7 @@ public:
               bool has_write = false, bool rd_sync = false, bool wr_sync = true,
               int wr_en_width = 1);
 
-    virtual std::string class_id(void) override { return "model_mem:"; }
+    std::string class_id(void) override { return "model_mem:"; }
 
     void drawAt(class basecanvas *canvas, float X, float Y, int type) override;
     void calculate(int ttl) override;

@@ -9,12 +9,12 @@ class model_dflipflop : public element
 {
 public:
     model_dflipflop(float X, float Y);
-    virtual std::string class_id(void) { return "model_dflipflop:";};
+    std::string class_id(void) override { return "model_dflipflop:";};
 
 
     void drawAt(class basecanvas *canvas, float X, float Y, int type) override;
-    virtual void to_json(json &j) override;
-    virtual void from_json(json &j) override;
+    void to_json(json &j) override;
+    void from_json(json &j) override;
     void handle_event(class basecanvas *canvas, SDL_Event &event) override;
 
     bool in_edit_mode(void) override { return name_edit->get_edit_mode() && selected && single;};

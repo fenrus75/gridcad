@@ -11,7 +11,7 @@ class wire : public base, public std::enable_shared_from_this<wire>
 public:
     wire(int x1, int y1, int x2, int y2, int _color = 0);
     virtual ~wire(void);
-    virtual std::string class_id(void) { return "wire:";};
+    std::string class_id(void) override { return "wire:";};
     
     void move_target(int x2, int y2);
     void draw(class basecanvas *, int color = COLOR_WIRE_SOLID);

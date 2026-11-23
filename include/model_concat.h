@@ -21,7 +21,7 @@ class model_concat : public element
 public:
     model_concat(float _X, float _Y, const std::vector<int> &in_widths = {1, 1}, int out_width = 2);
 
-    virtual std::string class_id(void) override { return "model_concat:"; }
+    std::string class_id(void) override { return "model_concat:"; }
 
     void drawAt(class basecanvas *canvas, float X, float Y, int type) override;
     void calculate(int ttl) override;

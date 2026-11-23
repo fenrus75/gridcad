@@ -7,7 +7,7 @@ class model_buffer : public element
 {
 public:
     model_buffer(float X, float Y);
-    virtual std::string class_id(void) { return "model_buffer:";};
+    std::string class_id(void) override { return "model_buffer:";};
     
     void drawAt(class basecanvas *canvas, float X, float Y, int type) override;
     

@@ -8,7 +8,7 @@ class seqcanvas : public basecanvas
 {
 public:
 	seqcanvas(class sequencer *seq);
-	~seqcanvas(void);
+	~seqcanvas(void) override;
 	void draw(void) override;
 	bool handle_event(SDL_Event &event) override;
 protected:

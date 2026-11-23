@@ -8,7 +8,7 @@ class hexcanvas : public basecanvas
 {
 public :
     hexcanvas(std::string name, unsigned char *buffer, unsigned int length);
-    ~hexcanvas(void);
+    ~hexcanvas(void) override;
     
     bool handle_event(SDL_Event &event) override;
     void draw(void) override;

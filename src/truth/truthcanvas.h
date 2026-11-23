@@ -7,7 +7,7 @@ class truthcanvas : public basecanvas
 {
 public:
     truthcanvas(class model_truth *element);
-    virtual ~truthcanvas();
+    ~truthcanvas() override;
     void draw(void) override;
     bool handle_event(SDL_Event &event) override;
     void add_widget(std::unique_ptr<class widget> widget);

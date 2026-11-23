@@ -8,12 +8,12 @@ class model_datascope : public element
 {
 public:
     model_datascope(float X, float Y);
-    virtual std::string class_id(void) { return "model_datascope:";};
+    std::string class_id(void) override { return "model_datascope:";};
 
 
     void drawAt(class basecanvas *canvas, float X, float Y, int type) override;
-    virtual void to_json(json &j) override;
-    virtual void from_json(json &j) override;
+    void to_json(json &j) override;
+    void from_json(json &j) override;
 
     bool in_edit_mode(void) override { return edit_mode && single && selected;};
     

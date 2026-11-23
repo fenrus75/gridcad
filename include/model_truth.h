@@ -10,14 +10,14 @@ class model_truth : public element
 {
 public:
     model_truth(float X, float Y);
-    virtual ~model_truth(void);
-    virtual std::string class_id(void) { return "model_truth:";};
+    ~model_truth(void) override;
+    std::string class_id(void) override { return "model_truth:";};
 
 
     void drawAt(class basecanvas *canvas, float X, float Y, int type) override;
     bool mouse_select(float X, float Y) override;
-    virtual void to_json(json &j) override;
-    virtual void from_json(json &j) override;
+    void to_json(json &j) override;
+    void from_json(json &j) override;
     
     std::vector<std::vector<char>> values;
     std::vector<std::string> names;

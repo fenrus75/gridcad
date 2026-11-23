@@ -9,7 +9,7 @@ class model_toggle : public element
 {
 public:
     model_toggle(float X, float Y);
-    virtual std::string class_id(void) { return "model_toggle:";};
+    std::string class_id(void) override { return "model_toggle:";};
 
 
     void drawAt(class basecanvas *canvas, float X, float Y, int type) override;

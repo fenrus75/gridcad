@@ -8,8 +8,8 @@ class model_nest : public element
 {
 public:
     model_nest(float X, float Y);
-    virtual ~model_nest(void);
-    virtual std::string class_id(void) { return "model_nest:";};
+    ~model_nest(void) override;
+    std::string class_id(void) override { return "model_nest:";};
 
 
     void drawAt(class basecanvas *canvas, float X, float Y, int type) override;

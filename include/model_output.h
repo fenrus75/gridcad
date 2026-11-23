@@ -9,12 +9,12 @@ class model_output : public element
 {
 public:
     model_output(float X, float Y);
-    virtual std::string class_id(void) { return "model_output:";};
+    std::string class_id(void) override { return "model_output:";};
 
 
     void drawAt(class basecanvas *canvas, float X, float Y, int type) override;
-    virtual void to_json(json &j) override;
-    virtual void from_json(json &j) override;
+    void to_json(json &j) override;
+    void from_json(json &j) override;
     void handle_event(class basecanvas *canvas, SDL_Event &event) override;
     struct value get_value(void);
     

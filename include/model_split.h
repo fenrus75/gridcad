@@ -23,7 +23,7 @@ public:
                 const std::vector<int> &offsets = {},
                 const std::vector<int> &out_widths = {});
 
-    virtual std::string class_id(void) override { return "model_split:"; }
+    std::string class_id(void) override { return "model_split:"; }
 
     void drawAt(class basecanvas *canvas, float X, float Y, int type) override;
     void calculate(int ttl) override;

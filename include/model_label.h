@@ -7,11 +7,11 @@ class model_label : public element
 {
 public:
     model_label(float X, float Y);
-    virtual std::string class_id(void) { return "model_label:";};
+    std::string class_id(void) override { return "model_label:";};
 
 
-    virtual void to_json(json &j) override;
-    virtual void from_json(json &j) override;
+    void to_json(json &j) override;
+    void from_json(json &j) override;
 
     void handle_event(class basecanvas *canvas, SDL_Event &event) override;
     void draw_early(class basecanvas *canvas, int type) override;

@@ -6,7 +6,7 @@ class connector : public element
 {
 public:
     connector(float _X = 0, float _Y =0);
-    virtual std::string class_id(void) { return "connector:";};
+    std::string class_id(void) override { return "connector:";};
 //    void draw(class canvas *canvas, int type) override;
     void drawAt(class basecanvas *canvas, float X, float Y, int type) override;
 

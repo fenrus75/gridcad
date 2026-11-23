@@ -23,7 +23,7 @@ class canvas : public basecanvas
 {
 public:
     canvas (std::unique_ptr<class scene> _scene, struct capabilities *cap = nullptr);
-    virtual ~canvas(void);
+    ~canvas(void) override;
     
     void draw(void) override;
     

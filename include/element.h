@@ -8,7 +8,7 @@ public:
     element(int sizeX, int sizeY, std::string _name, std::string _parent = "");
     virtual ~element(void);
 
-    virtual std::string class_id(void) { return "element:";};
+    std::string class_id(void) override { return "element:";};
     
     void place(int X, int Y);
     

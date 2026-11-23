@@ -14,7 +14,7 @@ class port : public base
 public:
     port(std::string _name, int _direction = PORT_IN, int bus_width = 1);    
     virtual ~port(void);
-    virtual std::string class_id(void) { return "port:";};
+    std::string class_id(void) override { return "port:";};
     int X = 0, Y = 0;
     float screenX = 0.0f, screenY = 0.0f;
     std::string name = "";
