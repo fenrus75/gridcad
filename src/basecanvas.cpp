@@ -224,9 +224,9 @@ void basecanvas::draw_shadow_Line(float X1, float Y1, float X2, float Y2, int co
 	float width = 0.25f * scaleX;
 
 	if (critical) {
-		r = 190;
-		g = 34;
-		b = 34;
+		r = 115;
+		g = 24;
+		b = 24;
 		a = 255;
 		width = 0.50f * scaleX;
 	} else if (color == COLOR_VALUE_RED) {
