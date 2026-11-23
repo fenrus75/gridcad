@@ -108,6 +108,20 @@ int calc_angle(int x1, int y1, int x2, int y2)
 
 void draw_snake_line(class basecanvas *canvas, float x1, float y1, float x2, float y2, int color, int *step, int *box_parity, struct value *value, int stepsize, class wire *wire, float pulse, std::string_view enum_label)
 {
+	if (!canvas->segment_visible(x1, y1, x2, y2)) {
+		/* Advance animation phase in O(1) so boxes entering the viewport stay stitched. */
+		const float seg_d = dist(x1, y1, x2, y2);
+		if (seg_d > 0.0f && stepsize > 0) {
+			const int nsteps = static_cast<int>(ceilf(seg_d * 12.0f));
+			const int total = *step + nsteps;
+			const int boxes = total / stepsize;
+			*step = total % stepsize;
+			if (boxes & 1)
+				(*box_parity) ^= 1;
+		}
+		return;
+	}
+
 	float dx, dy,d, deltad, currentd, bigstep;
 	bool thick = false;
 	int ang = calc_angle(roundf(x1),roundf(y1),roundf(x2),roundf(y2));
@@ -148,7 +162,9 @@ void draw_snake_line(class basecanvas *canvas, float x1, float y1, float x2, flo
 			(*step) -= stepsize;
 			const bool show_enum = (!enum_label.empty() && (((*box_parity) & 1) == 0));
 			(*box_parity) ^= 1;
-			if (value->type == VALUE_TYPE_INT || wire_debug_mode || wire->get_is_z()) { 
+			if (!canvas->segment_visible(x1, y1, x1, y1)) {
+				/* Off-screen badge on a long partially-visible segment: skip GPU/text work. */
+			} else if (value->type == VALUE_TYPE_INT || wire_debug_mode || wire->get_is_z()) {
 				float cursormag;
 				cursormag = 2.5 - canvas->distance_from_mouse(x1,y1)/2;
 				if (cursormag < 1)
@@ -280,7 +296,8 @@ void wire::draw(class basecanvas *canvas, int _color)
 			first = false;
 			continue;
 		}
-		canvas->draw_shadow_Line(prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, shadow_color, pulse, is_crit);
+		if (canvas->segment_visible(prevX + 0.5f, prevY + 0.5f, point.X + 0.5f, point.Y + 0.5f))
+			canvas->draw_shadow_Line(prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, shadow_color, pulse, is_crit);
 		prevX = point.X;
 		prevY = point.Y;
 	}

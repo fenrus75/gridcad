@@ -116,6 +116,19 @@ public:
     void draw_line(float X1, float Y1, float X2, float Y2, int color);
     void draw_thick_line(float X1, float Y1, float X2, float Y2, int color);
     void draw_shadow_Line(float X1, float Y1, float X2, float Y2, int color, float pulse = 0.0f, bool critical = false);
+    bool segment_visible(float x1, float y1, float x2, float y2, float pad_px = 64.0f) const {
+        if (cached_out_w <= 0 || cached_out_h <= 0)
+            return true;
+        const float sx1 = (x1 - offsetX) * scaleX;
+        const float sx2 = (x2 - offsetX) * scaleX;
+        if (std::max(sx1, sx2) < -pad_px || std::min(sx1, sx2) > static_cast<float>(cached_out_w) + pad_px)
+            return false;
+        const float sy1 = (y1 - offsetY) * scaleY;
+        const float sy2 = (y2 - offsetY) * scaleY;
+        if (std::max(sy1, sy2) < -pad_px || std::min(sy1, sy2) > static_cast<float>(cached_out_h) + pad_px)
+            return false;
+        return true;
+    }
     void flush_line_batch(void);
     uint64_t current_frame_id(void) const { return frame_id; }
 
