@@ -46,33 +46,22 @@ float basecanvas::scr_to_Y(int Y)
 
 void basecanvas::draw_box(float X1, float Y1, float X2, float Y2, int color, int alpha)
 {
-	flush_line_batch();
-	int x1, y1, x2, y2;
+	int x1 = X_to_scr(X1);
+	int x2 = X_to_scr(X2);
+	int y1 = Y_to_scr(Y1);
+	int y2 = Y_to_scr(Y2);
 
-	SDL_Rect rect;
-
-	x1 = X_to_scr(X1);
-	x2 = X_to_scr(X2);
-	y1 = Y_to_scr(Y1);
-	y2 = Y_to_scr(Y2);
-
-	/* clip */
+	if (x2 < 0 || y2 < 0)
+		return;
+	if (cached_out_w > 0 && cached_out_h > 0 && (x1 > cached_out_w || y1 > cached_out_h))
+		return;
 	if (x1 < 0)
 		x1 = 0;
-	if (x2 < 0)
-		return;
 	if (y1 < 0)
 		y1 = 0;
-	if (y2 < 0)
-		return;
 
-	/* TODO: clip boxes that are fully outside of the visible window */
-
-	rect.x = x1;
-	rect.y = y1;
-	rect.w = x2 - x1;
-	rect.h = y2 - y1;
-
+	flush_line_batch();
+	SDL_Rect rect = {x1, y1, x2 - x1, y2 - y1};
 	if (alpha < 0)
 		alpha = Alpha(color);
 
@@ -82,21 +71,21 @@ void basecanvas::draw_box(float X1, float Y1, float X2, float Y2, int color, int
 
 void basecanvas::draw_box_rgba(float X1, float Y1, float X2, float Y2, Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 {
-	flush_line_batch();
 	int x1 = X_to_scr(X1);
 	int x2 = X_to_scr(X2);
 	int y1 = Y_to_scr(Y1);
 	int y2 = Y_to_scr(Y2);
 
+	if (x2 < 0 || y2 < 0)
+		return;
+	if (cached_out_w > 0 && cached_out_h > 0 && (x1 > cached_out_w || y1 > cached_out_h))
+		return;
 	if (x1 < 0)
 		x1 = 0;
-	if (x2 < 0)
-		return;
 	if (y1 < 0)
 		y1 = 0;
-	if (y2 < 0)
-		return;
 
+	flush_line_batch();
 	SDL_Rect rect = {x1, y1, x2 - x1, y2 - y1};
 	SDL_SetRenderDrawColor(renderer.get(), r, g, b, a);
 	SDL_RenderFillRect(renderer.get(), &rect);
@@ -415,7 +404,6 @@ sdl::TexturePtr basecanvas::load_image(std::string_view filename)
 
 void basecanvas::draw_image(SDL_Texture *image, float X, float Y, float W, float H, int alpha, bool keep_aspect) 
 {
-	flush_line_batch();
 	SDL_Rect rect;
 	float w, h;
 
@@ -446,6 +434,7 @@ void basecanvas::draw_image(SDL_Texture *image, float X, float Y, float W, float
 	     rect.y + rect.h < 0 || rect.y > cached_out_h))
 		return;
 
+	flush_line_batch();
 	SDL_SetTextureAlphaMod(image, alpha);
 
 	SDL_RenderCopy(renderer.get(), image, nullptr, &rect);
@@ -453,7 +442,6 @@ void basecanvas::draw_image(SDL_Texture *image, float X, float Y, float W, float
 
 void basecanvas::draw_image_fragment(SDL_Texture *image, float X, float Y, float W, float H, int fromX, int fromY, int w, int h, int angle) 
 {
-	flush_line_batch();
 	SDL_Rect rect, src;
 
 	if (!image) {
@@ -470,6 +458,7 @@ void basecanvas::draw_image_fragment(SDL_Texture *image, float X, float Y, float
 	     rect.y + rect.h < 0 || rect.y > cached_out_h))
 		return;
 
+	flush_line_batch();
 	src.x = fromX;
 	src.y = fromY;
 	src.w = w;
@@ -482,7 +471,6 @@ void basecanvas::draw_image_fragment(SDL_Texture *image, float X, float Y, float
 
 void basecanvas::draw_image_rotated(SDL_Texture *image, float X, float Y, float W, float H, int alpha, int angle) 
 {
-	flush_line_batch();
 	SDL_Rect rect;
 
 	if (!image) {
@@ -507,6 +495,7 @@ void basecanvas::draw_image_rotated(SDL_Texture *image, float X, float Y, float 
 	     rect.y + rect.h < 0 || rect.y > cached_out_h))
 		return;
 
+	flush_line_batch();
 	SDL_SetTextureAlphaMod(image, alpha);
 
 	SDL_RenderCopyEx(renderer.get(), image, nullptr, &rect, angle, nullptr, SDL_FLIP_NONE);
@@ -532,6 +521,8 @@ const basecanvas::cached_texture &basecanvas::get_cached_texture(std::string_vie
 
 void basecanvas::draw_image(std::string_view filename, float X, float Y, float W, float H, int alpha, bool keep_aspect) 
 {
+	if (!segment_visible(X, Y, X + W, Y + H, 0.0f))
+		return;
 	const auto &ct = get_cached_texture(filename);
 	if (!ct.tex)
 		return;
@@ -550,12 +541,17 @@ void basecanvas::draw_image(std::string_view filename, float X, float Y, float W
 
 void basecanvas::draw_image_rotated(std::string_view filename, float X, float Y, float W, float H, int alpha, int angle) 
 {
+	const float span = std::max(W, H);
+	if (!segment_visible(X - span * 0.5f, Y - span * 0.5f, X + span * 1.5f, Y + span * 1.5f, 0.0f))
+		return;
 	const auto &ct = get_cached_texture(filename);
 	draw_image_rotated(ct.tex.get(), X, Y, W, H, alpha, angle);
 }
 
 void basecanvas::draw_image_fragment(std::string_view filename, float X, float Y, float W, float H, int fromX, int fromY, int w, int h, int angle)  
 {
+	if (!segment_visible(X, Y, X + W, Y + H, 0.0f))
+		return;
 	const auto &ct = get_cached_texture(filename);
 	draw_image_fragment(ct.tex.get(), X, Y, W, H, fromX, fromY, w, h, angle);
 }
@@ -602,7 +598,7 @@ const basecanvas::cached_texture &basecanvas::get_cached_text(std::string_view t
 
 void basecanvas::draw_text(std::string_view text, float X, float Y, float W, float H)
 {
-	if (text.empty())
+	if (text.empty() || !segment_visible(X, Y, X + W, Y + H, 0.0f))
 		return;
 
 	const auto &ct = get_cached_text(text);
@@ -620,7 +616,7 @@ void basecanvas::draw_text(std::string_view text, float X, float Y, float W, flo
 }
 void basecanvas::draw_text_left(std::string_view text, float X, float Y, float W, float H)
 {
-	if (text.empty())
+	if (text.empty() || !segment_visible(X, Y, X + W, Y + H, 0.0f))
 		return;
 
 	const auto &ct = get_cached_text(text);
