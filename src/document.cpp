@@ -275,28 +275,7 @@ document::~document(void)
 
 bool clock_running = true;
 
-static struct timeval previous_frame = {};
 
-static void wait_fps(float target_fps)
-{
-	struct timeval now;
-	double d = 0.0;
-	double target_time = 1.0 / target_fps;
-	double time_left;
-	
-	gettimeofday(&now, nullptr);
-	d = now.tv_sec - previous_frame.tv_sec + now.tv_usec/1000000.0 -  previous_frame.tv_usec/1000000.0;
-	
-	time_left = target_time - d;
-	if (time_left < 0.0002)  /* skip a whole frame */
-		time_left += target_time;
-	if (time_left < 0.0002) {
-		gettimeofday(&previous_frame, nullptr);
-		return;
-	}
-	usleep(time_left * 1000000 - 200);
-	gettimeofday(&previous_frame, nullptr);
-}
 
 void document::run(void)
 {
@@ -315,14 +294,17 @@ void document::run(void)
 			leave = true;
 			break;
 		}
+		const uint64_t frame_start_ms = SDL_GetTicks64();
 		run_queued_calculations();
-//		ret = SDL_WaitEventTimeout(&event, 1);
-		ret = SDL_PollEvent(&event);
 
-		if (event.type == SDL_QUIT)
-			leave = true;
+		/* Drain all pending SDL events before rendering so high-rate input never starves frames. */
+		int drained = 0;
+		while (!leave && drained++ < 256 && (ret = SDL_PollEvent(&event)) != 0) {
+			if (event.type == SDL_QUIT) {
+				leave = true;
+				break;
+			}
 
-		if (ret) {
 			/* toggle the clock if there is a timer event -- this is the best race-free place to do this*/
 			if (event.type == EVENT_STOP_CLOCK) {
 				logger::get().debug("Receive stop clock");
@@ -424,17 +406,16 @@ void document::run(void)
 						break;
 					}
 				}
-
 			}
-		} else {
-			//			SDL_Delay(1);
 		}
 
-		if (leave)
+		if (leave) {
 			logger::get().debug("Want to quit");
+			break;
+		}
 
 		run_queued_calculations();
-		if (!ret && !leave) {
+		{
 			struct timeval now;
 			gettimeofday(&now, nullptr);
 			/* Stagger unfocused window redraws independently (500 + [0..99] ms) to avoid frame spikes. */
@@ -443,12 +424,17 @@ void document::run(void)
 			static std::uniform_int_distribution<uint64_t> slow_draw_jitter(0, 99);
 			std::vector<basecanvas *> drawn_canvases;
 			drawn_canvases.reserve(canvases.size());
+			bool has_focused_draw = false;
 			for (auto canvas: canvases) {
 				if (canvas->canvas_has_focus()) {
+					/* Enable vsync only on the focused window so multi-window setups never halve FPS. */
+					canvas->set_vsync(!has_focused_draw);
 					canvas->draw();
 					drawn_canvases.push_back(canvas);
+					has_focused_draw = true;
 					next_slow_draw_ms[canvas] = now_ms + 500 + slow_draw_jitter(slow_draw_rng);
 				} else {
+					canvas->set_vsync(false);
 					auto [it, inserted] = next_slow_draw_ms.try_emplace(
 					    canvas, now_ms + 500 + slow_draw_jitter(slow_draw_rng));
 					if (!inserted && now_ms >= it->second) {
@@ -470,11 +456,17 @@ void document::run(void)
 				previous_fast_draw = now;
 				fast_draw_counter = 0;
 			}
-			wait_fps(30);
-			/* Only present canvases drawn this frame (1-to-1 draw/present pairing prevents queued draw leaks). */
+			/* Present immediately after draw() so animation timestamps match display scanout. */
 			for (auto canvas: drawn_canvases)
 				canvas->present();
 
+			/* Safety cap (~60 Hz) when vsync is unavailable (e.g. dummy video driver or all windows unfocused). */
+			const uint64_t elapsed_ms = SDL_GetTicks64() - frame_start_ms;
+			if (!has_focused_draw) {
+				SDL_Delay(16);
+			} else if (elapsed_ms < 4) {
+				SDL_Delay(static_cast<Uint32>(16 - elapsed_ms));
+			}
 		}
 	}
 

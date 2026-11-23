@@ -144,6 +144,13 @@ public:
     void draw_text_left(std::string_view text, float X, float Y, float W, float H);
     void unhide(void);
     bool canvas_has_focus(void) { return has_focus; };
+    void set_vsync(bool enabled) {
+        const int want = enabled ? 1 : 0;
+        if (vsync_state == want || !renderer)
+            return;
+        vsync_state = want;
+        SDL_RenderSetVSync(renderer.get(), want);
+    }
     void set_fps(float _fps) { fps = _fps;};
     virtual float distance_from_mouse(float X, float Y) { return 0; };
     virtual class scene* get_scene(void) { return nullptr; };
@@ -177,6 +184,7 @@ protected:
     const cached_texture &get_cached_texture(std::string_view filename);
     const cached_texture &get_cached_text(std::string_view text);
     bool has_focus = true;
+    int vsync_state = -1; /* -1 = unset, 0 = off, 1 = on */
     float fps = -1.0;
     uint64_t frame_id = 0;
     int cached_out_w = 0, cached_out_h = 0;
