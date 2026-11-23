@@ -282,10 +282,14 @@ void document::run(void)
 	SDL_Event event;
 	int ret = 0;
 	bool leave = false;
+	uint64_t sim_generation = 1;
+	std::unordered_map<basecanvas *, uint64_t> last_drawn_sim_gen;
+	std::unordered_map<basecanvas *, bool> exposed_canvases;
 	
 	for (auto canvas:canvases) {
 		canvas->draw();
 		canvas->present();
+		last_drawn_sim_gen[canvas] = sim_generation;
 	}
 
 	while (!leave) {
@@ -345,6 +349,7 @@ void document::run(void)
 				    static_cast<vcd_wire_update *>(event.user.data1));
 				if (upd && main_canvas && main_canvas->get_scene()) {
 					main_canvas->get_scene()->broadcast_vcd_values(upd->values);
+					++sim_generation;
 				}
 				continue;
 			}
@@ -384,6 +389,7 @@ void document::run(void)
 			if (event.type == SDL_timer_event && !clock_running)
 				continue;
 			if ((event.type == SDL_timer_event && clock_running) || event.type == EVENT_SINGLE_CLOCK) {
+				++sim_generation;
 				if (vcd && vcd->is_loaded() && vcd->get_total_ticks() > 0) {
 					size_t next = (vcd->get_current_tick() + 1 < vcd->get_total_ticks())
 					                  ? (vcd->get_current_tick() + 1)
@@ -396,11 +402,23 @@ void document::run(void)
 					global_clock.arrayval++;
 				}
 			}
+			if (event.type == SDL_MOUSEBUTTONDOWN || event.type == SDL_MOUSEBUTTONUP ||
+			    event.type == SDL_KEYDOWN) {
+				++sim_generation;
+			}
 			for (unsigned int i = 0; i < canvases.size(); i++)  {
 				auto canvas = canvases[i];
 				bool thisret = false;
 
 				if (event.window.windowID == canvas->get_window_ID() || event.type >= SDL_timer_event) {
+					if (event.type == SDL_WINDOWEVENT &&
+					    (event.window.event == SDL_WINDOWEVENT_EXPOSED ||
+					     event.window.event == SDL_WINDOWEVENT_RESIZED ||
+					     event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED ||
+					     event.window.event == SDL_WINDOWEVENT_SHOWN ||
+					     event.window.event == SDL_WINDOWEVENT_FOCUS_LOST)) {
+						exposed_canvases[canvas] = true;
+					}
 					thisret = canvas->handle_event(event);
 					if (thisret) {
 						if (i == 0)
@@ -420,7 +438,8 @@ void document::run(void)
 		{
 			struct timeval now;
 			gettimeofday(&now, nullptr);
-			/* Stagger unfocused window redraws independently (500 + [0..99] ms) to avoid frame spikes. */
+			/* Only redraw unfocused windows when exposed/resized or when simulation state changed
+			 * (throttled to 500 + [0..99] ms) so static background windows never steal a compositor swap. */
 			const uint64_t now_ms = SDL_GetTicks64();
 			static std::mt19937 slow_draw_rng(std::random_device{}());
 			static std::uniform_int_distribution<uint64_t> slow_draw_jitter(0, 99);
@@ -434,14 +453,20 @@ void document::run(void)
 					canvas->draw();
 					drawn_canvases.push_back(canvas);
 					has_focused_draw = true;
+					last_drawn_sim_gen[canvas] = sim_generation;
+					exposed_canvases[canvas] = false;
 					next_slow_draw_ms[canvas] = now_ms + 500 + slow_draw_jitter(slow_draw_rng);
 				} else {
 					canvas->set_vsync(false);
+					const bool was_exposed = exposed_canvases[canvas];
+					const bool sim_dirty = (last_drawn_sim_gen[canvas] != sim_generation);
 					auto [it, inserted] = next_slow_draw_ms.try_emplace(
 					    canvas, now_ms + 500 + slow_draw_jitter(slow_draw_rng));
-					if (!inserted && now_ms >= it->second) {
+					if (was_exposed || (sim_dirty && !inserted && now_ms >= it->second)) {
 						canvas->draw();
 						drawn_canvases.push_back(canvas);
+						last_drawn_sim_gen[canvas] = sim_generation;
+						exposed_canvases[canvas] = false;
 						it->second = now_ms + 500 + slow_draw_jitter(slow_draw_rng);
 					}
 				}
