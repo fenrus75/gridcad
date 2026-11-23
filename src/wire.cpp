@@ -57,11 +57,7 @@ void wire::set_new_name(void)
 
 }
 
-/* Monotonic 60 Hz animation tick counter so box parity stays stitched across wraps. */
-static uint64_t current_animation_ticks(void)
-{
-	return (SDL_GetTicks64() * 60ULL) / 1000ULL;
-}
+
 
 float dist(float x1, float y1, float x2, float y2)
 {
@@ -106,31 +102,27 @@ int calc_angle(int x1, int y1, int x2, int y2)
 	return 0;
 }
 
-void draw_snake_line(class basecanvas *canvas, float x1, float y1, float x2, float y2, int color, int *step, int *box_parity, struct value *value, int stepsize, class wire *wire, float pulse, std::string_view enum_label)
+void draw_snake_line(class basecanvas *canvas, float x1, float y1, float x2, float y2, int color, float *dist_to_next, int *box_parity, struct value *value, float spacing, class wire *wire, float pulse, std::string_view enum_label)
 {
+	const float d = dist(x1, y1, x2, y2);
+	if (d <= 1e-6f || spacing <= 1e-6f)
+		return;
+
 	if (!canvas->segment_visible(x1, y1, x2, y2)) {
-		/* Advance animation phase in O(1) so boxes entering the viewport stay stitched. */
-		const float seg_d = dist(x1, y1, x2, y2);
-		if (seg_d > 0.0f && stepsize > 0) {
-			const int nsteps = static_cast<int>(ceilf(seg_d * 12.0f));
-			const int total = *step + nsteps;
-			const int boxes = total / stepsize;
-			*step = total % stepsize;
-			if (boxes & 1)
+		/* Advance continuous phase in O(1) so boxes entering the viewport stay seamlessly stitched. */
+		float rem = *dist_to_next - d;
+		if (rem <= 0.0f) {
+			const int crossed = static_cast<int>(std::floor(-rem / spacing)) + 1;
+			rem += static_cast<float>(crossed) * spacing;
+			if (crossed & 1)
 				(*box_parity) ^= 1;
 		}
+		*dist_to_next = rem;
 		return;
 	}
 
-	float dx, dy,d, deltad, currentd, bigstep;
-	bool thick = false;
-	int ang = calc_angle(roundf(x1),roundf(y1),roundf(x2),roundf(y2));
-	int totalstep = 0;
-
-	if (value->type == VALUE_TYPE_INT)
-		thick = true;
-
-	if (thick)         
+	const bool thick = (value->type == VALUE_TYPE_INT);
+	if (thick)
 		canvas->draw_thick_line(x1, y1, x2, y2, color);
 	else
 		canvas->draw_line(x1, y1, x2, y2, color);
@@ -141,36 +133,22 @@ void draw_snake_line(class basecanvas *canvas, float x1, float y1, float x2, flo
 	if (canvas->scale_to_X(1) > 1/20.0)
 		return;
 
+	const int ang = calc_angle(roundf(x1), roundf(y1), roundf(x2), roundf(y2));
+	const float dx = x2 - x1;
+	const float dy = y2 - y1;
+	float pos = *dist_to_next;
 
-	dx = x2-x1;
-	dy = y2-y1;
-	d = dist(x1,y1,x2,y2);;
-	dx = dx/d/12.0;
-	dy = dy/d/12.0;
+	while (pos <= d) {
+		const float t = pos / d;
+		const float bx = x1 + dx * t;
+		const float by = y1 + dy * t;
+		const bool show_enum = (!enum_label.empty() && (((*box_parity) & 1) == 0));
+		(*box_parity) ^= 1;
 
-	deltad = sqrt(dx * dx + dy * dy);
-	currentd = d;
-
-	bigstep = deltad * stepsize;
-
-
-	while (currentd > 0) {
-		(*step)++;
-		totalstep++;
-		currentd -= deltad;
-		if ((*step) >= stepsize) {
-			(*step) -= stepsize;
-			const bool show_enum = (!enum_label.empty() && (((*box_parity) & 1) == 0));
-			(*box_parity) ^= 1;
-			if (!canvas->segment_visible(x1, y1, x1, y1)) {
-				/* Off-screen badge on a long partially-visible segment: skip GPU/text work. */
-			} else if (value->type == VALUE_TYPE_INT || wire_debug_mode || wire->get_is_z()) {
-				float cursormag;
-				cursormag = 2.5 - canvas->distance_from_mouse(x1,y1)/2;
-				if (cursormag < 1)
-					cursormag = 1;
-				if (cursormag > 2)
-					cursormag = 2;
+		if (canvas->segment_visible(bx, by, bx, by)) {
+			if (value->type == VALUE_TYPE_INT || wire_debug_mode || wire->get_is_z()) {
+				float cursormag = 2.5f - canvas->distance_from_mouse(bx, by) / 2.0f;
+				cursormag = std::clamp(cursormag, 1.0f, 2.0f);
 				const bool qual_invalid = (!value->qualifier_valid && !wire->get_is_z() && !wire_debug_mode);
 				const float eff_pulse = qual_invalid ? 0.0f : pulse;
 				const float pulse_mag = 1.0f + 0.35f * eff_pulse;
@@ -178,8 +156,8 @@ void draw_snake_line(class basecanvas *canvas, float x1, float y1, float x2, flo
 				const float size2 = 0.20f * cursormag * pulse_mag;
 				if (qual_invalid) {
 					/* Qualified-invalid signal: muted grey box without white border or text. */
-					canvas->draw_box_rgba(x1 - size, y1 - size, x1 + size, y1 + size, 100, 100, 100, 220);
-					canvas->draw_box_rgba(x1 - size2, y1 - size2, x1 + size2, y1 + size2, 68, 68, 68, 220);
+					canvas->draw_box_rgba(bx - size, by - size, bx + size, by + size, 100, 100, 100, 220);
+					canvas->draw_box_rgba(bx - size2, by - size2, bx + size2, by + size2, 68, 68, 68, 220);
 				} else {
 					std::string s;
 					bool has_enum_label = false;
@@ -199,57 +177,36 @@ void draw_snake_line(class basecanvas *canvas, float x1, float y1, float x2, flo
 						const Uint8 br = static_cast<Uint8>(R(COLOR_WIRE_MOTION) + (255 - R(COLOR_WIRE_MOTION)) * eff_pulse);
 						const Uint8 bg = static_cast<Uint8>(G(COLOR_WIRE_MOTION) + (225 - G(COLOR_WIRE_MOTION)) * eff_pulse);
 						const Uint8 bb = static_cast<Uint8>(B(COLOR_WIRE_MOTION) + (80 - B(COLOR_WIRE_MOTION)) * eff_pulse);
-						canvas->draw_box_rgba(x1-half_w, y1-size, x1+half_w, y1+size, br, bg, bb, 255);
+						canvas->draw_box_rgba(bx - half_w, by - size, bx + half_w, by + size, br, bg, bb, 255);
 					} else {
-						canvas->draw_box(x1-half_w, y1-size, x1+half_w, y1+size, COLOR_WIRE_MOTION);
+						canvas->draw_box(bx - half_w, by - size, bx + half_w, by + size, COLOR_WIRE_MOTION);
 					}
-					canvas->draw_box(x1-half_w2, y1-size2, x1+half_w2, y1+size2, COLOR_BACKGROUND_MAIN);
-					canvas->draw_text(s, x1+0.05-half_w, y1+0.05-size, 2 * half_w - 0.1, 2 * size - 0.1);
+					canvas->draw_box(bx - half_w2, by - size2, bx + half_w2, by + size2, COLOR_BACKGROUND_MAIN);
+					canvas->draw_text(s, bx + 0.05f - half_w, by + 0.05f - size, 2.0f * half_w - 0.1f, 2.0f * size - 0.1f);
 				}
 			} else if (value->is_clock) {
-				const float size = 0.24;
-				float f;
-				f = 2 * totalstep / (0.01 + stepsize);
-				while (f > 1)
-					f -= 1;
-
-				f = 1 -f;
-				f = f * (450-25);
-
+				const float size = 0.24f;
+				float f = std::fmod(2.0f * pos / spacing, 1.0f);
+				f = (1.0f - f) * (450.0f - 25.0f);
 				if (!clock_running)
-					f = 0;
-				canvas->draw_box(x1-size, y1-size, x1+size, y1+size, COLOR_WIRE_MOTION);
-				//                        canvas->draw_image_fragment("assets/clock_wave.png", x1-size, y1-size, 4*size, 2*size, 25 + f, 0, 2 * (450 -25), 189, ang);	
-				canvas->draw_image_fragment("assets/clock_wave.png", x1-size, y1-size, 2*size, 2*size, 25 + f, 0, 450 -25, 189, ang);	
+					f = 0.0f;
+				canvas->draw_box(bx - size, by - size, bx + size, by + size, COLOR_WIRE_MOTION);
+				canvas->draw_image_fragment("assets/clock_wave.png", bx - size, by - size, 2.0f * size, 2.0f * size, 25 + f, 0, 450 - 25, 189, ang);
 			} else {
-				float r = 0.18f;
-				if (thick)
-					r = 0.22f;
+				float r = thick ? 0.22f : 0.18f;
 				r *= (1.0f + 0.45f * pulse);
-				canvas->draw_image(value_color_texture(value), x1-r, y1-r, 2 * r, 2 * r);
-//				canvas->draw_circle2(x1, y1, r, COLOR_WIRE_MOTION, value_color(value));
-			}
-			if (currentd > bigstep) {
-				x1 += (stepsize - 2) * dx;
-				y1 += (stepsize - 2) * dy;
-				*step += (stepsize - 2);
-				currentd -= (stepsize - 2) * deltad;
+				canvas->draw_image(value_color_texture(value), bx - r, by - r, 2.0f * r, 2.0f * r);
 			}
 		}
-		x1 += dx;
-		y1 += dy;
+		pos += spacing;
 	}
-
-
-
+	*dist_to_next = pos - d;
 }
 
 void wire::draw(class basecanvas *canvas, int _color)
 {
 	float prevX, prevY;
 	bool first = true;
-	int stepsize;
-	int step;
 
 	assert(!dead);
 
@@ -271,16 +228,15 @@ void wire::draw(class basecanvas *canvas, int _color)
 		return;
 	}
 
-	stepsize = 60;
-	if (selected)
-		stepsize = 20;
-
-	const uint64_t ticks = current_animation_ticks();
-	step = static_cast<int>(ticks % static_cast<uint64_t>(stepsize));
-	int box_parity = static_cast<int>((ticks / static_cast<uint64_t>(stepsize)) & 1ULL);
-
+	/* Continuous floating-point phase (5.0 grid units/sec) avoids 60 Hz integer beat stutter. */
+	const float spacing = selected ? (20.0f / 12.0f) : 5.0f;
+	double phase_boxes = (static_cast<double>(SDL_GetTicks64()) * 0.005) / static_cast<double>(spacing);
 	if (value.is_clock && !clock_running)
-		step = (global_clock.arrayval * 4) % stepsize;
+		phase_boxes = (static_cast<double>(global_clock.arrayval) * (4.0 / 12.0)) / static_cast<double>(spacing);
+	const double whole = std::floor(phase_boxes);
+	const double frac = phase_boxes - whole;
+	float dist_to_next = static_cast<float>((1.0 - frac) * static_cast<double>(spacing));
+	int box_parity = static_cast<int>(static_cast<uint64_t>(whole) & 1ULL);
 
 	const std::string enum_label =
 		(value.type == VALUE_TYPE_INT && !wire_debug_mode && !is_z) ? get_label(value.intval) : "";
@@ -319,9 +275,9 @@ void wire::draw(class basecanvas *canvas, int _color)
 			canvas->draw_circle(tX,tY, 0.4, COLOR_VALUE_RED);
 		
 		if (_color != COLOR_ELEMENT_GHOST)
-			draw_snake_line(canvas, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, wire_to_color(color), &step, &box_parity, &value, stepsize, this, pulse, enum_label);
+			draw_snake_line(canvas, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, wire_to_color(color), &dist_to_next, &box_parity, &value, spacing, this, pulse, enum_label);
 		else
-			draw_snake_line(canvas, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, COLOR_ELEMENT_GHOST, &step, &box_parity, &value, stepsize, this, 0.0f, enum_label);
+			draw_snake_line(canvas, prevX + 0.5, prevY + 0.5, point.X + 0.5, point.Y + 0.5, COLOR_ELEMENT_GHOST, &dist_to_next, &box_parity, &value, spacing, this, 0.0f, enum_label);
 		prevX = point.X;
 		prevY = point.Y;
 	}
