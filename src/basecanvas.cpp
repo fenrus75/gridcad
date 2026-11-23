@@ -235,10 +235,10 @@ void basecanvas::draw_shadow_Line(float X1, float Y1, float X2, float Y2, int co
 	float width = 0.25f * scaleX;
 
 	if (critical) {
-		r = 255;
-		g = 40;
-		b = 40;
-		a = 175;
+		r = 190;
+		g = 34;
+		b = 34;
+		a = 255;
 		width = 0.50f * scaleX;
 	} else if (color == COLOR_VALUE_RED) {
 		r = 255;
@@ -257,9 +257,16 @@ void basecanvas::draw_shadow_Line(float X1, float Y1, float X2, float Y2, int co
 		width = std::max(width, (0.25f + 0.50f * p) * scaleX);
 	}
 
-	emit_thick_quad(static_cast<float>(X_to_scr(X1)), static_cast<float>(Y_to_scr(Y1)),
-	                static_cast<float>(X_to_scr(X2)), static_cast<float>(Y_to_scr(Y2)),
-	                width, r, g, b, a);
+	const float sx1 = static_cast<float>(X_to_scr(X1));
+	const float sy1 = static_cast<float>(Y_to_scr(Y1));
+	const float sx2 = static_cast<float>(X_to_scr(X2));
+	const float sy2 = static_cast<float>(Y_to_scr(Y2));
+	emit_thick_quad(sx1, sy1, sx2, sy2, width, r, g, b, a);
+	if (width >= 3.0f && (critical || pulse > 0.001f)) {
+		const float cap_r = width * 0.5f;
+		emit_round_cap(sx1, sy1, cap_r, r, g, b, a);
+		emit_round_cap(sx2, sy2, cap_r, r, g, b, a);
+	}
 }
 
 void basecanvas::draw_circle(float X, float Y, float _R, int color, int color2)
