@@ -84,6 +84,10 @@ namespace sdl {
 
 Context::Context()
 {
+#ifdef SDL_HINT_WINDOWS_DPI_AWARENESS
+	/* Use native pixels on Windows instead of letting DWM bitmap-scale the window. */
+	SDL_SetHint(SDL_HINT_WINDOWS_DPI_AWARENESS, "permonitorv2");
+#endif
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
 	TTF_Init();
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2");
