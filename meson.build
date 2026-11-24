@@ -277,6 +277,8 @@ png_gen = custom_target('generate_pngs',
         meson.project_source_root() + '/assets/memory.png',
         meson.project_source_root() + '/assets/datascope.png',
         meson.project_source_root() + '/assets/delayline.png',
+        meson.project_source_root() + '/assets/mux_body.png',
+        meson.project_source_root() + '/assets/mux_arrow.png',
     ],
     capture: true,
 )

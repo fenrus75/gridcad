@@ -70,9 +70,18 @@ void model_mux::calculate(int ttl)
 
 void model_mux::drawAt(class basecanvas *canvas, float X, float Y, int type)
 {
-    canvas->draw_image_rotated(selected ? "library/mux/MUX8.json.selected.png" : "library/mux/MUX8.json.png",
-                               X, Y, sizeX, sizeY, Alpha(type), angle);
-    canvas->draw_text(std::format("{}", bus_width), X + 0.2f, Y + sizeY - 1.1f, sizeX - 0.4f, 1.0f);
+    if (selected)
+        canvas->draw_image_rotated("assets/selectionhalo.png", X - 0.1f, Y - 0.1f, sizeX + 0.2f, sizeY + 0.2f, Alpha(type), angle);
+    canvas->draw_image_rotated("assets/mux_body.png", X, Y, sizeX, sizeY, Alpha(type), angle);
+
+    /* Draw select arrow from top select port 's' (col 1) into the sloped top edge. */
+    const float frac = 1.5f / static_cast<float>(sizeX);
+    const float edge_y = Y + 0.25f * static_cast<float>(sizeY) * frac;
+    const float arrow_h = std::max(0.55f, (edge_y + 0.30f) - (Y - 0.05f));
+    canvas->draw_image_rotated("assets/mux_arrow.png", X + 1.20f, Y - 0.05f, 0.60f, arrow_h, Alpha(type), 0);
+
+    canvas->draw_text(std::format("{}", bus_width),
+                      X + 0.3f, Y + sizeY * 0.5f - 0.45f, sizeX - 0.6f, 0.9f);
 
     for (auto &port : ports) {
         port->drawAt(canvas, X, Y, COLOR_WIRE_SOLID);

@@ -96,10 +96,35 @@ void model_pmux::calculate(int ttl)
 
 void model_pmux::drawAt(class basecanvas *canvas, float X, float Y, int type)
 {
-    canvas->draw_image_rotated(selected ? "library/mux/MUX8.json.selected.png" : "library/mux/MUX8.json.png",
-                               X, Y, sizeX, sizeY, Alpha(type), angle);
+    if (selected)
+        canvas->draw_image_rotated("assets/selectionhalo.png", X - 0.1f, Y - 0.1f, sizeX + 0.2f, sizeY + 0.2f, Alpha(type), angle);
+    canvas->draw_image_rotated("assets/mux_body.png", X, Y, sizeX, sizeY, Alpha(type), angle);
+
+    /* Draw select arrows from each top/bottom select port into the sloped trapezoid edges. */
+    const int top_sels = (num_arms <= 8) ? num_arms : ((num_arms + 1) / 2);
+    const int bot_sels = num_arms - top_sels;
+    const float w = static_cast<float>(sizeX);
+    const float h = static_cast<float>(sizeY);
+
+    for (int i = 0; i < top_sels; ++i) {
+        const float frac = (static_cast<float>(i) + 0.5f) / w;
+        const float edge_y = Y + 0.25f * h * frac;
+        const float arrow_h = std::max(0.55f, (edge_y + 0.30f) - (Y - 0.05f));
+        canvas->draw_image_rotated("assets/mux_arrow.png",
+                                   X + static_cast<float>(i) + 0.20f, Y - 0.05f,
+                                   0.60f, arrow_h, Alpha(type), 0);
+    }
+    for (int i = 0; i < bot_sels; ++i) {
+        const float frac = (static_cast<float>(i) + 0.5f) / w;
+        const float edge_y = Y + h - 0.25f * h * frac;
+        const float arrow_h = std::max(0.55f, (Y + h + 0.05f) - (edge_y - 0.30f));
+        canvas->draw_image_rotated("assets/mux_arrow.png",
+                                   X + static_cast<float>(i) + 0.20f, Y + h + 0.05f - arrow_h,
+                                   0.60f, arrow_h, Alpha(type), 180);
+    }
+
     canvas->draw_text(std::format("{}:1 ({}b)", num_arms, bus_width),
-                      X + 0.2f, Y + sizeY * 0.5f - 0.6f, sizeX - 0.4f, 1.2f);
+                      X + 0.3f, Y + sizeY * 0.5f - 0.55f, sizeX - 0.6f, 1.1f);
 
     for (auto &port : ports) {
         port->drawAt(canvas, X, Y, COLOR_WIRE_SOLID);
