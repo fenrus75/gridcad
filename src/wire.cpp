@@ -228,8 +228,18 @@ void wire::draw(class basecanvas *canvas, int _color)
 		return;
 	}
 
-	/* Continuous floating-point phase (5.0 grid units/sec) avoids 60 Hz integer beat stutter. */
-	const float spacing = selected ? (20.0f / 12.0f) : 5.0f;
+	/* Continuous floating-point phase (5.0 grid units/sec) avoids 60 Hz integer beat stutter.
+	 * Increase value-badge density across the entire net whenever any segment on it is hovered. */
+	bool net_selected = selected;
+	if (!net_selected && net) {
+		for (const class wire *w : net->get_wires()) {
+			if (w && w->is_selected()) {
+				net_selected = true;
+				break;
+			}
+		}
+	}
+	const float spacing = net_selected ? (20.0f / 12.0f) : 5.0f;
 	double phase_boxes = (static_cast<double>(SDL_GetTicks64()) * 0.005) / static_cast<double>(spacing);
 	if (value.is_clock && !clock_running)
 		phase_boxes = (static_cast<double>(global_clock.arrayval) * (4.0 / 12.0)) / static_cast<double>(spacing);

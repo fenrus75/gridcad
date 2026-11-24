@@ -29,6 +29,7 @@ public:
     
     void select(void) { selected = true;};
     void deselect(void) { selected = false;};
+    bool is_selected(void) const { return selected; };
     void remove(void);
     void remove_if_orphan(void);
     void fill_grid(class wiregrid* grid);
