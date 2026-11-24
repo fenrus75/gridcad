@@ -70,18 +70,21 @@ canvas::canvas(std::unique_ptr<class scene> _scene, struct capabilities *cap)
 	SDL_SetRenderDrawBlendMode(renderer.get(), SDL_BLENDMODE_BLEND);
 
 	windowID = SDL_GetWindowID(window.get());
-	SDL_GetDisplayDPI(0, &DPI, nullptr, nullptr);
+	const int display_idx = std::max(0, SDL_GetWindowDisplayIndex(window.get()));
+	SDL_GetDisplayDPI(display_idx, &DPI, nullptr, nullptr);
 	if (DPI < 96)
 		DPI = 96;
 
+	const float icon_scale = std::clamp(DPI * (40.0f / 192.0f), 20.0f, 50.0f);
+	const int icon_bar_w = static_cast<int>(std::lround(5.5f * icon_scale));
 
 	button_rect.x = 0;
 	button_rect.y = 0;
 	button_rect.w = DPI/2;
 	button_rect.h = 768;
-	ui_area_rect.x = 820;
+	ui_area_rect.x = 1024 - icon_bar_w;
 	ui_area_rect.y = 0;
-	ui_area_rect.w = 1024 - 820;
+	ui_area_rect.w = icon_bar_w;
 	ui_area_rect.h = 768;
 	main_area_rect.x = button_rect.w;
 	main_area_rect.y = 0;
@@ -124,8 +127,10 @@ void canvas::update_window_size(int w, int h)
 		return;
 	layout_win_w = w;
 	layout_win_h = h;
+	const float icon_scale = std::clamp(DPI * (40.0f / 192.0f), 20.0f, 50.0f);
+	const int icon_bar_w = static_cast<int>(std::lround(5.5f * icon_scale));
 	button_rect.h = h;
-	main_area_rect.w = std::max(1, w - 220 - button_rect.w);
+	main_area_rect.w = std::max(1, w - icon_bar_w - button_rect.w);
 	main_area_rect.h = h;
 	ui_area_rect.x = main_area_rect.w + button_rect.w;
 	ui_area_rect.y = 0;

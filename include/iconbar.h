@@ -76,6 +76,8 @@ private:
     int hover_item_y = 8888;
     uint64_t hover_time = 0;
 
+    float cell_scale(void) const;
+    float top_offset(void) const;
 };
 
 class iconbar {

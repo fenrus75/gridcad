@@ -67,10 +67,6 @@ void iconbar::resize(SDL_Rect _rect)
 		one->resize(_rect);
 }
 
-#define SCALEX 40
-#define SCALEY 40
-#define OFFSETX 0
-#define OFFSETY 20
 
 void iconbar::draw(void)
 {
@@ -107,7 +103,8 @@ class icon * iconbar::current_icon(int ScreenX, int ScreenY)
 
 class contextmenu * iconbar::get_menu(int ScreenX, int ScreenY)
 {
-	if (ScreenY < OFFSETY * 1.5) {
+	const float offset_y = 0.5f * std::max(16.0f, static_cast<float>(rect.w) / 5.5f);
+	if (ScreenY < offset_y * 1.5f) {
 		return menu.get();
 	}
 	return nullptr;
@@ -134,13 +131,15 @@ void oneiconbar::handle_event(SDL_Event &event)
 
 	float dX, dY;
 	int gridX, gridY;
+	const float scale = cell_scale();
+	const float offset_y = top_offset();
 
 	ScreenX -= rect.x;
 	ScreenY -= rect.y;
 
 	/* subtract the border */
-	ScreenX -= 0.5 * SCALEX;
-	ScreenY -= 0.5 * SCALEY;
+	ScreenX -= 0.5f * scale;
+	ScreenY -= 0.5f * scale;
 
 	if (ScreenX < 0 || ScreenY <0) {/* left of the icons */
 		hover_item_x = 8888;
@@ -148,8 +147,8 @@ void oneiconbar::handle_event(SDL_Event &event)
 		return;
 	}
 
-	dX = (ScreenX - OFFSETX) / (2.5 * SCALEX);
-	dY = (ScreenY - OFFSETY)/ (2.5 * SCALEY);
+	dX = ScreenX / (2.5f * scale);
+	dY = (ScreenY - offset_y) / (2.5f * scale);
 
 	gridX = floor(dX);
 	gridY = floor(dY);
@@ -272,8 +271,15 @@ void oneiconbar::resize(SDL_Rect _rect)
 	rect = _rect;
 }
 
-#define SCALEX 40
-#define SCALEY 40
+float oneiconbar::cell_scale(void) const
+{
+	return std::max(16.0f, static_cast<float>(rect.w) / 5.5f);
+}
+
+float oneiconbar::top_offset(void) const
+{
+	return 0.5f * cell_scale();
+}
 
 extern float ratio_effect(float ratio);
 static float delta_hover(uint64_t deltaT)
@@ -294,23 +300,25 @@ void oneiconbar::draw(void)
 	SDL_RenderSetClipRect(renderer, &rect);    
 	int color = 0;
 	SDL_Rect box;
+	const float scale = cell_scale();
+	const float offset_y = top_offset();
 
 	for (y = 0; y < 15; y++) {
 		for (x = 0; x < 2; x++) {
 			float delta = 0.0;
 			if (hover_item_x == x && hover_item_y == y && icons[x][y]) {
 				uint64_t now = SDL_GetTicks64();
-				delta = delta_hover(now - hover_time);
+				delta = delta_hover(now - hover_time) * (scale / 40.0f);
 			}
-			box.x = rect.x + (0.5 + 2.5 * x) * SCALEX + OFFSETX - delta;
-			box.y = rect.y + (0.5 + 2.5 * y) * SCALEY + OFFSETY - delta;
-			box.h = 2 * SCALEY + delta * 2;
-			box.w = 2 * SCALEX + delta * 2;
+			box.x = rect.x + (0.5f + 2.5f * x) * scale - delta;
+			box.y = rect.y + (0.5f + 2.5f * y) * scale + offset_y - delta;
+			box.h = 2.0f * scale + delta * 2.0f;
+			box.w = 2.0f * scale + delta * 2.0f;
 			SDL_SetRenderDrawColor(renderer, R(color), G(color), B(color),
 					Alpha(color));
 			SDL_RenderFillRect(renderer, &box);
 			if (icons[x][y])
-				icons[x][y]->draw(renderer, rect.x + (0.6 + 2.5 * x) * SCALEX + OFFSETX, rect.y + (0.6 + 2.5 * y) * SCALEY + OFFSETY, 1.8 * SCALEX, 1.8 * SCALEY, canvas, delta);
+				icons[x][y]->draw(renderer, rect.x + (0.6f + 2.5f * x) * scale, rect.y + (0.6f + 2.5f * y) * scale + offset_y, 1.8f * scale, 1.8f * scale, canvas, delta);
 
 
 		}    
@@ -321,19 +329,21 @@ class icon * oneiconbar::current_icon(int ScreenX, int ScreenY)
 {
 	float dX, dY;
 	int gridX, gridY;
+	const float scale = cell_scale();
+	const float offset_y = top_offset();
 
 	ScreenX -= rect.x;
 	ScreenY -= rect.y;
 
 	/* subtract the border */
-	ScreenX -= 0.5 * SCALEX;
-	ScreenY -= 0.5 * SCALEY;
+	ScreenX -= 0.5f * scale;
+	ScreenY -= 0.5f * scale;
 
 	if (ScreenX < 0 || ScreenY <0) /* left of the icons */
 		return nullptr;
 
-	dX = (ScreenX - OFFSETX) / (2.5 * SCALEX);
-	dY = (ScreenY - OFFSETY)/ (2.5 * SCALEY);
+	dX = ScreenX / (2.5f * scale);
+	dY = (ScreenY - offset_y) / (2.5f * scale);
 
 	gridX = floor(dX);
 	gridY = floor(dY);
@@ -358,20 +368,21 @@ std::string oneiconbar::current_tooltip(int ScreenX, int ScreenY)
 {
 	float dX, dY;
 	int gridX, gridY;
-
+	const float scale = cell_scale();
+	const float offset_y = top_offset();
 
 	ScreenX -= rect.x;
 	ScreenY -= rect.y;
 
 	/* subtract the border */
-	ScreenX -= 0.5 * SCALEX;
-	ScreenY -= 0.5 * SCALEY;
+	ScreenX -= 0.5f * scale;
+	ScreenY -= 0.5f * scale;
 
 	if (ScreenX < 0 || ScreenY <0) /* left of the icons */
 		return "";
 
-	dX = (ScreenX - OFFSETX) / (2.5 * SCALEX);
-	dY = (ScreenY - OFFSETY) / (2.5 * SCALEY);
+	dX = ScreenX / (2.5f * scale);
+	dY = (ScreenY - offset_y) / (2.5f * scale);
 
 	gridX = floor(dX);
 	gridY = floor(dY);
