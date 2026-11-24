@@ -56,11 +56,9 @@ model_concat::model_concat(float _X, float _Y, const std::vector<int> &in_widths
 
 void model_concat::drawAt(class basecanvas *canvas, float _X, float _Y, int type)
 {
-    const bool large = (input_widths.size() > 4);
-    const char *img = selected
-                          ? (large ? "assets/1to8_selected.png" : "assets/1to4_selected.png")
-                          : (large ? "assets/1to8.png" : "assets/1to4.png");
-    canvas->draw_image(img, _X, _Y, sizeX, sizeY, Alpha(type));
+    if (selected)
+        canvas->draw_image_rotated("assets/selectionhalo.png", _X - 0.1f, _Y - 0.1f, sizeX + 0.2f, sizeY + 0.2f, Alpha(type), angle);
+    canvas->draw_image_rotated("assets/concat.png", _X, _Y, sizeX, sizeY, Alpha(type), angle);
 
     for (auto &port : ports) {
         port->draw_wires(canvas);
