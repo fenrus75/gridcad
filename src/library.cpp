@@ -35,8 +35,8 @@ void populate_library(std::string_view directory)
         return;
     
     for (auto const &dir_entry : std::filesystem::recursive_directory_iterator{libpath}) {
-        std::string path = dir_entry.path();
-        std::string filename = dir_entry.path().filename();
+        std::string path = dir_entry.path().generic_string();
+        std::string filename = dir_entry.path().filename().string();
         
         if (filename.starts_with("testbench_"))
             continue;
@@ -49,8 +49,8 @@ void populate_library(std::string_view directory)
         
         if (path.ends_with(".json")) {
             struct library_block block;
-            block.name = dir_entry.path().filename();
-            block.collection = dir_entry.path().parent_path();
+            block.name = dir_entry.path().filename().string();
+            block.collection = dir_entry.path().parent_path().generic_string();
 	    block.name = block.name.substr(0, block.name.size()-5);
             std::ifstream input(path);
             std::string line = "";

@@ -81,8 +81,8 @@ extern std::string current_project;
 std::string projcanvas::library_test_bench(void)
 {
 	const std::filesystem::path fullpath(name);
-	std::string path = fullpath.parent_path();
-	std::string elem = fullpath.filename();
+	std::string path = fullpath.parent_path().generic_string();
+	std::string elem = fullpath.filename().string();
 	std::string benchname;
 
 	benchname = path + "/testbench_" + elem;
@@ -363,8 +363,8 @@ void projcanvas::crawl_filesystem(void)
 
 	if (std::filesystem::exists(templatepath)) {
 		for (auto const &dir_entry : std::filesystem::directory_iterator{templatepath}) {
-			std::string path = dir_entry.path().filename();
-			std::string fullpath = dir_entry.path();
+			std::string path = dir_entry.path().filename().string();
+			std::string fullpath = dir_entry.path().generic_string();
 
 			if (!dir_entry.is_directory())
 				continue;
@@ -394,7 +394,7 @@ void projcanvas::crawl_filesystem(void)
 	bool first = true;
 
 	for (auto const &dir_entry : std::filesystem::directory_iterator{projpath}) {
-		std::string path = dir_entry.path().filename();
+		std::string path = dir_entry.path().filename().string();
 		std::filesystem::path jsonpath = dir_entry.path() / "scene.json";
 
 		if (std::filesystem::last_write_time(jsonpath) > newest_time || first) {
@@ -422,14 +422,14 @@ void projcanvas::crawl_library(void)
 {
 	const std::filesystem::path libpath{"library/"};
 	for (auto const &dir_entry : std::filesystem::recursive_directory_iterator{libpath}) {
-		std::string path = dir_entry.path().filename();
+		std::string path = dir_entry.path().filename().string();
 		if (!path.ends_with(".json"))
 			continue;
 
 		if (path.starts_with("testbench_"))
 			continue;
 
-		projects.push_back(dir_entry.path());
+		projects.push_back(dir_entry.path().generic_string());
 
 		logger::get().info("Library {}", path);
 	}
@@ -448,8 +448,8 @@ void projcanvas::create_project_from_template(std::string name, std::string temp
 
 	if (std::filesystem::exists(templatepath)) {
 		for (auto const &dir_entry : std::filesystem::recursive_directory_iterator{templatepath}) {
-			std::string path = dir_entry.path().filename();
-			std::string fullpath = dir_entry.path();
+			std::string path = dir_entry.path().filename().string();
+			std::string fullpath = dir_entry.path().generic_string();
 
 			std::string relative = fullpath.substr(("templates/"+templ).size() + 1, std::string::npos);
 			logger::get().debug("Found {} / {} /{}", path, fullpath, relative);
