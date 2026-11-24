@@ -38,6 +38,7 @@ public:
 	std::string get_verilog_wire_decl(void);
 	
 	bool is_empty(void);
+	const std::vector<class wire *> &get_wires(void) const { return wires; };
 	
 protected:
 	std::vector<class wire *> wires;

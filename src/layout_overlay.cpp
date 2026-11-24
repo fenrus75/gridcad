@@ -234,6 +234,8 @@ bool layout_overlay::save_scene_to_file(class scene *target_scene, const std::fi
             jd["Y"] = ds->get_Y();
             jd["angle"] = ds->get_angle();
             jd["format"] = ds->get_format();
+            if (ds->is_scale_2x())
+                jd["scale_2x"] = true;
             jd["target_net"] = compute_net_key_from_port(ds->port_at(0));
             j_scopes.push_back(std::move(jd));
             continue;
@@ -543,6 +545,8 @@ bool layout_overlay::apply_file_to_scene(class scene *target_scene, const std::f
             auto ds = std::make_unique<model_datascope>(dx, dy);
             ds->update_name(jd.value("name", ""));
             ds->set_format(std::clamp(jd.value("format", 3), 0, 3));
+            if (jd.value("scale_2x", false))
+                ds->set_scale_2x(true);
             const int target_angle = ((((jd.value("angle", 0) % 360) + 360) % 360) / 90) * 90;
             for (int tries = 0; tries < 4 && (ds->get_angle() % 360) != target_angle; ++tries)
                 ds->rotate_ports();

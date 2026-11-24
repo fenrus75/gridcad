@@ -22,10 +22,15 @@ public:
     void rotate_ports(void) override;
     void set_format(int f) { format = f; };
     int get_format(void) const { return format; };
+    void set_scale_2x(bool enabled);
+    void toggle_scale_2x(void) { set_scale_2x(!scale_2x); };
+    bool is_scale_2x(void) const { return scale_2x; };
     std::string format_display_text(void) const;
+    std::string connected_wire_label(void) const;
 private:
     struct value value = {};
     bool edit_mode = false;
+    bool scale_2x = false;
     /* 0 = decimal, 1 = hex, 2 = binary, 3 = enum (falls back to decimal if no label) */
     int format = 3;
 };
