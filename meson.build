@@ -68,6 +68,14 @@ else
     crash_handler_sources = files()
 endif
 
+if host_machine.system() == 'windows'
+    cpp = meson.get_compiler('cpp')
+    stdcppexp_dep = cpp.find_library('stdc++exp', required: false)
+    if stdcppexp_dep.found()
+        common_deps += [stdcppexp_dep]
+    endif
+endif
+
 # ============================================================================
 # Source Files
 # ============================================================================
