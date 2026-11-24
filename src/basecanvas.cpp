@@ -394,7 +394,12 @@ sdl::TexturePtr IMG_LoadTextureFromMem(SDL_Renderer *renderer, const char *filen
 	if (!it->second)
 		return nullptr;
 
-	return sdl::TexturePtr(SDL_CreateTextureFromSurface(renderer, it->second.get()));
+	sdl::TexturePtr tex(SDL_CreateTextureFromSurface(renderer, it->second.get()));
+#if SDL_VERSION_ATLEAST(2, 0, 12)
+	if (tex)
+		SDL_SetTextureScaleMode(tex.get(), SDL_ScaleModeLinear);
+#endif
+	return tex;
 }
 
 sdl::TexturePtr basecanvas::load_image(std::string_view filename)
