@@ -99,5 +99,7 @@ protected:
     std::function<void()> on_scene_swapped;
     int layout_win_w = 1024;
     int layout_win_h = 768;
+    bool crit_hover_active = false;
+    uint64_t crit_hover_start_ms = 0;
     void update_window_size(int w, int h);
 };

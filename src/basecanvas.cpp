@@ -224,11 +224,12 @@ void basecanvas::draw_shadow_Line(float X1, float Y1, float X2, float Y2, int co
 	float width = 0.25f * scaleX;
 
 	if (critical) {
-		r = 115;
-		g = 24;
-		b = 24;
+		const float cp = std::clamp(critical_pulse, 0.0f, 1.0f);
+		r = static_cast<Uint8>(115.0f + (235.0f - 115.0f) * cp);
+		g = static_cast<Uint8>(24.0f + (52.0f - 24.0f) * cp);
+		b = static_cast<Uint8>(24.0f + (52.0f - 24.0f) * cp);
 		a = 255;
-		width = 0.50f * scaleX;
+		width = (0.50f + 0.12f * cp) * scaleX;
 	} else if (color == COLOR_VALUE_RED) {
 		r = 255;
 	}

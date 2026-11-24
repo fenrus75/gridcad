@@ -188,6 +188,7 @@ protected:
     float fps = -1.0;
     uint64_t frame_id = 0;
     int cached_out_w = 0, cached_out_h = 0;
+    float critical_pulse = 0.0f; /* 0..1 sine pulse when hovering any critical-path item */
     std::vector<SDL_Vertex> line_verts;
     std::vector<int> line_indices;
 

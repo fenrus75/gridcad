@@ -1143,14 +1143,57 @@ void canvas::draw(void)
 			elem->draw_early(this, DRAW_ORIGIN);
 	}
 
+	/* Pulse all critical-path halos (1 s sine wave) while hovering any critical element or wire. */
+	critical_pulse = 0.0f;
+	if (show_critical_path && !active_menu && !dialogbox && !dragging && !in_area_select) {
+		const int mx_scr = X_to_scr(mouseX);
+		const int my_scr = Y_to_scr(mouseY);
+		const int bottom_lim = (timeline_bar && timeline_bar->is_active())
+		                           ? (main_area_rect.h - timelinebar::BAR_HEIGHT)
+		                           : main_area_rect.h;
+		bool hovering_crit = false;
+		if (mx_scr >= main_area_rect.x && mx_scr < main_area_rect.x + main_area_rect.w &&
+		    my_scr >= main_area_rect.y && my_scr < bottom_lim) {
+			for (auto const &elem : current_scene->elements) {
+				if (!elem || elem->is_background() || elem->class_id() == "connector:")
+					continue;
+				if (elem->intersect(mouseX, mouseY)) {
+					hovering_crit = elem->is_critical_path();
+					break;
+				}
+			}
+			if (!hovering_crit) {
+				if (auto hw = hover_wire.lock())
+					hovering_crit = hw->is_critical_path();
+			}
+		}
+		if (hovering_crit) {
+			const uint64_t now_ms = SDL_GetTicks64();
+			if (!crit_hover_active) {
+				crit_hover_active = true;
+				crit_hover_start_ms = now_ms;
+			}
+			constexpr double two_pi_per_sec = 2.0 * 3.14159265358979323846 / 1000.0;
+			const double phase = static_cast<double>(now_ms - crit_hover_start_ms) * two_pi_per_sec;
+			critical_pulse = static_cast<float>(0.5 * (1.0 - std::cos(phase)));
+		} else {
+			crit_hover_active = false;
+		}
+	} else {
+		crit_hover_active = false;
+	}
+
 	if (show_critical_path) {
+		const Uint8 halo_g = static_cast<Uint8>(45.0f + 30.0f * critical_pulse);
+		const Uint8 halo_b = static_cast<Uint8>(45.0f + 30.0f * critical_pulse);
+		const Uint8 halo_a = static_cast<Uint8>(130.0f + 85.0f * critical_pulse);
 		for (auto const &elem : current_scene->elements) {
 			if (elem && elem->is_critical_path() && !elem->is_background() && elem.get() != dragging) {
 				const float pad = (elem->class_id() == "model_nest:") ? 0.35f : 0.22f;
 				draw_box_rgba(elem->get_X() - pad, elem->get_Y() - pad,
 				              elem->get_X() + elem->get_width() + pad,
 				              elem->get_Y() + elem->get_height() + pad,
-				              255, 45, 45, 130);
+				              255, halo_g, halo_b, halo_a);
 			}
 		}
 	}
