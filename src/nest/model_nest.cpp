@@ -398,9 +398,9 @@ void model_nest::regen_ports(void)
 	}
 	ports.clear();
 
-	const unsigned int stride = scale_2x ? 2U : 1U;
-	sizeY = std::max(west.size() + 2U, std::max(east.size() + 2U, 4UL)) * stride;
-	sizeX = std::max(north.size() + 2U, std::max(south.size() + 2U, 4UL)) * stride;
+	const size_t stride = scale_2x ? 2uz : 1uz;
+	sizeY = static_cast<int>(std::max({west.size() + 2uz, east.size() + 2uz, 4uz}) * stride);
+	sizeX = static_cast<int>(std::max({north.size() + 2uz, south.size() + 2uz, 4uz}) * stride);
 
 	std::sort(north.begin(), north.end(), compare_north);
 	std::sort(south.begin(), south.end(), compare_south);
