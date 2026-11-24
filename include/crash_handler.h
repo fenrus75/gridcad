@@ -35,6 +35,8 @@ Functions in this subsystem fall into two categories:
 namespace crash_handler
 {
 
+#ifdef HAVE_LIBUNWIND
+
 // [INIT ONLY: NOT ASYNC-SIGNAL-SAFE]
 // Installs fallback crash signal handlers (with alternate signal stack) and
 // std::set_terminate handler if no debugger or custom handler is active.
@@ -67,5 +69,26 @@ public:
 private:
     char prev_[128] = {};
 };
+
+#else
+
+inline void install_fallback_handler() {}
+inline bool is_debugger_attached() { return false; }
+inline int crash_fd = -1;
+inline void set_breadcrumb(std::string_view) {}
+inline void clear_breadcrumb() {}
+
+class scoped_breadcrumb {
+public:
+    explicit scoped_breadcrumb(std::string_view) {}
+    ~scoped_breadcrumb() = default;
+
+    scoped_breadcrumb(const scoped_breadcrumb &) = delete;
+    scoped_breadcrumb &operator=(const scoped_breadcrumb &) = delete;
+    scoped_breadcrumb(scoped_breadcrumb &&) = delete;
+    scoped_breadcrumb &operator=(scoped_breadcrumb &&) = delete;
+};
+
+#endif // HAVE_LIBUNWIND
 
 } // namespace crash_handler

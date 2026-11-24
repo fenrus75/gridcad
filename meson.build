@@ -51,7 +51,22 @@ sdl2_dep = dependency('SDL2')
 sdl2_image_dep = dependency('SDL2_image')
 sdl2_gfx_dep = dependency('SDL2_gfx')
 sdl2_ttf_dep = dependency('SDL2_ttf')
-libunwind_dep = dependency('libunwind')
+libunwind_dep = dependency('libunwind', required: false)
+
+common_deps = [
+    sdl2_dep,
+    sdl2_image_dep,
+    sdl2_gfx_dep,
+    sdl2_ttf_dep,
+]
+
+if libunwind_dep.found() and host_machine.system() != 'windows'
+    add_project_arguments('-DHAVE_LIBUNWIND=1', language: 'cpp')
+    common_deps += [libunwind_dep]
+    crash_handler_sources = files('src/crash_handler.cpp')
+else
+    crash_handler_sources = files()
+endif
 
 # ============================================================================
 # Source Files
@@ -60,7 +75,6 @@ libunwind_dep = dependency('libunwind')
 # Core source files (excluding main.cpp for wiretest)
 core_sources = files(
     'src/document.cpp',
-    'src/crash_handler.cpp',
     'src/canvas.cpp',
     'src/scene.cpp',
     'src/color.cpp',
@@ -92,7 +106,7 @@ core_sources = files(
     'src/vcd_parser.cpp',
     'src/vcd_session.cpp',
     'lib/wirepath.cpp',
-)
+) + crash_handler_sources
 
 # Main entry point
 main_sources = files(
@@ -256,13 +270,7 @@ gridcad_exe = executable('gridcad',
     imgui_hex_sources,
     png_gen,
     include_directories: inc_dirs,
-    dependencies: [
-        sdl2_dep,
-        sdl2_image_dep,
-        sdl2_gfx_dep,
-        sdl2_ttf_dep,
-        libunwind_dep,
-    ],
+    dependencies: common_deps,
     install: true,
 )
 
@@ -287,13 +295,7 @@ executable('wiretest',
     png_gen,
     test_sources,
     include_directories: inc_dirs,
-    dependencies: [
-        sdl2_dep,
-        sdl2_image_dep,
-        sdl2_gfx_dep,
-        sdl2_ttf_dep,
-        libunwind_dep,
-    ],
+    dependencies: common_deps,
 )
 
 # Smoke test: start GUI binary headlessly and exit cleanly after 1 second
@@ -318,13 +320,7 @@ test_logic_exe = executable('test_logic',
     png_gen,
     files('tests/test_logic.cpp'),
     include_directories: inc_dirs,
-    dependencies: [
-        sdl2_dep,
-        sdl2_image_dep,
-        sdl2_gfx_dep,
-        sdl2_ttf_dep,
-        libunwind_dep,
-    ],
+    dependencies: common_deps,
 )
 
 test('logic_unit_tests', test_logic_exe,
