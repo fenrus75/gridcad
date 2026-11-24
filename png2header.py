@@ -1,23 +1,33 @@
 #!/usr/bin/python3
 from pathlib import Path
+import re
 import sys
 
 
+files = []
 
-files = [];
 
-def munge_filename(filename):
-    newname = filename.replace('/', '_');
-    newname = newname.replace('.', '_');
-    return newname
+def normalize_key(filename):
+    posix = filename.replace('\\', '/')
+    marker = 'assets/'
+    idx = posix.find(marker)
+    if idx != -1:
+        return posix[idx:]
+    return posix
+
+
+def munge_filename(key):
+    return 'png_' + re.sub(r'[^A-Za-z0-9_]', '_', key)
+
 
 def file_to_bytes(filename):
     data = Path(filename).read_bytes()
-    
-    varname = munge_filename(filename)
-    
-    print("const unsigned char ",varname,"[] = {")
-    
+
+    key = normalize_key(filename)
+    varname = munge_filename(key)
+
+    print("const unsigned char ", varname, "[] = {")
+
     ind = 0
     while ind < len(data):
         if ind != 0:
@@ -26,10 +36,10 @@ def file_to_bytes(filename):
             print("")
         print(data[ind], end='')
         ind = ind + 1
-    
-    print("};");
-    
-    files.append([filename, varname, len(data)]);
+
+    print("};")
+
+    files.append([key, varname, len(data)])
     
 
 def print_prelogue():
