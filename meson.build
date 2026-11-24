@@ -204,6 +204,26 @@ imgui_hex_sources = files(
 )
 
 # ============================================================================
+# Font Asset (download Roboto-Medium-webfont.ttf if missing)
+# ============================================================================
+
+fs = import('fs')
+python3 = find_program('python3')
+font_file = meson.project_source_root() / 'fonts' / 'Roboto-Medium-webfont.ttf'
+if not fs.exists(font_file)
+    message('Downloading fonts/Roboto-Medium-webfont.ttf...')
+    font_res = run_command(python3, '-c',
+        'import os, sys, urllib.request; url, dst = sys.argv[1], sys.argv[2]; tmp = dst + ".tmp"; urllib.request.urlretrieve(url, tmp); os.replace(tmp, dst)',
+        'https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/roboto-webfont/Roboto-Medium-webfont.ttf',
+        font_file,
+        check: false,
+    )
+    if font_res.returncode() != 0
+        warning('Could not download fonts/Roboto-Medium-webfont.ttf: ' + font_res.stderr().strip())
+    endif
+endif
+
+# ============================================================================
 # PNG Assets - Generated Source
 # ============================================================================
 
@@ -211,7 +231,7 @@ imgui_hex_sources = files(
 png_gen = custom_target('generate_pngs',
     output: 'pngs.cpp',
     command: [
-        'python3',
+        python3,
         meson.project_source_root() + '/png2header.py',
         meson.project_source_root() + '/assets/andgate.png',
         meson.project_source_root() + '/assets/nandgate.png',
@@ -344,10 +364,6 @@ test('smoke_vcd_top', gridcad_exe,
 # ============================================================================
 # Installation
 # ============================================================================
-
-# Note: fonts/Roboto-Medium-webfont.ttf needs to be downloaded manually:
-#   make -C fonts
-# Or: curl -O -L https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/roboto-webfont/Roboto-Medium-webfont.ttf -o fonts/Roboto-Medium-webfont.ttf
 
 # Install library JSON files
 # library_subdirs = ['add', 'logic4', 'logic8', 'mux', 'register']
