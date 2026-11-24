@@ -1396,6 +1396,7 @@ void canvas::draw_hover_inspector(void)
 	SDL_RenderSetClipRect(renderer.get(), nullptr);
 
 	/* 1. Top single-line name + file:line banner. */
+	int top_banner_bottom = main_area_rect.y;
 	if (!top_text.empty()) {
 		SDL_Texture *tex = text_to_texture(top_text);
 		if (tex) {
@@ -1408,6 +1409,7 @@ void canvas::draw_hover_inspector(void)
 
 			SDL_Rect bg = {main_area_rect.x, main_area_rect.y,
 			               main_area_rect.w, draw_h + 2 * pad_y};
+			top_banner_bottom = bg.y + bg.h;
 			SDL_SetRenderDrawColor(renderer.get(), 18, 20, 24, 210);
 			SDL_RenderFillRect(renderer.get(), &bg);
 			SDL_SetRenderDrawColor(renderer.get(), 90, 100, 115, 220);
@@ -1500,13 +1502,46 @@ void canvas::draw_hover_inspector(void)
 			const int max_box_w = std::max(100, main_area_rect.w - 2 * margin);
 			const int box_w = std::min(max_w + 2 * pad_x, max_box_w);
 			const int box_h = total_h + 2 * pad_y;
-			const int box_x = main_area_rect.x + main_area_rect.w - margin - box_w;
-			const int box_y = std::max(main_area_rect.y + 40, bottom_limit - margin - box_h);
+			const int min_top_y = std::max(main_area_rect.y + 40, top_banner_bottom + margin);
+			const int right_x = main_area_rect.x + main_area_rect.w - margin - box_w;
+			const int left_x = main_area_rect.x + margin;
+			const int bottom_y = std::max(min_top_y, bottom_limit - margin - box_h);
+			const int top_y = min_top_y;
+
+			/* Dodge the mouse cursor across corners; fall back to translucent if all 4 overlap. */
+			constexpr int cursor_pad = 24;
+			auto overlaps_cursor = [&](int x, int y) {
+				return scr_x >= x - cursor_pad && scr_x <= x + box_w + cursor_pad &&
+				       scr_y >= y - cursor_pad && scr_y <= y + box_h + cursor_pad;
+			};
+
+			const struct { int x; int y; } candidates[4] = {
+				{right_x, bottom_y},
+				{left_x, bottom_y},
+				{right_x, top_y},
+				{left_x, top_y},
+			};
+
+			int box_x = right_x;
+			int box_y = bottom_y;
+			bool translucent = true;
+			for (const auto &c : candidates) {
+				if (!overlaps_cursor(c.x, c.y)) {
+					box_x = c.x;
+					box_y = c.y;
+					translucent = false;
+					break;
+				}
+			}
+
+			const Uint8 bg_alpha = translucent ? 75 : 215;
+			const Uint8 border_alpha = translucent ? 95 : 220;
+			const Uint8 text_alpha = translucent ? 115 : 255;
 
 			SDL_Rect bg = {box_x, box_y, box_w, box_h};
-			SDL_SetRenderDrawColor(renderer.get(), 18, 20, 24, 215);
+			SDL_SetRenderDrawColor(renderer.get(), 18, 20, 24, bg_alpha);
 			SDL_RenderFillRect(renderer.get(), &bg);
-			SDL_SetRenderDrawColor(renderer.get(), 90, 100, 115, 220);
+			SDL_SetRenderDrawColor(renderer.get(), 90, 100, 115, border_alpha);
 			SDL_RenderDrawRect(renderer.get(), &bg);
 
 			SDL_Rect clip = {bg.x + pad_x, bg.y + pad_y,
@@ -1517,8 +1552,12 @@ void canvas::draw_hover_inspector(void)
 			int cur_y = bg.y + pad_y;
 			for (const auto &lt : rendered) {
 				if (lt.tex) {
+					if (translucent)
+						SDL_SetTextureAlphaMod(lt.tex, text_alpha);
 					SDL_Rect dst = {bg.x + pad_x, cur_y, lt.w, lt.h};
 					SDL_RenderCopy(renderer.get(), lt.tex, nullptr, &dst);
+					if (translucent)
+						SDL_SetTextureAlphaMod(lt.tex, 255);
 				}
 				cur_y += lt.h + line_gap;
 			}
