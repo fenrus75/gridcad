@@ -111,6 +111,9 @@ class vcd_parser
 	// Return raw binary value string (e.g. "0", "1", "00110110", or "" if unset) at target_time
 	std::string get_raw_value_at_time(const vcd_signal &sig, uint64_t target_time) const;
 
+	// Return read-only transition map (timestamp -> raw binary string) for a signal, or nullptr if none
+	const std::map<uint64_t, std::string> *get_signal_transitions(const vcd_signal &sig) const noexcept;
+
 	// Extract clock edge timestamps for a given clock signal and edge mode ("posedge", "negedge", "both")
 	std::vector<uint64_t> get_clock_edge_times(
 		std::string_view clock_signal,

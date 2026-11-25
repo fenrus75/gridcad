@@ -988,4 +988,12 @@ std::string vcd_parser::get_raw_value_at_time(const vcd_signal &sig, uint64_t ta
 	return up->second;
 }
 
+const std::map<uint64_t, std::string> *vcd_parser::get_signal_transitions(const vcd_signal &sig) const noexcept
+{
+	auto it = id_transitions_.find(sig.id_code);
+	if (it == id_transitions_.end())
+		return nullptr;
+	return &it->second;
+}
+
 } // namespace verilog

@@ -95,6 +95,7 @@ public:
     virtual void draw(void) = 0;
     virtual void present(void) { flush_line_batch(); SDL_RenderPresent(renderer.get()); };
     unsigned int get_window_ID(void) { return windowID;};
+    SDL_Renderer *get_renderer(void) const noexcept { return renderer.get(); }
 
 
     float X_to_scr(float X) const noexcept;

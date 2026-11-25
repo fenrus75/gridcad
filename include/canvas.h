@@ -64,6 +64,7 @@ protected:
     std::unique_ptr<class buttonbar> button_bar;
     std::unique_ptr<class timelinebar> timeline_bar;
     class contextmenu *active_menu = nullptr;
+    std::unique_ptr<class contextmenu> wire_menu;
     std::unique_ptr<class dialog> dialogbox;
     bool left_mouse_down = false;
     float mouseX = 0.0, mouseY = 0.0;

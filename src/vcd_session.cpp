@@ -203,6 +203,167 @@ uint64_t vcd_session::get_current_timestamp(void) const noexcept
     return clock_ticks_[current_tick_];
 }
 
+uint64_t vcd_session::get_tick_timestamp(size_t tick_idx) const noexcept
+{
+    if (clock_ticks_.empty())
+        return 0;
+    return clock_ticks_[std::min(tick_idx, clock_ticks_.size() - 1)];
+}
+
+size_t vcd_session::find_nearest_tick(uint64_t timestamp) const noexcept
+{
+    if (clock_ticks_.empty())
+        return 0;
+    auto it = std::lower_bound(clock_ticks_.begin(), clock_ticks_.end(), timestamp);
+    if (it == clock_ticks_.begin())
+        return 0;
+    if (it == clock_ticks_.end())
+        return clock_ticks_.size() - 1;
+    const auto prev = std::prev(it);
+    if (timestamp - *prev <= *it - timestamp)
+        return static_cast<size_t>(std::distance(clock_ticks_.begin(), prev));
+    return static_cast<size_t>(std::distance(clock_ticks_.begin(), it));
+}
+
+bool vcd_session::has_binding(std::string_view wire_vcd_name) const noexcept
+{
+    if (!loaded_ || wire_vcd_name.empty())
+        return false;
+    for (const auto &b : bindings_) {
+        if (b.wire_vcd_name == wire_vcd_name && b.signal != nullptr)
+            return true;
+    }
+    return false;
+}
+
+namespace {
+
+bool same_wave_value(const struct value &a, const struct value &b) noexcept
+{
+    return a.valid == b.valid &&
+           a.is_error == b.is_error &&
+           a.boolval == b.boolval &&
+           a.intval == b.intval &&
+           a.qualifier_valid == b.qualifier_valid;
+}
+
+vcd_session::wave_data build_wave_from_maps(
+    const verilog::vcd_signal &sig,
+    const std::map<uint64_t, std::string> *sig_trans,
+    const std::map<uint64_t, std::string> *val_trans,
+    bool valid_active_low,
+    bool is_clock,
+    uint64_t t_min,
+    uint64_t t_max)
+{
+    vcd_session::wave_data out;
+    out.signal_name = sig.short_name.empty() ? sig.full_name : sig.short_name;
+    out.bit_width = std::max(1, sig.bit_width);
+    out.t_min = t_min;
+    out.t_max = (t_max > t_min) ? t_max : (t_min + 1);
+    out.has_qualifier = (val_trans != nullptr);
+    out.is_clock = is_clock;
+
+    if (!sig_trans || sig_trans->empty())
+        return out;
+
+    auto sig_it = sig_trans->begin();
+    const auto sig_end = sig_trans->end();
+    const std::map<uint64_t, std::string> empty_map;
+    auto val_it = val_trans ? val_trans->begin() : empty_map.begin();
+    const auto val_end = val_trans ? val_trans->end() : empty_map.end();
+
+    std::string cur_raw;
+    std::string cur_vraw;
+    bool have_sig = false;
+
+    while (sig_it != sig_end || val_it != val_end) {
+        uint64_t t = 0;
+        if (sig_it != sig_end && val_it != val_end)
+            t = std::min(sig_it->first, val_it->first);
+        else if (sig_it != sig_end)
+            t = sig_it->first;
+        else
+            t = val_it->first;
+
+        if (sig_it != sig_end && sig_it->first == t) {
+            cur_raw = sig_it->second;
+            have_sig = true;
+            ++sig_it;
+        }
+        if (val_it != val_end && val_it->first == t) {
+            cur_vraw = val_it->second;
+            ++val_it;
+        }
+        if (!have_sig)
+            continue;
+
+        struct value v = vcd_session::parse_vcd_raw_value(cur_raw, out.bit_width);
+        v.is_clock = is_clock;
+        if (out.has_qualifier)
+            v.qualifier_valid = vcd_session::evaluate_valid_raw(cur_vraw, valid_active_low);
+
+        if (!out.segments.empty()) {
+            if (same_wave_value(out.segments.back().val, v)) {
+                out.segments.back().t_end = out.t_max;
+                continue;
+            }
+            out.segments.back().t_end = t;
+            if (out.segments.back().t_end <= out.segments.back().t_start)
+                out.segments.pop_back();
+        }
+        out.segments.push_back(vcd_session::wave_segment{t, out.t_max, v, out.has_qualifier});
+    }
+
+    if (!out.segments.empty())
+        out.segments.back().t_end = out.t_max;
+    return out;
+}
+
+} // namespace
+
+vcd_session::wave_data vcd_session::extract_wave(std::string_view wire_vcd_name) const
+{
+    if (!loaded_ || wire_vcd_name.empty())
+        return {};
+    const binding *found = nullptr;
+    for (const auto &b : bindings_) {
+        if (b.wire_vcd_name == wire_vcd_name && b.signal != nullptr) {
+            found = &b;
+            break;
+        }
+    }
+    if (!found)
+        return {};
+
+    uint64_t t_min = parser_.get_start_time();
+    uint64_t t_max = parser_.get_end_time();
+    if (!clock_ticks_.empty())
+        t_max = std::max(t_max, clock_ticks_.back());
+
+    const auto *sig_trans = parser_.get_signal_transitions(*found->signal);
+    const auto *val_trans = found->valid_signal ? parser_.get_signal_transitions(*found->valid_signal) : nullptr;
+    const bool is_clk = (found->signal->full_name == clock_signal_ || found->signal->short_name == "clk");
+    return build_wave_from_maps(*found->signal, sig_trans, val_trans, found->valid_active_low, is_clk, t_min, t_max);
+}
+
+vcd_session::wave_data vcd_session::extract_clock_wave(void) const
+{
+    if (!loaded_ || clock_signal_.empty())
+        return {};
+    const auto *clk_sig = parser_.find_signal(clock_signal_, scope_prefix_);
+    if (!clk_sig)
+        return {};
+
+    uint64_t t_min = parser_.get_start_time();
+    uint64_t t_max = parser_.get_end_time();
+    if (!clock_ticks_.empty())
+        t_max = std::max(t_max, clock_ticks_.back());
+
+    const auto *clk_trans = parser_.get_signal_transitions(*clk_sig);
+    return build_wave_from_maps(*clk_sig, clk_trans, nullptr, false, true, t_min, t_max);
+}
+
 size_t vcd_session::apply_tick(size_t tick_idx, class scene *root_scene)
 {
     if (!loaded_ || !root_scene || clock_ticks_.empty())

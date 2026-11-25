@@ -2185,6 +2185,100 @@ static void test_critical_timing_import(void)
     assert(crit_elems >= 15);
 }
 
+static void test_vcd_wave_viewer(void)
+{
+    verilog_importer::options opts;
+    opts.run_placer = false;
+    auto res = verilog_importer::import_file("tests/data/top.json", opts);
+    assert(res.ok && res.imported_scene != nullptr);
+
+    vcd_session sess;
+    std::string err;
+    assert(sess.load("tests/data/dump_top_tb.vcd", err));
+    assert(sess.bind_scene(res.imported_scene.get()) > 0);
+
+    // Find a valid-qualified bound signal and a second bound signal
+    std::unordered_map<std::string, std::pair<std::string, bool>> quals;
+    res.imported_scene->collect_vcd_qualifiers(quals);
+    std::vector<std::string> vcd_names;
+    res.imported_scene->collect_vcd_names(vcd_names);
+    std::string alu_out_name;
+    std::string second_name;
+    for (const auto &vn : vcd_names) {
+        if (!sess.has_binding(vn))
+            continue;
+        if (alu_out_name.empty() && quals.count(vn)) {
+            auto w = sess.extract_wave(vn);
+            if (w.has_qualifier)
+                alu_out_name = vn;
+        } else if (second_name.empty() && vn != alu_out_name) {
+            auto w = sess.extract_wave(vn);
+            if (!w.segments.empty() && !w.is_clock)
+                second_name = vn;
+        }
+    }
+    assert(!alu_out_name.empty());
+    assert(!second_name.empty());
+
+    auto alu_wave = sess.extract_wave(alu_out_name);
+    assert(!alu_wave.segments.empty());
+    assert(alu_wave.has_qualifier);
+    assert(alu_wave.t_max > alu_wave.t_min);
+    for (size_t i = 0; i < alu_wave.segments.size(); ++i) {
+        assert(alu_wave.segments[i].t_end > alu_wave.segments[i].t_start);
+        if (i + 1 < alu_wave.segments.size())
+            assert(alu_wave.segments[i].t_end == alu_wave.segments[i + 1].t_start);
+    }
+
+    auto clk_wave = sess.extract_clock_wave();
+    assert(!clk_wave.segments.empty());
+    assert(clk_wave.is_clock);
+    assert(sess.find_nearest_tick(sess.get_tick_timestamp(0)) == 0);
+
+    // Verify timelinebar dynamic hover + multi-pin + unpin height transitions
+    timelinebar tb;
+    tb.set_session(&sess);
+    assert(tb.is_active());
+    assert(!tb.has_active_wave());
+    assert(tb.get_height() == timelinebar::BAR_HEIGHT);
+
+    timelinebar::wave_signal_ref ref1{alu_out_name, "alu_out", alu_wave.bit_width, nullptr};
+    timelinebar::wave_signal_ref ref2{second_name, "sig2", 1, nullptr};
+
+    tb.set_hovered_signal(ref1);
+    assert(tb.has_active_wave());
+    const int h_one = tb.get_height();
+    assert(h_one > timelinebar::BAR_HEIGHT);
+
+    tb.clear_hovered_signal();
+    assert(!tb.has_active_wave());
+    assert(tb.get_height() == timelinebar::BAR_HEIGHT);
+
+    tb.pin_signal(ref1);
+    assert(tb.is_pinned(alu_out_name));
+    assert(tb.has_active_wave());
+    assert(tb.get_height() == h_one);
+
+    // Hovering a second wire while ref1 is pinned adds a second row
+    tb.set_hovered_signal(ref2);
+    const int h_two = tb.get_height();
+    assert(h_two == h_one + timelinebar::WAVE_ROW_HEIGHT);
+
+    // Pinning ref2 keeps both rows even after hover clears
+    tb.pin_signal(ref2);
+    tb.clear_hovered_signal();
+    assert(tb.is_pinned(second_name));
+    assert(tb.get_height() == h_two);
+
+    tb.unpin_signal(alu_out_name);
+    assert(!tb.is_pinned(alu_out_name));
+    assert(tb.get_height() == h_one);
+
+    tb.clear_pinned_signals();
+    assert(!tb.has_active_wave());
+    assert(tb.get_height() == timelinebar::BAR_HEIGHT);
+}
+
 int main(void)
 {
     start_time = std::chrono::steady_clock::now();
@@ -2203,6 +2297,7 @@ int main(void)
     test_vcd_valid_qualifiers();
     test_nest_scale_2x();
     test_critical_timing_import();
+    test_vcd_wave_viewer();
 
     std::cout << "All logic tests passed." << std::endl;
     return 0;

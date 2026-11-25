@@ -3,6 +3,8 @@
 #include "gridcad.h"
 
 
+#include <functional>
+
 typedef void (*callback_fn)(class element *element);
 typedef void (*scene_callback_fn)(class scene *scene);
 typedef void (*port_callback_fn)(class port *port, int color);
@@ -18,6 +20,7 @@ struct context_item {
     scene_callback_fn scene_callback = nullptr; 
     port_callback_fn port_callback = nullptr; 
     icon_callback_fn icon_callback = nullptr; 
+    std::function<void()> action_callback;
     bool active = false;
 };
 
@@ -29,10 +32,11 @@ public:
 
     void add_item(std::string text, callback_fn callback);    
     void add_item(std::string text, scene_callback_fn callback);    
-    
+    void add_item(std::string text, std::function<void()> callback);
+
     virtual void draw_at(class basecanvas * canvas, float X, float Y);
     virtual void draw_at(class basecanvas * canvas);
-    
+
     void mouse_motion(float X, float Y);
     void mouse_set(float X, float Y);
     virtual void mouse_click(float X, float Y);

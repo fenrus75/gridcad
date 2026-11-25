@@ -39,6 +39,17 @@ void contextmenu::add_item(std::string text, scene_callback_fn scene_callback)
 	items.push_back(std::move(item));
 }
 
+void contextmenu::add_item(std::string text, std::function<void()> callback)
+{
+	struct context_item item;
+
+	item.menu_text = std::move(text);
+	item.action_callback = std::move(callback);
+	item.active = true;
+
+	items.push_back(std::move(item));
+}
+
 void contextmenu::set_active(std::string_view name)
 {
 	for (auto &item : items) {
@@ -209,13 +220,15 @@ void contextmenu::mouse_click(float X, float Y)
 
 	Y -= Y1;
 	selection = floorf(Y/maxY);
-	if (selection < (int)items.size() && element && items[selection].callback)
-		items[selection].callback(element);
-	if (selection < (int)items.size() && scene && items[selection].scene_callback)
-		items[selection].scene_callback(scene);
+	if (selection >= 0 && selection < (int)items.size()) {
+		if (element && items[selection].callback)
+			items[selection].callback(element);
+		if (scene && items[selection].scene_callback)
+			items[selection].scene_callback(scene);
+		if (items[selection].action_callback)
+			items[selection].action_callback();
+	}
 }
-
-
 port_contextmenu:: port_contextmenu(class port *_port) : contextmenu((class element *)nullptr)
 {
 	port = _port;

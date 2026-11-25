@@ -65,6 +65,31 @@ public:
     const std::string &get_clock_signal(void) const noexcept { return clock_signal_; }
     const std::string &get_scope_prefix(void) const noexcept { return scope_prefix_; }
     size_t get_bound_signal_count(void) const noexcept { return bindings_.size(); }
+    uint64_t get_start_time(void) const noexcept { return parser_.get_start_time(); }
+    uint64_t get_end_time(void) const noexcept { return parser_.get_end_time(); }
+    uint64_t get_tick_timestamp(size_t tick_idx) const noexcept;
+    size_t find_nearest_tick(uint64_t timestamp) const noexcept;
+
+    struct wave_segment {
+        uint64_t t_start = 0;
+        uint64_t t_end = 0;
+        struct value val = {};
+        bool has_qualifier = false;
+    };
+
+    struct wave_data {
+        std::string signal_name;
+        int bit_width = 1;
+        uint64_t t_min = 0;
+        uint64_t t_max = 0;
+        bool has_qualifier = false;
+        bool is_clock = false;
+        std::vector<wave_segment> segments;
+    };
+
+    bool has_binding(std::string_view wire_vcd_name) const noexcept;
+    wave_data extract_wave(std::string_view wire_vcd_name) const;
+    wave_data extract_clock_wave(void) const;
 
     /* Convert a raw VCD binary string (e.g. "0", "1", "00110110") into a gridcad value. */
     static struct value parse_vcd_raw_value(std::string_view raw, int bit_width);

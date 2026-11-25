@@ -328,9 +328,35 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 		if (!here || here->is_background())  {
 			if (is_port) {
 				active_menu = is_port->get_menu();
+			} else if (wr && timeline_bar && timeline_bar->is_active() &&
+			           !wr->get_vcd_name().empty()) {
+				auto *vcd = get_active_vcd_session();
+				if (vcd && vcd->has_binding(wr->get_vcd_name())) {
+					timelinebar::wave_signal_ref sig;
+					sig.vcd_name = wr->get_vcd_name();
+					sig.display_name = !wr->name.empty() ? wr->name : wr->get_vcd_name();
+					sig.bit_width = wr->get_width();
+					sig.labels = wr->get_label_table();
+					wire_menu = std::make_unique<contextmenu>(static_cast<class element *>(nullptr));
+					if (timeline_bar->is_pinned(sig.vcd_name)) {
+						wire_menu->add_item("Unpin wave", [tb = timeline_bar.get(), name = sig.vcd_name]() {
+							tb->unpin_signal(name);
+						});
+					} else {
+						wire_menu->add_item("Pin wave", [tb = timeline_bar.get(), sig]() {
+							tb->pin_signal(sig);
+						});
+					}
+					if (timeline_bar->has_pinned_signals()) {
+						wire_menu->add_item("Unpin all waves", [tb = timeline_bar.get()]() {
+							tb->clear_pinned_signals();
+						});
+					}
+					active_menu = wire_menu.get();
+				}
 			} else if (!wr && !here) {
 				active_menu = current_scene->get_menu();
-			}			
+			}
 		}
 		if (active_menu)
 			active_menu->mouse_set(x, y);
@@ -414,10 +440,14 @@ bool canvas::handle_event(SDL_Event &event)
 		tooltip_eligable = false;
 
 	if (timeline_bar && timeline_bar->is_active()) {
-		SDL_Rect bar_rect = {main_area_rect.x, main_area_rect.h - timelinebar::BAR_HEIGHT,
-		                     main_area_rect.w, timelinebar::BAR_HEIGHT};
-		if (timeline_bar->handle_event(event, bar_rect))
+		const int bar_h = timeline_bar->get_height();
+		SDL_Rect bar_rect = {main_area_rect.x, main_area_rect.h - bar_h,
+		                     main_area_rect.w, bar_h};
+		if (timeline_bar->handle_event(event, bar_rect)) {
+			if (event.type == SDL_EVENT_MOUSE_MOTION)
+				timeline_bar->clear_hovered_signal();
 			return false;
+		}
 	}
 
 	if (event.type == EVENT_RELOAD_ICONBAR)
@@ -485,7 +515,7 @@ bool canvas::handle_event(SDL_Event &event)
 		if (bX2 != 0 && bX2 != bX1) {
 			const int usable_h = std::max(1, main_area_rect.h -
 			                                     ((timeline_bar && timeline_bar->is_active())
-			                                          ? timelinebar::BAR_HEIGHT
+			                                          ? timeline_bar->get_height()
 			                                          : 0));
 			from_offsetX = offsetX;
 			from_offsetY = offsetY;
@@ -995,8 +1025,23 @@ bool canvas::handle_event(SDL_Event &event)
 			if (auto hw = hover_wire.lock())
 				hw->deselect();
 			hover_wire = current_scene->is_wire(x, y);
-			if (auto hw = hover_wire.lock())
+			if (auto hw = hover_wire.lock()) {
 				hw->select();
+				if (timeline_bar && timeline_bar->is_active()) {
+					if (!hw->get_vcd_name().empty()) {
+						timelinebar::wave_signal_ref sig;
+						sig.vcd_name = hw->get_vcd_name();
+						sig.display_name = !hw->name.empty() ? hw->name : hw->get_vcd_name();
+						sig.bit_width = hw->get_width();
+						sig.labels = hw->get_label_table();
+						timeline_bar->set_hovered_signal(sig);
+					} else {
+						timeline_bar->clear_hovered_signal();
+					}
+				}
+			} else if (timeline_bar && timeline_bar->is_active()) {
+				timeline_bar->clear_hovered_signal();
+			}
 
 			if (dragging) {
 				dragging->update_drag(this, current_scene.get(),
@@ -1161,7 +1206,7 @@ void canvas::draw(void)
 		const int mx_scr = X_to_scr(mouseX);
 		const int my_scr = Y_to_scr(mouseY);
 		const int bottom_lim = (timeline_bar && timeline_bar->is_active())
-		                           ? (main_area_rect.h - timelinebar::BAR_HEIGHT)
+		                           ? (main_area_rect.h - timeline_bar->get_height())
 		                           : main_area_rect.h;
 		bool hovering_crit = false;
 		if (mx_scr >= main_area_rect.x && mx_scr < main_area_rect.x + main_area_rect.w &&
@@ -1278,8 +1323,9 @@ void canvas::draw(void)
 	button_bar->draw_at(this, button_rect.w, button_rect.h);
 
 	if (timeline_bar && timeline_bar->is_active()) {
-		SDL_Rect bar_rect = {main_area_rect.x, main_area_rect.h - timelinebar::BAR_HEIGHT,
-		                     main_area_rect.w, timelinebar::BAR_HEIGHT};
+		const int bar_h = timeline_bar->get_height();
+		SDL_Rect bar_rect = {main_area_rect.x, main_area_rect.h - bar_h,
+		                     main_area_rect.w, bar_h};
 		timeline_bar->draw(this, bar_rect);
 	}
 
@@ -1368,7 +1414,7 @@ void canvas::draw_hover_inspector(void)
 	const int scr_x = X_to_scr(mouseX);
 	const int scr_y = Y_to_scr(mouseY);
 	const int bottom_limit = (timeline_bar && timeline_bar->is_active())
-	                             ? (main_area_rect.h - timelinebar::BAR_HEIGHT)
+	                             ? (main_area_rect.h - timeline_bar->get_height())
 	                             : main_area_rect.h;
 	if (scr_x < main_area_rect.x || scr_x >= main_area_rect.x + main_area_rect.w ||
 	    scr_y < main_area_rect.y || scr_y >= bottom_limit) {

@@ -10,27 +10,59 @@
 #pragma once
 
 #include "gridcad.h"
+#include "vcd_session.h"
 
 #include <SDL3/SDL.h>
 #include <cstddef>
+#include <memory>
 #include <string>
+#include <string_view>
+#include <utility>
+#include <vector>
 
-class vcd_session;
+class label_table;
 
 /*
- * Native SDL2 docked timeline bar drawn at the bottom of a canvas when a VCD
- * session is active. Provides transport buttons, click/drag tick scrubbing,
- * tick/timestamp readout, and a VCD lock/unlock toggle.
+ * Native SDL3 docked timeline bar & GTKWave-style signal wave viewer drawn at
+ * the bottom of a canvas when a VCD session is active.
+ *
+ * Provides transport buttons, click/drag tick scrubbing, tick/timestamp
+ * readout, VCD lock/unlock toggle, dynamic hover waveform preview, and
+ * multi-signal pinned waveforms with enum and valid-qualifier resolution.
  */
 class timelinebar
 {
 public:
     static constexpr int BAR_HEIGHT = 52;
+    static constexpr int RULER_HEIGHT = 20;
+    static constexpr int CLK_ROW_HEIGHT = 20;
+    static constexpr int WAVE_ROW_HEIGHT = 34;
+    static constexpr int SIGNAL_COL_WIDTH = 190;
+    static constexpr size_t MAX_PINNED = 6;
+
+    struct wave_signal_ref {
+        std::string vcd_name;
+        std::string display_name;
+        int bit_width = 1;
+        std::shared_ptr<const class label_table> labels;
+    };
 
     timelinebar() = default;
 
-    void set_session(class vcd_session *sess) { session_ = sess; }
+    void set_session(class vcd_session *sess);
     bool is_active(void) const;
+
+    /* Current total height of the docked bar (expands when hover/pinned waves are shown). */
+    int get_height(void) const;
+
+    void set_hovered_signal(const wave_signal_ref &sig);
+    void clear_hovered_signal(void);
+    void pin_signal(const wave_signal_ref &sig);
+    void unpin_signal(std::string_view vcd_name);
+    void clear_pinned_signals(void);
+    bool is_pinned(std::string_view vcd_name) const;
+    bool has_pinned_signals(void) const noexcept { return !pinned_.empty(); }
+    bool has_active_wave(void) const;
 
     void draw(class basecanvas *canvas, const SDL_Rect &bar_rect);
 
@@ -41,7 +73,19 @@ public:
     size_t tick_from_x(int screen_x, const SDL_Rect &bar_rect) const;
 
 private:
+    struct cached_wave_entry {
+        wave_signal_ref ref;
+        vcd_session::wave_data data;
+        std::vector<std::string> seg_labels;
+        bool pinned = false;
+    };
+
     struct layout {
+        SDL_Rect controls_rect{};
+        SDL_Rect wave_panel{};
+        SDL_Rect wave_area{};
+        SDL_Rect ruler_rect{};
+        SDL_Rect clk_row{};
         SDL_Rect btn_start{};
         SDL_Rect btn_prev{};
         SDL_Rect btn_play{};
@@ -50,13 +94,27 @@ private:
         SDL_Rect track{};
         SDL_Rect readout{};
         SDL_Rect btn_lock{};
+        std::vector<SDL_Rect> signal_rows;
+        std::vector<SDL_Rect> unpin_btns;
     };
 
     layout compute_layout(const SDL_Rect &bar_rect) const;
+    std::pair<uint64_t, uint64_t> compute_time_window(void) const;
+    size_t tick_from_wave_x(int screen_x, const SDL_Rect &wave_area) const;
+    bool show_clock_row(void) const;
+    void rebuild_entry(cached_wave_entry &entry, const wave_signal_ref &sig, bool pinned);
+    void ensure_clock_wave(void);
     void emit_seek(size_t tick);
 
     class vcd_session *session_ = nullptr;
     bool scrubbing_ = false;
+    bool scrubbing_wave_ = false;
     int hover_x_ = -1;
     int hover_y_ = -1;
+
+    std::vector<cached_wave_entry> pinned_;
+    cached_wave_entry hovered_;
+    bool has_hovered_ = false;
+    vcd_session::wave_data clk_wave_;
+    bool clk_wave_loaded_ = false;
 };
