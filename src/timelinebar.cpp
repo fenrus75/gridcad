@@ -12,8 +12,10 @@
 #include "vcd_session.h"
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <format>
+#include <numbers>
 
 extern bool clock_running;
 
@@ -90,32 +92,12 @@ std::string format_segment_label(const vcd_session::wave_segment &seg,
     return std::format("{:0{}X}", seg.val.intval, hex_digits);
 }
 
-size_t choose_tick_step(size_t visible_ticks, int wave_width_px)
-{
-    if (visible_ticks <= 1 || wave_width_px <= 0)
-        return 1;
-    /* Keep at least ~42 px between tick labels so numbers stay crisp inside the clk wave. */
-    const size_t max_labels = static_cast<size_t>(std::max(2, wave_width_px / 42));
-    const size_t raw_step = (visible_ticks + max_labels - 1) / max_labels;
-    if (raw_step <= 1)
-        return 1;
-    size_t mag = 1;
-    while (mag * 10 <= raw_step)
-        mag *= 10;
-    if (raw_step <= mag)
-        return mag;
-    if (raw_step <= mag * 2)
-        return mag * 2;
-    if (raw_step <= mag * 5)
-        return mag * 5;
-    return mag * 10;
-}
-
 void draw_wave_trace(SDL_Renderer *ren, class basecanvas *canvas,
                      const SDL_Rect &wave_rect,
                      const vcd_session::wave_data &data,
                      const std::vector<std::string> *seg_labels,
                      uint64_t t0, uint64_t t1,
+                     const timelinebar::wave_lens &lens,
                      bool is_clk_row)
 {
     if (!ren || data.segments.empty() || t1 <= t0 || wave_rect.w <= 4 || wave_rect.h <= 4)
@@ -127,8 +109,9 @@ void draw_wave_trace(SDL_Renderer *ren, class basecanvas *canvas,
             return static_cast<float>(wave_rect.x);
         if (t >= t1)
             return static_cast<float>(wave_rect.x + wave_rect.w);
-        const double f = static_cast<double>(t - t0) * inv_span;
-        return static_cast<float>(wave_rect.x) + static_cast<float>(f * static_cast<double>(wave_rect.w));
+        const double u = static_cast<double>(t - t0) * inv_span;
+        const double sx = lens.x_from_u(u);
+        return static_cast<float>(wave_rect.x) + static_cast<float>(sx * static_cast<double>(wave_rect.w));
     };
 
     const float pad_y = is_clk_row ? 3.0f : 5.0f;
@@ -289,6 +272,124 @@ void timelinebar::set_session(class vcd_session *sess)
     hovered_ = {};
     clk_wave_ = {};
     clk_wave_loaded_ = false;
+    /* Short VCDs (<= 32 ticks) fit cleanly linearly; long VCDs start with a 4-tick flat-top lens. */
+    lens_ticks_ = (session_ && session_->get_total_ticks() > 32) ? 4 : 0;
+}
+
+double timelinebar::wave_lens::x_from_u(double u) const noexcept
+{
+    u = std::clamp(u, 0.0, 1.0);
+    if (!is_active())
+        return u;
+
+    auto kernel_integral = [this](double d) -> double {
+        if (d <= 0.0)
+            return 0.0;
+        if (d <= half_flat)
+            return d;
+        if (ramp > 1e-12 && d < half_flat + ramp) {
+            const double s = d - half_flat;
+            return half_flat + 0.5 * s +
+                   (ramp / (2.0 * std::numbers::pi)) * std::sin(std::numbers::pi * s / ramp);
+        }
+        return half_flat + 0.5 * ramp;
+    };
+
+    auto F = [&](double v) -> double {
+        const double dv = v - center;
+        const double ki = kernel_integral(std::abs(dv));
+        return dv + boost * ((dv >= 0.0) ? ki : -ki);
+    };
+
+    const double f0 = F(0.0);
+    const double f1 = F(1.0);
+    const double denom = f1 - f0;
+    if (denom <= 1e-12)
+        return u;
+    return std::clamp((F(u) - f0) / denom, 0.0, 1.0);
+}
+
+double timelinebar::wave_lens::u_from_x(double x) const noexcept
+{
+    x = std::clamp(x, 0.0, 1.0);
+    if (!is_active())
+        return x;
+
+    double lo = 0.0;
+    double hi = 1.0;
+    for (int i = 0; i < 24; ++i) {
+        const double mid = 0.5 * (lo + hi);
+        if (x_from_u(mid) < x)
+            lo = mid;
+        else
+            hi = mid;
+    }
+    return 0.5 * (lo + hi);
+}
+
+namespace {
+constexpr std::array<size_t, 6> kZoomSteps = {2, 4, 8, 16, 32, 64};
+} // namespace
+
+void timelinebar::zoom_in(void)
+{
+    if (!session_ || session_->get_total_ticks() <= 2)
+        return;
+    const size_t total = session_->get_total_ticks();
+    if (lens_ticks_ == 0) {
+        /* Step from linear full-view into the largest preset smaller than total_ticks (or 4). */
+        size_t chosen = 4;
+        for (size_t s : kZoomSteps) {
+            if (s * 2 <= total)
+                chosen = s;
+        }
+        lens_ticks_ = chosen;
+        return;
+    }
+    for (auto it = kZoomSteps.rbegin(); it != kZoomSteps.rend(); ++it) {
+        if (*it < lens_ticks_) {
+            lens_ticks_ = *it;
+            return;
+        }
+    }
+    lens_ticks_ = kZoomSteps.front();
+}
+
+void timelinebar::zoom_out(void)
+{
+    if (lens_ticks_ == 0 || !session_)
+        return;
+    const size_t total = session_->get_total_ticks();
+    for (size_t s : kZoomSteps) {
+        if (s > lens_ticks_) {
+            lens_ticks_ = (s >= total) ? 0 : s;
+            return;
+        }
+    }
+    lens_ticks_ = 0;
+}
+
+timelinebar::wave_lens timelinebar::build_lens(double center_u) const noexcept
+{
+    wave_lens lens;
+    lens.center = std::clamp(center_u, 0.0, 1.0);
+    if (!session_ || lens_ticks_ == 0)
+        return lens;
+    const size_t total = session_->get_total_ticks();
+    if (total <= 2 || lens_ticks_ >= total)
+        return lens;
+
+    const double span_ticks = static_cast<double>(total - 1);
+    lens.half_flat = 0.5 * static_cast<double>(lens_ticks_) / span_ticks;
+    lens.ramp = lens.half_flat;
+    const double lens_area = 2.0 * lens.half_flat + lens.ramp;
+    if (lens_area >= 0.95)
+        return lens;
+
+    /* Allocate ~58% of the viewport to the magnified lens when zoomed in, fading smoothly to linear. */
+    const double extra_share = 0.58 * (1.0 - lens_area);
+    lens.boost = (extra_share / std::max(0.05, 1.0 - extra_share)) / lens_area;
+    return lens;
 }
 
 bool timelinebar::is_active(void) const
@@ -423,26 +524,18 @@ std::pair<uint64_t, uint64_t> timelinebar::compute_time_window(void) const
         t_max = std::max(t_max, session_->get_tick_timestamp(total - 1));
     if (t_max <= t_min)
         t_max = t_min + 1;
+    /* Start and end times are always anchored to the full VCD; the bifocal lens handles magnification. */
+    return {t_min, t_max};
+}
 
-    if (total <= 64)
-        return {t_min, t_max};
-
-    const size_t half = 24;
-    const size_t cur = session_->get_current_tick();
-    size_t i0 = (cur > half) ? (cur - half) : 0;
-    size_t i1 = std::min(total - 1, i0 + 2 * half);
-    if (i1 - i0 < 2 * half && i1 >= 2 * half)
-        i0 = i1 - 2 * half;
-
-    uint64_t w0 = session_->get_tick_timestamp(i0);
-    uint64_t w1 = session_->get_tick_timestamp(i1);
-    if (i1 + 1 < total) {
-        const uint64_t next_t = session_->get_tick_timestamp(i1 + 1);
-        w1 += (next_t - w1) / 2;
-    }
-    if (w1 <= w0)
-        w1 = w0 + 1;
-    return {w0, w1};
+double timelinebar::current_playhead_u(void) const
+{
+    if (!session_)
+        return 0.0;
+    const auto [t0, t1] = compute_time_window();
+    const double cur_t = static_cast<double>(session_->get_current_timestamp());
+    return std::clamp((cur_t - static_cast<double>(t0)) / static_cast<double>(std::max<uint64_t>(1, t1 - t0)),
+                      0.0, 1.0);
 }
 
 timelinebar::layout timelinebar::compute_layout(const SDL_Rect &bar_rect) const
@@ -497,6 +590,10 @@ timelinebar::layout timelinebar::compute_layout(const SDL_Rect &bar_rect) const
         }
 
         l.clk_row = {wave_x, y, wave_w, CLK_RULER_HEIGHT};
+        const int zb_size = 18;
+        const int zb_y = y + (CLK_RULER_HEIGHT - zb_size) / 2;
+        l.btn_zoom_in  = {wave_x - 6 - zb_size, zb_y, zb_size, zb_size};
+        l.btn_zoom_out = {l.btn_zoom_in.x - 4 - zb_size, zb_y, zb_size, zb_size};
         y += CLK_RULER_HEIGHT;
 
         l.pinned_rows.reserve(pinned_.size());
@@ -524,15 +621,15 @@ size_t timelinebar::tick_from_x(int screen_x, const SDL_Rect &bar_rect) const
     return static_cast<size_t>(std::llround(clamped * static_cast<double>(max_tick)));
 }
 
-size_t timelinebar::tick_from_wave_x(int screen_x, const SDL_Rect &wave_area) const
+size_t timelinebar::tick_from_wave_x(int screen_x, const SDL_Rect &wave_area, const wave_lens &lens) const
 {
     if (!session_ || session_->get_total_ticks() <= 1)
         return 0;
     const auto [t0, t1] = compute_time_window();
     const double rel = static_cast<double>(screen_x - wave_area.x) /
                        static_cast<double>(std::max(1, wave_area.w));
-    const double clamped = std::clamp(rel, 0.0, 1.0);
-    const uint64_t target_t = t0 + static_cast<uint64_t>(std::llround(clamped * static_cast<double>(t1 - t0)));
+    const double u = lens.u_from_x(std::clamp(rel, 0.0, 1.0));
+    const uint64_t target_t = t0 + static_cast<uint64_t>(std::llround(u * static_cast<double>(t1 - t0)));
     return session_->find_nearest_tick(target_t);
 }
 
@@ -553,6 +650,16 @@ bool timelinebar::handle_event(const SDL_Event &event, const SDL_Rect &bar_rect)
 
     const layout l = compute_layout(bar_rect);
 
+    if (event.type == SDL_EVENT_MOUSE_WHEEL && has_active_wave()) {
+        if (point_in_rect(hover_x_, hover_y_, l.wave_panel)) {
+            if (event.wheel.y > 0.0f)
+                zoom_in();
+            else if (event.wheel.y < 0.0f)
+                zoom_out();
+            return true;
+        }
+    }
+
     if (event.type == SDL_EVENT_MOUSE_MOTION) {
         hover_x_ = static_cast<int>(event.motion.x);
         hover_y_ = static_cast<int>(event.motion.y);
@@ -561,7 +668,8 @@ bool timelinebar::handle_event(const SDL_Event &event, const SDL_Rect &bar_rect)
             return true;
         }
         if (scrubbing_wave_) {
-            emit_seek(tick_from_wave_x(hover_x_, l.wave_area));
+            const wave_lens lens = build_lens(frozen_lens_center_u_);
+            emit_seek(tick_from_wave_x(hover_x_, l.wave_area, lens));
             return true;
         }
         return point_in_rect(hover_x_, hover_y_, bar_rect);
@@ -582,6 +690,18 @@ bool timelinebar::handle_event(const SDL_Event &event, const SDL_Rect &bar_rect)
         if (!point_in_rect(mx, my, bar_rect))
             return false;
 
+        /* Mini zoom (-) and (+) buttons in the clk row signal column. */
+        if (has_active_wave()) {
+            if (point_in_rect(mx, my, l.btn_zoom_in)) {
+                zoom_in();
+                return true;
+            }
+            if (point_in_rect(mx, my, l.btn_zoom_out)) {
+                zoom_out();
+                return true;
+            }
+        }
+
         /* Check per-row unpin buttons first. */
         for (size_t i = 0; i < l.unpin_btns.size() && i < pinned_.size(); ++i) {
             if (point_in_rect(mx, my, l.unpin_btns[i])) {
@@ -592,10 +712,12 @@ bool timelinebar::handle_event(const SDL_Event &event, const SDL_Rect &bar_rect)
             }
         }
 
-        /* Clicking inside the waveform area scrubs to the clicked timestamp. */
+        /* Clicking inside the waveform area freezes the lens center during drag and scrubs cleanly. */
         if (has_active_wave() && point_in_rect(mx, my, l.wave_area)) {
+            frozen_lens_center_u_ = current_playhead_u();
+            const wave_lens lens = build_lens(frozen_lens_center_u_);
             scrubbing_wave_ = true;
-            emit_seek(tick_from_wave_x(mx, l.wave_area));
+            emit_seek(tick_from_wave_x(mx, l.wave_area, lens));
             return true;
         }
 
@@ -646,12 +768,56 @@ void timelinebar::draw(class basecanvas *canvas, const SDL_Rect &bar_rect)
         canvas->flush_line_batch();
         const auto [t0, t1] = compute_time_window();
         const double inv_span = 1.0 / static_cast<double>(std::max<uint64_t>(1, t1 - t0));
+        const size_t total_ticks = session_->get_total_ticks();
+
+        /* Compute smoothly interpolated playhead time first so the bifocal lens glides at 60 FPS. */
+        const size_t cur_idx = session_->get_current_tick();
+        const uint64_t now_ms = SDL_GetTicks();
+        const bool animating = clock_running && !scrubbing_ && !scrubbing_wave_ && !session_->is_unlocked();
+        if (!animating || !was_playing_ || cur_idx != last_observed_tick_) {
+            last_observed_tick_ = cur_idx;
+            last_tick_ms_ = now_ms;
+        }
+        was_playing_ = animating;
+
+        double playhead_t = static_cast<double>(session_->get_current_timestamp());
+        if (animating && cur_idx + 1 < total_ticks) {
+            constexpr double kTickIntervalMs = 500.0;
+            const double frac = std::clamp(static_cast<double>(now_ms - last_tick_ms_) / kTickIntervalMs, 0.0, 1.0);
+            const uint64_t next_t = session_->get_tick_timestamp(cur_idx + 1);
+            if (next_t > session_->get_current_timestamp())
+                playhead_t += frac * static_cast<double>(next_t - session_->get_current_timestamp());
+        }
+
+        const double playhead_u = std::clamp((playhead_t - static_cast<double>(t0)) * inv_span, 0.0, 1.0);
+        const double lens_center_u = scrubbing_wave_ ? frozen_lens_center_u_ : playhead_u;
+        const wave_lens lens = build_lens(lens_center_u);
+
+        auto time_to_x = [&](double t) -> float {
+            const double u = std::clamp((t - static_cast<double>(t0)) * inv_span, 0.0, 1.0);
+            return static_cast<float>(l.wave_area.x) +
+                   static_cast<float>(lens.x_from_u(u) * static_cast<double>(l.wave_area.w));
+        };
 
         /* Deep GTKWave dark background + top divider border. */
         SDL_FRect panel_f = {static_cast<float>(l.wave_panel.x), static_cast<float>(l.wave_panel.y),
                              static_cast<float>(l.wave_panel.w), static_cast<float>(l.wave_panel.h)};
         SDL_SetRenderDrawColor(ren, 10, 12, 16, 245);
         SDL_RenderFillRect(ren, &panel_f);
+
+        /* Subtle highlight band marking the uniform flat-top magnified region when lens is active. */
+        if (lens.is_active()) {
+            const double u_lo = std::clamp(lens.center - lens.half_flat, 0.0, 1.0);
+            const double u_hi = std::clamp(lens.center + lens.half_flat, 0.0, 1.0);
+            const float fx0 = static_cast<float>(l.wave_area.x) +
+                              static_cast<float>(lens.x_from_u(u_lo) * static_cast<double>(l.wave_area.w));
+            const float fx1 = static_cast<float>(l.wave_area.x) +
+                              static_cast<float>(lens.x_from_u(u_hi) * static_cast<double>(l.wave_area.w));
+            SDL_FRect flat_band = {fx0, static_cast<float>(l.wave_area.y),
+                                   std::max(1.0f, fx1 - fx0), static_cast<float>(l.wave_area.h)};
+            SDL_SetRenderDrawColor(ren, 255, 255, 255, 11);
+            SDL_RenderFillRect(ren, &flat_band);
+        }
 
         /* Left signal-name column subtle tint + vertical separator. */
         const int sig_col_w = l.wave_area.x - l.wave_panel.x;
@@ -665,25 +831,29 @@ void timelinebar::draw(class basecanvas *canvas, const SDL_Rect &bar_rect)
         SDL_RenderLine(ren, static_cast<float>(l.wave_area.x - 1), panel_f.y,
                        static_cast<float>(l.wave_area.x - 1), panel_f.y + panel_f.h);
 
-        /* Clock-tick vertical gridlines across the entire wave area. */
-        const size_t total_ticks = session_->get_total_ticks();
-        const size_t first_vis_tick = session_->find_nearest_tick(t0);
-        const size_t last_vis_tick = session_->find_nearest_tick(t1);
-        const size_t vis_ticks = (last_vis_tick >= first_vis_tick) ? (last_vis_tick - first_vis_tick + 1) : 1;
-        const size_t tick_step = choose_tick_step(vis_ticks, l.wave_area.w);
-        const size_t first_grid_tick = ((first_vis_tick + tick_step - 1) / tick_step) * tick_step;
-
-        for (size_t tk = first_grid_tick; tk < total_ticks; tk += tick_step) {
-            const uint64_t tt = session_->get_tick_timestamp(tk);
-            if (tt < t0)
-                continue;
-            if (tt > t1)
-                break;
-            const float gx = static_cast<float>(l.wave_area.x) +
-                             static_cast<float>(static_cast<double>(tt - t0) * inv_span * static_cast<double>(l.wave_area.w));
-            SDL_SetRenderDrawColor(ren, 38, 46, 58, 170);
-            SDL_RenderLine(ren, gx, static_cast<float>(l.wave_area.y),
-                           gx, static_cast<float>(l.wave_area.y + l.wave_area.h));
+        /* Adaptive screen-spaced clock-tick gridlines & labels (O(width/38 * log N) even on huge VCDs). */
+        std::vector<std::pair<size_t, float>> labeled_ticks;
+        if (total_ticks > 0 && l.wave_area.w > 0) {
+            constexpr float kMinLabelGapPx = 38.0f;
+            float last_gx = -1e9f;
+            size_t last_tk = SIZE_MAX;
+            for (int px_off = 0; px_off <= l.wave_area.w; px_off += 16) {
+                const double sx = static_cast<double>(px_off) / static_cast<double>(std::max(1, l.wave_area.w));
+                const double u = lens.u_from_x(sx);
+                const uint64_t target_t = t0 + static_cast<uint64_t>(std::llround(u * static_cast<double>(t1 - t0)));
+                const size_t tk = session_->find_nearest_tick(target_t);
+                if (tk == last_tk)
+                    continue;
+                const float gx = time_to_x(static_cast<double>(session_->get_tick_timestamp(tk)));
+                if (gx - last_gx < kMinLabelGapPx)
+                    continue;
+                last_tk = tk;
+                last_gx = gx;
+                labeled_ticks.emplace_back(tk, gx);
+                SDL_SetRenderDrawColor(ren, 38, 46, 58, 170);
+                SDL_RenderLine(ren, gx, static_cast<float>(l.wave_area.y),
+                               gx, static_cast<float>(l.wave_area.y + l.wave_area.h));
+            }
         }
 
         auto draw_signal_row = [&](const cached_wave_entry &e, const SDL_Rect &row, const SDL_Rect *unpin_btn) {
@@ -708,7 +878,7 @@ void timelinebar::draw(class basecanvas *canvas, const SDL_Rect &bar_rect)
             SDL_Rect lbl_box = {lbl_x, row.y + 6, std::max(1, l.wave_area.x - lbl_x - 6), row.h - 12};
             draw_clipped_label(ren, canvas, title, lbl_box, false);
 
-            draw_wave_trace(ren, canvas, row, e.data, &e.seg_labels, t0, t1, false);
+            draw_wave_trace(ren, canvas, row, e.data, &e.seg_labels, t0, t1, lens, false);
 
             SDL_SetRenderDrawColor(ren, 42, 48, 58, 200);
             SDL_RenderLine(ren, panel_f.x, static_cast<float>(row.y + row.h),
@@ -719,22 +889,31 @@ void timelinebar::draw(class basecanvas *canvas, const SDL_Rect &bar_rect)
         if (has_unpinned_hover() && l.hover_row.h > 0)
             draw_signal_row(hovered_, l.hover_row, nullptr);
 
-        /* Unified clk wave + clock-tick numbers row. */
+        /* Unified clk wave + clock-tick numbers + mini (-) / (+) zoom buttons row. */
         if (l.clk_row.h > 0) {
-            SDL_Rect clk_lbl = {l.wave_panel.x + 8, l.clk_row.y + 3, std::max(1, sig_col_w - 14), CLK_RULER_HEIGHT - 6};
+            const int clk_lbl_w = std::max(1, l.btn_zoom_out.x - (l.wave_panel.x + 8) - 4);
+            SDL_Rect clk_lbl = {l.wave_panel.x + 8, l.clk_row.y + 3, clk_lbl_w, CLK_RULER_HEIGHT - 6};
             const std::string clk_title = clk_wave_.signal_name.empty() ? "ticks" : clk_wave_.signal_name;
             draw_clipped_label(ren, canvas, clk_title, clk_lbl, false);
 
+            auto draw_zoom_btn = [&](const SDL_Rect &r, std::string_view glyph, bool enabled) {
+                const bool hov = enabled && point_in_rect(hover_x_, hover_y_, r);
+                SDL_FRect rf = {static_cast<float>(r.x), static_cast<float>(r.y),
+                                static_cast<float>(r.w), static_cast<float>(r.h)};
+                SDL_SetRenderDrawColor(ren, hov ? 85 : (enabled ? 46 : 28),
+                                       hov ? 105 : (enabled ? 54 : 32),
+                                       hov ? 125 : (enabled ? 64 : 38), 230);
+                SDL_RenderFillRect(ren, &rf);
+                SDL_SetRenderDrawColor(ren, enabled ? 110 : 50, enabled ? 125 : 58, enabled ? 140 : 66, 200);
+                SDL_RenderRect(ren, &rf);
+                draw_clipped_label(ren, canvas, glyph, r, true);
+            };
+            draw_zoom_btn(l.btn_zoom_out, "-", lens_ticks_ != 0);
+            draw_zoom_btn(l.btn_zoom_in, "+", total_ticks > 2 && lens_ticks_ != kZoomSteps.front());
+
             /* Draw clock tick numbers first (tucked inside the wave height) so the green clk wave
              * renders cleanly on top without any dark box interrupting the signal line. */
-            for (size_t tk = first_grid_tick; tk < total_ticks; tk += tick_step) {
-                const uint64_t tt = session_->get_tick_timestamp(tk);
-                if (tt < t0)
-                    continue;
-                if (tt > t1)
-                    break;
-                const float gx = static_cast<float>(l.wave_area.x) +
-                                 static_cast<float>(static_cast<double>(tt - t0) * inv_span * static_cast<double>(l.wave_area.w));
+            for (const auto &[tk, gx] : labeled_ticks) {
                 const int lx = static_cast<int>(std::lround(gx)) + 3;
                 const int avail = (l.wave_area.x + l.wave_area.w) - lx;
                 if (avail < 12)
@@ -745,7 +924,7 @@ void timelinebar::draw(class basecanvas *canvas, const SDL_Rect &bar_rect)
             }
 
             if (!clk_wave_.segments.empty())
-                draw_wave_trace(ren, canvas, l.clk_row, clk_wave_, nullptr, t0, t1, true);
+                draw_wave_trace(ren, canvas, l.clk_row, clk_wave_, nullptr, t0, t1, lens, true);
 
             SDL_SetRenderDrawColor(ren, 55, 65, 78, 220);
             SDL_RenderLine(ren, panel_f.x, static_cast<float>(l.clk_row.y + l.clk_row.h),
@@ -758,36 +937,13 @@ void timelinebar::draw(class basecanvas *canvas, const SDL_Rect &bar_rect)
             draw_signal_row(pinned_[i], l.pinned_rows[i], ub);
         }
 
-        /* Vertical playhead cursor across the entire wave area.
-         * In VCD animation mode (clock_running), smoothly interpolate across the 500 ms tick
-         * interval at 60 FPS; in step-by-step / paused / scrubbing mode, snap to the exact tick. */
-        const size_t cur_idx = session_->get_current_tick();
-        const uint64_t now_ms = SDL_GetTicks();
-        const bool animating = clock_running && !scrubbing_ && !scrubbing_wave_ && !session_->is_unlocked();
-        if (!animating || !was_playing_ || cur_idx != last_observed_tick_) {
-            last_observed_tick_ = cur_idx;
-            last_tick_ms_ = now_ms;
-        }
-        was_playing_ = animating;
-
-        double playhead_t = static_cast<double>(session_->get_current_timestamp());
-        if (animating && cur_idx + 1 < total_ticks) {
-            constexpr double kTickIntervalMs = 500.0;
-            const double frac = std::clamp(static_cast<double>(now_ms - last_tick_ms_) / kTickIntervalMs, 0.0, 1.0);
-            const uint64_t next_t = session_->get_tick_timestamp(cur_idx + 1);
-            if (next_t > session_->get_current_timestamp())
-                playhead_t += frac * static_cast<double>(next_t - session_->get_current_timestamp());
-        }
-
-        if (playhead_t >= static_cast<double>(t0) && playhead_t <= static_cast<double>(t1)) {
-            const float px = static_cast<float>(l.wave_area.x) +
-                             static_cast<float>((playhead_t - static_cast<double>(t0)) * inv_span * static_cast<double>(l.wave_area.w));
-            SDL_SetRenderDrawColor(ren, 235, 245, 255, 230);
-            SDL_RenderLine(ren, px, static_cast<float>(l.wave_area.y),
-                           px, static_cast<float>(l.wave_area.y + l.wave_area.h));
-            SDL_RenderLine(ren, px + 1.0f, static_cast<float>(l.wave_area.y),
-                           px + 1.0f, static_cast<float>(l.wave_area.y + l.wave_area.h));
-        }
+        /* Vertical playhead cursor across the entire wave area. */
+        const float px = time_to_x(playhead_t);
+        SDL_SetRenderDrawColor(ren, 235, 245, 255, 230);
+        SDL_RenderLine(ren, px, static_cast<float>(l.wave_area.y),
+                       px, static_cast<float>(l.wave_area.y + l.wave_area.h));
+        SDL_RenderLine(ren, px + 1.0f, static_cast<float>(l.wave_area.y),
+                       px + 1.0f, static_cast<float>(l.wave_area.y + l.wave_area.h));
     }
 
     /* 2. Docked dark translucent transport control strip at the bottom. */

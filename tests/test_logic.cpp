@@ -2336,6 +2336,58 @@ static void test_vcd_wave_viewer(void)
     assert(restored[0] == alu_out_name);
     assert(restored[1] == second_name);
     std::filesystem::remove(tmp_wave_overlay, ec);
+
+    // Verify flat-top bifocal fisheye lens math: anchored endpoints, strict monotonicity,
+    // uniform spacing inside the flat top, exact inverse, and zoom_in/zoom_out stepping.
+    {
+        for (double c : {0.0, 0.25, 0.5, 0.75, 1.0}) {
+            timelinebar::wave_lens lens;
+            lens.center = c;
+            lens.half_flat = 0.05;
+            lens.ramp = 0.05;
+            lens.boost = 12.0;
+            assert(lens.is_active());
+            assert(std::abs(lens.x_from_u(0.0) - 0.0) < 1e-9);
+            assert(std::abs(lens.x_from_u(1.0) - 1.0) < 1e-9);
+
+            double prev_x = -1.0;
+            for (int i = 0; i <= 100; ++i) {
+                const double u = static_cast<double>(i) / 100.0;
+                const double x = lens.x_from_u(u);
+                assert(x > prev_x);
+                prev_x = x;
+                const double u_rt = lens.u_from_x(x);
+                assert(std::abs(u_rt - u) < 1e-5);
+            }
+        }
+
+        // Uniform linear spacing inside the flat top [center - half_flat, center + half_flat]
+        timelinebar::wave_lens mid_lens;
+        mid_lens.center = 0.5;
+        mid_lens.half_flat = 0.06;
+        mid_lens.ramp = 0.06;
+        mid_lens.boost = 10.0;
+        const double d1 = mid_lens.x_from_u(0.48) - mid_lens.x_from_u(0.46);
+        const double d2 = mid_lens.x_from_u(0.50) - mid_lens.x_from_u(0.48);
+        const double d3 = mid_lens.x_from_u(0.52) - mid_lens.x_from_u(0.50);
+        const double d_tail = mid_lens.x_from_u(0.04) - mid_lens.x_from_u(0.02);
+        assert(std::abs(d1 - d2) < 1e-9);
+        assert(std::abs(d2 - d3) < 1e-9);
+        assert(d1 > d_tail * 5.0);
+
+        // Zoom in / zoom out stepping on timelinebar
+        assert(tb.get_lens_ticks() == 0); // 24-tick test VCD starts linear
+        tb.zoom_in();
+        assert(tb.get_lens_ticks() > 0);
+        const size_t z1 = tb.get_lens_ticks();
+        tb.zoom_in();
+        assert(tb.get_lens_ticks() < z1);
+        tb.zoom_out();
+        assert(tb.get_lens_ticks() == z1);
+        while (tb.get_lens_ticks() != 0)
+            tb.zoom_out();
+        assert(tb.get_lens_ticks() == 0);
+    }
 }
 
 int main(void)

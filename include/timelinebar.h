@@ -47,6 +47,23 @@ public:
         std::shared_ptr<const class label_table> labels;
     };
 
+    /*
+     * 1D flat-top bifocal fisheye lens mapping normalized time u in [0, 1]
+     * to normalized screen X in [0, 1] with anchored endpoints (x(0)=0, x(1)=1).
+     * Inside [center - half_flat, center + half_flat], magnification is uniform;
+     * outside, a raised-cosine ramp transitions smoothly to compressed context tails.
+     */
+    struct wave_lens {
+        double center = 0.5;
+        double half_flat = 0.0;
+        double ramp = 0.0;
+        double boost = 0.0; /* 0.0 => pure linear mapping */
+
+        double x_from_u(double u) const noexcept;
+        double u_from_x(double x) const noexcept;
+        bool is_active(void) const noexcept { return boost > 1e-6 && half_flat > 0.0; }
+    };
+
     timelinebar() = default;
 
     void set_session(class vcd_session *sess);
@@ -54,6 +71,11 @@ public:
 
     /* Current total height of the docked bar (expands when hover/pinned waves are shown). */
     int get_height(void) const;
+
+    void zoom_in(void);
+    void zoom_out(void);
+    size_t get_lens_ticks(void) const noexcept { return lens_ticks_; }
+    wave_lens build_lens(double center_u) const noexcept;
 
     void set_hovered_signal(const wave_signal_ref &sig);
     void clear_hovered_signal(void);
@@ -88,6 +110,8 @@ private:
         SDL_Rect wave_area{};
         SDL_Rect hover_row{};
         SDL_Rect clk_row{};
+        SDL_Rect btn_zoom_out{};
+        SDL_Rect btn_zoom_in{};
         SDL_Rect btn_start{};
         SDL_Rect btn_prev{};
         SDL_Rect btn_play{};
@@ -102,7 +126,8 @@ private:
 
     layout compute_layout(const SDL_Rect &bar_rect) const;
     std::pair<uint64_t, uint64_t> compute_time_window(void) const;
-    size_t tick_from_wave_x(int screen_x, const SDL_Rect &wave_area) const;
+    size_t tick_from_wave_x(int screen_x, const SDL_Rect &wave_area, const wave_lens &lens) const;
+    double current_playhead_u(void) const;
     bool has_unpinned_hover(void) const;
     void rebuild_entry(cached_wave_entry &entry, const wave_signal_ref &sig, bool pinned);
     void ensure_clock_wave(void);
@@ -123,4 +148,7 @@ private:
     size_t last_observed_tick_ = 0;
     uint64_t last_tick_ms_ = 0;
     bool was_playing_ = false;
+    /* Flat-top lens width in clock ticks (0 = linear full-VCD view). */
+    size_t lens_ticks_ = 0;
+    double frozen_lens_center_u_ = 0.5;
 };
