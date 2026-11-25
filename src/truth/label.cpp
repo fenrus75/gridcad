@@ -38,8 +38,8 @@ void label::handle_event(SDL_Event &event)
         /* first handle all generic string based keys */            
         labelevent(event, text);
         switch (event.type) {
-	case SDL_KEYDOWN:        
-        	switch (event.key.keysym.sym) {
+	case SDL_EVENT_KEY_DOWN:        
+        	switch (event.key.key) {
                 case SDLK_RETURN:
                     _selected = false;
                     break;

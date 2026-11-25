@@ -6,8 +6,8 @@ seqcanvas::seqcanvas(class sequencer *_element) : basecanvas()
 {
 	seq = _element;
 
-	window.reset(SDL_CreateWindow(("Sequencer / "+ _element->get_full_name()).c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_RESIZABLE));
-	renderer.reset(SDL_CreateRenderer(window.get(), -1, SDL_RENDERER_ACCELERATED));
+	window.reset(SDL_CreateWindow(("Sequencer / "+ _element->get_full_name()).c_str(), 800, 600, SDL_WINDOW_RESIZABLE));
+	renderer.reset(SDL_CreateRenderer(window.get(), nullptr));
 	SDL_SetRenderDrawBlendMode(renderer.get(), SDL_BLENDMODE_BLEND);
 
 	windowID = SDL_GetWindowID(window.get());
@@ -53,8 +53,8 @@ void seqcanvas::draw(void)
 bool seqcanvas::handle_event(SDL_Event &event)
 {
 	switch (event.type) {
-		case SDL_KEYDOWN:
-			switch (event.key.keysym.sym) {
+		case SDL_EVENT_KEY_DOWN:
+			switch (event.key.key) {
 				case SDLK_UP:
 					if (cursor > 0)
 						make_active(cursor - 1);
@@ -64,7 +64,7 @@ bool seqcanvas::handle_event(SDL_Event &event)
 					break;
 			}
 			break;
-		case SDL_MOUSEBUTTONDOWN:
+		case SDL_EVENT_MOUSE_BUTTON_DOWN:
 			float x, y;
 			x = scr_to_X(event.motion.x);
 			y = scr_to_Y(event.motion.y);
@@ -76,10 +76,8 @@ bool seqcanvas::handle_event(SDL_Event &event)
 			if (y >= 1)
 				make_active(y - 1);
 			break;
-		case SDL_WINDOWEVENT:
-			if (event.window.event == SDL_WINDOWEVENT_CLOSE) {  /* user clicked the 'x' */
-				SDL_HideWindow(window.get()); /* TODO: THis leaks like a sieve */
-			}
+		case SDL_EVENT_WINDOW_CLOSE_REQUESTED:  /* user clicked the 'x' */
+			SDL_HideWindow(window.get()); /* TODO: THis leaks like a sieve */
 			break;
 	};
 

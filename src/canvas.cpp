@@ -9,9 +9,9 @@
  *    Arjan van de Ven <arjanvandeven@gmail.com>
  */
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
+#include <SDL3/SDL.h>
+#include <SDL3_image/SDL_image.h>
+#include <SDL3_ttf/SDL_ttf.h>
 
 #include <stdio.h>
 
@@ -63,9 +63,8 @@ canvas::canvas(std::unique_ptr<class scene> _scene, struct capabilities *cap)
 
 	s = "GridCad " + _scene->get_full_name();
 	window.reset(
-		SDL_CreateWindow(s.c_str(), SDL_WINDOWPOS_UNDEFINED,
-				SDL_WINDOWPOS_UNDEFINED, 1024, 768, SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI));
-	renderer.reset(SDL_CreateRenderer(window.get(), -1, SDL_RENDERER_ACCELERATED));
+		SDL_CreateWindow(s.c_str(), 1024, 768, SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY));
+	renderer.reset(SDL_CreateRenderer(window.get(), nullptr));
 	SDL_SetRenderDrawBlendMode(renderer.get(), SDL_BLENDMODE_BLEND);
 
 	windowID = SDL_GetWindowID(window.get());
@@ -393,7 +392,7 @@ bool canvas::handle_event(SDL_Event &event)
 	bool leave = false;
 	bool someone_in_editmode = false;
 
-	if (SDL_GetTicks64() - mouse_timestamp > 1000 && active_menu == nullptr) 
+	if (SDL_GetTicks() - mouse_timestamp > 1000 && active_menu == nullptr) 
 		tooltip_eligable = true;
 	else
 		tooltip_eligable = false;
@@ -476,7 +475,7 @@ bool canvas::handle_event(SDL_Event &event)
 			from_offsetY = offsetY;
 			from_scaleX = scaleX;
 			from_scaleY = scaleY;
-			animation_start = SDL_GetTicks64();
+			animation_start = SDL_GetTicks();
 			target_scaleX = main_area_rect.w / (bX2 - bX1 + 6.0f);
 			target_scaleY = usable_h / (bY2 - bY1 + 6.0f);
 			target_scaleX = std::min(target_scaleX, target_scaleY);
@@ -501,26 +500,26 @@ bool canvas::handle_event(SDL_Event &event)
 		if (elem->in_edit_mode())
 			someone_in_editmode = true;
 	switch (event.type) {
-		case SDL_QUIT:
+		case SDL_EVENT_QUIT:
 			logger::get().debug("QUIT");
 			leave = true;
 			return true;
 			break;
 
-		case SDL_KEYDOWN:
-			if (event.key.keysym.sym != SDLK_TAB)
+		case SDL_EVENT_KEY_DOWN:
+			if (event.key.key != SDLK_TAB)
 				zap_autocomplete();
-			if ((event.key.keysym.mod & (KMOD_LSHIFT)))
+			if ((event.key.mod & (SDL_KMOD_LSHIFT)))
 				shift_down = true;
 			else
 				shift_down = false;
-			switch (event.key.keysym.sym) {
+			switch (event.key.key) {
 				case SDLK_UP:
 							from_offsetX = offsetX;
 							from_offsetY = offsetY;
 							from_scaleX = scaleX;
 							from_scaleY = scaleY;
-							animation_start = SDL_GetTicks64();
+							animation_start = SDL_GetTicks();
 							target_offsetX = offsetX;
 							target_offsetY = offsetY;
 							target_scaleX = scaleX;
@@ -539,7 +538,7 @@ bool canvas::handle_event(SDL_Event &event)
 							from_offsetY = offsetY;
 							from_scaleX = scaleX;
 							from_scaleY = scaleY;
-							animation_start = SDL_GetTicks64();
+							animation_start = SDL_GetTicks();
 							target_offsetX = offsetX;
 							target_offsetY = offsetY;
 							target_scaleX = scaleX;
@@ -553,7 +552,7 @@ bool canvas::handle_event(SDL_Event &event)
 								target_offsetY = current_scene->sizeY;
 					break;
 				case SDLK_LEFT:
-					if (event.key.keysym.mod & KMOD_LCTRL) {
+					if (event.key.mod & SDL_KMOD_LCTRL) {
 						icon_bar->previous();
 					} else {
 						if (!someone_in_editmode) {
@@ -561,7 +560,7 @@ bool canvas::handle_event(SDL_Event &event)
 							from_offsetY = offsetY;
 							from_scaleX = scaleX;
 							from_scaleY = scaleY;
-							animation_start = SDL_GetTicks64();
+							animation_start = SDL_GetTicks();
 							target_offsetX = offsetX;
 							target_offsetY = offsetY;
 							target_scaleX = scaleX;
@@ -578,7 +577,7 @@ bool canvas::handle_event(SDL_Event &event)
 					break;
 
 				case SDLK_RIGHT:
-					if (event.key.keysym.mod & KMOD_LCTRL) {
+					if (event.key.mod & SDL_KMOD_LCTRL) {
 						icon_bar->next();
 					} else {
 						if (!someone_in_editmode) {
@@ -586,7 +585,7 @@ bool canvas::handle_event(SDL_Event &event)
 							from_offsetY = offsetY;
 							from_scaleX = scaleX;
 							from_scaleY = scaleY;
-							animation_start = SDL_GetTicks64();
+							animation_start = SDL_GetTicks();
 							target_offsetX = offsetX;
 							target_offsetY = offsetY;
 							target_scaleX = scaleX;
@@ -605,12 +604,12 @@ bool canvas::handle_event(SDL_Event &event)
 				case SDLK_KP_PLUS:
 				case SDLK_EQUALS:
 					if (!someone_in_editmode) {
-						int sx = 0, sy = 0;
+						float sx = 0.0f, sy = 0.0f;
 						SDL_GetMouseState(&sx, &sy);
 						if (sx < main_area_rect.x || sx > main_area_rect.x + main_area_rect.w ||
 						    sy < main_area_rect.y || sy > main_area_rect.y + main_area_rect.h) {
-							sx = main_area_rect.x + main_area_rect.w / 2;
-							sy = main_area_rect.y + main_area_rect.h / 2;
+							sx = main_area_rect.x + main_area_rect.w * 0.5f;
+							sy = main_area_rect.y + main_area_rect.h * 0.5f;
 						}
 						start_zoom_animation_at_screen(sx, sy, 1.15f);
 						fittoscreen = false;
@@ -619,12 +618,12 @@ bool canvas::handle_event(SDL_Event &event)
 				case SDLK_MINUS:
 				case SDLK_KP_MINUS:
 					if (!someone_in_editmode) {
-						int sx = 0, sy = 0;
+						float sx = 0.0f, sy = 0.0f;
 						SDL_GetMouseState(&sx, &sy);
 						if (sx < main_area_rect.x || sx > main_area_rect.x + main_area_rect.w ||
 						    sy < main_area_rect.y || sy > main_area_rect.y + main_area_rect.h) {
-							sx = main_area_rect.x + main_area_rect.w / 2;
-							sy = main_area_rect.y + main_area_rect.h / 2;
+							sx = main_area_rect.x + main_area_rect.w * 0.5f;
+							sy = main_area_rect.y + main_area_rect.h * 0.5f;
 						}
 						start_zoom_animation_at_screen(sx, sy, 1.0f / 1.15f);
 						fittoscreen = false;
@@ -682,17 +681,17 @@ bool canvas::handle_event(SDL_Event &event)
 
 					}
 					break;
-				case SDLK_f:
+				case SDLK_F:
 					if (!someone_in_editmode) {
 						show_fps = !show_fps;
 					}
 					break;
-				case SDLK_g:
+				case SDLK_G:
 					if (!someone_in_editmode) {
 						draw_grid = !draw_grid;
 					}
 					break;
-				case SDLK_o:
+				case SDLK_O:
 					if (!someone_in_editmode) {
 						if (animation_time > 1 && animation_time < 1000)
 							animation_time = 4000;
@@ -703,18 +702,18 @@ bool canvas::handle_event(SDL_Event &event)
 
 					}
 					break;
-				case SDLK_n:
+				case SDLK_N:
 					if (!someone_in_editmode) {
 						wire_debug_mode = !wire_debug_mode;
 					}
 					break;
-				case SDLK_t:
+				case SDLK_T:
 					if (!someone_in_editmode) {
 						show_critical_path = !show_critical_path;
 					}
 					break;
-				case SDLK_z:
-					if (event.key.keysym.mod & KMOD_LCTRL) {
+				case SDLK_Z:
+					if (event.key.mod & SDL_KMOD_LCTRL) {
 						zap_autocomplete();
 						if (auto undone = get_undo()) {
 							logger::get().debug("UNDO");
@@ -733,15 +732,15 @@ bool canvas::handle_event(SDL_Event &event)
 						}
 					}
 					break;
-				case SDLK_a:
-					if (event.key.keysym.mod & KMOD_LCTRL) {
+				case SDLK_A:
+					if (event.key.mod & SDL_KMOD_LCTRL) {
 						for (auto &elem : current_scene->elements) {
 							elem->select();
 						}
 					}
 					break;
-				case SDLK_c:
-					if (event.key.keysym.mod & KMOD_LCTRL) {
+				case SDLK_C:
+					if (event.key.mod & SDL_KMOD_LCTRL) {
 						logger::get().debug("copy");
 						json p;
 
@@ -750,13 +749,13 @@ bool canvas::handle_event(SDL_Event &event)
 						logger::get().debug("clipboard is {}", clipboard);
 					}
 					break;
-				case SDLK_q:
-					if (event.key.keysym.mod & KMOD_LCTRL) {
+				case SDLK_Q:
+					if (event.key.mod & SDL_KMOD_LCTRL) {
 						return true;
 					}
 					break;
-				case SDLK_x:
-					if (event.key.keysym.mod & KMOD_LCTRL) {
+				case SDLK_X:
+					if (event.key.mod & SDL_KMOD_LCTRL) {
 						json p;
 
 						take_undo_snapshot(current_scene.get());
@@ -768,8 +767,8 @@ bool canvas::handle_event(SDL_Event &event)
 						current_scene->redo_nets();
 					}
 					break;
-				case SDLK_v:
-					if (event.key.keysym.mod & KMOD_LCTRL) {
+				case SDLK_V:
+					if (event.key.mod & SDL_KMOD_LCTRL) {
 						float x1 = 1000000, x2 = -100000;
 						float y1 = 1000000, y2 = -100000;
 						logger::get().debug("paste");
@@ -793,13 +792,13 @@ bool canvas::handle_event(SDL_Event &event)
 					break;
 					break;
 			}
-		case SDL_KEYUP:
-			if ((event.key.keysym.mod & (KMOD_LSHIFT))) 
+		case SDL_EVENT_KEY_UP:
+			if ((event.key.mod & (SDL_KMOD_LSHIFT))) 
 				shift_down = true;
 			else
 				shift_down = false;
 			break;
-		case SDL_MOUSEBUTTONDOWN:
+		case SDL_EVENT_MOUSE_BUTTON_DOWN:
 			zap_autocomplete();
 			if (active_menu && !dialogbox) {
 				float x, y;
@@ -819,7 +818,7 @@ bool canvas::handle_event(SDL_Event &event)
 				if (event.motion.x >= ui_area_rect.x && !dialogbox)
 					canvas::handle_event_iconarea(event);	
 			break;
-		case SDL_MOUSEBUTTONUP:
+		case SDL_EVENT_MOUSE_BUTTON_UP:
 			if (event.button.button == SDL_BUTTON_LEFT) {
 				left_mouse_down = false;
 				float x, y;
@@ -938,11 +937,11 @@ bool canvas::handle_event(SDL_Event &event)
 			}
 			current_scene->remove_orphans();
 			break;
-		case SDL_MOUSEMOTION:
+		case SDL_EVENT_MOUSE_MOTION:
 			float x,y;
 			mouseX = scr_to_X(event.motion.x);
 			mouseY = scr_to_Y(event.motion.y);
-			mouse_timestamp = SDL_GetTicks64();
+			mouse_timestamp = SDL_GetTicks();
 			x = scr_to_X(event.motion.x);
 			y = scr_to_Y(event.motion.y);
 
@@ -1019,15 +1018,13 @@ bool canvas::handle_event(SDL_Event &event)
 			}
 			break;
 
-		case SDL_MOUSEWHEEL:
+		case SDL_EVENT_MOUSE_WHEEL:
 			if (dialogbox)
 				break;
 			{
-				const float steps = (event.wheel.preciseY != 0.0f)
-				                        ? event.wheel.preciseY
-				                        : static_cast<float>(event.wheel.y);
+				const float steps = event.wheel.y;
 				if (steps != 0.0f) {
-					int sx = 0, sy = 0;
+					float sx = 0.0f, sy = 0.0f;
 					SDL_GetMouseState(&sx, &sy);
 					const float factor = std::pow(1.15f, std::clamp(steps, -5.0f, 5.0f));
 					start_zoom_animation_at_screen(sx, sy, factor);
@@ -1038,32 +1035,35 @@ bool canvas::handle_event(SDL_Event &event)
 			}
 			break;
 
-		case SDL_POLLSENTINEL:
+		case SDL_EVENT_WINDOW_SHOWN:
+			window_shown = true;
 			break;
-		case SDL_WINDOWEVENT:
-			switch( event.window.event) {
-				case SDL_WINDOWEVENT_SHOWN:
-					window_shown = true;
-					break;
-
-				case SDL_WINDOWEVENT_HIDDEN:
-					window_shown = false;
-					break;
-				case SDL_WINDOWEVENT_RESIZED:
-				case SDL_WINDOWEVENT_SIZE_CHANGED:
-					update_window_size(event.window.data1, event.window.data2);
-					break;
-				case SDL_WINDOWEVENT_CLOSE:   /* user clicked the 'x' */
-					SDL_HideWindow(window.get());
-					leave = true;
-					break;
-				case SDL_WINDOWEVENT_FOCUS_GAINED:
-					has_focus = true;
-					break;
-				case SDL_WINDOWEVENT_FOCUS_LOST:
-					has_focus = false;
-					break;
+		case SDL_EVENT_WINDOW_HIDDEN:
+			window_shown = false;
+			break;
+		case SDL_EVENT_WINDOW_RESIZED:
+		case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
+			update_window_size(event.window.data1, event.window.data2);
+			break;
+		case SDL_EVENT_WINDOW_DISPLAY_SCALE_CHANGED:
+			DPI = sdl::window_display_scale(window.get()) * 96.0f;
+			button_rect.w = static_cast<int>(DPI / 2.0f);
+			{
+				int cw = 0, ch = 0;
+				SDL_GetWindowSize(window.get(), &cw, &ch);
+				layout_win_w = 0;
+				update_window_size(cw, ch);
 			}
+			break;
+		case SDL_EVENT_WINDOW_CLOSE_REQUESTED:   /* user clicked the 'x' */
+			SDL_HideWindow(window.get());
+			leave = true;
+			break;
+		case SDL_EVENT_WINDOW_FOCUS_GAINED:
+			has_focus = true;
+			break;
+		case SDL_EVENT_WINDOW_FOCUS_LOST:
+			has_focus = false;
 			break;
 	}
 
@@ -1099,7 +1099,7 @@ void canvas::draw(void)
 			update_window_size(cur_w, cur_h);
 	}
 	icon_bar->draw();
-	SDL_RenderSetClipRect(renderer.get(), &main_area_rect);
+	SDL_SetRenderClipRect(renderer.get(), &main_area_rect);
 
 	/* then fill in the darger gray grid to keep lines */
 	float X = 0, Y = 0;
@@ -1164,7 +1164,7 @@ void canvas::draw(void)
 			}
 		}
 		if (hovering_crit) {
-			const uint64_t now_ms = SDL_GetTicks64();
+			const uint64_t now_ms = SDL_GetTicks();
 			if (!crit_hover_active) {
 				crit_hover_active = true;
 				crit_hover_start_ms = now_ms;
@@ -1256,7 +1256,7 @@ void canvas::draw(void)
 	}
 
 	flush_line_batch();
-	SDL_RenderSetClipRect(renderer.get(), nullptr);
+	SDL_SetRenderClipRect(renderer.get(), nullptr);
 	if (fps > 0)
 		button_bar->set_fps(fps);
 	button_bar->draw_at(this, button_rect.w, button_rect.h);
@@ -1291,7 +1291,7 @@ void canvas::draw(void)
 	draw_autocomplete();
 
 	if (active_menu) {
-		SDL_RenderSetClipRect(renderer.get(), nullptr);
+		SDL_SetRenderClipRect(renderer.get(), nullptr);
 		active_menu->draw_at(this);
 	}
 
@@ -1338,10 +1338,10 @@ void canvas::draw_tooltip(float X, float Y, std::string_view tooltip)
 	rect.w = tw / scale;
 	rect.h = th / scale;
 
-	SDL_RenderSetClipRect(renderer.get(), nullptr);	
+	SDL_SetRenderClipRect(renderer.get(), nullptr);	
 	SDL_SetRenderDrawColor(renderer.get(), 45, 45, 45, 220);
-	SDL_RenderFillRectF(renderer.get(), &rect);
-	SDL_RenderCopyF(renderer.get(), text, nullptr, &rect);
+	SDL_RenderFillRect(renderer.get(), &rect);
+	SDL_RenderTexture(renderer.get(), text, nullptr, &rect);
 }
 
 void canvas::draw_hover_inspector(void)
@@ -1428,7 +1428,7 @@ void canvas::draw_hover_inspector(void)
 		return;
 
 	fill_scale();
-	SDL_RenderSetClipRect(renderer.get(), nullptr);
+	SDL_SetRenderClipRect(renderer.get(), nullptr);
 
 	/* 1. Top single-line name + file:line banner. */
 	float top_banner_bottom = static_cast<float>(main_area_rect.y);
@@ -1446,18 +1446,18 @@ void canvas::draw_hover_inspector(void)
 			                static_cast<float>(main_area_rect.w), draw_h + 2.0f * pad_y};
 			top_banner_bottom = bg.y + bg.h;
 			SDL_SetRenderDrawColor(renderer.get(), 18, 20, 24, 210);
-			SDL_RenderFillRectF(renderer.get(), &bg);
+			SDL_RenderFillRect(renderer.get(), &bg);
 			SDL_SetRenderDrawColor(renderer.get(), 90, 100, 115, 220);
-			SDL_RenderDrawLineF(renderer.get(), bg.x, bg.y + bg.h - 1.0f,
+			SDL_RenderLine(renderer.get(), bg.x, bg.y + bg.h - 1.0f,
 			                    bg.x + bg.w - 1.0f, bg.y + bg.h - 1.0f);
 
 			SDL_Rect clip = {static_cast<int>(bg.x + pad_x), static_cast<int>(bg.y + pad_y),
 			                 std::max(1, static_cast<int>(bg.w - 2.0f * pad_x)),
 			                 std::max(1, static_cast<int>(draw_h))};
-			SDL_RenderSetClipRect(renderer.get(), &clip);
+			SDL_SetRenderClipRect(renderer.get(), &clip);
 			SDL_FRect dst = {bg.x + pad_x, bg.y + pad_y, draw_w, draw_h};
-			SDL_RenderCopyF(renderer.get(), tex, nullptr, &dst);
-			SDL_RenderSetClipRect(renderer.get(), nullptr);
+			SDL_RenderTexture(renderer.get(), tex, nullptr, &dst);
+			SDL_SetRenderClipRect(renderer.get(), nullptr);
 		}
 	}
 
@@ -1576,14 +1576,14 @@ void canvas::draw_hover_inspector(void)
 
 			SDL_FRect bg = {box_x, box_y, box_w, box_h};
 			SDL_SetRenderDrawColor(renderer.get(), 18, 20, 24, bg_alpha);
-			SDL_RenderFillRectF(renderer.get(), &bg);
+			SDL_RenderFillRect(renderer.get(), &bg);
 			SDL_SetRenderDrawColor(renderer.get(), 90, 100, 115, border_alpha);
-			SDL_RenderDrawRectF(renderer.get(), &bg);
+			SDL_RenderRect(renderer.get(), &bg);
 
 			SDL_Rect clip = {static_cast<int>(box_x + pad_x), static_cast<int>(box_y + pad_y),
 			                 std::max(1, static_cast<int>(box_w - 2.0f * pad_x)),
 			                 std::max(1, static_cast<int>(box_h - 2.0f * pad_y))};
-			SDL_RenderSetClipRect(renderer.get(), &clip);
+			SDL_SetRenderClipRect(renderer.get(), &clip);
 
 			float cur_y = box_y + pad_y;
 			for (const auto &lt : rendered) {
@@ -1591,13 +1591,13 @@ void canvas::draw_hover_inspector(void)
 					if (translucent)
 						SDL_SetTextureAlphaMod(lt.tex, text_alpha);
 					SDL_FRect dst = {box_x + pad_x, cur_y, lt.w, lt.h};
-					SDL_RenderCopyF(renderer.get(), lt.tex, nullptr, &dst);
+					SDL_RenderTexture(renderer.get(), lt.tex, nullptr, &dst);
 					if (translucent)
 						SDL_SetTextureAlphaMod(lt.tex, 255);
 				}
 				cur_y += lt.h + line_gap;
 			}
-			SDL_RenderSetClipRect(renderer.get(), nullptr);
+			SDL_SetRenderClipRect(renderer.get(), nullptr);
 		}
 	}
 }

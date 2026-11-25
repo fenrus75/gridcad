@@ -13,13 +13,13 @@
 #pragma once
 
 #include <memory>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
+#include <SDL3/SDL.h>
+#include <SDL3_ttf/SDL_ttf.h>
 
 namespace sdl {
 
 /*
- * Zero-overhead RAII smart pointer wrappers for SDL2 / SDL2_ttf handles.
+ * Zero-overhead RAII smart pointer wrappers for SDL3 / SDL3_ttf handles.
  * Destruction order when held as class members follows standard C++ reverse
  * declaration order: declare WindowPtr before RendererPtr before any
  * TexturePtr / FontPtr caches so textures are freed while the renderer is
@@ -50,7 +50,7 @@ struct TextureDeleter {
 struct SurfaceDeleter {
     void operator()(SDL_Surface *s) const noexcept {
         if (s)
-            SDL_FreeSurface(s);
+            SDL_DestroySurface(s);
     }
 };
 
@@ -120,76 +120,28 @@ public:
 };
 
 /*
- * Return the target window ID for an SDL event without assuming union-member
- * layout aliasing (required for SDL3 portability).
+ * Return the target window ID for an SDL event using SDL3's SDL_GetWindowFromEvent().
  */
-inline Uint32 event_window_id(const SDL_Event &ev) noexcept
+inline SDL_WindowID event_window_id(const SDL_Event &ev) noexcept
 {
-    switch (ev.type) {
-    case SDL_WINDOWEVENT:
-        return ev.window.windowID;
-    case SDL_KEYDOWN:
-    case SDL_KEYUP:
-        return ev.key.windowID;
-    case SDL_TEXTEDITING:
-        return ev.edit.windowID;
-    case SDL_TEXTINPUT:
-        return ev.text.windowID;
-    case SDL_MOUSEMOTION:
-        return ev.motion.windowID;
-    case SDL_MOUSEBUTTONDOWN:
-    case SDL_MOUSEBUTTONUP:
-        return ev.button.windowID;
-    case SDL_MOUSEWHEEL:
-        return ev.wheel.windowID;
-    case SDL_DROPFILE:
-    case SDL_DROPTEXT:
-    case SDL_DROPBEGIN:
-    case SDL_DROPCOMPLETE:
-        return ev.drop.windowID;
-    default:
-        if (ev.type >= SDL_USEREVENT)
-            return ev.user.windowID;
-        return 0;
-    }
+    SDL_Window *w = SDL_GetWindowFromEvent(&ev);
+    return w ? SDL_GetWindowID(w) : 0;
 }
 
 /*
  * Return display content scale factor (1.0 = 96 DPI, 2.0 = 192 DPI).
- * Maps directly to SDL_GetDisplayContentScale / SDL_GetWindowDisplayScale in SDL3.
  */
 inline float primary_display_scale() noexcept
 {
-    float dpi = 96.0f;
-    if (SDL_GetDisplayDPI(0, &dpi, nullptr, nullptr) != 0 || dpi < 96.0f)
-        dpi = 96.0f;
-    return dpi / 96.0f;
+    SDL_DisplayID d = SDL_GetPrimaryDisplay();
+    float s = d ? SDL_GetDisplayContentScale(d) : 1.0f;
+    return (s > 0.0f) ? s : 1.0f;
 }
 
 inline float window_display_scale(SDL_Window *window) noexcept
 {
-    int idx = window ? SDL_GetWindowDisplayIndex(window) : 0;
-    if (idx < 0)
-        idx = 0;
-    float dpi = 96.0f;
-    if (SDL_GetDisplayDPI(idx, &dpi, nullptr, nullptr) != 0 || dpi < 96.0f)
-        dpi = 96.0f;
-    return dpi / 96.0f;
+    float s = window ? SDL_GetWindowDisplayScale(window) : primary_display_scale();
+    return (s > 0.0f) ? s : 1.0f;
 }
 
 } // namespace sdl
-
-#if !SDL_VERSION_ATLEAST(3, 0, 0)
-/* Temporary SDL3-compatible shim over SDL2's SDL_QueryTexture(). */
-inline bool SDL_GetTextureSize(SDL_Texture *texture, float *w, float *h) noexcept
-{
-    int iw = 0, ih = 0;
-    if (!texture || SDL_QueryTexture(texture, nullptr, nullptr, &iw, &ih) != 0)
-        return false;
-    if (w)
-        *w = static_cast<float>(iw);
-    if (h)
-        *h = static_cast<float>(ih);
-    return true;
-}
-#endif

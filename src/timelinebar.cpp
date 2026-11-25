@@ -106,7 +106,7 @@ bool timelinebar::handle_event(const SDL_Event &event, const SDL_Rect &bar_rect)
 
     const layout l = compute_layout(bar_rect);
 
-    if (event.type == SDL_MOUSEMOTION) {
+    if (event.type == SDL_EVENT_MOUSE_MOTION) {
         hover_x_ = event.motion.x;
         hover_y_ = event.motion.y;
         if (scrubbing_) {
@@ -116,7 +116,7 @@ bool timelinebar::handle_event(const SDL_Event &event, const SDL_Rect &bar_rect)
         return point_in_rect(event.motion.x, event.motion.y, bar_rect);
     }
 
-    if (event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT) {
+    if (event.type == SDL_EVENT_MOUSE_BUTTON_UP && event.button.button == SDL_BUTTON_LEFT) {
         if (scrubbing_) {
             scrubbing_ = false;
             return true;
@@ -124,7 +124,7 @@ bool timelinebar::handle_event(const SDL_Event &event, const SDL_Rect &bar_rect)
         return point_in_rect(event.button.x, event.button.y, bar_rect);
     }
 
-    if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) {
+    if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN && event.button.button == SDL_BUTTON_LEFT) {
         const int mx = event.button.x;
         const int my = event.button.y;
         if (!point_in_rect(mx, my, bar_rect))

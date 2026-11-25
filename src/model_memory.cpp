@@ -121,8 +121,8 @@ void model_memory::handle_event(class basecanvas *canvas, SDL_Event &event)
     if (!selected || !single)
         return;
     switch (event.type) {
-	case SDL_KEYDOWN:        
-        	switch (event.key.keysym.sym) {
+	case SDL_EVENT_KEY_DOWN:        
+        	switch (event.key.key) {
                 case SDLK_RETURN:
                     name_edit->toggle_edit_mode();
                     break;

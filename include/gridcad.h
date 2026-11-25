@@ -20,9 +20,10 @@
 #include "logger.h"
 #include "sdl_raii.h"
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
+#include <SDL3/SDL.h>
+#include <SDL3_ttf/SDL_ttf.h>
 
+#include <climits>
 #include <functional>
 #include <memory>
 #include <vector>
@@ -149,7 +150,7 @@ public:
         if (vsync_state == want || !renderer)
             return;
         vsync_state = want;
-        SDL_RenderSetVSync(renderer.get(), want);
+        SDL_SetRenderVSync(renderer.get(), want);
     }
     void set_fps(float _fps) { fps = _fps;};
     virtual float distance_from_mouse(float X, float Y) { return 0; };

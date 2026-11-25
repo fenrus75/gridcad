@@ -2,11 +2,11 @@
 #include "hexcanvas.h"
 
 
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 
 #include "imgui.h"
-#include "backends/imgui_impl_sdl2.h"
-#include "backends/imgui_impl_sdlrenderer2.h"
+#include "backends/imgui_impl_sdl3.h"
+#include "backends/imgui_impl_sdlrenderer3.h"
 #include "imgui_hex.h"
 
 hexcanvas::hexcanvas(std::string name, unsigned char *_buffer, unsigned int _length) : basecanvas()
@@ -16,30 +16,30 @@ hexcanvas::hexcanvas(std::string name, unsigned char *_buffer, unsigned int _len
     std::string s;
     s = "Content edit for " + name;
 
-    window.reset(SDL_CreateWindow(s.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1024, 768, SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI));
-    renderer.reset(SDL_CreateRenderer(window.get(), -1, SDL_RENDERER_ACCELERATED));
+    window.reset(SDL_CreateWindow(s.c_str(), 1024, 768, SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY));
+    renderer.reset(SDL_CreateRenderer(window.get(), nullptr));
     windowID = SDL_GetWindowID(window.get());
     SDL_SetRenderDrawBlendMode(renderer.get(), SDL_BLENDMODE_BLEND);
 
-    ImGui_ImplSDL2_InitForSDLRenderer(window.get(), renderer.get());
-    ImGui_ImplSDLRenderer2_Init(renderer.get());
+    ImGui_ImplSDL3_InitForSDLRenderer(window.get(), renderer.get());
+    ImGui_ImplSDLRenderer3_Init(renderer.get());
 }
 
 
 hexcanvas::~hexcanvas(void)
 {
     unregister_canvas(this);
-    ImGui_ImplSDLRenderer2_Shutdown();
-    ImGui_ImplSDL2_Shutdown();
+    ImGui_ImplSDLRenderer3_Shutdown();
+    ImGui_ImplSDL3_Shutdown();
 }
 
 
 bool hexcanvas::handle_event(SDL_Event &event)
 {
 
-    ImGui_ImplSDL2_ProcessEvent(&event);
+    ImGui_ImplSDL3_ProcessEvent(&event);
 
-    if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE) {
+    if (event.type == SDL_EVENT_WINDOW_CLOSE_REQUESTED) {
         SDL_HideWindow(window.get()); 
         return false;
     }
@@ -50,8 +50,8 @@ bool hexcanvas::handle_event(SDL_Event &event)
 
 void hexcanvas::draw(void)
 {
-    ImGui_ImplSDLRenderer2_NewFrame();
-    ImGui_ImplSDL2_NewFrame();
+    ImGui_ImplSDLRenderer3_NewFrame();
+    ImGui_ImplSDL3_NewFrame();
     ImGui::NewFrame();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
 
@@ -70,7 +70,7 @@ void hexcanvas::draw(void)
 
     
     ImGui::Render();
-    SDL_RenderSetScale(renderer.get(), io.DisplayFramebufferScale.x, io.DisplayFramebufferScale.y);
+    SDL_SetRenderScale(renderer.get(), io.DisplayFramebufferScale.x, io.DisplayFramebufferScale.y);
     SDL_RenderClear(renderer.get());
-    ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData(), renderer.get());
+    ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer.get());
 }

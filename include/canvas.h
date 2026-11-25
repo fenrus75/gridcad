@@ -68,7 +68,7 @@ protected:
     std::unique_ptr<class dialog> dialogbox;
     bool left_mouse_down = false;
     float mouseX = 0.0, mouseY = 0.0;
-    uint64_t mouse_timestamp = 0; /* SDL_GetTicks64 time of when the mouse last moved */
+    uint64_t mouse_timestamp = 0; /* SDL_GetTicks time of when the mouse last moved */
     float click_start_X = 0.0, click_start_Y = 0.0;
     int middle_X = 0, middle_Y = 0;
     bool shift_down = false; /* not saved in json */

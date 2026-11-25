@@ -17,7 +17,7 @@
 #include "contextmenu.h"
 
 #include <map>
-#include <SDL2/SDL_image.h>
+#include <SDL3_image/SDL_image.h>
 
 
 void callback_ib(class iconbar *bar, class oneiconbar *choice)
@@ -71,7 +71,7 @@ void iconbar::resize(SDL_Rect _rect)
 void iconbar::draw(void)
 {
 	SDL_FRect drop;
-	SDL_RenderSetClipRect(renderer, &rect);    
+	SDL_SetRenderClipRect(renderer, &rect);    
 	float w = 0.0f, h = 0.0f;
 	float newH;
 
@@ -93,7 +93,7 @@ void iconbar::draw(void)
 	drop.h = newH;
 
 	SDL_SetTextureAlphaMod(dropdown.get(), 255);
-	SDL_RenderCopyF(renderer, dropdown.get(), nullptr, &drop);
+	SDL_RenderTexture(renderer, dropdown.get(), nullptr, &drop);
 }
 
 class icon * iconbar::current_icon(int ScreenX, int ScreenY)
@@ -126,7 +126,7 @@ void oneiconbar::handle_event(SDL_Event &event)
 	float ScreenX = (event.motion.x);
 	float ScreenY = (event.motion.y);
 	
-	if (event.type != SDL_MOUSEMOTION)
+	if (event.type != SDL_EVENT_MOUSE_MOTION)
 		return;
 
 	float dX, dY;
@@ -162,7 +162,7 @@ void oneiconbar::handle_event(SDL_Event &event)
 	if (gridX != hover_item_x || gridY != hover_item_y) {
 		hover_item_x = gridX;
 		hover_item_y = gridY;
-		hover_time = SDL_GetTicks64();
+		hover_time = SDL_GetTicks();
 	}	
 }
 
@@ -221,8 +221,8 @@ void icon::draw(SDL_Renderer *renderer, float X, float Y, float width, float hei
 			Alpha(color));
 	SDL_SetTextureAlphaMod(texture.get(), 255);
 	if (active)                              
-		SDL_RenderFillRectF(renderer, &rect);
-	SDL_RenderCopyF(renderer, texture.get(), nullptr, &rect);
+		SDL_RenderFillRect(renderer, &rect);
+	SDL_RenderTexture(renderer, texture.get(), nullptr, &rect);
 
 	if (overlay != "") {
 		float newX, newY, newW, newH;
@@ -297,7 +297,7 @@ static float delta_hover(uint64_t deltaT)
 void oneiconbar::draw(void)
 {
 	int x,y;
-	SDL_RenderSetClipRect(renderer, &rect);    
+	SDL_SetRenderClipRect(renderer, &rect);    
 	int color = 0;
 	SDL_FRect box;
 	const float scale = cell_scale();
@@ -307,7 +307,7 @@ void oneiconbar::draw(void)
 		for (x = 0; x < 2; x++) {
 			float delta = 0.0;
 			if (hover_item_x == x && hover_item_y == y && icons[x][y]) {
-				uint64_t now = SDL_GetTicks64();
+				uint64_t now = SDL_GetTicks();
 				delta = delta_hover(now - hover_time) * (scale / 40.0f);
 			}
 			box.x = rect.x + (0.5f + 2.5f * x) * scale - delta;
@@ -316,7 +316,7 @@ void oneiconbar::draw(void)
 			box.w = 2.0f * scale + delta * 2.0f;
 			SDL_SetRenderDrawColor(renderer, R(color), G(color), B(color),
 					Alpha(color));
-			SDL_RenderFillRectF(renderer, &box);
+			SDL_RenderFillRect(renderer, &box);
 			if (icons[x][y])
 				icons[x][y]->draw(renderer, rect.x + (0.6f + 2.5f * x) * scale, rect.y + (0.6f + 2.5f * y) * scale + offset_y, 1.8f * scale, 1.8f * scale, canvas, delta);
 

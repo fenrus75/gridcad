@@ -57,9 +57,11 @@ void callback_single_clock(class element *element)
 	SDL_PushEvent(&ev);
 }
 
-Uint32 SDL_timer_func(Uint32 interval, void *param)
+Uint32 SDL_timer_func(void *param, SDL_TimerID timerID, Uint32 interval)
 {
-     SDL_Event ev = {};
+    (void)param;
+    (void)timerID;
+    SDL_Event ev = {};
 
 
     ev.type = SDL_timer_event;

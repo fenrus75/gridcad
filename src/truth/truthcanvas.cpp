@@ -22,8 +22,8 @@ truthcanvas::truthcanvas(class model_truth *_element)
 
     element = _element;
 
-    window.reset(SDL_CreateWindow(("GridCad Truth Table / "+ _element->get_full_name()).c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_RESIZABLE));
-    renderer.reset(SDL_CreateRenderer(window.get(), -1, SDL_RENDERER_ACCELERATED));
+    window.reset(SDL_CreateWindow(("GridCad Truth Table / "+ _element->get_full_name()).c_str(), 800, 600, SDL_WINDOW_RESIZABLE));
+    renderer.reset(SDL_CreateRenderer(window.get(), nullptr));
     SDL_SetRenderDrawBlendMode(renderer.get(), SDL_BLENDMODE_BLEND);
 
     windowID = SDL_GetWindowID(window.get());
@@ -165,13 +165,13 @@ bool truthcanvas::handle_event(SDL_Event &event)
     for (auto &widget : widgets)
         widget->handle_event(event);
         
-    if (event.type == SDL_KEYDOWN) {
+    if (event.type == SDL_EVENT_KEY_DOWN) {
          element->names_to_ports();
     }
         
     switch (event.type) {
-    case SDL_KEYDOWN:
-         switch (event.key.keysym.sym) {
+    case SDL_EVENT_KEY_DOWN:
+         switch (event.key.key) {
 	 case SDLK_UP:
 	       for (auto &widget : widgets)
 	          if (widget->get_gridX() == selectX && widget->get_gridY() == selectY-1 && selectY >= 1) {
@@ -214,7 +214,7 @@ bool truthcanvas::handle_event(SDL_Event &event)
                break;
          }
          break;
-    case SDL_MOUSEBUTTONDOWN:
+    case SDL_EVENT_MOUSE_BUTTON_DOWN:
           float x, y;
 	  x = scr_to_X(event.motion.x);
 	  y = scr_to_Y(event.motion.y);
@@ -229,10 +229,8 @@ bool truthcanvas::handle_event(SDL_Event &event)
                
           break;
    
-    case SDL_WINDOWEVENT:
-         if (event.window.event == SDL_WINDOWEVENT_CLOSE) {  /* user clicked the 'x' */
-              SDL_HideWindow(window.get()); /* TODO: THis leaks like a sieve */
-         }
+    case SDL_EVENT_WINDOW_CLOSE_REQUESTED:  /* user clicked the 'x' */
+         SDL_HideWindow(window.get()); /* TODO: THis leaks like a sieve */
          break;
     };
     

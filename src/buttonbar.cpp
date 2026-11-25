@@ -18,7 +18,7 @@ void buttonbar::handle_event(SDL_Event &event)
 {
 	unsigned int x, y;
 	switch (event.type) {
-		case SDL_MOUSEBUTTONDOWN:
+		case SDL_EVENT_MOUSE_BUTTON_DOWN:
 			unsigned int buttonindex;
 			x = event.motion.x;
 			y = event.motion.y;
@@ -31,11 +31,11 @@ void buttonbar::handle_event(SDL_Event &event)
 
 			buttons[buttonindex]->activate();
 			break;
-		case SDL_MOUSEBUTTONUP:
+		case SDL_EVENT_MOUSE_BUTTON_UP:
 			for (auto &button : buttons)
 				button->deactivate();
 			break;
-		case SDL_MOUSEMOTION:
+		case SDL_EVENT_MOUSE_MOTION:
 			mouseX = event.motion.x;
 			mouseY = event.motion.y;
 
@@ -77,7 +77,7 @@ void buttonbar::draw_at(class basecanvas *canvas, int W, int H)
 	
 	if (buttonindex != hover_button) {
 		hover_button = buttonindex;
-		hover_time = SDL_GetTicks64();
+		hover_time = SDL_GetTicks();
 	}
 	
 
@@ -85,7 +85,7 @@ void buttonbar::draw_at(class basecanvas *canvas, int W, int H)
 		auto &button = buttons[i];
 		float delta = 0;
 		if (hover_button == i)
-			delta = delta_hover(SDL_GetTicks64() - hover_time);
+			delta = delta_hover(SDL_GetTicks() - hover_time);
 		button->draw_at(canvas, canvas->scr_to_X(0), canvas->scr_to_Y(0) + Y_SPACING * h  * i, w, h, buttonindex == i, delta);
 	}
 

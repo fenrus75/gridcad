@@ -456,7 +456,7 @@ void element::hover_ports(class basecanvas *canvas)
 void element::handle_event(class basecanvas *thiscanvas, SDL_Event &event)
 {
 	switch (event.type) {
-		case SDL_MOUSEMOTION:
+		case SDL_EVENT_MOUSE_MOTION:
 			mouseX = thiscanvas->scr_to_X(event.motion.x); 
 			mouseY = thiscanvas->scr_to_Y(event.motion.y);
 

@@ -22,8 +22,8 @@ projcanvas::projcanvas(bool _library_mode)
 
 	fill_png_maps();
 
-	window.reset(SDL_CreateWindow(s.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1024, 768, SDL_WINDOW_RESIZABLE));
-	renderer.reset(SDL_CreateRenderer(window.get(), -1, SDL_RENDERER_ACCELERATED));
+	window.reset(SDL_CreateWindow(s.c_str(), 1024, 768, SDL_WINDOW_RESIZABLE));
+	renderer.reset(SDL_CreateRenderer(window.get(), nullptr));
 	SDL_SetRenderDrawBlendMode(renderer.get(), SDL_BLENDMODE_BLEND);
 
 	scaleX = 25;
@@ -145,7 +145,7 @@ void projcanvas::draw(void)
 			Alpha(COLOR_BACKGROUND_GRID));
 	SDL_RenderClear(renderer.get());
 	
-	uint64_t now = SDL_GetTicks64();
+	uint64_t now = SDL_GetTicks();
 
 	float X = 0, Y = 0;
 	while (Y < 100) {
@@ -269,12 +269,12 @@ void projcanvas::draw(void)
 bool projcanvas::handle_event(SDL_Event &event)
 {
 	switch (event.type) {
-		case SDL_QUIT:
+		case SDL_EVENT_QUIT:
 			logger::get().debug("QUIT");
 			exit(0);
 			return true;
 			break;
-		case SDL_MOUSEBUTTONDOWN:
+		case SDL_EVENT_MOUSE_BUTTON_DOWN:
 			float x, y;
 			x = scr_to_X(event.motion.x);
 			y = scr_to_Y(event.motion.y);
@@ -325,7 +325,7 @@ bool projcanvas::handle_event(SDL_Event &event)
 
 			previous_click = time(nullptr);
 			break;
-		case SDL_MOUSEMOTION:
+		case SDL_EVENT_MOUSE_MOTION:
 			currentX = scr_to_X(event.motion.x);
 			currentY = scr_to_Y(event.motion.y);
 			break;

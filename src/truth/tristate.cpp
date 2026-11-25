@@ -28,8 +28,8 @@ void tristate::handle_event(SDL_Event &event)
 	if (!selected())
 		return;
 	switch (event.type) {
-	case SDL_KEYDOWN:
-        	switch (event.key.keysym.sym) {
+	case SDL_EVENT_KEY_DOWN:
+        	switch (event.key.key) {
 		case SDLK_0:
 			canvas->clear_canX();
 			if (is_input) {
@@ -50,7 +50,7 @@ void tristate::handle_event(SDL_Event &event)
 				canvas->values_changed();
 			}
 			break;	
-		case SDLK_x:
+		case SDLK_X:
 			canvas->clear_canX();
 			if (is_input) {
 				canvas->turn_to_X(gridX, gridY);

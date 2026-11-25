@@ -11,8 +11,8 @@
  */
 
 #include "gridcad.h"
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
+#include <SDL3_image/SDL_image.h>
+#include <SDL3_ttf/SDL_ttf.h>
 #include <array>
 #include <cmath>
 #include <map>
@@ -67,7 +67,7 @@ void basecanvas::draw_box(float X1, float Y1, float X2, float Y2, int color, int
 		alpha = Alpha(color);
 
 	SDL_SetRenderDrawColor(renderer.get(), R(color), G(color), B(color), alpha);
-	SDL_RenderFillRectF(renderer.get(), &rect);
+	SDL_RenderFillRect(renderer.get(), &rect);
 }
 
 void basecanvas::draw_box_rgba(float X1, float Y1, float X2, float Y2, Uint8 r, Uint8 g, Uint8 b, Uint8 a)
@@ -89,7 +89,7 @@ void basecanvas::draw_box_rgba(float X1, float Y1, float X2, float Y2, Uint8 r, 
 	flush_line_batch();
 	SDL_FRect rect = {x1, y1, x2 - x1, y2 - y1};
 	SDL_SetRenderDrawColor(renderer.get(), r, g, b, a);
-	SDL_RenderFillRectF(renderer.get(), &rect);
+	SDL_RenderFillRect(renderer.get(), &rect);
 }
 
 /*
@@ -148,7 +148,7 @@ void basecanvas::emit_thick_quad(float x1, float y1, float x2, float y2,
 	}
 
 	const int base = static_cast<int>(line_verts.size());
-	const SDL_Color col = {r, g, b, a};
+	const SDL_FColor col = {r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f};
 	line_verts.push_back({{x1 + nx, y1 + ny}, col, {0.0f, 0.0f}});
 	line_verts.push_back({{x1 - nx, y1 - ny}, col, {0.0f, 0.0f}});
 	line_verts.push_back({{x2 - nx, y2 - ny}, col, {0.0f, 0.0f}});
@@ -173,7 +173,7 @@ void basecanvas::emit_round_cap(float cx, float cy, float radius, Uint8 r, Uint8
 	static constexpr float kSin[6] = {0.0f, 0.8660254f, 0.8660254f, 0.0f, -0.8660254f, -0.8660254f};
 
 	const int center = static_cast<int>(line_verts.size());
-	const SDL_Color col = {r, g, b, a};
+	const SDL_FColor col = {r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f};
 	line_verts.push_back({{cx, cy}, col, {0.0f, 0.0f}});
 	for (int i = 0; i < 6; ++i)
 		line_verts.push_back({{cx + kCos[i] * radius, cy + kSin[i] * radius}, col, {0.0f, 0.0f}});
@@ -279,7 +279,7 @@ void basecanvas::emit_filled_circle(float cx, float cy, float radius, Uint8 r, U
 	}();
 
 	const int center = static_cast<int>(line_verts.size());
-	const SDL_Color col = {r, g, b, a};
+	const SDL_FColor col = {r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f};
 	line_verts.push_back({{cx, cy}, col, {0.0f, 0.0f}});
 	for (int i = 0; i < kSegs; ++i)
 		line_verts.push_back({{cx + kUnitCircle[i].first * radius, cy + kUnitCircle[i].second * radius}, col, {0.0f, 0.0f}});
@@ -322,10 +322,10 @@ static sdl::SurfacePtr downscale_surface_if_large(sdl::SurfacePtr src, int max_d
 	const int dst_h = std::max(1, src->h / div);
 
 	/* RGBA32 guarantees byte order [R, G, B, A] regardless of host endianness. */
-	sdl::SurfacePtr rgba(SDL_ConvertSurfaceFormat(src.get(), SDL_PIXELFORMAT_RGBA32, 0));
+	sdl::SurfacePtr rgba(SDL_ConvertSurface(src.get(), SDL_PIXELFORMAT_RGBA32));
 	if (!rgba)
 		return src;
-	sdl::SurfacePtr dst(SDL_CreateRGBSurfaceWithFormat(0, dst_w, dst_h, 32, SDL_PIXELFORMAT_RGBA32));
+	sdl::SurfacePtr dst(SDL_CreateSurface(dst_w, dst_h, SDL_PIXELFORMAT_RGBA32));
 	if (!dst)
 		return src;
 
@@ -395,9 +395,9 @@ sdl::TexturePtr IMG_LoadTextureFromMem(SDL_Renderer *renderer, const char *filen
 			logger::get().debug("PNGMAP miss for '{}'", filename);
 			surf.reset(IMG_Load(filename));
 		} else {
-			SDL_RWops *ops = SDL_RWFromConstMem(dm->second, sizemap[key]);
+			SDL_IOStream *ops = SDL_IOFromConstMem(dm->second, sizemap[key]);
 			if (ops)
-				surf.reset(IMG_Load_RW(ops, 1));
+				surf.reset(IMG_Load_IO(ops, true));
 		}
 		/* Keep clock_wave.png native since draw_image_fragment() indexes it by pixel coords. */
 		if (key != "assets/clock_wave.png")
@@ -409,10 +409,8 @@ sdl::TexturePtr IMG_LoadTextureFromMem(SDL_Renderer *renderer, const char *filen
 		return nullptr;
 
 	sdl::TexturePtr tex(SDL_CreateTextureFromSurface(renderer, it->second.get()));
-#if SDL_VERSION_ATLEAST(2, 0, 12)
 	if (tex)
-		SDL_SetTextureScaleMode(tex.get(), SDL_ScaleModeLinear);
-#endif
+		SDL_SetTextureScaleMode(tex.get(), SDL_SCALEMODE_LINEAR);
 	return tex;
 }
 
@@ -457,13 +455,13 @@ void basecanvas::draw_image(SDL_Texture *image, float X, float Y, float W, float
 	flush_line_batch();
 	SDL_SetTextureAlphaMod(image, alpha);
 
-	SDL_RenderCopyF(renderer.get(), image, nullptr, &rect);
+	SDL_RenderTexture(renderer.get(), image, nullptr, &rect);
 }
 
 void basecanvas::draw_image_fragment(SDL_Texture *image, float X, float Y, float W, float H, int fromX, int fromY, int w, int h, int angle) 
 {
 	SDL_FRect rect;
-	SDL_Rect src;
+	SDL_FRect src;
 
 	if (!image) {
 		return;
@@ -480,14 +478,14 @@ void basecanvas::draw_image_fragment(SDL_Texture *image, float X, float Y, float
 		return;
 
 	flush_line_batch();
-	src.x = fromX;
-	src.y = fromY;
-	src.w = w;
-	src.h = h;
+	src.x = static_cast<float>(fromX);
+	src.y = static_cast<float>(fromY);
+	src.w = static_cast<float>(w);
+	src.h = static_cast<float>(h);
 
 	SDL_SetTextureAlphaMod(image, 255);
 
-	SDL_RenderCopyExF(renderer.get(), image, &src, &rect, angle, nullptr, SDL_FLIP_NONE);
+	SDL_RenderTextureRotated(renderer.get(), image, &src, &rect, angle, nullptr, SDL_FLIP_NONE);
 }
 
 void basecanvas::draw_image_rotated(SDL_Texture *image, float X, float Y, float W, float H, int alpha, int angle) 
@@ -519,7 +517,7 @@ void basecanvas::draw_image_rotated(SDL_Texture *image, float X, float Y, float 
 	flush_line_batch();
 	SDL_SetTextureAlphaMod(image, alpha);
 
-	SDL_RenderCopyExF(renderer.get(), image, nullptr, &rect, angle, nullptr, SDL_FLIP_NONE);
+	SDL_RenderTextureRotated(renderer.get(), image, nullptr, &rect, angle, nullptr, SDL_FLIP_NONE);
 }
 
 const basecanvas::cached_texture &basecanvas::get_cached_texture(std::string_view filename)
@@ -595,7 +593,7 @@ sdl::TexturePtr basecanvas::render_text_to_texture(const char *text)
 	} else {
 		TTF_SetFontStyle(font.get(), TTF_STYLE_NORMAL);
 	}
-	sdl::SurfacePtr surface(TTF_RenderUTF8_Blended(font.get(), text, white));
+	sdl::SurfacePtr surface(TTF_RenderText_Blended(font.get(), text, 0, white));
 	if (!surface) {
 		logger::get().error("text_to_texture error {}", SDL_GetError());
 	}
@@ -704,7 +702,7 @@ void basecanvas::start_zoom_animation_at_screen(float scr_x, float scr_y, float 
 	zoom_anchor_sx = scr_x;
 	zoom_anchor_sy = scr_y;
 
-	animation_start = SDL_GetTicks64();
+	animation_start = SDL_GetTicks();
 	animation_type = 1;
 	in_animation = true;
 }
@@ -715,9 +713,9 @@ void basecanvas::draw(void)
 	line_verts.clear();
 	line_indices.clear();
 	if (renderer)
-		SDL_GetRendererOutputSize(renderer.get(), &cached_out_w, &cached_out_h);
+		SDL_GetCurrentRenderOutputSize(renderer.get(), &cached_out_w, &cached_out_h);
 	if (in_animation) {
-		uint64_t now = SDL_GetTicks64();
+		uint64_t now = SDL_GetTicks();
 		
 		float ratio;
 		float effect;

@@ -240,7 +240,7 @@ void wire::draw(class basecanvas *canvas, int _color)
 		}
 	}
 	const float spacing = net_selected ? (20.0f / 12.0f) : 5.0f;
-	double phase_boxes = (static_cast<double>(SDL_GetTicks64()) * 0.005) / static_cast<double>(spacing);
+	double phase_boxes = (static_cast<double>(SDL_GetTicks()) * 0.005) / static_cast<double>(spacing);
 	if (value.is_clock && !clock_running)
 		phase_boxes = (static_cast<double>(global_clock.arrayval) * (4.0 / 12.0)) / static_cast<double>(spacing);
 	const double whole = std::floor(phase_boxes);
@@ -380,7 +380,7 @@ void wire::route(class scene *scene)
 	being_routed = false;
 //	reseat();
 	
-	points_timestamp = SDL_GetTicks64();
+	points_timestamp = SDL_GetTicks();
 	in_animation = true;
 }
 
@@ -507,7 +507,7 @@ void wire::update_value(struct value *newvalue, int ttl)
 void wire::record_value_change(const struct value &v)
 {
 	if (value.valid && v.valid && v.qualifier_valid && !v.is_clock && value != v)
-		last_changed_ms = SDL_GetTicks64();
+		last_changed_ms = SDL_GetTicks();
 }
 
 float wire::change_pulse(void) const
@@ -519,7 +519,7 @@ float wire::change_pulse(void) const
 	const uint64_t attack_ms = clock_running ? 50 : 100;
 	const uint64_t decay_ms = clock_running ? 550 : 1100;
 	const uint64_t total_ms = attack_ms + decay_ms;
-	const uint64_t now = SDL_GetTicks64();
+	const uint64_t now = SDL_GetTicks();
 	if (now < last_changed_ms)
 		return 0.0f;
 	const uint64_t elapsed = now - last_changed_ms;
@@ -1081,7 +1081,7 @@ void wire::calculate_drawpoints(void)
 		return;
 	
 	
-	now = SDL_GetTicks64();
+	now = SDL_GetTicks();
 	
 	ratio = (now - points_timestamp) / animation_time;
 	if (ratio < 0.0)

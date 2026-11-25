@@ -16,8 +16,8 @@
 #include "port.h"
 #include "net.h"
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
+#include <SDL3/SDL.h>
+#include <SDL3_image/SDL_image.h>
 #include <sys/time.h>
 
 void callback_set_color(class port *port, int color)
@@ -758,5 +758,5 @@ std::string port::get_label(uint64_t val) const
 
 bool port::enum_display_phase(void)
 {
-	return ((SDL_GetTicks64() / 1000ULL) & 1ULL) == 0;
+	return ((SDL_GetTicks() / 1000ULL) & 1ULL) == 0;
 }

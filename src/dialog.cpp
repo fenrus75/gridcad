@@ -104,7 +104,7 @@ void dialog::draw(class basecanvas *canvas)
 void dialog::handle_event(class basecanvas *canvas, SDL_Event &event)
 {
 	switch (event.type) {
-		case SDL_MOUSEBUTTONDOWN:
+		case SDL_EVENT_MOUSE_BUTTON_DOWN:
 			float x, y;
 			x = canvas->scr_to_X(event.motion.x);
 			y = canvas->scr_to_Y(event.motion.y);
@@ -119,12 +119,12 @@ void dialog::handle_event(class basecanvas *canvas, SDL_Event &event)
 				SDL_PushEvent(&ev);                            
 			}
 
-		case SDL_MOUSEMOTION:
+		case SDL_EVENT_MOUSE_MOTION:
 			currentX = canvas->scr_to_X(event.motion.x);
 			currentY = canvas->scr_to_Y(event.motion.y);
 			break;
-		case SDL_KEYDOWN:
-			switch (event.key.keysym.sym) {
+		case SDL_EVENT_KEY_DOWN:
+			switch (event.key.key) {
 				case SDLK_RETURN:
 					if (!has_ok_button)
 						break;

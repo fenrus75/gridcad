@@ -513,7 +513,7 @@ void model_truth::handle_event(class basecanvas *canvas, SDL_Event &event)
 {
 	element::handle_event(canvas, event);
 	switch (event.type) {
-		case SDL_MOUSEMOTION:
+		case SDL_EVENT_MOUSE_MOTION:
 			mouseX = canvas->scr_to_X(event.motion.x); 
 			mouseY = canvas->scr_to_Y(event.motion.y);
 
@@ -522,8 +522,8 @@ void model_truth::handle_event(class basecanvas *canvas, SDL_Event &event)
 	if (!selected || !single)
 		return;
 	switch (event.type) {
-		case SDL_KEYDOWN:        
-			switch (event.key.keysym.sym) {
+		case SDL_EVENT_KEY_DOWN:        
+			switch (event.key.key) {
 				case SDLK_RETURN:
 					name_edit->toggle_edit_mode();
 					break;

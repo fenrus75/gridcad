@@ -26,8 +26,8 @@ std::chrono::steady_clock::time_point start_time;
 std::chrono::steady_clock::time_point exit_time;
 bool has_exit_time = false;
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
+#include <SDL3/SDL.h>
+#include <SDL3_ttf/SDL_ttf.h>
 #include <iostream>
 #include <fstream>
 #include <random>
@@ -40,8 +40,8 @@ bool has_exit_time = false;
 static std::unordered_map<class basecanvas *, uint64_t> next_slow_draw_ms;
 
 #include "imgui.h"
-#include "backends/imgui_impl_sdl2.h"
-#include "backends/imgui_impl_sdlrenderer2.h"
+#include "backends/imgui_impl_sdl3.h"
+#include "backends/imgui_impl_sdlrenderer3.h"
 
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
@@ -51,7 +51,7 @@ static std::vector<class basecanvas *> canvases;
 
 extern void fill_png_maps(void);
 extern void clear_png_maps(void);
-extern Uint32 SDL_timer_func(Uint32 interval, void *param);
+extern Uint32 SDL_timer_func(void *param, SDL_TimerID timerID, Uint32 interval);
 extern bool show_fps;
 
 
@@ -84,13 +84,8 @@ namespace sdl {
 
 Context::Context()
 {
-#ifdef SDL_HINT_WINDOWS_DPI_AWARENESS
-	/* Use native pixels on Windows instead of letting DWM bitmap-scale the window. */
-	SDL_SetHint(SDL_HINT_WINDOWS_DPI_AWARENESS, "permonitorv2");
-#endif
-	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
+	SDL_Init(SDL_INIT_VIDEO);
 	TTF_Init();
-	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2");
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -283,7 +278,6 @@ bool clock_running = true;
 void document::run(void)
 {
 	SDL_Event event;
-	int ret = 0;
 	bool leave = false;
 	uint64_t sim_generation = 1;
 	std::unordered_map<basecanvas *, uint64_t> last_drawn_sim_gen;
@@ -301,13 +295,13 @@ void document::run(void)
 			leave = true;
 			break;
 		}
-		const uint64_t frame_start_ms = SDL_GetTicks64();
+		const uint64_t frame_start_ms = SDL_GetTicks();
 		run_queued_calculations();
 
 		/* Drain all pending SDL events before rendering so high-rate input never starves frames. */
 		int drained = 0;
-		while (!leave && drained++ < 256 && (ret = SDL_PollEvent(&event)) != 0) {
-			if (event.type == SDL_QUIT) {
+		while (!leave && drained++ < 256 && SDL_PollEvent(&event)) {
+			if (event.type == SDL_EVENT_QUIT) {
 				leave = true;
 				break;
 			}
@@ -370,8 +364,8 @@ void document::run(void)
 				main_canvas->get_scene()->unlock_all_vcd();
 				logger::get().info("VCD wires unlocked; free simulation active");
 			}
-			if (vcd && vcd->is_loaded() && event.type == SDL_KEYDOWN) {
-				if (event.key.keysym.sym == SDLK_RIGHTBRACKET) {
+			if (vcd && vcd->is_loaded() && event.type == SDL_EVENT_KEY_DOWN) {
+				if (event.key.key == SDLK_RIGHTBRACKET) {
 					size_t next = (vcd->get_current_tick() + 1 < vcd->get_total_ticks())
 					                  ? (vcd->get_current_tick() + 1)
 					                  : 0;
@@ -379,7 +373,7 @@ void document::run(void)
 					logger::get().info("VCD tick {}/{} (t={})",
 					                   vcd->get_current_tick(), vcd->get_total_ticks(),
 					                   vcd->get_current_timestamp());
-				} else if (event.key.keysym.sym == SDLK_LEFTBRACKET) {
+				} else if (event.key.key == SDLK_LEFTBRACKET) {
 					size_t prev = (vcd->get_current_tick() > 0)
 					                  ? (vcd->get_current_tick() - 1)
 					                  : (vcd->get_total_ticks() > 0 ? vcd->get_total_ticks() - 1 : 0);
@@ -405,8 +399,8 @@ void document::run(void)
 					global_clock.arrayval++;
 				}
 			}
-			if (event.type == SDL_MOUSEBUTTONDOWN || event.type == SDL_MOUSEBUTTONUP ||
-			    event.type == SDL_KEYDOWN) {
+			if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN || event.type == SDL_EVENT_MOUSE_BUTTON_UP ||
+			    event.type == SDL_EVENT_KEY_DOWN) {
 				++sim_generation;
 			}
 			for (unsigned int i = 0; i < canvases.size(); i++)  {
@@ -414,12 +408,11 @@ void document::run(void)
 				bool thisret = false;
 
 				if (sdl::event_window_id(event) == canvas->get_window_ID() || event.type >= SDL_timer_event) {
-					if (event.type == SDL_WINDOWEVENT &&
-					    (event.window.event == SDL_WINDOWEVENT_EXPOSED ||
-					     event.window.event == SDL_WINDOWEVENT_RESIZED ||
-					     event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED ||
-					     event.window.event == SDL_WINDOWEVENT_SHOWN ||
-					     event.window.event == SDL_WINDOWEVENT_FOCUS_LOST)) {
+					if (event.type == SDL_EVENT_WINDOW_EXPOSED ||
+					    event.type == SDL_EVENT_WINDOW_RESIZED ||
+					    event.type == SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED ||
+					    event.type == SDL_EVENT_WINDOW_SHOWN ||
+					    event.type == SDL_EVENT_WINDOW_FOCUS_LOST) {
 						exposed_canvases[canvas] = true;
 					}
 					thisret = canvas->handle_event(event);
@@ -443,7 +436,7 @@ void document::run(void)
 			gettimeofday(&now, nullptr);
 			/* Only redraw unfocused windows when exposed/resized or when simulation state changed
 			 * (throttled to 500 + [0..99] ms) so static background windows never steal a compositor swap. */
-			const uint64_t now_ms = SDL_GetTicks64();
+			const uint64_t now_ms = SDL_GetTicks();
 			static std::mt19937 slow_draw_rng(std::random_device{}());
 			static std::uniform_int_distribution<uint64_t> slow_draw_jitter(0, 99);
 			std::vector<basecanvas *> drawn_canvases;
@@ -491,7 +484,7 @@ void document::run(void)
 				canvas->present();
 
 			/* Safety cap (~60 Hz) when vsync is unavailable (e.g. dummy video driver or all windows unfocused). */
-			const uint64_t elapsed_ms = SDL_GetTicks64() - frame_start_ms;
+			const uint64_t elapsed_ms = SDL_GetTicks() - frame_start_ms;
 			if (!has_focused_draw) {
 				SDL_Delay(16);
 			} else if (elapsed_ms < 4) {

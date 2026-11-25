@@ -10,8 +10,8 @@
  *    Arjan van de Ven <arjanvandeven@gmail.com>
  */
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
+#include <SDL3/SDL.h>
+#include <SDL3_ttf/SDL_ttf.h>
 
 #include <charconv>
 #include <iostream>

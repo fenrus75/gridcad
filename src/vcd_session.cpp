@@ -11,7 +11,7 @@
 #include "gridcad.h"
 #include "scene.h"
 
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 
 #include <algorithm>
 #include <format>

@@ -130,7 +130,7 @@ protected:
     struct timing_info timing = {}; /* imported critical timing path metadata */
     uint64_t last_drawn_frame = 0; /* nosave: deduplicate wire::draw() across endpoint ports */
     const class basecanvas *last_drawn_canvas = nullptr; /* nosave */
-    uint64_t last_changed_ms = 0;  /* nosave: SDL_GetTicks64() timestamp of last value change */
+    uint64_t last_changed_ms = 0;  /* nosave: SDL_GetTicks() timestamp of last value change */
     void record_value_change(const struct value &v);
 };
 

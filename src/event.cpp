@@ -16,8 +16,8 @@ void labelevent(SDL_Event &event, std::string *text)
 {
         char c;
         switch (event.type) {
-	case SDL_KEYDOWN:
-        	switch (event.key.keysym.sym) {
+	case SDL_EVENT_KEY_DOWN:
+        	switch (event.key.key) {
 		case SDLK_BACKSPACE:
 			if (text->size()>0)
 			    text->pop_back();
@@ -33,7 +33,7 @@ void labelevent(SDL_Event &event, std::string *text)
                 case SDLK_8:
                 case SDLK_9:                
                     c = '0';
-                    c += event.key.keysym.sym - SDLK_0;
+                    c += event.key.key - SDLK_0;
                     *text += c;
                     break;
                 case SDLK_UNDERSCORE:                
@@ -48,46 +48,46 @@ void labelevent(SDL_Event &event, std::string *text)
                 case SDLK_MINUS:                
                 case SDLK_KP_MINUS:
                     c = '-';
-                    if (event.key.keysym.mod & (KMOD_LSHIFT))
+                    if (event.key.mod & (SDL_KMOD_LSHIFT))
                         c = '_';
                     *text += c;
                     break;
                 case SDLK_EQUALS:
                     c= '=';
-                    if (event.key.keysym.mod & (KMOD_LSHIFT))
+                    if (event.key.mod & (SDL_KMOD_LSHIFT))
                         c = '+';
                     *text += c;
                     break;                
-                case SDLK_a:
-                case SDLK_b:
-                case SDLK_c:
-                case SDLK_d:
-                case SDLK_e:
-                case SDLK_f:
-                case SDLK_g:
-                case SDLK_h:
-                case SDLK_i:
-                case SDLK_j:                
-                case SDLK_k:
-                case SDLK_l:
-                case SDLK_m:
-                case SDLK_n:
-                case SDLK_o:
-                case SDLK_p:
-                case SDLK_q:
-                case SDLK_r:
-                case SDLK_s:
-                case SDLK_t:                
-                case SDLK_u:
-                case SDLK_v:
-                case SDLK_w:
-                case SDLK_x:
-                case SDLK_y:
-                case SDLK_z:
+                case SDLK_A:
+                case SDLK_B:
+                case SDLK_C:
+                case SDLK_D:
+                case SDLK_E:
+                case SDLK_F:
+                case SDLK_G:
+                case SDLK_H:
+                case SDLK_I:
+                case SDLK_J:                
+                case SDLK_K:
+                case SDLK_L:
+                case SDLK_M:
+                case SDLK_N:
+                case SDLK_O:
+                case SDLK_P:
+                case SDLK_Q:
+                case SDLK_R:
+                case SDLK_S:
+                case SDLK_T:                
+                case SDLK_U:
+                case SDLK_V:
+                case SDLK_W:
+                case SDLK_X:
+                case SDLK_Y:
+                case SDLK_Z:
                     c= 'a';
-                    if (event.key.keysym.mod & (KMOD_LSHIFT))
+                    if (event.key.mod & (SDL_KMOD_LSHIFT))
                         c = 'A';
-                    c += event.key.keysym.sym - SDLK_a;
+                    c += event.key.key - SDLK_A;
                     *text += c;
                     break;
                 case SDLK_RETURN:

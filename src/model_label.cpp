@@ -84,28 +84,28 @@ void model_label::handle_event(class basecanvas *canvas, SDL_Event &event)
     if (!selected || !single)
         return;
     switch (event.type) {
-	case SDL_KEYDOWN:        
-        	switch (event.key.keysym.sym) {
+	case SDL_EVENT_KEY_DOWN:        
+        	switch (event.key.key) {
                 case SDLK_RETURN:
                     name_edit->toggle_edit_mode();
                     break;
-                case SDLK_s:
+                case SDLK_S:
                     if (!name_edit->get_edit_mode()) {
                         sizeX++;
                     }
                     break;
-                case SDLK_a:
+                case SDLK_A:
                     if (!name_edit->get_edit_mode()) {
                         if (sizeX > 3)
                             sizeX--;
                     }
                     break;
-                case SDLK_z:
+                case SDLK_Z:
                     if (!name_edit->get_edit_mode()) {
                         sizeY++;
                     }
                     break;
-                case SDLK_w:
+                case SDLK_W:
                     if (!name_edit->get_edit_mode()) {
                         if (sizeY > 3)
                             sizeY--;

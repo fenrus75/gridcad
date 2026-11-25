@@ -199,7 +199,7 @@ void model_nest::open_window(void)
 
 bool model_nest::mouse_select(float _X, float _Y)
 {
-	const uint64_t now = SDL_GetTicks64();
+	const uint64_t now = SDL_GetTicks();
 
 	regen_ports();
 
@@ -217,7 +217,7 @@ bool model_nest::mouse_select(float _X, float _Y)
 void model_nest::handle_event(class basecanvas *thiscanvas, SDL_Event &event)
 {
 	switch (event.type) {
-		case SDL_MOUSEMOTION:
+		case SDL_EVENT_MOUSE_MOTION:
 			mouseX = thiscanvas->scr_to_X(event.motion.x); 
 			mouseY = thiscanvas->scr_to_Y(event.motion.y);
 
@@ -226,8 +226,8 @@ void model_nest::handle_event(class basecanvas *thiscanvas, SDL_Event &event)
 	if (!selected || !single)
 		return;
 	switch (event.type) {
-		case SDL_KEYDOWN:        
-			switch (event.key.keysym.sym) {
+		case SDL_EVENT_KEY_DOWN:        
+			switch (event.key.key) {
 				case SDLK_RETURN:
 					name_edit->toggle_edit_mode();
 					break;

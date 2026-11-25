@@ -47,15 +47,15 @@ inc_dirs = include_directories([
 # Dependencies
 # ============================================================================
 
-sdl2_dep = dependency('SDL2')
-sdl2_image_dep = dependency('SDL2_image')
-sdl2_ttf_dep = dependency('SDL2_ttf')
+sdl3_dep = dependency('sdl3')
+sdl3_image_dep = dependency('sdl3-image')
+sdl3_ttf_dep = dependency('sdl3-ttf')
 libunwind_dep = dependency('libunwind', required: false)
 
 common_deps = [
-    sdl2_dep,
-    sdl2_image_dep,
-    sdl2_ttf_dep,
+    sdl3_dep,
+    sdl3_image_dep,
+    sdl3_ttf_dep,
 ]
 
 if libunwind_dep.found() and host_machine.system() != 'windows'
@@ -200,8 +200,8 @@ imgui_sources = files(
     'imgui/imgui_draw.cpp',
     'imgui/imgui_tables.cpp',
     'imgui/imgui_widgets.cpp',
-    'imgui/backends/imgui_impl_sdl2.cpp',
-    'imgui/backends/imgui_impl_sdlrenderer2.cpp',
+    'imgui/backends/imgui_impl_sdl3.cpp',
+    'imgui/backends/imgui_impl_sdlrenderer3.cpp',
 )
 
 # ImGui hex editor (from submodule)
