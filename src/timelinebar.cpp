@@ -705,10 +705,8 @@ void timelinebar::draw(class basecanvas *canvas, const SDL_Rect &bar_rect)
             const std::string clk_title = clk_wave_.signal_name.empty() ? "ticks" : clk_wave_.signal_name;
             draw_clipped_label(ren, canvas, clk_title, clk_lbl, false);
 
-            if (!clk_wave_.segments.empty())
-                draw_wave_trace(ren, canvas, l.clk_row, clk_wave_, nullptr, t0, t1, true);
-
-            /* Overlay clock tick numbers directly inside the clk wave row. */
+            /* Draw clock tick numbers first (tucked inside the wave height) so the green clk wave
+             * renders cleanly on top without any dark box interrupting the signal line. */
             for (size_t tk = first_grid_tick; tk < total_ticks; tk += tick_step) {
                 const uint64_t tt = session_->get_tick_timestamp(tk);
                 if (tt < t0)
@@ -717,19 +715,17 @@ void timelinebar::draw(class basecanvas *canvas, const SDL_Rect &bar_rect)
                     break;
                 const float gx = static_cast<float>(l.wave_area.x) +
                                  static_cast<float>(static_cast<double>(tt - t0) * inv_span * static_cast<double>(l.wave_area.w));
-                const int lx = static_cast<int>(std::lround(gx)) + 2;
+                const int lx = static_cast<int>(std::lround(gx)) + 3;
                 const int avail = (l.wave_area.x + l.wave_area.w) - lx;
-                if (avail < 14)
+                if (avail < 12)
                     continue;
                 const std::string tlbl = std::format("{}", tk);
-                const int pill_w = std::min(avail, std::max(16, static_cast<int>(tlbl.size()) * 8 + 6));
-                SDL_FRect pill = {static_cast<float>(lx), static_cast<float>(l.clk_row.y + 3),
-                                  static_cast<float>(pill_w), static_cast<float>(CLK_RULER_HEIGHT - 6)};
-                SDL_SetRenderDrawColor(ren, 10, 12, 16, 195);
-                SDL_RenderFillRect(ren, &pill);
-                SDL_Rect rlbl = {lx + 2, l.clk_row.y + 3, std::max(1, pill_w - 4), CLK_RULER_HEIGHT - 6};
+                SDL_Rect rlbl = {lx, l.clk_row.y + 4, std::min(avail, 48), CLK_RULER_HEIGHT - 8};
                 draw_clipped_label(ren, canvas, tlbl, rlbl, false);
             }
+
+            if (!clk_wave_.segments.empty())
+                draw_wave_trace(ren, canvas, l.clk_row, clk_wave_, nullptr, t0, t1, true);
 
             SDL_SetRenderDrawColor(ren, 55, 65, 78, 220);
             SDL_RenderLine(ren, panel_f.x, static_cast<float>(l.clk_row.y + l.clk_row.h),
