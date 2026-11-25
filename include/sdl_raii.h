@@ -154,6 +154,29 @@ inline Uint32 event_window_id(const SDL_Event &ev) noexcept
     }
 }
 
+/*
+ * Return display content scale factor (1.0 = 96 DPI, 2.0 = 192 DPI).
+ * Maps directly to SDL_GetDisplayContentScale / SDL_GetWindowDisplayScale in SDL3.
+ */
+inline float primary_display_scale() noexcept
+{
+    float dpi = 96.0f;
+    if (SDL_GetDisplayDPI(0, &dpi, nullptr, nullptr) != 0 || dpi < 96.0f)
+        dpi = 96.0f;
+    return dpi / 96.0f;
+}
+
+inline float window_display_scale(SDL_Window *window) noexcept
+{
+    int idx = window ? SDL_GetWindowDisplayIndex(window) : 0;
+    if (idx < 0)
+        idx = 0;
+    float dpi = 96.0f;
+    if (SDL_GetDisplayDPI(idx, &dpi, nullptr, nullptr) != 0 || dpi < 96.0f)
+        dpi = 96.0f;
+    return dpi / 96.0f;
+}
+
 } // namespace sdl
 
 #if !SDL_VERSION_ATLEAST(3, 0, 0)

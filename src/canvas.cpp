@@ -69,10 +69,7 @@ canvas::canvas(std::unique_ptr<class scene> _scene, struct capabilities *cap)
 	SDL_SetRenderDrawBlendMode(renderer.get(), SDL_BLENDMODE_BLEND);
 
 	windowID = SDL_GetWindowID(window.get());
-	const int display_idx = std::max(0, SDL_GetWindowDisplayIndex(window.get()));
-	SDL_GetDisplayDPI(display_idx, &DPI, nullptr, nullptr);
-	if (DPI < 96)
-		DPI = 96;
+	DPI = sdl::window_display_scale(window.get()) * 96.0f;
 
 	const float icon_scale = std::clamp(DPI * (40.0f / 192.0f), 20.0f, 50.0f);
 	const int icon_bar_w = static_cast<int>(std::lround(5.5f * icon_scale));
@@ -1309,11 +1306,7 @@ static void fill_scale(void)
 {
 	if (scale > 0)
 		return;
-	float dpi;
-	SDL_GetDisplayDPI(0, &dpi, nullptr, nullptr);
-	if (dpi < 90)
-		dpi = 96;
-	scale = 1.3 * 96.0 / dpi;
+	scale = 1.3f / sdl::primary_display_scale();
 }
 
 
@@ -1326,29 +1319,29 @@ void canvas::draw_tooltip(float X, float Y, std::string_view tooltip)
 	if (!text)
 		return;
 
-	SDL_Rect rect;
+	SDL_FRect rect;
 	float tw = 0.0f, th = 0.0f;
-	int x, y;
+	float x, y;
 
 	SDL_GetTextureSize(text, &tw, &th);
 
-	x = X_to_scr(X);
+	x = static_cast<float>(X_to_scr(X));
 	if (x > tw / scale)
 		x = x - tw / scale;
-	y = Y_to_scr(Y);
+	y = static_cast<float>(Y_to_scr(Y));
 	if (y > th / scale)
 		y = y - th / scale;
 
 
 	rect.x = x;
 	rect.y = y;
-	rect.w = static_cast<int>(tw / scale);
-	rect.h = static_cast<int>(th / scale);
+	rect.w = tw / scale;
+	rect.h = th / scale;
 
 	SDL_RenderSetClipRect(renderer.get(), nullptr);	
 	SDL_SetRenderDrawColor(renderer.get(), 45, 45, 45, 220);
-	SDL_RenderFillRect(renderer.get(), &rect);
-	SDL_RenderCopy(renderer.get(), text, nullptr, &rect);
+	SDL_RenderFillRectF(renderer.get(), &rect);
+	SDL_RenderCopyF(renderer.get(), text, nullptr, &rect);
 }
 
 void canvas::draw_hover_inspector(void)
@@ -1449,20 +1442,20 @@ void canvas::draw_hover_inspector(void)
 			constexpr int pad_x = 12;
 			constexpr int pad_y = 6;
 
-			SDL_Rect bg = {main_area_rect.x, main_area_rect.y,
-			               main_area_rect.w, draw_h + 2 * pad_y};
-			top_banner_bottom = bg.y + bg.h;
+			SDL_FRect bg = {static_cast<float>(main_area_rect.x), static_cast<float>(main_area_rect.y),
+			                static_cast<float>(main_area_rect.w), static_cast<float>(draw_h + 2 * pad_y)};
+			top_banner_bottom = static_cast<int>(bg.y + bg.h);
 			SDL_SetRenderDrawColor(renderer.get(), 18, 20, 24, 210);
-			SDL_RenderFillRect(renderer.get(), &bg);
+			SDL_RenderFillRectF(renderer.get(), &bg);
 			SDL_SetRenderDrawColor(renderer.get(), 90, 100, 115, 220);
-			SDL_RenderDrawLine(renderer.get(), bg.x, bg.y + bg.h - 1,
-			                   bg.x + bg.w - 1, bg.y + bg.h - 1);
+			SDL_RenderDrawLineF(renderer.get(), bg.x, bg.y + bg.h - 1.0f,
+			                    bg.x + bg.w - 1.0f, bg.y + bg.h - 1.0f);
 
-			SDL_Rect clip = {bg.x + pad_x, bg.y + pad_y,
-			                 std::max(1, bg.w - 2 * pad_x), draw_h};
+			SDL_Rect clip = {main_area_rect.x + pad_x, main_area_rect.y + pad_y,
+			                 std::max(1, main_area_rect.w - 2 * pad_x), draw_h};
 			SDL_RenderSetClipRect(renderer.get(), &clip);
-			SDL_Rect dst = {bg.x + pad_x, bg.y + pad_y, draw_w, draw_h};
-			SDL_RenderCopy(renderer.get(), tex, nullptr, &dst);
+			SDL_FRect dst = {bg.x + pad_x, bg.y + pad_y, static_cast<float>(draw_w), static_cast<float>(draw_h)};
+			SDL_RenderCopyF(renderer.get(), tex, nullptr, &dst);
 			SDL_RenderSetClipRect(renderer.get(), nullptr);
 		}
 	}
@@ -1580,24 +1573,26 @@ void canvas::draw_hover_inspector(void)
 			const Uint8 border_alpha = translucent ? 95 : 220;
 			const Uint8 text_alpha = translucent ? 115 : 255;
 
-			SDL_Rect bg = {box_x, box_y, box_w, box_h};
+			SDL_FRect bg = {static_cast<float>(box_x), static_cast<float>(box_y),
+			                static_cast<float>(box_w), static_cast<float>(box_h)};
 			SDL_SetRenderDrawColor(renderer.get(), 18, 20, 24, bg_alpha);
-			SDL_RenderFillRect(renderer.get(), &bg);
+			SDL_RenderFillRectF(renderer.get(), &bg);
 			SDL_SetRenderDrawColor(renderer.get(), 90, 100, 115, border_alpha);
-			SDL_RenderDrawRect(renderer.get(), &bg);
+			SDL_RenderDrawRectF(renderer.get(), &bg);
 
-			SDL_Rect clip = {bg.x + pad_x, bg.y + pad_y,
-			                 std::max(1, bg.w - 2 * pad_x),
-			                 std::max(1, bg.h - 2 * pad_y)};
+			SDL_Rect clip = {box_x + pad_x, box_y + pad_y,
+			                 std::max(1, box_w - 2 * pad_x),
+			                 std::max(1, box_h - 2 * pad_y)};
 			SDL_RenderSetClipRect(renderer.get(), &clip);
 
-			int cur_y = bg.y + pad_y;
+			int cur_y = box_y + pad_y;
 			for (const auto &lt : rendered) {
 				if (lt.tex) {
 					if (translucent)
 						SDL_SetTextureAlphaMod(lt.tex, text_alpha);
-					SDL_Rect dst = {bg.x + pad_x, cur_y, lt.w, lt.h};
-					SDL_RenderCopy(renderer.get(), lt.tex, nullptr, &dst);
+					SDL_FRect dst = {static_cast<float>(box_x + pad_x), static_cast<float>(cur_y),
+					                 static_cast<float>(lt.w), static_cast<float>(lt.h)};
+					SDL_RenderCopyF(renderer.get(), lt.tex, nullptr, &dst);
 					if (translucent)
 						SDL_SetTextureAlphaMod(lt.tex, 255);
 				}

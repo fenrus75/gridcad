@@ -114,11 +114,7 @@ static void fill_scale(void)
 {
 	if (scale > 0)
 		return;
-	float dpi;
-	SDL_GetDisplayDPI(0, &dpi, nullptr, nullptr);
-	if (dpi < 90)
-		dpi = 96;
-	scale = 1.3 * 96.0 / dpi;
+	scale = 1.3f / sdl::primary_display_scale();
 }
 
 float get_scale(void)

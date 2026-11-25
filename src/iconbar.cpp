@@ -70,7 +70,7 @@ void iconbar::resize(SDL_Rect _rect)
 
 void iconbar::draw(void)
 {
-	SDL_Rect drop;
+	SDL_FRect drop;
 	SDL_RenderSetClipRect(renderer, &rect);    
 	float w = 0.0f, h = 0.0f;
 	float newH;
@@ -84,16 +84,16 @@ void iconbar::draw(void)
 	if (!dropdown)
 		return;
 
-	drop.x = rect.x + 5;
-	drop.w = rect.w - 10;
-	drop.y = 5;
+	drop.x = static_cast<float>(rect.x + 5);
+	drop.w = static_cast<float>(rect.w - 10);
+	drop.y = 5.0f;
 	SDL_GetTextureSize(dropdown.get(), &w, &h);
 
-	newH = 1.0 * h/w * drop.w;
+	newH = 1.0f * h / w * drop.w;
 	drop.h = newH;
 
 	SDL_SetTextureAlphaMod(dropdown.get(), 255);
-	SDL_RenderCopy(renderer, dropdown.get(), nullptr, &drop);
+	SDL_RenderCopyF(renderer, dropdown.get(), nullptr, &drop);
 }
 
 class icon * iconbar::current_icon(int ScreenX, int ScreenY)
@@ -189,10 +189,10 @@ void icon::assign_library_element(struct library_block block)
 /* X and Y are our box to draw in -- we'll draw centered to that */
 void icon::draw(SDL_Renderer *renderer, float X, float Y, float width, float height, class basecanvas *canvas, float delta)
 {
-	SDL_Rect rect;
+	SDL_FRect rect;
 	const int color = COLOR_WIRE_SOLID;
 	float w = 0.0f, h = 0.0f;
-	int oX = 0, oY = 0;
+	float oX = 0.0f, oY = 0.0f;
 	float ratioX, ratioY;
 	float newwidth, newheight;
 
@@ -209,20 +209,20 @@ void icon::draw(SDL_Renderer *renderer, float X, float Y, float width, float hei
 	newwidth = w * ratioX;
 	newheight = h * ratioY;
 
-	oX = (width - newwidth) / 2;
-	oY = (height - newheight) / 2; 
+	oX = (width - newwidth) / 2.0f;
+	oY = (height - newheight) / 2.0f;
 
 	rect.x = X + oX - delta;
 	rect.y = Y + oY - delta;
-	rect.w = newwidth + 2 * delta;
-	rect.h = newheight + 2 * delta;
+	rect.w = newwidth + 2.0f * delta;
+	rect.h = newheight + 2.0f * delta;
 
 	SDL_SetRenderDrawColor(renderer, R(color), G(color), B(color),
 			Alpha(color));
 	SDL_SetTextureAlphaMod(texture.get(), 255);
 	if (active)                              
-		SDL_RenderFillRect(renderer, &rect);
-	SDL_RenderCopy(renderer, texture.get(), nullptr, &rect);
+		SDL_RenderFillRectF(renderer, &rect);
+	SDL_RenderCopyF(renderer, texture.get(), nullptr, &rect);
 
 	if (overlay != "") {
 		float newX, newY, newW, newH;
@@ -299,7 +299,7 @@ void oneiconbar::draw(void)
 	int x,y;
 	SDL_RenderSetClipRect(renderer, &rect);    
 	int color = 0;
-	SDL_Rect box;
+	SDL_FRect box;
 	const float scale = cell_scale();
 	const float offset_y = top_offset();
 
@@ -316,7 +316,7 @@ void oneiconbar::draw(void)
 			box.w = 2.0f * scale + delta * 2.0f;
 			SDL_SetRenderDrawColor(renderer, R(color), G(color), B(color),
 					Alpha(color));
-			SDL_RenderFillRect(renderer, &box);
+			SDL_RenderFillRectF(renderer, &box);
 			if (icons[x][y])
 				icons[x][y]->draw(renderer, rect.x + (0.6f + 2.5f * x) * scale, rect.y + (0.6f + 2.5f * y) * scale + offset_y, 1.8f * scale, 1.8f * scale, canvas, delta);
 

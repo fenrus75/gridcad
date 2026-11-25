@@ -115,8 +115,6 @@ document::document(std::string _name, bool _library_mode,
                    std::string vcd_path,
                    std::string vcd_scope)
 {
-	float d1,d2,d3;
-
 	struct capabilities cap = {};
 
 
@@ -136,8 +134,9 @@ document::document(std::string _name, bool _library_mode,
 		cap.has_full_workflow = true;
 
 
-	SDL_GetDisplayDPI(0, &d1, &d2, &d3);
-	logger::get().info("DPI {:5.2f} {:5.2f} {:5.2f}", d1, d2, d3);
+	logger::get().info("Display scale {:5.2f} ({:5.1f} DPI)",
+	                   sdl::primary_display_scale(),
+	                   sdl::primary_display_scale() * 96.0f);
 
 	SDL_timer_event = SDL_RegisterEvents(32);
 

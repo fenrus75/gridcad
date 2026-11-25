@@ -62,12 +62,13 @@ void basecanvas::draw_box(float X1, float Y1, float X2, float Y2, int color, int
 		y1 = 0;
 
 	flush_line_batch();
-	SDL_Rect rect = {x1, y1, x2 - x1, y2 - y1};
+	SDL_FRect rect = {static_cast<float>(x1), static_cast<float>(y1),
+	                  static_cast<float>(x2 - x1), static_cast<float>(y2 - y1)};
 	if (alpha < 0)
 		alpha = Alpha(color);
 
 	SDL_SetRenderDrawColor(renderer.get(), R(color), G(color), B(color), alpha);
-	SDL_RenderFillRect(renderer.get(), &rect);
+	SDL_RenderFillRectF(renderer.get(), &rect);
 }
 
 void basecanvas::draw_box_rgba(float X1, float Y1, float X2, float Y2, Uint8 r, Uint8 g, Uint8 b, Uint8 a)
@@ -87,9 +88,10 @@ void basecanvas::draw_box_rgba(float X1, float Y1, float X2, float Y2, Uint8 r, 
 		y1 = 0;
 
 	flush_line_batch();
-	SDL_Rect rect = {x1, y1, x2 - x1, y2 - y1};
+	SDL_FRect rect = {static_cast<float>(x1), static_cast<float>(y1),
+	                  static_cast<float>(x2 - x1), static_cast<float>(y2 - y1)};
 	SDL_SetRenderDrawColor(renderer.get(), r, g, b, a);
-	SDL_RenderFillRect(renderer.get(), &rect);
+	SDL_RenderFillRectF(renderer.get(), &rect);
 }
 
 /*
@@ -424,7 +426,7 @@ sdl::TexturePtr basecanvas::load_image(std::string_view filename)
 
 void basecanvas::draw_image(SDL_Texture *image, float X, float Y, float W, float H, int alpha, bool keep_aspect) 
 {
-	SDL_Rect rect;
+	SDL_FRect rect;
 	float w, h;
 
 	if (!image) {
@@ -444,8 +446,8 @@ void basecanvas::draw_image(SDL_Texture *image, float X, float Y, float W, float
 		w = W;
 		h = H;
 	}
-	rect.x = X_to_scr(X) + (W-w)/2 * scaleX;
-	rect.y = Y_to_scr(Y) + (H-h)/2 * scaleY;
+	rect.x = static_cast<float>(X_to_scr(X)) + (W - w) * 0.5f * scaleX;
+	rect.y = static_cast<float>(Y_to_scr(Y)) + (H - h) * 0.5f * scaleY;
 	rect.w = w * scaleX;
 	rect.h = h * scaleY;
 
@@ -457,19 +459,20 @@ void basecanvas::draw_image(SDL_Texture *image, float X, float Y, float W, float
 	flush_line_batch();
 	SDL_SetTextureAlphaMod(image, alpha);
 
-	SDL_RenderCopy(renderer.get(), image, nullptr, &rect);
+	SDL_RenderCopyF(renderer.get(), image, nullptr, &rect);
 }
 
 void basecanvas::draw_image_fragment(SDL_Texture *image, float X, float Y, float W, float H, int fromX, int fromY, int w, int h, int angle) 
 {
-	SDL_Rect rect, src;
+	SDL_FRect rect;
+	SDL_Rect src;
 
 	if (!image) {
 		return;
 	}
 
-	rect.x = X_to_scr(X);
-	rect.y = Y_to_scr(Y);
+	rect.x = static_cast<float>(X_to_scr(X));
+	rect.y = static_cast<float>(Y_to_scr(Y));
 	rect.w = W * scaleX;
 	rect.h = H * scaleY;
 
@@ -486,12 +489,12 @@ void basecanvas::draw_image_fragment(SDL_Texture *image, float X, float Y, float
 
 	SDL_SetTextureAlphaMod(image, 255);
 
-	SDL_RenderCopyEx(renderer.get(), image, &src, &rect, angle, nullptr, SDL_FLIP_NONE);
+	SDL_RenderCopyExF(renderer.get(), image, &src, &rect, angle, nullptr, SDL_FLIP_NONE);
 }
 
 void basecanvas::draw_image_rotated(SDL_Texture *image, float X, float Y, float W, float H, int alpha, int angle) 
 {
-	SDL_Rect rect;
+	SDL_FRect rect;
 
 	if (!image) {
 		return;
@@ -501,8 +504,8 @@ void basecanvas::draw_image_rotated(SDL_Texture *image, float X, float Y, float 
 	   Adjust to move it back to 0,0 by half-of-the-shape-difference
 	   */
 	if ((angle == 90 || angle == 270)) { X -= (H-W)/2; Y -= (W-H)/2; };
-	rect.x = X_to_scr(X);
-	rect.y = Y_to_scr(Y);
+	rect.x = static_cast<float>(X_to_scr(X));
+	rect.y = static_cast<float>(Y_to_scr(Y));
 	rect.w = W * scaleX;
 	rect.h = H * scaleY;
 	if (angle == 90 || angle == 270) {
@@ -518,7 +521,7 @@ void basecanvas::draw_image_rotated(SDL_Texture *image, float X, float Y, float 
 	flush_line_batch();
 	SDL_SetTextureAlphaMod(image, alpha);
 
-	SDL_RenderCopyEx(renderer.get(), image, nullptr, &rect, angle, nullptr, SDL_FLIP_NONE);
+	SDL_RenderCopyExF(renderer.get(), image, nullptr, &rect, angle, nullptr, SDL_FLIP_NONE);
 }
 
 const basecanvas::cached_texture &basecanvas::get_cached_texture(std::string_view filename)
