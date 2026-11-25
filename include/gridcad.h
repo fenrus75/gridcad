@@ -96,17 +96,17 @@ public:
     unsigned int get_window_ID(void) { return windowID;};
 
 
-    int X_to_scr(float X);
-    int Y_to_scr(float Y);
-    float scr_to_X(int X);
-    float scr_to_Y(int Y);
+    float X_to_scr(float X) const noexcept;
+    float Y_to_scr(float Y) const noexcept;
+    float scr_to_X(float X) const noexcept;
+    float scr_to_Y(float Y) const noexcept;
 
     /* Zoom by multiplicative factor while keeping the world point at (scr_x, scr_y) pinned. */
     void zoom_at_screen(int scr_x, int scr_y, float factor);
     void start_zoom_animation_at_screen(int scr_x, int scr_y, float factor);
 
-    float scale_to_X(int X) { return X / scaleX;};
-    float scale_to_Y(int Y) { return Y / scaleY;};
+    float scale_to_X(float X) const noexcept { return X / scaleX; };
+    float scale_to_Y(float Y) const noexcept { return Y / scaleY; };
     
 
     void draw_box(float X1, float Y1, float X2, float Y2, int color, int alpha = -1);

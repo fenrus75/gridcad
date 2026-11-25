@@ -25,45 +25,44 @@ basecanvas::basecanvas(void)
 {
 }
 
-int basecanvas::X_to_scr(float X)
+float basecanvas::X_to_scr(float X) const noexcept
 {
 	return (X - offsetX) * scaleX;
 }
 
-float basecanvas::scr_to_X(int X)
+float basecanvas::scr_to_X(float X) const noexcept
 {
 	return X / scaleX + offsetX;
 }
 
-int basecanvas::Y_to_scr(float Y)
+float basecanvas::Y_to_scr(float Y) const noexcept
 {
 	return (Y - offsetY) * scaleY;
 }
 
-float basecanvas::scr_to_Y(int Y)
+float basecanvas::scr_to_Y(float Y) const noexcept
 {
 	return Y / scaleY + offsetY;
 }
 
 void basecanvas::draw_box(float X1, float Y1, float X2, float Y2, int color, int alpha)
 {
-	int x1 = X_to_scr(X1);
-	int x2 = X_to_scr(X2);
-	int y1 = Y_to_scr(Y1);
-	int y2 = Y_to_scr(Y2);
+	float x1 = X_to_scr(X1);
+	float x2 = X_to_scr(X2);
+	float y1 = Y_to_scr(Y1);
+	float y2 = Y_to_scr(Y2);
 
-	if (x2 < 0 || y2 < 0)
+	if (x2 < 0.0f || y2 < 0.0f)
 		return;
 	if (cached_out_w > 0 && cached_out_h > 0 && (x1 > cached_out_w || y1 > cached_out_h))
 		return;
-	if (x1 < 0)
-		x1 = 0;
-	if (y1 < 0)
-		y1 = 0;
+	if (x1 < 0.0f)
+		x1 = 0.0f;
+	if (y1 < 0.0f)
+		y1 = 0.0f;
 
 	flush_line_batch();
-	SDL_FRect rect = {static_cast<float>(x1), static_cast<float>(y1),
-	                  static_cast<float>(x2 - x1), static_cast<float>(y2 - y1)};
+	SDL_FRect rect = {x1, y1, x2 - x1, y2 - y1};
 	if (alpha < 0)
 		alpha = Alpha(color);
 
@@ -73,23 +72,22 @@ void basecanvas::draw_box(float X1, float Y1, float X2, float Y2, int color, int
 
 void basecanvas::draw_box_rgba(float X1, float Y1, float X2, float Y2, Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 {
-	int x1 = X_to_scr(X1);
-	int x2 = X_to_scr(X2);
-	int y1 = Y_to_scr(Y1);
-	int y2 = Y_to_scr(Y2);
+	float x1 = X_to_scr(X1);
+	float x2 = X_to_scr(X2);
+	float y1 = Y_to_scr(Y1);
+	float y2 = Y_to_scr(Y2);
 
-	if (x2 < 0 || y2 < 0)
+	if (x2 < 0.0f || y2 < 0.0f)
 		return;
 	if (cached_out_w > 0 && cached_out_h > 0 && (x1 > cached_out_w || y1 > cached_out_h))
 		return;
-	if (x1 < 0)
-		x1 = 0;
-	if (y1 < 0)
-		y1 = 0;
+	if (x1 < 0.0f)
+		x1 = 0.0f;
+	if (y1 < 0.0f)
+		y1 = 0.0f;
 
 	flush_line_batch();
-	SDL_FRect rect = {static_cast<float>(x1), static_cast<float>(y1),
-	                  static_cast<float>(x2 - x1), static_cast<float>(y2 - y1)};
+	SDL_FRect rect = {x1, y1, x2 - x1, y2 - y1};
 	SDL_SetRenderDrawColor(renderer.get(), r, g, b, a);
 	SDL_RenderFillRectF(renderer.get(), &rect);
 }
@@ -188,10 +186,10 @@ void basecanvas::emit_round_cap(float cx, float cy, float radius, Uint8 r, Uint8
 
 void basecanvas::draw_line(float X1, float Y1, float X2, float Y2, int color)
 {
-	const float sx1 = static_cast<float>(X_to_scr(X1));
-	const float sy1 = static_cast<float>(Y_to_scr(Y1));
-	const float sx2 = static_cast<float>(X_to_scr(X2));
-	const float sy2 = static_cast<float>(Y_to_scr(Y2));
+	const float sx1 = X_to_scr(X1);
+	const float sy1 = Y_to_scr(Y1);
+	const float sx2 = X_to_scr(X2);
+	const float sy2 = Y_to_scr(Y2);
 	const Uint8 r = R(color), g = G(color), b = B(color), a = Alpha(color);
 
 	emit_thick_quad(sx1, sy1, sx2, sy2, 0.2f * scaleX, r, g, b, a);
@@ -204,10 +202,10 @@ void basecanvas::draw_line(float X1, float Y1, float X2, float Y2, int color)
 
 void basecanvas::draw_thick_line(float X1, float Y1, float X2, float Y2, int color)
 {
-	const float sx1 = static_cast<float>(X_to_scr(X1));
-	const float sy1 = static_cast<float>(Y_to_scr(Y1));
-	const float sx2 = static_cast<float>(X_to_scr(X2));
-	const float sy2 = static_cast<float>(Y_to_scr(Y2));
+	const float sx1 = X_to_scr(X1);
+	const float sy1 = Y_to_scr(Y1);
+	const float sx2 = X_to_scr(X2);
+	const float sy2 = Y_to_scr(Y2);
 	const Uint8 r = R(color), g = G(color), b = B(color), a = Alpha(color);
 
 	emit_thick_quad(sx1, sy1, sx2, sy2, 0.3f * scaleX, r, g, b, a);
@@ -250,10 +248,10 @@ void basecanvas::draw_shadow_Line(float X1, float Y1, float X2, float Y2, int co
 		width = std::max(width, (0.25f + 0.50f * p) * scaleX);
 	}
 
-	const float sx1 = static_cast<float>(X_to_scr(X1));
-	const float sy1 = static_cast<float>(Y_to_scr(Y1));
-	const float sx2 = static_cast<float>(X_to_scr(X2));
-	const float sy2 = static_cast<float>(Y_to_scr(Y2));
+	const float sx1 = X_to_scr(X1);
+	const float sy1 = Y_to_scr(Y1);
+	const float sx2 = X_to_scr(X2);
+	const float sy2 = Y_to_scr(Y2);
 	emit_thick_quad(sx1, sy1, sx2, sy2, width, r, g, b, a);
 	if (width >= 3.0f && (critical || pulse > 0.001f)) {
 		const float cap_r = width * 0.5f;
@@ -294,8 +292,8 @@ void basecanvas::emit_filled_circle(float cx, float cy, float radius, Uint8 r, U
 
 void basecanvas::draw_circle(float X, float Y, float _R, int color, int color2)
 {
-	const float x1 = static_cast<float>(X_to_scr(X));
-	const float y1 = static_cast<float>(Y_to_scr(Y));
+	const float x1 = X_to_scr(X);
+	const float y1 = Y_to_scr(Y);
 
 	emit_filled_circle(x1, y1, _R * scaleX, R(color), G(color), B(color), Alpha(color));
 	emit_filled_circle(x1, y1, (_R / 2.0f) * scaleX, R(color2), G(color2), B(color2), Alpha(color2));
@@ -303,8 +301,8 @@ void basecanvas::draw_circle(float X, float Y, float _R, int color, int color2)
 
 void basecanvas::draw_circle2(float X, float Y, float _R, int color, int color2)
 {
-	const float x1 = static_cast<float>(X_to_scr(X));
-	const float y1 = static_cast<float>(Y_to_scr(Y));
+	const float x1 = X_to_scr(X);
+	const float y1 = Y_to_scr(Y);
 
 	emit_filled_circle(x1, y1, _R * scaleX, R(color), G(color), B(color), Alpha(color));
 	emit_filled_circle(x1, y1, (_R / 1.4f) * scaleX, R(color2), G(color2), B(color2), Alpha(color2));
@@ -446,8 +444,8 @@ void basecanvas::draw_image(SDL_Texture *image, float X, float Y, float W, float
 		w = W;
 		h = H;
 	}
-	rect.x = static_cast<float>(X_to_scr(X)) + (W - w) * 0.5f * scaleX;
-	rect.y = static_cast<float>(Y_to_scr(Y)) + (H - h) * 0.5f * scaleY;
+	rect.x = X_to_scr(X) + (W - w) * 0.5f * scaleX;
+	rect.y = Y_to_scr(Y) + (H - h) * 0.5f * scaleY;
 	rect.w = w * scaleX;
 	rect.h = h * scaleY;
 
@@ -471,8 +469,8 @@ void basecanvas::draw_image_fragment(SDL_Texture *image, float X, float Y, float
 		return;
 	}
 
-	rect.x = static_cast<float>(X_to_scr(X));
-	rect.y = static_cast<float>(Y_to_scr(Y));
+	rect.x = X_to_scr(X);
+	rect.y = Y_to_scr(Y);
 	rect.w = W * scaleX;
 	rect.h = H * scaleY;
 
@@ -504,8 +502,8 @@ void basecanvas::draw_image_rotated(SDL_Texture *image, float X, float Y, float 
 	   Adjust to move it back to 0,0 by half-of-the-shape-difference
 	   */
 	if ((angle == 90 || angle == 270)) { X -= (H-W)/2; Y -= (W-H)/2; };
-	rect.x = static_cast<float>(X_to_scr(X));
-	rect.y = static_cast<float>(Y_to_scr(Y));
+	rect.x = X_to_scr(X);
+	rect.y = Y_to_scr(Y);
 	rect.w = W * scaleX;
 	rect.h = H * scaleY;
 	if (angle == 90 || angle == 270) {

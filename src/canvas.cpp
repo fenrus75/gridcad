@@ -1325,10 +1325,10 @@ void canvas::draw_tooltip(float X, float Y, std::string_view tooltip)
 
 	SDL_GetTextureSize(text, &tw, &th);
 
-	x = static_cast<float>(X_to_scr(X));
+	x = X_to_scr(X);
 	if (x > tw / scale)
 		x = x - tw / scale;
-	y = static_cast<float>(Y_to_scr(Y));
+	y = Y_to_scr(Y);
 	if (y > th / scale)
 		y = y - th / scale;
 
