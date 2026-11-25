@@ -64,8 +64,24 @@ canvas::canvas(std::unique_ptr<class scene> _scene, struct capabilities *cap)
 	s = "GridCad " + _scene->get_full_name();
 	window.reset(
 		SDL_CreateWindow(s.c_str(), 1024, 768, SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY));
-	renderer.reset(SDL_CreateRenderer(window.get(), nullptr));
+	SDL_PropertiesID rprops = SDL_CreateProperties();
+	SDL_SetPointerProperty(rprops, SDL_PROP_RENDERER_CREATE_WINDOW_POINTER, window.get());
+	SDL_SetNumberProperty(rprops, SDL_PROP_RENDERER_CREATE_PRESENT_VSYNC_NUMBER, 1);
+	renderer.reset(SDL_CreateRendererWithProperties(rprops));
+	SDL_DestroyProperties(rprops);
+	if (!renderer)
+		renderer.reset(SDL_CreateRenderer(window.get(), nullptr));
 	SDL_SetRenderDrawBlendMode(renderer.get(), SDL_BLENDMODE_BLEND);
+
+	{
+		int actual_vsync = 0;
+		SDL_GetRenderVSync(renderer.get(), &actual_vsync);
+		vsync_state = actual_vsync;
+		const char *vdrv = SDL_GetCurrentVideoDriver();
+		const char *rdrv = SDL_GetRendererName(renderer.get());
+		logger::get().info("SDL3 video='{}' renderer='{}' vsync={}",
+		                   vdrv ? vdrv : "?", rdrv ? rdrv : "?", actual_vsync);
+	}
 
 	windowID = SDL_GetWindowID(window.get());
 	DPI = sdl::window_display_scale(window.get()) * 96.0f;

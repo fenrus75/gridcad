@@ -149,8 +149,13 @@ public:
         const int want = enabled ? 1 : 0;
         if (vsync_state == want || !renderer)
             return;
+        if (!SDL_SetRenderVSync(renderer.get(), want)) {
+            logger::get().warn("SDL_SetRenderVSync({}) failed on '{}': {}",
+                               want,
+                               SDL_GetRendererName(renderer.get()) ? SDL_GetRendererName(renderer.get()) : "?",
+                               SDL_GetError());
+        }
         vsync_state = want;
-        SDL_SetRenderVSync(renderer.get(), want);
     }
     void set_fps(float _fps) { fps = _fps;};
     virtual float distance_from_mouse(float X, float Y) { return 0; };
