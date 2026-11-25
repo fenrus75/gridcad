@@ -21,6 +21,7 @@
 #include "canvas.h"
 #include "scene.h"
 #include "element.h"
+#include "model_datascope.h"
 #include "connector.h"
 #include "wire.h"
 #include "port.h"
@@ -372,6 +373,40 @@ bool canvas::handle_event_drawingarea(SDL_Event &event)
 
 		if (here) {
 			active_menu = here->get_menu();
+			if (here->class_id() == "model_datascope:" && timeline_bar && timeline_bar->is_active()) {
+				auto *ds = static_cast<model_datascope *>(here);
+				auto *vcd = get_active_vcd_session();
+				if (wire *dw = ds->connected_vcd_wire(); dw && vcd && vcd->has_binding(dw->get_vcd_name())) {
+					timelinebar::wave_signal_ref sig;
+					sig.vcd_name = dw->get_vcd_name();
+					const std::string ds_lbl = ds->connected_wire_label();
+					sig.display_name = !ds_lbl.empty() ? ds_lbl
+					                                   : (!dw->name.empty() ? dw->name : dw->get_vcd_name());
+					sig.bit_width = dw->get_width();
+					sig.labels = dw->get_label_table();
+					wire_menu = std::make_unique<contextmenu>(static_cast<class element *>(nullptr));
+					if (timeline_bar->is_pinned(sig.vcd_name)) {
+						wire_menu->add_item("Unpin wave", [tb = timeline_bar.get(), name = sig.vcd_name]() {
+							tb->unpin_signal(name);
+						});
+					} else {
+						wire_menu->add_item("Pin wave", [tb = timeline_bar.get(), sig]() {
+							tb->pin_signal(sig);
+						});
+					}
+					if (timeline_bar->has_pinned_signals()) {
+						wire_menu->add_item("Unpin all waves", [tb = timeline_bar.get()]() {
+							tb->clear_pinned_signals();
+						});
+					}
+					wire_menu->add_item(ds->is_scale_2x() ? "1x size" : "2x size", [ds]() { ds->toggle_scale_2x(); });
+					wire_menu->add_item("Enum", [ds]() { ds->set_format(3); });
+					wire_menu->add_item("Decimal", [ds]() { ds->set_format(0); });
+					wire_menu->add_item("Hex", [ds]() { ds->set_format(1); });
+					wire_menu->add_item("Binary", [ds]() { ds->set_format(2); });
+					active_menu = wire_menu.get();
+				}
+			}
 		} 
 
 		if (!here || here->is_background())  {
@@ -1089,7 +1124,27 @@ bool canvas::handle_event(SDL_Event &event)
 					}
 				}
 			} else if (timeline_bar && timeline_bar->is_active()) {
-				timeline_bar->clear_hovered_signal();
+				/* Also preview the attached VCD wire when hovering over a Data Scope element. */
+				bool set_from_scope = false;
+				for (auto &elem : current_scene->elements) {
+					if (elem && elem->class_id() == "model_datascope:" && elem->intersect(x, y)) {
+						auto *ds = static_cast<model_datascope *>(elem.get());
+						if (wire *dw = ds->connected_vcd_wire()) {
+							timelinebar::wave_signal_ref sig;
+							sig.vcd_name = dw->get_vcd_name();
+							const std::string ds_lbl = ds->connected_wire_label();
+							sig.display_name = !ds_lbl.empty() ? ds_lbl
+							                                   : (!dw->name.empty() ? dw->name : dw->get_vcd_name());
+							sig.bit_width = dw->get_width();
+							sig.labels = dw->get_label_table();
+							timeline_bar->set_hovered_signal(sig);
+							set_from_scope = true;
+						}
+						break;
+					}
+				}
+				if (!set_from_scope)
+					timeline_bar->clear_hovered_signal();
 			}
 
 			if (dragging) {

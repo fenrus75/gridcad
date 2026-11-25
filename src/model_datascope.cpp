@@ -140,6 +140,25 @@ std::string model_datascope::connected_wire_label(void) const
     return "";
 }
 
+class wire *model_datascope::connected_vcd_wire(void) const
+{
+    if (ports.empty())
+        return nullptr;
+
+    for (const auto &w : ports[0]->get_wires()) {
+        if (w && !w->get_vcd_name().empty())
+            return w.get();
+    }
+
+    if (class net *n = ports[0]->get_net()) {
+        for (class wire *w : n->get_wires()) {
+            if (w && !w->get_vcd_name().empty())
+                return w;
+        }
+    }
+    return nullptr;
+}
+
 std::string model_datascope::format_display_text(void) const
 {
     if (ports.empty())

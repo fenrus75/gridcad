@@ -27,6 +27,7 @@ public:
     bool is_scale_2x(void) const { return scale_2x; };
     std::string format_display_text(void) const;
     std::string connected_wire_label(void) const;
+    class wire *connected_vcd_wire(void) const;
 private:
     struct value value = {};
     bool edit_mode = false;
