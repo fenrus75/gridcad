@@ -255,7 +255,7 @@ void draw_wave_trace(SDL_Renderer *ren, class basecanvas *canvas,
             SDL_RenderLine(ren, x1 - slant, y_top, x1, y_mid);
             SDL_RenderLine(ren, x1 - slant, y_bot, x1, y_mid);
 
-            if (seg_labels && idx < seg_labels->size() && seg_w >= 18.0f) {
+            if (!qual_invalid && seg_labels && idx < seg_labels->size() && seg_w >= 18.0f) {
                 SDL_Rect tbox = {
                     static_cast<int>(std::lround(x0 + slant + 3.0f)),
                     static_cast<int>(std::lround(y_top + 1.0f)),
