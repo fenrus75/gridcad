@@ -90,19 +90,23 @@ std::string format_segment_label(const vcd_session::wave_segment &seg,
     return std::format("{:0{}X}", seg.val.intval, hex_digits);
 }
 
-uint64_t choose_ruler_step(uint64_t span)
+size_t choose_tick_step(size_t visible_ticks, int wave_width_px)
 {
-    if (span == 0)
+    if (visible_ticks <= 1 || wave_width_px <= 0)
         return 1;
-    const uint64_t target = std::max<uint64_t>(1, span / 8);
-    uint64_t mag = 1;
-    while (mag * 10 <= target)
+    /* Keep at least ~42 px between tick labels so numbers stay crisp inside the clk wave. */
+    const size_t max_labels = static_cast<size_t>(std::max(2, wave_width_px / 42));
+    const size_t raw_step = (visible_ticks + max_labels - 1) / max_labels;
+    if (raw_step <= 1)
+        return 1;
+    size_t mag = 1;
+    while (mag * 10 <= raw_step)
         mag *= 10;
-    if (target <= mag)
+    if (raw_step <= mag)
         return mag;
-    if (target <= mag * 2)
+    if (raw_step <= mag * 2)
         return mag * 2;
-    if (target <= mag * 5)
+    if (raw_step <= mag * 5)
         return mag * 5;
     return mag * 10;
 }
@@ -377,29 +381,17 @@ bool timelinebar::has_active_wave(void) const
     return !pinned_.empty() || has_hovered_;
 }
 
-bool timelinebar::show_clock_row(void) const
+bool timelinebar::has_unpinned_hover(void) const
 {
-    if (clk_wave_.segments.empty())
-        return false;
-    /* Omit the extra clk reference row if one of the displayed signals is already the clock. */
-    for (const auto &p : pinned_) {
-        if (p.data.is_clock)
-            return false;
-    }
-    if (has_hovered_ && !is_pinned(hovered_.ref.vcd_name) && hovered_.data.is_clock)
-        return false;
-    return true;
+    return has_hovered_ && !is_pinned(hovered_.ref.vcd_name);
 }
 
 int timelinebar::get_height(void) const
 {
     if (!has_active_wave())
         return BAR_HEIGHT;
-    size_t rows = pinned_.size();
-    if (has_hovered_ && !is_pinned(hovered_.ref.vcd_name))
-        ++rows;
-    const int clk_h = show_clock_row() ? CLK_ROW_HEIGHT : 0;
-    return BAR_HEIGHT + RULER_HEIGHT + clk_h + static_cast<int>(rows) * WAVE_ROW_HEIGHT + 6;
+    const size_t rows = pinned_.size() + (has_unpinned_hover() ? 1 : 0);
+    return BAR_HEIGHT + CLK_RULER_HEIGHT + static_cast<int>(rows) * WAVE_ROW_HEIGHT + 4;
 }
 
 std::pair<uint64_t, uint64_t> timelinebar::compute_time_window(void) const
@@ -472,26 +464,28 @@ timelinebar::layout timelinebar::compute_layout(const SDL_Rect &bar_rect) const
         const int wave_x = bar_rect.x + sig_col;
         const int wave_w = std::max(40, bar_rect.w - sig_col - pad);
 
+        /*
+         * Vertical layout (top -> bottom):
+         *   [optional live hover row] -> [clk + tick ruler] -> [pinned rows] -> [controls]
+         * Keeping the hover row at the top means pinned signals and the clk ruler never shift
+         * vertically as the mouse sweeps across wires.
+         */
         int y = bar_rect.y + 2;
-        l.ruler_rect = {wave_x, y, wave_w, RULER_HEIGHT};
-        y += RULER_HEIGHT;
-
         const int wave_top_y = y;
-        if (show_clock_row()) {
-            l.clk_row = {wave_x, y, wave_w, CLK_ROW_HEIGHT};
-            y += CLK_ROW_HEIGHT;
+
+        if (has_unpinned_hover()) {
+            l.hover_row = {wave_x, y, wave_w, WAVE_ROW_HEIGHT};
+            y += WAVE_ROW_HEIGHT;
         }
 
-        size_t rows = pinned_.size();
-        if (has_hovered_ && !is_pinned(hovered_.ref.vcd_name))
-            ++rows;
+        l.clk_row = {wave_x, y, wave_w, CLK_RULER_HEIGHT};
+        y += CLK_RULER_HEIGHT;
 
-        l.signal_rows.reserve(rows);
+        l.pinned_rows.reserve(pinned_.size());
         l.unpin_btns.reserve(pinned_.size());
-        for (size_t i = 0; i < rows; ++i) {
-            l.signal_rows.push_back({wave_x, y, wave_w, WAVE_ROW_HEIGHT});
-            if (i < pinned_.size())
-                l.unpin_btns.push_back({bar_rect.x + 6, y + 7, 20, 20});
+        for (size_t i = 0; i < pinned_.size(); ++i) {
+            l.pinned_rows.push_back({wave_x, y, wave_w, WAVE_ROW_HEIGHT});
+            l.unpin_btns.push_back({bar_rect.x + 6, y + 7, 20, 20});
             y += WAVE_ROW_HEIGHT;
         }
         l.wave_area = {wave_x, wave_top_y, wave_w, std::max(1, y - wave_top_y)};
@@ -579,7 +573,7 @@ bool timelinebar::handle_event(const SDL_Event &event, const SDL_Rect &bar_rect)
         }
 
         /* Clicking inside the waveform area scrubs to the clicked timestamp. */
-        if (has_active_wave() && (point_in_rect(mx, my, l.wave_area) || point_in_rect(mx, my, l.ruler_rect))) {
+        if (has_active_wave() && point_in_rect(mx, my, l.wave_area)) {
             scrubbing_wave_ = true;
             emit_seek(tick_from_wave_x(mx, l.wave_area));
             return true;
@@ -651,80 +645,101 @@ void timelinebar::draw(class basecanvas *canvas, const SDL_Rect &bar_rect)
         SDL_RenderLine(ren, static_cast<float>(l.wave_area.x - 1), panel_f.y,
                        static_cast<float>(l.wave_area.x - 1), panel_f.y + panel_f.h);
 
-        /* Ruler header & faint vertical time gridlines. */
-        SDL_Rect sig_hdr = {l.wave_panel.x + 8, l.ruler_rect.y + 2, std::max(1, sig_col_w - 14), RULER_HEIGHT - 4};
-        draw_clipped_label(ren, canvas, "Signals", sig_hdr, false);
+        /* Clock-tick vertical gridlines across the entire wave area. */
+        const size_t total_ticks = session_->get_total_ticks();
+        const size_t first_vis_tick = session_->find_nearest_tick(t0);
+        const size_t last_vis_tick = session_->find_nearest_tick(t1);
+        const size_t vis_ticks = (last_vis_tick >= first_vis_tick) ? (last_vis_tick - first_vis_tick + 1) : 1;
+        const size_t tick_step = choose_tick_step(vis_ticks, l.wave_area.w);
+        const size_t first_grid_tick = ((first_vis_tick + tick_step - 1) / tick_step) * tick_step;
 
-        const uint64_t step = choose_ruler_step(t1 - t0);
-        const uint64_t first_tick = ((t0 + step - 1) / step) * step;
-        const std::string &ts = session_->get_timescale();
-        for (uint64_t t = first_tick; t <= t1; t += step) {
+        for (size_t tk = first_grid_tick; tk < total_ticks; tk += tick_step) {
+            const uint64_t tt = session_->get_tick_timestamp(tk);
+            if (tt < t0)
+                continue;
+            if (tt > t1)
+                break;
             const float gx = static_cast<float>(l.wave_area.x) +
-                             static_cast<float>(static_cast<double>(t - t0) * inv_span * static_cast<double>(l.wave_area.w));
+                             static_cast<float>(static_cast<double>(tt - t0) * inv_span * static_cast<double>(l.wave_area.w));
             SDL_SetRenderDrawColor(ren, 38, 46, 58, 170);
-            SDL_RenderLine(ren, gx, static_cast<float>(l.ruler_rect.y + RULER_HEIGHT),
+            SDL_RenderLine(ren, gx, static_cast<float>(l.wave_area.y),
                            gx, static_cast<float>(l.wave_area.y + l.wave_area.h));
-            SDL_SetRenderDrawColor(ren, 95, 110, 130, 200);
-            SDL_RenderLine(ren, gx, static_cast<float>(l.ruler_rect.y + RULER_HEIGHT - 5),
-                           gx, static_cast<float>(l.ruler_rect.y + RULER_HEIGHT));
-            SDL_Rect rlbl = {static_cast<int>(std::lround(gx)) + 3, l.ruler_rect.y + 2, 72, RULER_HEIGHT - 4};
-            if (rlbl.x + 24 < l.wave_area.x + l.wave_area.w)
-                draw_clipped_label(ren, canvas, std::format("{}{}", t, ts), rlbl, false);
-        }
-        SDL_SetRenderDrawColor(ren, 55, 65, 78, 220);
-        SDL_RenderLine(ren, panel_f.x, static_cast<float>(l.ruler_rect.y + RULER_HEIGHT),
-                       panel_f.x + panel_f.w, static_cast<float>(l.ruler_rect.y + RULER_HEIGHT));
-
-        /* Optional mini clock row. */
-        if (show_clock_row() && l.clk_row.h > 0) {
-            SDL_Rect clk_lbl = {l.wave_panel.x + 8, l.clk_row.y + 2, std::max(1, sig_col_w - 14), CLK_ROW_HEIGHT - 4};
-            draw_clipped_label(ren, canvas, clk_wave_.signal_name.empty() ? "clk" : clk_wave_.signal_name, clk_lbl, false);
-            draw_wave_trace(ren, canvas, l.clk_row, clk_wave_, nullptr, t0, t1, true);
-            SDL_SetRenderDrawColor(ren, 42, 48, 58, 200);
-            SDL_RenderLine(ren, panel_f.x, static_cast<float>(l.clk_row.y + l.clk_row.h),
-                           panel_f.x + panel_f.w, static_cast<float>(l.clk_row.y + l.clk_row.h));
         }
 
-        /* Build list of entries to draw: pinned signals + live hovered signal (if not already pinned). */
-        std::vector<const cached_wave_entry *> entries;
-        entries.reserve(pinned_.size() + 1);
-        for (const auto &p : pinned_)
-            entries.push_back(&p);
-        if (has_hovered_ && !is_pinned(hovered_.ref.vcd_name))
-            entries.push_back(&hovered_);
-
-        for (size_t i = 0; i < entries.size() && i < l.signal_rows.size(); ++i) {
-            const auto *e = entries[i];
-            const SDL_Rect &row = l.signal_rows[i];
-
-            /* Subtle row striping / hover highlight in the signal column. */
-            if (!e->pinned) {
+        auto draw_signal_row = [&](const cached_wave_entry &e, const SDL_Rect &row, const SDL_Rect *unpin_btn) {
+            if (!e.pinned) {
                 SDL_FRect hbg = {static_cast<float>(l.wave_panel.x), static_cast<float>(row.y),
                                  static_cast<float>(sig_col_w - 1), static_cast<float>(row.h)};
-                SDL_SetRenderDrawColor(ren, 28, 38, 48, 220);
+                SDL_SetRenderDrawColor(ren, 28, 38, 48, 225);
                 SDL_RenderFillRect(ren, &hbg);
-            } else if (i < l.unpin_btns.size()) {
-                const SDL_Rect &ub = l.unpin_btns[i];
-                const bool uhov = point_in_rect(hover_x_, hover_y_, ub);
-                SDL_FRect ubf = {static_cast<float>(ub.x), static_cast<float>(ub.y),
-                                 static_cast<float>(ub.w), static_cast<float>(ub.h)};
+            } else if (unpin_btn) {
+                const bool uhov = point_in_rect(hover_x_, hover_y_, *unpin_btn);
+                SDL_FRect ubf = {static_cast<float>(unpin_btn->x), static_cast<float>(unpin_btn->y),
+                                 static_cast<float>(unpin_btn->w), static_cast<float>(unpin_btn->h)};
                 SDL_SetRenderDrawColor(ren, uhov ? 165 : 55, uhov ? 50 : 62, uhov ? 50 : 72, 230);
                 SDL_RenderFillRect(ren, &ubf);
-                draw_clipped_label(ren, canvas, "x", ub, true);
+                draw_clipped_label(ren, canvas, "x", *unpin_btn, true);
             }
 
-            const int lbl_x = e->pinned ? (l.wave_panel.x + 30) : (l.wave_panel.x + 8);
-            const std::string title = (e->data.bit_width > 1)
-                ? std::format("{}[{}:0]", e->ref.display_name, e->data.bit_width - 1)
-                : e->ref.display_name;
+            const int lbl_x = e.pinned ? (l.wave_panel.x + 30) : (l.wave_panel.x + 8);
+            const std::string title = (e.data.bit_width > 1)
+                ? std::format("{}[{}:0]", e.ref.display_name, e.data.bit_width - 1)
+                : e.ref.display_name;
             SDL_Rect lbl_box = {lbl_x, row.y + 6, std::max(1, l.wave_area.x - lbl_x - 6), row.h - 12};
             draw_clipped_label(ren, canvas, title, lbl_box, false);
 
-            draw_wave_trace(ren, canvas, row, e->data, &e->seg_labels, t0, t1, false);
+            draw_wave_trace(ren, canvas, row, e.data, &e.seg_labels, t0, t1, false);
 
             SDL_SetRenderDrawColor(ren, 42, 48, 58, 200);
             SDL_RenderLine(ren, panel_f.x, static_cast<float>(row.y + row.h),
                            panel_f.x + panel_f.w, static_cast<float>(row.y + row.h));
+        };
+
+        /* Live hover row at the top (so pinned rows & clk ruler never shift vertically). */
+        if (has_unpinned_hover() && l.hover_row.h > 0)
+            draw_signal_row(hovered_, l.hover_row, nullptr);
+
+        /* Unified clk wave + clock-tick numbers row. */
+        if (l.clk_row.h > 0) {
+            SDL_Rect clk_lbl = {l.wave_panel.x + 8, l.clk_row.y + 3, std::max(1, sig_col_w - 14), CLK_RULER_HEIGHT - 6};
+            const std::string clk_title = clk_wave_.signal_name.empty() ? "ticks" : clk_wave_.signal_name;
+            draw_clipped_label(ren, canvas, clk_title, clk_lbl, false);
+
+            if (!clk_wave_.segments.empty())
+                draw_wave_trace(ren, canvas, l.clk_row, clk_wave_, nullptr, t0, t1, true);
+
+            /* Overlay clock tick numbers directly inside the clk wave row. */
+            for (size_t tk = first_grid_tick; tk < total_ticks; tk += tick_step) {
+                const uint64_t tt = session_->get_tick_timestamp(tk);
+                if (tt < t0)
+                    continue;
+                if (tt > t1)
+                    break;
+                const float gx = static_cast<float>(l.wave_area.x) +
+                                 static_cast<float>(static_cast<double>(tt - t0) * inv_span * static_cast<double>(l.wave_area.w));
+                const int lx = static_cast<int>(std::lround(gx)) + 2;
+                const int avail = (l.wave_area.x + l.wave_area.w) - lx;
+                if (avail < 14)
+                    continue;
+                const std::string tlbl = std::format("{}", tk);
+                const int pill_w = std::min(avail, std::max(16, static_cast<int>(tlbl.size()) * 8 + 6));
+                SDL_FRect pill = {static_cast<float>(lx), static_cast<float>(l.clk_row.y + 3),
+                                  static_cast<float>(pill_w), static_cast<float>(CLK_RULER_HEIGHT - 6)};
+                SDL_SetRenderDrawColor(ren, 10, 12, 16, 195);
+                SDL_RenderFillRect(ren, &pill);
+                SDL_Rect rlbl = {lx + 2, l.clk_row.y + 3, std::max(1, pill_w - 4), CLK_RULER_HEIGHT - 6};
+                draw_clipped_label(ren, canvas, tlbl, rlbl, false);
+            }
+
+            SDL_SetRenderDrawColor(ren, 55, 65, 78, 220);
+            SDL_RenderLine(ren, panel_f.x, static_cast<float>(l.clk_row.y + l.clk_row.h),
+                           panel_f.x + panel_f.w, static_cast<float>(l.clk_row.y + l.clk_row.h));
+        }
+
+        /* Pinned signal rows anchored at the bottom above transport controls. */
+        for (size_t i = 0; i < pinned_.size() && i < l.pinned_rows.size(); ++i) {
+            const SDL_Rect *ub = (i < l.unpin_btns.size()) ? &l.unpin_btns[i] : nullptr;
+            draw_signal_row(pinned_[i], l.pinned_rows[i], ub);
         }
 
         /* Vertical playhead cursor across the entire wave area. */
@@ -733,9 +748,9 @@ void timelinebar::draw(class basecanvas *canvas, const SDL_Rect &bar_rect)
             const float px = static_cast<float>(l.wave_area.x) +
                              static_cast<float>(static_cast<double>(cur_t - t0) * inv_span * static_cast<double>(l.wave_area.w));
             SDL_SetRenderDrawColor(ren, 235, 245, 255, 230);
-            SDL_RenderLine(ren, px, static_cast<float>(l.ruler_rect.y),
+            SDL_RenderLine(ren, px, static_cast<float>(l.wave_area.y),
                            px, static_cast<float>(l.wave_area.y + l.wave_area.h));
-            SDL_RenderLine(ren, px + 1.0f, static_cast<float>(l.ruler_rect.y),
+            SDL_RenderLine(ren, px + 1.0f, static_cast<float>(l.wave_area.y),
                            px + 1.0f, static_cast<float>(l.wave_area.y + l.wave_area.h));
         }
     }

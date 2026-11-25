@@ -34,8 +34,7 @@ class timelinebar
 {
 public:
     static constexpr int BAR_HEIGHT = 52;
-    static constexpr int RULER_HEIGHT = 20;
-    static constexpr int CLK_ROW_HEIGHT = 20;
+    static constexpr int CLK_RULER_HEIGHT = 24;
     static constexpr int WAVE_ROW_HEIGHT = 34;
     static constexpr int SIGNAL_COL_WIDTH = 190;
     static constexpr size_t MAX_PINNED = 6;
@@ -84,7 +83,7 @@ private:
         SDL_Rect controls_rect{};
         SDL_Rect wave_panel{};
         SDL_Rect wave_area{};
-        SDL_Rect ruler_rect{};
+        SDL_Rect hover_row{};
         SDL_Rect clk_row{};
         SDL_Rect btn_start{};
         SDL_Rect btn_prev{};
@@ -94,14 +93,14 @@ private:
         SDL_Rect track{};
         SDL_Rect readout{};
         SDL_Rect btn_lock{};
-        std::vector<SDL_Rect> signal_rows;
+        std::vector<SDL_Rect> pinned_rows;
         std::vector<SDL_Rect> unpin_btns;
     };
 
     layout compute_layout(const SDL_Rect &bar_rect) const;
     std::pair<uint64_t, uint64_t> compute_time_window(void) const;
     size_t tick_from_wave_x(int screen_x, const SDL_Rect &wave_area) const;
-    bool show_clock_row(void) const;
+    bool has_unpinned_hover(void) const;
     void rebuild_entry(cached_wave_entry &entry, const wave_signal_ref &sig, bool pinned);
     void ensure_clock_wave(void);
     void emit_seek(size_t tick);
