@@ -1431,30 +1431,31 @@ void canvas::draw_hover_inspector(void)
 	SDL_RenderSetClipRect(renderer.get(), nullptr);
 
 	/* 1. Top single-line name + file:line banner. */
-	int top_banner_bottom = main_area_rect.y;
+	float top_banner_bottom = static_cast<float>(main_area_rect.y);
 	if (!top_text.empty()) {
 		SDL_Texture *tex = text_to_texture(top_text);
 		if (tex) {
 			float tw = 0.0f, th = 0.0f;
 			SDL_GetTextureSize(tex, &tw, &th);
-			const int draw_w = std::max(1, static_cast<int>(tw / scale));
-			const int draw_h = std::max(1, static_cast<int>(th / scale));
-			constexpr int pad_x = 12;
-			constexpr int pad_y = 6;
+			const float draw_w = std::max(1.0f, tw / scale);
+			const float draw_h = std::max(1.0f, th / scale);
+			constexpr float pad_x = 12.0f;
+			constexpr float pad_y = 6.0f;
 
 			SDL_FRect bg = {static_cast<float>(main_area_rect.x), static_cast<float>(main_area_rect.y),
-			                static_cast<float>(main_area_rect.w), static_cast<float>(draw_h + 2 * pad_y)};
-			top_banner_bottom = static_cast<int>(bg.y + bg.h);
+			                static_cast<float>(main_area_rect.w), draw_h + 2.0f * pad_y};
+			top_banner_bottom = bg.y + bg.h;
 			SDL_SetRenderDrawColor(renderer.get(), 18, 20, 24, 210);
 			SDL_RenderFillRectF(renderer.get(), &bg);
 			SDL_SetRenderDrawColor(renderer.get(), 90, 100, 115, 220);
 			SDL_RenderDrawLineF(renderer.get(), bg.x, bg.y + bg.h - 1.0f,
 			                    bg.x + bg.w - 1.0f, bg.y + bg.h - 1.0f);
 
-			SDL_Rect clip = {main_area_rect.x + pad_x, main_area_rect.y + pad_y,
-			                 std::max(1, main_area_rect.w - 2 * pad_x), draw_h};
+			SDL_Rect clip = {static_cast<int>(bg.x + pad_x), static_cast<int>(bg.y + pad_y),
+			                 std::max(1, static_cast<int>(bg.w - 2.0f * pad_x)),
+			                 std::max(1, static_cast<int>(draw_h))};
 			SDL_RenderSetClipRect(renderer.get(), &clip);
-			SDL_FRect dst = {bg.x + pad_x, bg.y + pad_y, static_cast<float>(draw_w), static_cast<float>(draw_h)};
+			SDL_FRect dst = {bg.x + pad_x, bg.y + pad_y, draw_w, draw_h};
 			SDL_RenderCopyF(renderer.get(), tex, nullptr, &dst);
 			SDL_RenderSetClipRect(renderer.get(), nullptr);
 		}
@@ -1496,22 +1497,22 @@ void canvas::draw_hover_inspector(void)
 			lines.back() = "...";
 
 		const float code_scale = scale * 1.15f;
-		constexpr int pad_x = 12;
-		constexpr int pad_y = 8;
-		constexpr int line_gap = 2;
-		constexpr int margin = 8;
+		constexpr float pad_x = 12.0f;
+		constexpr float pad_y = 8.0f;
+		constexpr float line_gap = 2.0f;
+		constexpr float margin = 8.0f;
 
 		struct line_tex {
 			SDL_Texture *tex = nullptr;
-			int w = 0;
-			int h = 0;
+			float w = 0.0f;
+			float h = 0.0f;
 		};
 		std::vector<line_tex> rendered;
 		rendered.reserve(lines.size());
 
-		int max_w = 0;
-		int default_h = 16;
-		int total_h = 0;
+		float max_w = 0.0f;
+		float default_h = 16.0f;
+		float total_h = 0.0f;
 		for (const auto &ln : lines) {
 			line_tex lt;
 			if (!ln.empty()) {
@@ -1519,13 +1520,13 @@ void canvas::draw_hover_inspector(void)
 				if (lt.tex) {
 					float tw = 0.0f, th = 0.0f;
 					SDL_GetTextureSize(lt.tex, &tw, &th);
-					lt.w = std::max(1, static_cast<int>(tw / code_scale));
-					lt.h = std::max(1, static_cast<int>(th / code_scale));
+					lt.w = std::max(1.0f, tw / code_scale);
+					lt.h = std::max(1.0f, th / code_scale);
 					default_h = lt.h;
 					max_w = std::max(max_w, lt.w);
 				}
 			}
-			if (lt.h == 0)
+			if (lt.h == 0.0f)
 				lt.h = default_h;
 			total_h += lt.h + line_gap;
 			rendered.push_back(lt);
@@ -1533,32 +1534,32 @@ void canvas::draw_hover_inspector(void)
 		if (!rendered.empty())
 			total_h -= line_gap;
 
-		if (max_w > 0 && total_h > 0) {
-			const int max_box_w = std::max(100, main_area_rect.w - 2 * margin);
-			const int box_w = std::min(max_w + 2 * pad_x, max_box_w);
-			const int box_h = total_h + 2 * pad_y;
-			const int min_top_y = std::max(main_area_rect.y + 40, top_banner_bottom + margin);
-			const int right_x = main_area_rect.x + main_area_rect.w - margin - box_w;
-			const int left_x = main_area_rect.x + margin;
-			const int bottom_y = std::max(min_top_y, bottom_limit - margin - box_h);
-			const int top_y = min_top_y;
+		if (max_w > 0.0f && total_h > 0.0f) {
+			const float max_box_w = std::max(100.0f, static_cast<float>(main_area_rect.w) - 2.0f * margin);
+			const float box_w = std::min(max_w + 2.0f * pad_x, max_box_w);
+			const float box_h = total_h + 2.0f * pad_y;
+			const float min_top_y = std::max(static_cast<float>(main_area_rect.y) + 40.0f, top_banner_bottom + margin);
+			const float right_x = static_cast<float>(main_area_rect.x + main_area_rect.w) - margin - box_w;
+			const float left_x = static_cast<float>(main_area_rect.x) + margin;
+			const float bottom_y = std::max(min_top_y, static_cast<float>(bottom_limit) - margin - box_h);
+			const float top_y = min_top_y;
 
 			/* Dodge the mouse cursor across corners; fall back to translucent if all 4 overlap. */
-			constexpr int cursor_pad = 24;
-			auto overlaps_cursor = [&](int x, int y) {
+			constexpr float cursor_pad = 24.0f;
+			auto overlaps_cursor = [&](float x, float y) {
 				return scr_x >= x - cursor_pad && scr_x <= x + box_w + cursor_pad &&
 				       scr_y >= y - cursor_pad && scr_y <= y + box_h + cursor_pad;
 			};
 
-			const struct { int x; int y; } candidates[4] = {
+			const struct { float x; float y; } candidates[4] = {
 				{right_x, bottom_y},
 				{left_x, bottom_y},
 				{right_x, top_y},
 				{left_x, top_y},
 			};
 
-			int box_x = right_x;
-			int box_y = bottom_y;
+			float box_x = right_x;
+			float box_y = bottom_y;
 			bool translucent = true;
 			for (const auto &c : candidates) {
 				if (!overlaps_cursor(c.x, c.y)) {
@@ -1573,25 +1574,23 @@ void canvas::draw_hover_inspector(void)
 			const Uint8 border_alpha = translucent ? 95 : 220;
 			const Uint8 text_alpha = translucent ? 115 : 255;
 
-			SDL_FRect bg = {static_cast<float>(box_x), static_cast<float>(box_y),
-			                static_cast<float>(box_w), static_cast<float>(box_h)};
+			SDL_FRect bg = {box_x, box_y, box_w, box_h};
 			SDL_SetRenderDrawColor(renderer.get(), 18, 20, 24, bg_alpha);
 			SDL_RenderFillRectF(renderer.get(), &bg);
 			SDL_SetRenderDrawColor(renderer.get(), 90, 100, 115, border_alpha);
 			SDL_RenderDrawRectF(renderer.get(), &bg);
 
-			SDL_Rect clip = {box_x + pad_x, box_y + pad_y,
-			                 std::max(1, box_w - 2 * pad_x),
-			                 std::max(1, box_h - 2 * pad_y)};
+			SDL_Rect clip = {static_cast<int>(box_x + pad_x), static_cast<int>(box_y + pad_y),
+			                 std::max(1, static_cast<int>(box_w - 2.0f * pad_x)),
+			                 std::max(1, static_cast<int>(box_h - 2.0f * pad_y))};
 			SDL_RenderSetClipRect(renderer.get(), &clip);
 
-			int cur_y = box_y + pad_y;
+			float cur_y = box_y + pad_y;
 			for (const auto &lt : rendered) {
 				if (lt.tex) {
 					if (translucent)
 						SDL_SetTextureAlphaMod(lt.tex, text_alpha);
-					SDL_FRect dst = {static_cast<float>(box_x + pad_x), static_cast<float>(cur_y),
-					                 static_cast<float>(lt.w), static_cast<float>(lt.h)};
+					SDL_FRect dst = {box_x + pad_x, cur_y, lt.w, lt.h};
 					SDL_RenderCopyF(renderer.get(), lt.tex, nullptr, &dst);
 					if (translucent)
 						SDL_SetTextureAlphaMod(lt.tex, 255);
