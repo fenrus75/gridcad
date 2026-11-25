@@ -145,9 +145,12 @@ public:
     void draw_text_left(std::string_view text, float X, float Y, float W, float H);
     void unhide(void);
     bool canvas_has_focus(void) { return has_focus; };
-    void set_vsync(bool enabled) {
-        const int want = enabled ? 1 : 0;
-        if (vsync_state == want || !renderer)
+    virtual bool is_shown(void) const { return true; }
+    void set_vsync(bool enabled, bool force = false) {
+        const int want = enabled ? 1 : SDL_RENDERER_VSYNC_DISABLED;
+        if (!renderer)
+            return;
+        if (!force && vsync_state == want)
             return;
         if (!SDL_SetRenderVSync(renderer.get(), want)) {
             logger::get().warn("SDL_SetRenderVSync({}) failed on '{}': {}",
@@ -157,11 +160,10 @@ public:
         }
         vsync_state = want;
     }
-    void set_fps(float _fps) { fps = _fps;};
+    void set_fps(float _fps) { fps = _fps; };
     virtual float distance_from_mouse(float X, float Y) { return 0; };
     virtual class scene* get_scene(void) { return nullptr; };
     virtual float screen_width(void) { return 0; };
-
 protected:
     float offsetX = 0.0;
     float offsetY = 0.0;

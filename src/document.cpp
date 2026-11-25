@@ -439,28 +439,32 @@ void document::run(void)
 			const uint64_t now_ms = SDL_GetTicks();
 			static std::mt19937 slow_draw_rng(std::random_device{}());
 			static std::uniform_int_distribution<uint64_t> slow_draw_jitter(0, 99);
-			std::vector<basecanvas *> drawn_canvases;
-			drawn_canvases.reserve(canvases.size());
+			static int last_global_vsync = -1;
+			basecanvas *focused_drawn = nullptr;
+			std::vector<basecanvas *> unfocused_drawn;
+			unfocused_drawn.reserve(canvases.size());
 			bool has_focused_draw = false;
 			for (auto canvas: canvases) {
+				if (!canvas->is_shown())
+					continue;
 				if (canvas->canvas_has_focus()) {
-					/* Enable vsync only on the focused window so multi-window setups never halve FPS. */
-					canvas->set_vsync(!has_focused_draw);
 					canvas->draw();
-					drawn_canvases.push_back(canvas);
+					if (!focused_drawn)
+						focused_drawn = canvas;
+					else
+						unfocused_drawn.push_back(canvas);
 					has_focused_draw = true;
 					last_drawn_sim_gen[canvas] = sim_generation;
 					exposed_canvases[canvas] = false;
 					next_slow_draw_ms[canvas] = now_ms + 500 + slow_draw_jitter(slow_draw_rng);
 				} else {
-					canvas->set_vsync(false);
 					const bool was_exposed = exposed_canvases[canvas];
 					const bool sim_dirty = (last_drawn_sim_gen[canvas] != sim_generation);
 					auto [it, inserted] = next_slow_draw_ms.try_emplace(
 					    canvas, now_ms + 500 + slow_draw_jitter(slow_draw_rng));
 					if (was_exposed || (sim_dirty && !inserted && now_ms >= it->second)) {
 						canvas->draw();
-						drawn_canvases.push_back(canvas);
+						unfocused_drawn.push_back(canvas);
 						last_drawn_sim_gen[canvas] = sim_generation;
 						exposed_canvases[canvas] = false;
 						it->second = now_ms + 500 + slow_draw_jitter(slow_draw_rng);
@@ -479,11 +483,20 @@ void document::run(void)
 				previous_fast_draw = now;
 				fast_draw_counter = 0;
 			}
-			/* Present immediately after draw() so animation timestamps match display scanout. */
-			for (auto canvas: drawn_canvases)
+			/* Present unfocused windows first with VSync disabled right before each present()
+			 * (Wayland/EGL tracks swap interval process-wide, so setting it per-present avoids
+			 * background windows blocking on an extra vblank), then present the focused window with VSync. */
+			for (auto *canvas : unfocused_drawn) {
+				canvas->set_vsync(false, true);
+				last_global_vsync = SDL_RENDERER_VSYNC_DISABLED;
 				canvas->present();
-
-			/* Safety cap (~60 Hz) when vsync is unavailable (e.g. dummy video driver or all windows unfocused). */
+			}
+			if (focused_drawn) {
+				const bool need_force = (last_global_vsync != 1);
+				focused_drawn->set_vsync(true, need_force);
+				last_global_vsync = 1;
+				focused_drawn->present();
+			}
 			const uint64_t elapsed_ms = SDL_GetTicks() - frame_start_ms;
 			if (!has_focused_draw) {
 				SDL_Delay(16);

@@ -28,10 +28,9 @@ public:
     void draw(void) override;
     
     class scene *get_scene(void) override { return current_scene.get(); };
+    bool is_shown(void) const override { return window_shown; }
     std::unique_ptr<class scene> swap_scene(std::unique_ptr<class scene> scene);
     bool handle_event(SDL_Event &event) override;
-    
-
     void to_json(json& j);
     std::unique_ptr<class scene> get_undo(void);
     void take_undo_snapshot(class scene *scene);
