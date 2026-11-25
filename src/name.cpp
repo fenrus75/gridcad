@@ -11,20 +11,20 @@ name::name(std::string *_val)
 
 float name::relative_cursor_pos(class basecanvas *canvas, std::string_view text, float H)
 {
-	SDL_Point size;
+	float tw = 0.0f, th = 0.0f;
 	float w,h,W = 40;
 
 	if (text == "")
 		return 0;
 
 	SDL_Texture *texture = canvas->text_to_texture(text);
-	SDL_QueryTexture(texture, nullptr, nullptr, &size.x, &size.y);
+	SDL_GetTextureSize(texture, &tw, &th);
 
 	h = H;
-	w = 1.0 * size.x / size.y * h;
+	w = tw / th * h;
 	if (w > W) {
 		w = W;
-		h = H * size.y / size.x * w;
+		h = H * th / tw * w;
 	}
 	return w;
 }

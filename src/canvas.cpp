@@ -1327,23 +1327,23 @@ void canvas::draw_tooltip(float X, float Y, std::string_view tooltip)
 		return;
 
 	SDL_Rect rect;
-	SDL_Point size;
+	float tw = 0.0f, th = 0.0f;
 	int x, y;
 
-	SDL_QueryTexture(text, nullptr, nullptr, &size.x, &size.y);
+	SDL_GetTextureSize(text, &tw, &th);
 
 	x = X_to_scr(X);
-	if (x > size.x/scale) 
-		x = x - size.x/scale;
+	if (x > tw / scale)
+		x = x - tw / scale;
 	y = Y_to_scr(Y);
-	if (y > size.y/scale)
-		y = y - size.y/scale;
+	if (y > th / scale)
+		y = y - th / scale;
 
 
 	rect.x = x;
 	rect.y = y;
-	rect.w = size.x/scale;
-	rect.h = size.y/scale;
+	rect.w = static_cast<int>(tw / scale);
+	rect.h = static_cast<int>(th / scale);
 
 	SDL_RenderSetClipRect(renderer.get(), nullptr);	
 	SDL_SetRenderDrawColor(renderer.get(), 45, 45, 45, 220);
@@ -1442,8 +1442,8 @@ void canvas::draw_hover_inspector(void)
 	if (!top_text.empty()) {
 		SDL_Texture *tex = text_to_texture(top_text);
 		if (tex) {
-			int tw = 0, th = 0;
-			SDL_QueryTexture(tex, nullptr, nullptr, &tw, &th);
+			float tw = 0.0f, th = 0.0f;
+			SDL_GetTextureSize(tex, &tw, &th);
 			const int draw_w = std::max(1, static_cast<int>(tw / scale));
 			const int draw_h = std::max(1, static_cast<int>(th / scale));
 			constexpr int pad_x = 12;
@@ -1524,8 +1524,8 @@ void canvas::draw_hover_inspector(void)
 			if (!ln.empty()) {
 				lt.tex = text_to_texture(ln);
 				if (lt.tex) {
-					int tw = 0, th = 0;
-					SDL_QueryTexture(lt.tex, nullptr, nullptr, &tw, &th);
+					float tw = 0.0f, th = 0.0f;
+					SDL_GetTextureSize(lt.tex, &tw, &th);
 					lt.w = std::max(1, static_cast<int>(tw / code_scale));
 					lt.h = std::max(1, static_cast<int>(th / code_scale));
 					default_h = lt.h;

@@ -432,13 +432,13 @@ void basecanvas::draw_image(SDL_Texture *image, float X, float Y, float W, float
 	}
 
 	if (keep_aspect) {
-		SDL_Point size = {1, 1};
-		SDL_QueryTexture(image, nullptr, nullptr, &size.x, &size.y);
+		float tw = 1.0f, th = 1.0f;
+		SDL_GetTextureSize(image, &tw, &th);
 		h = H;
-		w = 1.0f * size.x / std::max(1, size.y) * h;
+		w = tw / std::max(1.0f, th) * h;
 		if (w > W) {
 			w = W;
-			h = 1.0f * size.y / std::max(1, size.x) * w;
+			h = th / std::max(1.0f, tw) * w;
 		}
 	} else {
 		w = W;
@@ -528,7 +528,11 @@ const basecanvas::cached_texture &basecanvas::get_cached_texture(std::string_vie
 		cached_texture entry;
 		entry.tex = load_image(filename);
 		if (entry.tex) {
-			SDL_QueryTexture(entry.tex.get(), nullptr, nullptr, &entry.w, &entry.h);
+			float tw = 0.0f, th = 0.0f;
+			if (SDL_GetTextureSize(entry.tex.get(), &tw, &th)) {
+				entry.w = static_cast<int>(tw);
+				entry.h = static_cast<int>(th);
+			}
 		} else {
 			logger::get().error("Failure to load {}", filename);
 		}
@@ -605,7 +609,11 @@ const basecanvas::cached_texture &basecanvas::get_cached_text(std::string_view t
 		cached_texture entry;
 		entry.tex = render_text_to_texture(key.c_str());
 		if (entry.tex) {
-			SDL_QueryTexture(entry.tex.get(), nullptr, nullptr, &entry.w, &entry.h);
+			float tw = 0.0f, th = 0.0f;
+			if (SDL_GetTextureSize(entry.tex.get(), &tw, &th)) {
+				entry.w = static_cast<int>(tw);
+				entry.h = static_cast<int>(th);
+			}
 		} else {
 			logger::get().error("Failure to render {}", text);
 		}

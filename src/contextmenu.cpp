@@ -69,11 +69,11 @@ float Xsize(class basecanvas *canvas, std::string_view str)
 	if (!text)
 		return 0;
 
-	SDL_Point size = {};
+	float tw = 0.0f, th = 0.0f;
 
-	SDL_QueryTexture(text, nullptr, nullptr, &size.x, &size.y);
+	SDL_GetTextureSize(text, &tw, &th);
 
-	return size.x;
+	return tw;
 }
 
 float Ysize(class basecanvas *canvas, std::string_view str)
@@ -84,11 +84,11 @@ float Ysize(class basecanvas *canvas, std::string_view str)
 	if (!text)
 		return 0;
 
-	SDL_Point size = {};
+	float tw = 0.0f, th = 0.0f;
 
-	SDL_QueryTexture(text, nullptr, nullptr, &size.x, &size.y);
+	SDL_GetTextureSize(text, &tw, &th);
 
-	return size.y;
+	return th;
 }
 
 
@@ -103,10 +103,6 @@ void draw_menu_item_color(class basecanvas *canvas, float X, float Y, float W, f
 	SDL_Texture *text = canvas->text_to_texture(string);
 	if (!text)
 		return;
-
-	SDL_Point size;
-
-	SDL_QueryTexture(text, nullptr, nullptr, &size.x, &size.y);
 
 	canvas->draw_image(selected ? "assets/lightgray.png" : "assets/gray.png", X, Y, W + canvas->scale_to_X(36), H);
 	canvas->draw_box(X,Y, X + canvas->scale_to_X(36), Y + H, wire_to_color(color));

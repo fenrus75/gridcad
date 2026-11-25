@@ -72,7 +72,7 @@ void iconbar::draw(void)
 {
 	SDL_Rect drop;
 	SDL_RenderSetClipRect(renderer, &rect);    
-	int w, h;
+	float w = 0.0f, h = 0.0f;
 	float newH;
 
 	if (!dropdown)
@@ -87,7 +87,7 @@ void iconbar::draw(void)
 	drop.x = rect.x + 5;
 	drop.w = rect.w - 10;
 	drop.y = 5;
-	SDL_QueryTexture(dropdown.get(), nullptr, nullptr, &w, &h);
+	SDL_GetTextureSize(dropdown.get(), &w, &h);
 
 	newH = 1.0 * h/w * drop.w;
 	drop.h = newH;
@@ -191,12 +191,12 @@ void icon::draw(SDL_Renderer *renderer, float X, float Y, float width, float hei
 {
 	SDL_Rect rect;
 	const int color = COLOR_WIRE_SOLID;
-	int w,h;
+	float w = 0.0f, h = 0.0f;
 	int oX = 0, oY = 0;
 	float ratioX, ratioY;
 	float newwidth, newheight;
 
-	SDL_QueryTexture(texture.get(), nullptr, nullptr, &w, &h);
+	SDL_GetTextureSize(texture.get(), &w, &h);
 
 	ratioX = width / w;
 	ratioY = height / h;

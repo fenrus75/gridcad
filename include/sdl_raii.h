@@ -119,4 +119,54 @@ public:
     Context &operator=(Context &&) = delete;
 };
 
+/*
+ * Return the target window ID for an SDL event without assuming union-member
+ * layout aliasing (required for SDL3 portability).
+ */
+inline Uint32 event_window_id(const SDL_Event &ev) noexcept
+{
+    switch (ev.type) {
+    case SDL_WINDOWEVENT:
+        return ev.window.windowID;
+    case SDL_KEYDOWN:
+    case SDL_KEYUP:
+        return ev.key.windowID;
+    case SDL_TEXTEDITING:
+        return ev.edit.windowID;
+    case SDL_TEXTINPUT:
+        return ev.text.windowID;
+    case SDL_MOUSEMOTION:
+        return ev.motion.windowID;
+    case SDL_MOUSEBUTTONDOWN:
+    case SDL_MOUSEBUTTONUP:
+        return ev.button.windowID;
+    case SDL_MOUSEWHEEL:
+        return ev.wheel.windowID;
+    case SDL_DROPFILE:
+    case SDL_DROPTEXT:
+    case SDL_DROPBEGIN:
+    case SDL_DROPCOMPLETE:
+        return ev.drop.windowID;
+    default:
+        if (ev.type >= SDL_USEREVENT)
+            return ev.user.windowID;
+        return 0;
+    }
+}
+
 } // namespace sdl
+
+#if !SDL_VERSION_ATLEAST(3, 0, 0)
+/* Temporary SDL3-compatible shim over SDL2's SDL_QueryTexture(). */
+inline bool SDL_GetTextureSize(SDL_Texture *texture, float *w, float *h) noexcept
+{
+    int iw = 0, ih = 0;
+    if (!texture || SDL_QueryTexture(texture, nullptr, nullptr, &iw, &ih) != 0)
+        return false;
+    if (w)
+        *w = static_cast<float>(iw);
+    if (h)
+        *h = static_cast<float>(ih);
+    return true;
+}
+#endif

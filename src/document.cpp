@@ -414,7 +414,7 @@ void document::run(void)
 				auto canvas = canvases[i];
 				bool thisret = false;
 
-				if (event.window.windowID == canvas->get_window_ID() || event.type >= SDL_timer_event) {
+				if (sdl::event_window_id(event) == canvas->get_window_ID() || event.type >= SDL_timer_event) {
 					if (event.type == SDL_WINDOWEVENT &&
 					    (event.window.event == SDL_WINDOWEVENT_EXPOSED ||
 					     event.window.event == SDL_WINDOWEVENT_RESIZED ||
