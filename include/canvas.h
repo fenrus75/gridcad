@@ -46,6 +46,7 @@ public:
     void set_dialog(std::unique_ptr<class dialog> D);
     void set_project_name(std::string _projectname) { projectname = _projectname;};
     void set_vcd_session(class vcd_session *sess);
+    void restore_pinned_waves_from_scene(void);
     void set_on_scene_swapped(std::function<void()> cb) { on_scene_swapped = std::move(cb); }
     
          

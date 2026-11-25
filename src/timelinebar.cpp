@@ -347,7 +347,7 @@ bool timelinebar::is_pinned(std::string_view vcd_name) const
     return false;
 }
 
-void timelinebar::pin_signal(const wave_signal_ref &sig)
+void timelinebar::pin_signal(const wave_signal_ref &sig, bool notify)
 {
     if (!is_active() || sig.vcd_name.empty() || !session_->has_binding(sig.vcd_name))
         return;
@@ -358,20 +358,38 @@ void timelinebar::pin_signal(const wave_signal_ref &sig)
     ensure_clock_wave();
     cached_wave_entry entry;
     rebuild_entry(entry, sig, true);
-    if (!entry.data.segments.empty())
+    if (!entry.data.segments.empty()) {
         pinned_.push_back(std::move(entry));
+        if (notify && on_pinned_changed_)
+            on_pinned_changed_();
+    }
 }
 
-void timelinebar::unpin_signal(std::string_view vcd_name)
+void timelinebar::unpin_signal(std::string_view vcd_name, bool notify)
 {
-    std::erase_if(pinned_, [&](const cached_wave_entry &e) {
+    const size_t removed = std::erase_if(pinned_, [&](const cached_wave_entry &e) {
         return e.ref.vcd_name == vcd_name;
     });
+    if (removed > 0 && notify && on_pinned_changed_)
+        on_pinned_changed_();
 }
 
-void timelinebar::clear_pinned_signals(void)
+void timelinebar::clear_pinned_signals(bool notify)
 {
+    if (pinned_.empty())
+        return;
     pinned_.clear();
+    if (notify && on_pinned_changed_)
+        on_pinned_changed_();
+}
+
+std::vector<std::string> timelinebar::get_pinned_vcd_names(void) const
+{
+    std::vector<std::string> out;
+    out.reserve(pinned_.size());
+    for (const auto &p : pinned_)
+        out.push_back(p.ref.vcd_name);
+    return out;
 }
 
 bool timelinebar::has_active_wave(void) const
@@ -568,6 +586,8 @@ bool timelinebar::handle_event(const SDL_Event &event, const SDL_Rect &bar_rect)
         for (size_t i = 0; i < l.unpin_btns.size() && i < pinned_.size(); ++i) {
             if (point_in_rect(mx, my, l.unpin_btns[i])) {
                 pinned_.erase(pinned_.begin() + static_cast<std::ptrdiff_t>(i));
+                if (on_pinned_changed_)
+                    on_pinned_changed_();
                 return true;
             }
         }

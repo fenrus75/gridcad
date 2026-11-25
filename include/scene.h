@@ -84,6 +84,8 @@ public:
     void unlock_all_vcd(void);
     void collect_vcd_names(std::vector<std::string> &out_names) const;
     void collect_vcd_qualifiers(std::unordered_map<std::string, std::pair<std::string, bool>> &out_qualifiers) const;
+    const std::vector<std::string> &get_pinned_waves(void) const noexcept { return pinned_waves; }
+    void set_pinned_waves(std::vector<std::string> waves) { pinned_waves = std::move(waves); }
     
 protected:
     std::unique_ptr<class contextmenu> menu;
@@ -97,5 +99,6 @@ protected:
     std::string layout_project_key = "";
     std::string layout_module_name = "";
     bool layout_dirty = false;
+    std::vector<std::string> pinned_waves;
 };
 

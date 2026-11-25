@@ -113,6 +113,12 @@ canvas::canvas(std::unique_ptr<class scene> _scene, struct capabilities *cap)
 	button_bar = std::make_unique<buttonbar>(this, button_rect.w);
 	timeline_bar = std::make_unique<timelinebar>();
 	timeline_bar->set_session(get_active_vcd_session());
+	timeline_bar->set_on_pinned_changed([this]() {
+		if (current_scene && timeline_bar) {
+			current_scene->set_pinned_waves(timeline_bar->get_pinned_vcd_names());
+			current_scene->mark_layout_dirty();
+		}
+	});
 	button_bar->add_button("Save design to file", "assets/save_icon.png", EVENT_SAVE);
 	button_bar->add_button("Fit to screen", "assets/icon_fit_to_screen.png", EVENT_ZOOM_TO_FIT);
 	button_bar->add_button("Wire all clock signals", "assets/autoclock.png", EVENT_AUTOCLOCK);
@@ -125,6 +131,7 @@ canvas::canvas(std::unique_ptr<class scene> _scene, struct capabilities *cap)
 	current_scene = std::move(_scene);
 	if (current_scene)
 		current_scene->maybe_run_steiner_routing();
+	restore_pinned_waves_from_scene();
 	callback_fit_to_screen2(current_scene.get());
 	SDL_MaximizeWindow(window.get());
 }
@@ -162,8 +169,50 @@ void canvas::set_dialog(std::unique_ptr<class dialog> D)
 
 void canvas::set_vcd_session(class vcd_session *sess)
 {
-	if (timeline_bar)
+	if (timeline_bar) {
 		timeline_bar->set_session(sess);
+		restore_pinned_waves_from_scene();
+	}
+}
+
+void canvas::restore_pinned_waves_from_scene(void)
+{
+	if (!timeline_bar || !timeline_bar->is_active() || !current_scene)
+		return;
+	timeline_bar->clear_pinned_signals(false);
+	const auto &saved = current_scene->get_pinned_waves();
+	if (saved.empty())
+		return;
+
+	/* Index scene wires by vcd_name so restored waves recover display names, widths, and enum tables. */
+	std::unordered_map<std::string, wire *> wire_map;
+	for (const auto &elem : current_scene->elements) {
+		if (!elem)
+			continue;
+		for (unsigned int pi = 0;; ++pi) {
+			port *p = elem->port_at(pi);
+			if (!p)
+				break;
+			for (const auto &w : p->get_wires()) {
+				if (w && !w->get_vcd_name().empty())
+					wire_map.emplace(w->get_vcd_name(), w.get());
+			}
+		}
+	}
+
+	for (const auto &vn : saved) {
+		timelinebar::wave_signal_ref sig;
+		sig.vcd_name = vn;
+		if (auto it = wire_map.find(vn); it != wire_map.end() && it->second) {
+			wire *w = it->second;
+			sig.display_name = !w->name.empty() ? w->name : vn;
+			sig.bit_width = w->get_width();
+			sig.labels = w->get_label_table();
+		} else {
+			sig.display_name = vn;
+		}
+		timeline_bar->pin_signal(sig, false);
+	}
 }
 
 canvas::~canvas(void)
@@ -1680,6 +1729,7 @@ std::unique_ptr<class scene> canvas::swap_scene(std::unique_ptr<class scene> sce
 		return nullptr;
 	auto tmp = std::move(current_scene);
 	current_scene = std::move(scene);
+	restore_pinned_waves_from_scene();
 	return tmp;
 }
 

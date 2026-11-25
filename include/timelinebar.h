@@ -14,6 +14,7 @@
 
 #include <SDL3/SDL.h>
 #include <cstddef>
+#include <functional>
 #include <memory>
 #include <string>
 #include <string_view>
@@ -56,11 +57,13 @@ public:
 
     void set_hovered_signal(const wave_signal_ref &sig);
     void clear_hovered_signal(void);
-    void pin_signal(const wave_signal_ref &sig);
-    void unpin_signal(std::string_view vcd_name);
-    void clear_pinned_signals(void);
+    void pin_signal(const wave_signal_ref &sig, bool notify = true);
+    void unpin_signal(std::string_view vcd_name, bool notify = true);
+    void clear_pinned_signals(bool notify = true);
     bool is_pinned(std::string_view vcd_name) const;
     bool has_pinned_signals(void) const noexcept { return !pinned_.empty(); }
+    std::vector<std::string> get_pinned_vcd_names(void) const;
+    void set_on_pinned_changed(std::function<void()> cb) { on_pinned_changed_ = std::move(cb); }
     bool has_active_wave(void) const;
 
     void draw(class basecanvas *canvas, const SDL_Rect &bar_rect);
@@ -116,4 +119,5 @@ private:
     bool has_hovered_ = false;
     vcd_session::wave_data clk_wave_;
     bool clk_wave_loaded_ = false;
+    std::function<void()> on_pinned_changed_;
 };

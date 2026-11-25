@@ -2277,6 +2277,23 @@ static void test_vcd_wave_viewer(void)
     tb.clear_pinned_signals();
     assert(!tb.has_active_wave());
     assert(tb.get_height() == timelinebar::BAR_HEIGHT);
+
+    // Verify layout_overlay round-trip persistence of per-scene pinned_waves (isolated temp file)
+    res.imported_scene->set_pinned_waves({alu_out_name, second_name});
+    const std::filesystem::path tmp_wave_overlay =
+        std::filesystem::temp_directory_path() / "gridcad_test_pinned_waves_overlay.json";
+    std::error_code ec;
+    std::filesystem::remove(tmp_wave_overlay, ec);
+    assert(layout_overlay::save_scene_to_file(res.imported_scene.get(), tmp_wave_overlay));
+
+    res.imported_scene->set_pinned_waves({});
+    assert(res.imported_scene->get_pinned_waves().empty());
+    assert(layout_overlay::apply_file_to_scene(res.imported_scene.get(), tmp_wave_overlay));
+    const auto &restored = res.imported_scene->get_pinned_waves();
+    assert(restored.size() == 2);
+    assert(restored[0] == alu_out_name);
+    assert(restored[1] == second_name);
+    std::filesystem::remove(tmp_wave_overlay, ec);
 }
 
 int main(void)

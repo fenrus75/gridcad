@@ -275,6 +275,7 @@ bool layout_overlay::save_scene_to_file(class scene *target_scene, const std::fi
     root["wire_colors"] = std::move(j_wire_colors);
     root["area_labels"] = std::move(j_labels);
     root["datascopes"] = std::move(j_scopes);
+    root["pinned_waves"] = target_scene->get_pinned_waves();
 
     try {
         std::filesystem::create_directories(path.parent_path());
@@ -659,6 +660,24 @@ bool layout_overlay::apply_file_to_scene(class scene *target_scene, const std::f
                 }
             }
         }
+    }
+
+    /* Restore per-scene pinned VCD waveforms (untrusted JSON array of signal names). */
+    if (root.contains("pinned_waves") && root["pinned_waves"].is_array()) {
+        constexpr size_t kMaxPinnedWaves = 6;
+        std::vector<std::string> loaded_waves;
+        std::unordered_set<std::string> seen_waves;
+        for (const auto &untrusted_entry : root["pinned_waves"]) {
+            if (!untrusted_entry.is_string())
+                continue;
+            const std::string vn = untrusted_entry.get<std::string>();
+            if (vn.empty() || vn.size() > 512 || !seen_waves.insert(vn).second)
+                continue;
+            loaded_waves.push_back(vn);
+            if (loaded_waves.size() >= kMaxPinnedWaves)
+                break;
+        }
+        target_scene->set_pinned_waves(std::move(loaded_waves));
     }
 
     target_scene->clear_layout_dirty();
