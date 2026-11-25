@@ -120,4 +120,7 @@ private:
     vcd_session::wave_data clk_wave_;
     bool clk_wave_loaded_ = false;
     std::function<void()> on_pinned_changed_;
+    size_t last_observed_tick_ = 0;
+    uint64_t last_tick_ms_ = 0;
+    bool was_playing_ = false;
 };

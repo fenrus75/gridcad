@@ -758,11 +758,30 @@ void timelinebar::draw(class basecanvas *canvas, const SDL_Rect &bar_rect)
             draw_signal_row(pinned_[i], l.pinned_rows[i], ub);
         }
 
-        /* Vertical playhead cursor across the entire wave area. */
-        const uint64_t cur_t = session_->get_current_timestamp();
-        if (cur_t >= t0 && cur_t <= t1) {
+        /* Vertical playhead cursor across the entire wave area.
+         * In VCD animation mode (clock_running), smoothly interpolate across the 500 ms tick
+         * interval at 60 FPS; in step-by-step / paused / scrubbing mode, snap to the exact tick. */
+        const size_t cur_idx = session_->get_current_tick();
+        const uint64_t now_ms = SDL_GetTicks();
+        const bool animating = clock_running && !scrubbing_ && !scrubbing_wave_ && !session_->is_unlocked();
+        if (!animating || !was_playing_ || cur_idx != last_observed_tick_) {
+            last_observed_tick_ = cur_idx;
+            last_tick_ms_ = now_ms;
+        }
+        was_playing_ = animating;
+
+        double playhead_t = static_cast<double>(session_->get_current_timestamp());
+        if (animating && cur_idx + 1 < total_ticks) {
+            constexpr double kTickIntervalMs = 500.0;
+            const double frac = std::clamp(static_cast<double>(now_ms - last_tick_ms_) / kTickIntervalMs, 0.0, 1.0);
+            const uint64_t next_t = session_->get_tick_timestamp(cur_idx + 1);
+            if (next_t > session_->get_current_timestamp())
+                playhead_t += frac * static_cast<double>(next_t - session_->get_current_timestamp());
+        }
+
+        if (playhead_t >= static_cast<double>(t0) && playhead_t <= static_cast<double>(t1)) {
             const float px = static_cast<float>(l.wave_area.x) +
-                             static_cast<float>(static_cast<double>(cur_t - t0) * inv_span * static_cast<double>(l.wave_area.w));
+                             static_cast<float>((playhead_t - static_cast<double>(t0)) * inv_span * static_cast<double>(l.wave_area.w));
             SDL_SetRenderDrawColor(ren, 235, 245, 255, 230);
             SDL_RenderLine(ren, px, static_cast<float>(l.wave_area.y),
                            px, static_cast<float>(l.wave_area.y + l.wave_area.h));
