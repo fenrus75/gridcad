@@ -26,6 +26,7 @@ public:
     virtual void notify(int ttl);
     struct value value = {};
     bool intersect(float targetX, float targetY);
+    float distance_sq_to_point(float targetX, float targetY) const;
     
     void select(void) { selected = true;};
     void deselect(void) { selected = false;};

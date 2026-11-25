@@ -1594,6 +1594,48 @@ static void test_wire_intersect(void)
     assert(z->intersect(3.5f, 3.5f));
     assert(z->intersect(3.0f, 3.0f));
     assert(!z->intersect(10.0f, 10.0f));
+
+    // 7. Parallel 45-deg wires ("//" pattern) 1 grid cell apart:
+    //    Right wire is registered first in scene; hovering on or closer to the left wire
+    //    must select the left wire (not be stolen by the right wire's [x,x+1) box or first-match).
+    {
+        scene sc("parallel_45_test");
+        auto e_r1 = std::make_unique<model_toggle>(10, 10);
+        auto e_r2 = std::make_unique<model_output>(15, 10);
+        auto e_l1 = std::make_unique<model_toggle>(10, 15);
+        auto e_l2 = std::make_unique<model_output>(15, 15);
+        auto *r1 = e_r1.get();
+        auto *r2 = e_r2.get();
+        auto *l1 = e_l1.get();
+        auto *l2 = e_l2.get();
+        sc.add_element(std::move(e_r1));
+        sc.add_element(std::move(e_r2));
+        sc.add_element(std::move(e_l1));
+        sc.add_element(std::move(e_l2));
+
+        // Right 45-deg wire: centerline (4.5, 1.5) -> (1.5, 4.5)
+        auto right_w = connect_ports(r1->port_at(0), r2->port_at(0));
+        auto rpts = std::make_unique<std::vector<struct waypoint>>();
+        rpts->push_back(waypoint{4.0f, 1.0f});
+        rpts->push_back(waypoint{1.0f, 4.0f});
+        right_w->set_routed_points(std::move(rpts));
+
+        // Left 45-deg wire: centerline (3.5, 1.5) -> (0.5, 4.5)
+        auto left_w = connect_ports(l1->port_at(0), l2->port_at(0));
+        auto lpts = std::make_unique<std::vector<struct waypoint>>();
+        lpts->push_back(waypoint{3.0f, 1.0f});
+        lpts->push_back(waypoint{0.0f, 4.0f});
+        left_w->set_routed_points(std::move(lpts));
+
+        // Directly on left wire centerline (2.0, 3.0): dist_left = 0.0, dist_right = 0.707
+        assert(sc.is_wire(2.0f, 3.0f) == left_w);
+        // Directly on right wire centerline (3.0, 3.0): dist_right = 0.0, dist_left = 0.707
+        assert(sc.is_wire(3.0f, 3.0f) == right_w);
+        // Between them, closer to left wire
+        assert(sc.is_wire(2.3f, 3.0f) == left_w);
+        // Between them, closer to right wire
+        assert(sc.is_wire(2.7f, 3.0f) == right_w);
+    }
 }
 
 static void test_label_table_and_datascope(void)

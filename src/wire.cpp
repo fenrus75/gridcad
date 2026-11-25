@@ -669,6 +669,38 @@ bool wire::intersect(float targetX, float targetY)
 	return false;
 }
 
+float wire::distance_sq_to_point(float targetX, float targetY) const
+{
+	if (!points || points->size() < 2)
+		return std::numeric_limits<float>::max();
+
+	const auto &pts = *points;
+	float best = std::numeric_limits<float>::max();
+
+	for (size_t i = 1; i < pts.size(); ++i) {
+		const float x1 = pts[i - 1].X + 0.5f;
+		const float y1 = pts[i - 1].Y + 0.5f;
+		const float x2 = pts[i].X + 0.5f;
+		const float y2 = pts[i].Y + 0.5f;
+
+		const float dx = x2 - x1;
+		const float dy = y2 - y1;
+		const float len2 = dx * dx + dy * dy;
+		float t = 0.0f;
+		if (len2 > 1e-6f)
+			t = std::clamp(((targetX - x1) * dx + (targetY - y1) * dy) / len2, 0.0f, 1.0f);
+		const float cx = x1 + t * dx;
+		const float cy = y1 + t * dy;
+		const float ex = targetX - cx;
+		const float ey = targetY - cy;
+		const float d2 = ex * ex + ey * ey;
+		if (d2 < best)
+			best = d2;
+	}
+
+	return best;
+}
+
 void wire::remove(void)
 {
 	/* Hold a strong reference while detaching from both endpoints so `this`

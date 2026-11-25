@@ -188,13 +188,31 @@ class port *scene::is_port(float X, float Y)
 
 std::shared_ptr<class wire> scene::is_wire(float X, float Y)
 {
+	/* Pick the closest wire centerline within a symmetric hit radius so parallel 45-deg
+	 * wires never steal hits from each other due to iteration order or asymmetric cell boxes. */
+	constexpr float kHitRadiusSq = 0.45f * 0.45f;
+	std::shared_ptr<class wire> best_wire;
+	float best_d2 = kHitRadiusSq;
+
 	for (auto const &elem : elements) {
-		auto p = elem->is_wire(X, Y);
-		if (p) {
-			return p;
+		if (!elem)
+			continue;
+		for (unsigned int pi = 0;; ++pi) {
+			port *p = elem->port_at(pi);
+			if (!p)
+				break;
+			for (const auto &w : p->get_wires()) {
+				if (!w)
+					continue;
+				const float d2 = w->distance_sq_to_point(X, Y);
+				if (d2 < best_d2) {
+					best_d2 = d2;
+					best_wire = w;
+				}
+			}
 		}
 	}
-	return nullptr;
+	return best_wire;
 }
 
 void scene::fill_grid(class wiregrid * grid)
@@ -349,7 +367,7 @@ void scene::rewire_section(int x1, int y1, int w, int h)
 
 	for (y = y1 - 1 ; y <= y1 + h + 1; y++)
 		for (x = x1 -1 ; x <= x1 + w + 1; x++) {
-			auto wire = is_wire(x, y);
+			auto wire = is_wire(static_cast<float>(x) + 0.5f, static_cast<float>(y) + 0.5f);
 			if (wire) {
 				wire->reseat();
 				wire->redo_wires();
