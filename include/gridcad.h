@@ -195,6 +195,7 @@ protected:
     void emit_thick_quad(float x1, float y1, float x2, float y2,
                          float thickness, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
     void emit_round_cap(float cx, float cy, float radius, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
+    void emit_filled_circle(float cx, float cy, float radius, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
     bool point_visible(float x, float y, float radius) const;
 };
 

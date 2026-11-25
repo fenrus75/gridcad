@@ -49,14 +49,12 @@ inc_dirs = include_directories([
 
 sdl2_dep = dependency('SDL2')
 sdl2_image_dep = dependency('SDL2_image')
-sdl2_gfx_dep = dependency('SDL2_gfx')
 sdl2_ttf_dep = dependency('SDL2_ttf')
 libunwind_dep = dependency('libunwind', required: false)
 
 common_deps = [
     sdl2_dep,
     sdl2_image_dep,
-    sdl2_gfx_dep,
     sdl2_ttf_dep,
 ]
 

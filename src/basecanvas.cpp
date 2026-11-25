@@ -12,8 +12,9 @@
 
 #include "gridcad.h"
 #include <SDL2/SDL_image.h>
-#include <SDL2/SDL2_gfxPrimitives.h>
 #include <SDL2/SDL_ttf.h>
+#include <array>
+#include <cmath>
 #include <map>
 #include <unordered_map>
 
@@ -259,39 +260,52 @@ void basecanvas::draw_shadow_Line(float X1, float Y1, float X2, float Y2, int co
 	}
 }
 
+void basecanvas::emit_filled_circle(float cx, float cy, float radius, Uint8 r, Uint8 g, Uint8 b, Uint8 a)
+{
+	if (radius < 0.5f || !point_visible(cx, cy, radius))
+		return;
+	if (line_verts.size() >= 32000)
+		flush_line_batch();
+
+	constexpr int kSegs = 24;
+	static const auto kUnitCircle = []() {
+		std::array<std::pair<float, float>, kSegs> pts{};
+		constexpr double two_pi = 2.0 * 3.14159265358979323846;
+		for (int i = 0; i < kSegs; ++i) {
+			const double ang = (two_pi * i) / kSegs;
+			pts[i] = {static_cast<float>(std::cos(ang)), static_cast<float>(std::sin(ang))};
+		}
+		return pts;
+	}();
+
+	const int center = static_cast<int>(line_verts.size());
+	const SDL_Color col = {r, g, b, a};
+	line_verts.push_back({{cx, cy}, col, {0.0f, 0.0f}});
+	for (int i = 0; i < kSegs; ++i)
+		line_verts.push_back({{cx + kUnitCircle[i].first * radius, cy + kUnitCircle[i].second * radius}, col, {0.0f, 0.0f}});
+	for (int i = 0; i < kSegs; ++i) {
+		line_indices.push_back(center);
+		line_indices.push_back(center + 1 + i);
+		line_indices.push_back(center + 1 + ((i + 1) % kSegs));
+	}
+}
+
 void basecanvas::draw_circle(float X, float Y, float _R, int color, int color2)
 {
-	flush_line_batch();
-	int x1, y1;
+	const float x1 = static_cast<float>(X_to_scr(X));
+	const float y1 = static_cast<float>(Y_to_scr(Y));
 
-	x1 = X_to_scr(X);
-	y1 = Y_to_scr(Y);
-
-	/* TODO: clip boxes that are fully outside of the visible window */
-
-	filledCircleRGBA(renderer.get(), x1, y1, _R * scaleX, R(color), G(color),
-			B(color), Alpha(color));
-	color = color2;
-	filledCircleRGBA(renderer.get(), x1, y1, (_R / 2) * scaleX, R(color),
-			G(color), B(color), Alpha(color));
-
+	emit_filled_circle(x1, y1, _R * scaleX, R(color), G(color), B(color), Alpha(color));
+	emit_filled_circle(x1, y1, (_R / 2.0f) * scaleX, R(color2), G(color2), B(color2), Alpha(color2));
 }
+
 void basecanvas::draw_circle2(float X, float Y, float _R, int color, int color2)
 {
-	flush_line_batch();
-	int x1, y1;
+	const float x1 = static_cast<float>(X_to_scr(X));
+	const float y1 = static_cast<float>(Y_to_scr(Y));
 
-	x1 = X_to_scr(X);
-	y1 = Y_to_scr(Y);
-
-	/* TODO: clip boxes that are fully outside of the visible window */
-
-	filledCircleRGBA(renderer.get(), x1, y1, _R * scaleX, R(color), G(color),
-			B(color), Alpha(color));
-	color = color2;
-	filledCircleRGBA(renderer.get(), x1, y1, (_R / 1.4) * scaleX, R(color),
-			G(color), B(color), Alpha(color));
-
+	emit_filled_circle(x1, y1, _R * scaleX, R(color), G(color), B(color), Alpha(color));
+	emit_filled_circle(x1, y1, (_R / 1.4f) * scaleX, R(color2), G(color2), B(color2), Alpha(color2));
 }
 
 static sdl::SurfacePtr downscale_surface_if_large(sdl::SurfacePtr src, int max_dim)
