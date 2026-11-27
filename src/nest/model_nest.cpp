@@ -116,10 +116,25 @@ void model_nest::drawAt(class basecanvas *canvas, float X, float Y, int type)
 	maybe_regen_ports();
 	if (!selected)
 		name_edit->set_edit_mode(false);
+	const float pad_x = scale_2x ? 0.30f : 0.18f;
+	const float pad_y = scale_2x ? 0.24f : 0.14f;
+	const float label_h = scale_2x ? 1.8f : 1.0f;
+	const float label_x = X + pad_x;
+	const float label_w = std::max(0.5f, static_cast<float>(sizeX) - 2.0f * pad_x);
+	const float label_y = title_on_top
+		? (Y + pad_y)
+		: (Y + static_cast<float>(sizeY) - label_h - pad_y);
+	const bool show_label = !name.empty() || in_edit_mode();
+
 	if (!selected) {
 		if (icon == "") {
 			canvas->draw_image_rotated("assets/nest/nest_back.png", X, Y, sizeX, sizeY, Alpha(type), angle);
-			canvas->draw_image_rotated("assets/nest/icon.png", X+0.15, Y+0.15, sizeX-0.3, sizeY-0.3, Alpha(type), angle);	
+			const float icon_y = (show_label && title_on_top) ? (Y + label_h + pad_y + 0.05f) : (Y + 0.15f);
+			const float icon_h = show_label
+				? std::max(0.5f, static_cast<float>(sizeY) - label_h - pad_y - 0.20f)
+				: (static_cast<float>(sizeY) - 0.30f);
+			canvas->draw_image_rotated("assets/nest/icon.png", X + 0.15f, icon_y,
+			                           static_cast<float>(sizeX) - 0.30f, icon_h, Alpha(type), angle);
 		} else {
 			canvas->draw_image_rotated(icon, X, Y, sizeX, sizeY, Alpha(type), angle);
 		}
@@ -133,11 +148,12 @@ void model_nest::drawAt(class basecanvas *canvas, float X, float Y, int type)
 		}
 	}
 
-	const float label_h = scale_2x ? 2.0f : 1.0f;
-	if (title_on_top)
-		name_edit->drawAt(canvas, X, Y - label_h, sizeX, label_h);
-	else
-		name_edit->drawAt(canvas, X, Y + sizeY, sizeX, label_h);
+	if (show_label) {
+		const Uint8 bg_a = static_cast<Uint8>((205 * Alpha(type)) / 255);
+		canvas->draw_box_rgba(label_x, label_y, label_x + label_w, label_y + label_h, 16, 20, 22, bg_a);
+		name_edit->drawAt(canvas, label_x + 0.08f, label_y + 0.06f,
+		                  std::max(0.2f, label_w - 0.16f), std::max(0.2f, label_h - 0.12f));
+	}
 
 	for (auto &port : ports) {
 		port->draw_wires(canvas);	
